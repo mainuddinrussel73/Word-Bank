@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/cardview_light_background"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/word1"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:hint="Word"
+            android:textColorHint="@color/cardview_shadow_start_color"
+            android:textColor="@android:color/background_dark"
+            android:layout_marginTop="20dp"
+            android:paddingLeft="5dp"
+            android:background="@drawable/editextstyle"/>
+
+        <EditText
+            android:id="@+id/meaning1"
+            android:layout_width="match_parent"
+            android:layout_height="199dp"
+            android:hint="Meaning"
+            android:layout_marginTop="20dp"
+            android:textColorHint="@color/cardview_shadow_start_color"
+            android:textColor="@android:color/background_dark"
+            android:paddingLeft="5dp"
+            android:background="@drawable/editextstyle"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/done"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="Done"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:textColor="@color/cardview_light_background"
+            android:layout_marginLeft="150dp"/>
+
+
+
+    </LinearLayout>
+
+</LinearLayout>
