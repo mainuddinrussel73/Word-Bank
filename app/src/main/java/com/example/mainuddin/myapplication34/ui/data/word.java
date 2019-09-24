@@ -1,6 +1,6 @@
 package com.example.mainuddin.myapplication34.ui.data;
 
-public class word {
+public class word implements Comparable< word >{
     int ID;
 
     public String getSENTENCE() {
@@ -47,5 +47,9 @@ public class word {
 
     public word(){
 
+    }
+    @Override
+    public int compareTo(word o) {
+        return this.getID() - (o.getID());
     }
 }

@@ -16,7 +16,8 @@
     <string name="title_activity_backup_restore">backup_restore</string>
     <string name="Ok">Ok</string>
     <string name="File">File</string>
-    <string name="restore">Restore</string>
+    <string name="restore">Restore .json</string>
+    <string name="restore1">Restore .html</string>
     <string name="Backup">Backup</string>
 
 

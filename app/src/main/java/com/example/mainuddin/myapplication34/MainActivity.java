@@ -36,18 +36,24 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.Menu;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     ActionBarDrawerToggle toggle;
 
+    Button sort ;
     ListView list;
     public static int size = 0;
     public static List<word> contactList = new ArrayList<word>();
@@ -92,6 +98,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivityForResult(myIntent, 0);
             }
         });
+
 
 
 
@@ -187,6 +194,53 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             showMessage("Error","Nothing found");
         }
         size = contactList.size();
+
+
+
+
+        sort = findViewById(R.id.sort);
+        sort.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                //Creating the instance of PopupMenu
+                PopupMenu popup = new PopupMenu(MainActivity.this, sort);
+                //Inflating the Popup using xml file
+                popup.getMenuInflater().inflate(R.menu.pop_up_menu, popup.getMenu());
+
+                //registering popup with OnMenuItemClickListener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if(item.getTitle().equals("Ascending")){
+                            Collections.sort(contactList);
+                          //  adapter = new MyListAdapter(getParent());
+                            list=(ListView)findViewById(R.id.list);
+                            list.setAdapter(adapter);
+                        }else if(item.getTitle().equals("Descending")){
+                            Collections.sort(contactList,Collections.reverseOrder());
+                            //adapter = new MyListAdapter(getParent());
+                            list=(ListView)findViewById(R.id.list);
+                            list.setAdapter(adapter);
+                        }else{
+                            Collections.sort(contactList,
+                                    new Comparator<word>()
+                                    {
+                                        public int compare(word f1, word f2)
+                                        {
+                                            return f1.getWORD().compareTo(f2.getWORD());
+                                        }
+                                    });
+                            list=(ListView)findViewById(R.id.list);
+                            list.setAdapter(adapter);
+                        }
+                        Toast.makeText(MainActivity.this,"You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                });
+
+                popup.show();//showing popup menu
+            }
+        });//closing the setOnClickListener method
     }
 
 

@@ -62,7 +62,7 @@ public class MyListAdapter extends BaseAdapter {
 
         //System.out.println("klkl"+MainActivity.contactList.size());
         titleText.setText(MainActivity.contactList.get(position).getWORD());
-        number.setText(String.valueOf(position));
+        number.setText(Integer.toString(MainActivity.contactList.get(position).getID()));
 
 
         return rowView;
