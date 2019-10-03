@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 //import android.support.v7.app.ActionBarActivity;
 
@@ -130,8 +132,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return res;
     }
 
-    public boolean updateData(String id,String word,String meaining,String sentence) {
+    public boolean updateData(String id,String old_word,String word,String meaining,String sentence) {
         SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db1 = this.getReadableDatabase();
+        try{
+            Cursor re  = db1.rawQuery("SELECT * FROM Word_table WHERE WORD = ?; ", new String[] {old_word});
+            if (re.moveToFirst()) {
+                do {
+                    System.out.println(re.getString(0));
+                    id =  re.getString(0);
+                } while (re.moveToNext());
+            }
+
+            re.close();
+           // System.out.println(re.getString(0));
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
         ContentValues contentValues = new ContentValues();
         contentValues.put(ID,id);
         contentValues.put(WORD,word);
@@ -148,5 +165,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void deleteAll () {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from "+ TABLE_NAME);
+    }
+    public List<word> getSelectedDatas(String setId) {
+        List<word> cardList = new ArrayList<word>();
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.query(TABLE_NAME,
+                new String[]{ID, WORD, MEANING, SENTENCE},
+                WORD + "=?",
+                new String[]{setId}, null, null, null, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                word stats = new word();
+                stats.setID(cursor.getInt(0));
+                stats.setWORD(cursor.getString(1));
+                stats.setMEANING(cursor.getString(2));
+                stats.setSENTENCE(cursor.getString(3));
+                // Adding card to list
+                cardList.add(stats);
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        // return contact list
+        return cardList;
     }
 }

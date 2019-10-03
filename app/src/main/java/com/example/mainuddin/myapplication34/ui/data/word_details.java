@@ -73,7 +73,7 @@ public class word_details extends AppCompatActivity {
                     meanings = meaning.getText().toString();
                     id = intent.getExtras().getInt("id");
                     id++;
-                    boolean b = mDBHelper.updateData(String.valueOf(id),words,meanings,"");
+                    boolean b = mDBHelper.updateData(String.valueOf(id),intent.getStringExtra("message"),words,meanings,"");
                     if(b==true){
                         Toast.makeText(getApplicationContext(),"Done.",Toast.LENGTH_SHORT).show();
                         Intent myIntent = new Intent(v.getContext(), MainActivity.class);

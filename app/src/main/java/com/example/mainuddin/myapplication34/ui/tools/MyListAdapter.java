@@ -73,7 +73,7 @@ public class MyListAdapter extends BaseAdapter {
     public void filter(String charText) {
         charText = charText.toLowerCase();
         MainActivity.contactList.clear();
-        System.out.println(this.contactList.size());
+       // System.out.println(this.contactList.size());
         if (charText.length() == 0) {
             MainActivity.contactList.addAll(this.contactList);
         } else {
@@ -83,7 +83,7 @@ public class MyListAdapter extends BaseAdapter {
                 }
             }
         }
-        System.out.println(MainActivity.contactList.size());
+       // System.out.println(MainActivity.contactList.size());
         notifyDataSetChanged();
     }
 }

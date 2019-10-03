@@ -177,6 +177,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
                     // TODO Auto-generated method stub
+                   // System.out.println(position);
                     Intent myIntent = new Intent(view.getContext(), word_details.class);
                     //String s = view.findViewById(R.id.subtitle).toString();
                     //String s = (String) parent.getI;
