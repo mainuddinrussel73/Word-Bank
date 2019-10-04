@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="100dp"
+    android:background="@color/colorPrimary"
+    android:foreground="@drawable/shape_window_dim"
+    android:id="@+id/frame_layout">
+
+
+    <!-- Whatever your layout will consist of can go here -->
+    <ImageButton
+        android:id="@+id/ib_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_close_black_24dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:background="@null"
+        />
+    <com.suke.widget.SwitchButton
+        android:id="@+id/switch_button"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+
+
+
+
+
+</FrameLayout>

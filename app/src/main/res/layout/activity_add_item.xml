@@ -5,7 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/cardview_light_background"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/add_item">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"

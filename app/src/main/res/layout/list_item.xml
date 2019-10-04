@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="350dp"
     android:layout_height="match_parent"
     android:orientation="horizontal" >
 
@@ -14,6 +14,7 @@
         android:paddingTop="15dp"
         android:paddingBottom="15dp"
         android:paddingRight="15dp"
+        android:id="@+id/list_item"
         android:background="@drawable/backgroundborder"
         android:descendantFocusability="afterDescendants"
         >
@@ -36,7 +37,7 @@
             android:layout_width="80dp"
             android:layout_height="20dp"
 
-            android:layout_marginLeft="300dp"
+            android:layout_marginLeft="270dp"
             android:text="Medium Text"
             android:textSize="12dp"
             android:textAppearance="?android:attr/textAppearanceListItemSmall"

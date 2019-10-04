@@ -2,10 +2,12 @@ package com.example.mainuddin.myapplication34.ui.data;
 
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.mainuddin.myapplication34.MainActivity;
@@ -13,6 +15,7 @@ import com.example.mainuddin.myapplication34.R;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 
 public class word_details extends AppCompatActivity {
@@ -33,6 +36,21 @@ public class word_details extends AppCompatActivity {
         word.setText(intent.getStringExtra("message"));
         meaning.setText(intent.getStringExtra("meaning"));
 
+        LinearLayout additem = findViewById(R.id.item_detail);
+
+        if(MainActivity.isDark){
+            additem.setBackgroundColor(Color.rgb(64,64,64));
+            word.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
+            meaning.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
+            word.setTextColor(Color.WHITE);
+            meaning.setTextColor(Color.WHITE);
+        }else{
+            additem.setBackgroundColor(Color.WHITE);
+            word.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
+            meaning.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
+            word.setTextColor(Color.BLACK);
+            meaning.setTextColor(Color.BLACK);
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -93,9 +111,11 @@ public class word_details extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
+                words = word.getText().toString();
+                meanings = meaning.getText().toString();
                 id = intent.getExtras().getInt("id");
                 id++;
-                int b = mDBHelper.deleteData(String.valueOf(id));
+                int b = mDBHelper.deleteData(String.valueOf(id),intent.getStringExtra("message"),words,meanings,"");
                 if(b==1){
                     Toast.makeText(getApplicationContext(),"Done.",Toast.LENGTH_SHORT).show();
                     Intent myIntent = new Intent(v.getContext(), MainActivity.class);

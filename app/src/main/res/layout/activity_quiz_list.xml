@@ -3,7 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/relative_quiz">
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
 
     <TextView
@@ -26,7 +40,7 @@
 
         android:layout_marginStart="10dp"
 
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="70dp"
 
         android:textSize="20sp"
 
@@ -131,18 +145,24 @@
 
     </RadioGroup>
 
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnDisplay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
+        android:layout_width="109dp"
+        android:layout_height="61dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/radioGroup"
+        android:layout_marginEnd="87dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="192dp"
+        android:layout_toStartOf="@+id/nextquiz"
+        android:paddingBottom="10dp"
+        android:paddingLeft="30dp"
         android:paddingRight="10dp"
         android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:layout_marginTop="400dp"
-        android:layout_marginLeft="30dp"
-        android:textColor="@color/cardview_light_background"
-        android:text="@string/btn_display" />
+        android:text="@string/btn_display"
+        android:textColor="@color/cardview_light_background" />
 
     <com.google.android.material.button.MaterialButton
 
@@ -154,52 +174,21 @@
 
         android:layout_alignParentRight="true"
         android:layout_below="@+id/radioGroup"
-        android:layout_marginRight="19dp"
-        android:layout_marginTop="307dp"
 
+        android:layout_marginRight="25dp"
+
+        android:layout_marginTop="183dp"
         android:gravity="center"
 
         android:padding="5dp"
+
         android:paddingBottom="10dp"
 
         android:paddingLeft="10dp"
-
         android:paddingRight="10dp"
 
         android:paddingTop="10dp"
         android:text="@string/next_questions"
-
-        android:textColor="@color/cardview_light_background" />
-
-    <com.google.android.material.button.MaterialButton
-
-        android:id="@+id/previousquiz"
-
-        android:layout_width="160dp"
-
-        android:layout_height="80dp"
-
-        android:layout_alignLeft="@+id/radioGroup"
-
-        android:layout_alignStart="@+id/radioGroup"
-        android:layout_below="@+id/radioGroup"
-        android:layout_marginLeft="9dp"
-        android:layout_marginStart="9dp"
-        android:layout_marginTop="305dp"
-        android:gravity="center"
-
-        android:padding="5dp"
-
-
-        android:paddingBottom="30dp"
-
-        android:paddingLeft="10dp"
-
-        android:paddingRight="10dp"
-
-        android:paddingTop="30dp"
-
-        android:text="@string/exit"
         android:textColor="@color/cardview_light_background" />
 
     <TextView
@@ -208,7 +197,7 @@
         android:layout_height="29dp"
         android:layout_marginLeft="300dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="80dp"
         android:layout_marginBottom="100dp"
 
         android:text="@string/Score"

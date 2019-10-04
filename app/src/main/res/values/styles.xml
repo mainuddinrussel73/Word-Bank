@@ -12,10 +12,32 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+    <style name="YOURSTYLE" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:textColor">@color/cardview_light_background</item>
+        <item name="android:itemBackground">@color/cardview_dark_background</item>
+    </style>
+    <style name="YOURSTYLE1" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:textColor">@android:color/background_dark</item>
+        <item name="android:itemBackground">@android:color/background_light</item>
+    </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="CheckBoxTintTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@android:color/holo_green_dark</item>
+    </style>
 
+    <style name="DialogurDark" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">#3a9ebe</item>
+        <item name="android:textColorPrimary">@android:color/background_light</item>
+        <item name="android:background">@color/cardview_dark_background</item>
+    </style>
+
+    <style name="DialogueLight" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">#3a9ebe</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:background">@android:color/background_light</item>
+    </style>
 </resources>

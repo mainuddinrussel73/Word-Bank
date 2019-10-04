@@ -2,12 +2,14 @@ package com.example.mainuddin.myapplication34.ui.tools;
 
 import android.app.Activity;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.mainuddin.myapplication34.MainActivity;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class MyListAdapter extends BaseAdapter {
@@ -53,16 +56,36 @@ public class MyListAdapter extends BaseAdapter {
 
     public View getView(int position, View view, ViewGroup parent) {
 
-
         LayoutInflater inflater=context.getLayoutInflater();
         View rowView=inflater.inflate(R.layout.list_item, null,true);
 
         TextView titleText = (TextView) rowView.findViewById(R.id.title);
         TextView number = (TextView) rowView.findViewById(R.id.num);
 
+
         //System.out.println("klkl"+MainActivity.contactList.size());
         titleText.setText(MainActivity.contactList.get(position).getWORD());
         number.setText(Integer.toString(MainActivity.contactList.get(position).getID()));
+
+        //LinearLayout listitem = rowView.findViewById(R.id.list_item);
+
+        if(MainActivity.isDark){
+
+            //System.out.println("klklkl");
+           // listitem.setBackgroundColor(Color.BLACK);
+
+
+
+                titleText.setTextColor(Color.WHITE);
+                number.setTextColor(Color.WHITE);
+
+
+
+        }else {
+
+                titleText.setTextColor(Color.BLACK);
+                number.setTextColor(Color.BLACK);
+            }
 
 
         return rowView;

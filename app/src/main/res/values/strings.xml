@@ -10,7 +10,7 @@
     <string name="menu_home">Quiz</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
-    <string name="menu_tools">Tools</string>
+    <string name="menu_tools">DARK MODE</string>
     <string name="menu_share">Backup And Restore</string>
     <string name="menu_send">Backup Nad Restore</string>
     <string name="title_activity_backup_restore">backup_restore</string>
@@ -30,4 +30,7 @@
     <string name="title_activity_addpage">Add Word</string>
     <string name="title_activity_word_details">Details</string>
     <string name="title_quiz">Quiz</string>
+    <string name="darkmode">Dark Mode</string>
+    <string name="yes">Enable Dark Mode?</string>
+    <string name="no">Disable Dark Mode ?</string>
 </resources>

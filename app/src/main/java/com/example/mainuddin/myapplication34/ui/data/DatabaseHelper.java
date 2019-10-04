@@ -158,8 +158,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public Integer deleteData (String id) {
+    public Integer deleteData (String id,String old_word,String word,String meaining,String sentence) {
         SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db1 = this.getReadableDatabase();
+        try{
+            Cursor re  = db1.rawQuery("SELECT * FROM Word_table WHERE WORD = ?; ", new String[] {old_word});
+            if (re.moveToFirst()) {
+                do {
+                    System.out.println(re.getString(0));
+                    id =  re.getString(0);
+                } while (re.moveToNext());
+            }
+
+            re.close();
+            // System.out.println(re.getString(0));
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ID,id);
+        contentValues.put(WORD,word);
+        contentValues.put(MEANING,meaining);
+        contentValues.put(SENTENCE,sentence);
         return db.delete(TABLE_NAME, "ID = ?",new String[] {id});
     }
     public void deleteAll () {
