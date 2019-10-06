@@ -3,10 +3,6 @@ package com.example.mainuddin.myapplication34;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.IntentService;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,7 +14,6 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
@@ -31,7 +26,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.PopupWindow;
-import android.widget.RemoteViews;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,7 +37,6 @@ import com.example.mainuddin.myapplication34.ui.data.DatabaseHelper;
 import com.example.mainuddin.myapplication34.ui.data.word;
 import com.example.mainuddin.myapplication34.ui.data.word_details;
 import com.example.mainuddin.myapplication34.ui.insert.add_page;
-import com.example.mainuddin.myapplication34.ui.share.NotificationIntentService;
 import com.example.mainuddin.myapplication34.ui.tools.MyListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -54,17 +47,13 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuItemCompat;
@@ -403,8 +392,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Calendar calendar = Calendar.getInstance();
                 // set the triggered time to currentHour:08:00 for testing
                 calendar.set(Calendar.HOUR_OF_DAY, 20);
+                calendar.set(Calendar.MINUTE, 54);
                 calendar.set(Calendar.SECOND, 0);
-                calendar.set(Calendar.MINUTE, 13);
 
                 alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
                         calendar.getTimeInMillis(), 0, pendingIntent);
@@ -430,14 +419,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 showMessage("Sorry","Collect more then 4 words.");
             }
 
-        } else if (id == R.id.nav_tools) {
+        }else if(id == R.id.news){
+
+            try{
+            Intent myIntent = new Intent(MainActivity.this, news_activity.class);
+            myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivityForResult(myIntent, 0);}
+            catch (Exception e){
+                e.getMessage();
+            }
+
+        }else if (id == R.id.nav_tools) {
             mContext = getApplicationContext();
             mActivity = MainActivity.this;
 
 
             if(!isDark && contactList.size()!=0){
-
-
                 AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.DialogueLight);
                 builder.setTitle(R.string.darkmode);
                 builder.setMessage(R.string.yes);
@@ -462,7 +459,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 });
                 builder.setNegativeButton("NO", null);
                 builder.show();
-            }else if(isDark && contactList.size()!=0){
+            }
+            else if(isDark && contactList.size()!=0){
                 AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.DialogurDark);
                 builder.setTitle(R.string.darkmode);
                 builder.setMessage(R.string.no);
@@ -489,7 +487,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 builder.show();
 
 
-            }else if(!isDark && contactList.size()==0){
+            }
+            else if(!isDark && contactList.size()==0){
                 AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.DialogueLight);
                 builder.setTitle(R.string.darkmode);
                 builder.setMessage(R.string.yes);
@@ -513,7 +512,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 });
                 builder.setNegativeButton("NO", null);
                 builder.show();
-            }else if(isDark && contactList.size()==0){
+            }
+            else if(isDark && contactList.size()==0){
                 AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.DialogurDark);
                 builder.setTitle(R.string.darkmode);
                 builder.setMessage(R.string.no);

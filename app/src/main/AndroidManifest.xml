@@ -3,13 +3,6 @@
     xmlns:dist="http://schemas.android.com/apk/distribution"
     package="com.example.mainuddin.myapplication34">
 
-    <dist:module
-        dist:instant="true"
-        dist:onDemand="false"
-        dist:title="Instant App">
-        <dist:fusing dist:include="true" />
-    </dist:module>
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,13 +10,22 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-
-
+        <activity
+            android:name=".news_details"
+            android:label="@string/title_activity_news_details"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".news_activity"
+            android:label="@string/title_activity_news"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.insert.add_news"
+            android:label="@string/title_add_news"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.BackupAndRestore.backup_restore"
             android:label="@string/title_activity_backup_restore"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
@@ -37,26 +39,34 @@
         <activity
             android:name=".ui.insert.add_page"
             android:label="@string/title_activity_addpage"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.data.word_details"
             android:label="@string/title_activity_word_details"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
-        <activity android:name=".ui.Quiz.quiz_page"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.Quiz.quiz_page"
             android:label="@string/title_quiz"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <service
-            android:name=".ui.share.NotificationIntentService">
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <service android:name=".ui.share.NotificationIntentService">
             <intent-filter android:priority="10000">
-                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
-        <service android:enabled="true" android:name=".ui.Mainservice" />
+        <service
+            android:name=".ui.Mainservice"
+            android:enabled="true" />
     </application>
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <dist:module
+        dist:instant="true"
+        dist:onDemand="false"
+        dist:title="Instant App">
+        <dist:fusing dist:include="true" />
+    </dist:module>
 
 </manifest>

@@ -12,10 +12,12 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="YOURSTYLE" parent="Widget.AppCompat.PopupMenu">
         <item name="android:textColor">@color/cardview_light_background</item>
         <item name="android:itemBackground">@color/cardview_dark_background</item>
     </style>
+
     <style name="YOURSTYLE1" parent="Widget.AppCompat.PopupMenu">
         <item name="android:textColor">@android:color/background_dark</item>
         <item name="android:itemBackground">@android:color/background_light</item>

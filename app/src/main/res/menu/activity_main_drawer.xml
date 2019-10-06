@@ -19,6 +19,7 @@
             android:icon="@drawable/ic_notifications_active_black_24dp"
             android:title="@string/subscribe" />
 
+
     </group>
 
     <item android:title="DATA">
@@ -27,6 +28,10 @@
                 android:id="@+id/nav_send"
                 android:icon="@drawable/ic_settings_backup_restore_black"
                 android:title="@string/menu_share" />
+            <item
+                android:id="@+id/news"
+                android:icon="@drawable/ic_notifications_active_black_24dp"
+                android:title="@string/news" />
         </menu>
     </item>
 

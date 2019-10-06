@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/cardview_light_background"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:id="@+id/add_news_item">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/title1"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Title"
+            android:textColorHint="@color/cardview_shadow_start_color"
+            android:textColor="@android:color/background_dark"
+            android:layout_marginTop="20dp"
+            android:paddingLeft="5dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:background="@drawable/editextstyle"/>
+
+        <EditText
+            android:id="@+id/body1"
+            android:layout_width="match_parent"
+            android:layout_height="509dp"
+            android:paddingTop="10dp"
+            android:gravity="top"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:hint="News Body"
+            android:layout_marginTop="20dp"
+            android:scrollHorizontally="true"
+            android:scrollbars = "vertical"
+            android:textColorHint="@color/cardview_shadow_start_color"
+            android:textColor="@android:color/background_dark"
+            android:paddingLeft="5dp"
+            android:background="@drawable/editextstyle"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginTop="20dp">
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/save"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="150dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingTop="10dp"
+            android:text="Save"
+            android:textColor="@color/cardview_light_background" />
+
+
+    </LinearLayout>
+
+</LinearLayout>
