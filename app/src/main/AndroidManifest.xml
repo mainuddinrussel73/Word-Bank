@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dist="http://schemas.android.com/apk/distribution"
     package="com.example.mainuddin.myapplication34">
+
+    <dist:module
+        dist:instant="true"
+        dist:onDemand="false"
+        dist:title="Instant App">
+        <dist:fusing dist:include="true" />
+    </dist:module>
 
     <application
         android:allowBackup="true"
@@ -38,7 +46,15 @@
         <activity android:name=".ui.Quiz.quiz_page"
             android:label="@string/title_quiz"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <service
+            android:name=".ui.share.NotificationIntentService">
+            <intent-filter android:priority="10000">
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+            </intent-filter>
+        </service>
+        <service android:enabled="true" android:name=".ui.Mainservice" />
     </application>
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />

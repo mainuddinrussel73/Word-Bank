@@ -16,6 +16,7 @@ import com.example.mainuddin.myapplication34.R;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import es.dmoral.toasty.Toasty;
 
 
 public class word_details extends AppCompatActivity {
@@ -93,12 +94,12 @@ public class word_details extends AppCompatActivity {
                     id++;
                     boolean b = mDBHelper.updateData(String.valueOf(id),intent.getStringExtra("message"),words,meanings,"");
                     if(b==true){
-                        Toast.makeText(getApplicationContext(),"Done.",Toast.LENGTH_SHORT).show();
+                        Toasty.success(getApplicationContext(),"Done.",Toast.LENGTH_SHORT).show();
                         Intent myIntent = new Intent(v.getContext(), MainActivity.class);
                         myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivityForResult(myIntent, 0);
                     }else {
-                        Toast.makeText(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
+                        Toasty.error(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
                     }
                     word.setEnabled(false);
                     meaning.setEnabled(false);
@@ -117,12 +118,12 @@ public class word_details extends AppCompatActivity {
                 id++;
                 int b = mDBHelper.deleteData(String.valueOf(id),intent.getStringExtra("message"),words,meanings,"");
                 if(b==1){
-                    Toast.makeText(getApplicationContext(),"Done.",Toast.LENGTH_SHORT).show();
+                    Toasty.success(getApplicationContext(),"Done.",Toast.LENGTH_SHORT).show();
                     Intent myIntent = new Intent(v.getContext(), MainActivity.class);
                     myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivityForResult(myIntent, 0);
                 }else {
-                    Toast.makeText(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
+                    Toasty.success(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
                 }
 
             }

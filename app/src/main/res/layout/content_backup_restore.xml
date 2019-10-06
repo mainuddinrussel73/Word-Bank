@@ -10,13 +10,17 @@
     android:id="@+id/coordinate">
 
     <RelativeLayout
+        android:id="@+id/coordinate_backup"
         android:layout_width="350dp"
         android:layout_height="530dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="31dp"
         android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"
         android:background="@drawable/backgroundborder"
-        android:id="@+id/coordinate_backup"
         tools:layout_editor_absoluteX="30dp"
         tools:layout_editor_absoluteY="28dp">
 
@@ -25,12 +29,14 @@
             android:id="@+id/retext"
             android:layout_width="300dp"
             android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="10dp"
 
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="175dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="26dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="126dp"
             android:background="@drawable/backgroundborder"
             android:hint="@string/File">
 
@@ -42,10 +48,10 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
+            android:layout_below="@+id/retext"
             android:layout_marginLeft="10dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="252dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginTop="53dp"
             android:paddingBottom="10dp"
             android:paddingLeft="15dp"
             android:paddingRight="10dp"
@@ -61,8 +67,8 @@
 
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
-            android:layout_marginBottom="139dp"
-            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="110dp"
+            android:layout_marginEnd="37dp"
             android:layout_marginTop="120dp"
             android:paddingBottom="10dp"
             android:paddingLeft="30dp"
@@ -74,14 +80,14 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/backup"
-            android:layout_width="100dp"
+            android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
-            android:layout_alignParentStart="true"
 
-            android:layout_marginBottom="144dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginBottom="111dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginStart="29dp"
+            android:layout_marginStart="28dp"
             android:layout_marginTop="20dp"
             android:paddingBottom="10dp"
             android:paddingLeft="30dp"

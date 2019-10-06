@@ -1,5 +1,7 @@
 package com.example.mainuddin.myapplication34.ui.Quiz;
 
+import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,7 +24,14 @@ import com.example.mainuddin.myapplication34.MainActivity;
 import com.example.mainuddin.myapplication34.R;
 import com.example.mainuddin.myapplication34.ui.data.DatabaseHelper;
 import com.google.android.material.navigation.NavigationView;
+import com.tapadoo.alerter.Alerter;
+import com.tapadoo.alerter.OnHideAlertListener;
+import com.tapadoo.alerter.OnShowAlertListener;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -30,6 +39,7 @@ import java.util.Random;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import es.dmoral.toasty.Toasty;
 
 public class quiz_page extends AppCompatActivity {
 
@@ -73,16 +83,9 @@ public class quiz_page extends AppCompatActivity {
                 editor.commit();
 
 
-                SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
-                MainActivity.score = prefs1.getInt("key", 0);
-                System.out.println("kllkl"+MainActivity.score);
 
-                View inflatedView = getLayoutInflater().inflate(R.layout.nav_header_main, null);
-                TextView text = (TextView) inflatedView.findViewById(R.id.scores);
 
-                text.setText("Highest Score is : "+Integer.toString(MainActivity.score));
 
-                System.out.println("hjh"+MainActivity.score);
 
                 Intent myIntent = new Intent(view.getContext(), MainActivity.class);
 
@@ -161,6 +164,15 @@ public class quiz_page extends AppCompatActivity {
     }
 
 
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        getWindow().setBackgroundDrawableResource(android.R.color.white);
+    }
+
     public void addListenerOnButton(List<String> s) {
 
         radioSexGroup = (RadioGroup) findViewById(R.id.radioGroup);
@@ -186,8 +198,11 @@ public class quiz_page extends AppCompatActivity {
                     radioSexButton = (RadioButton) findViewById(selectedId);
 
                     if(sr.get(1).equals(radioSexButton.getText())){
-                        Toast.makeText(quiz_page.this,
+                        Toasty.success(quiz_page.this,
                                 "congrats", Toast.LENGTH_SHORT).show();
+
+
+
 
 
                         for (int i = 0; i < radioSexGroup .getChildCount(); i++) {
@@ -205,12 +220,11 @@ public class quiz_page extends AppCompatActivity {
                         score++;
 
 
-
                         btnDisplay.setEnabled(false);
 
                         scoress.setText(String.valueOf(score));
                     }else {
-                        Toast.makeText(quiz_page.this,
+                        Toasty.error(quiz_page.this,
                                 "Alas!", Toast.LENGTH_SHORT).show();
 
 
@@ -237,7 +251,7 @@ public class quiz_page extends AppCompatActivity {
                         btnDisplay.setEnabled(false);
                     }
                 }else {
-                    Toast.makeText(quiz_page.this,
+                    Toasty.warning(quiz_page.this,
                             "Select an option.", Toast.LENGTH_SHORT).show();
                 }
                 // find the radiobutton by returned id

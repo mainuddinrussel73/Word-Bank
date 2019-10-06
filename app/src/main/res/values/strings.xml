@@ -33,4 +33,6 @@
     <string name="darkmode">Dark Mode</string>
     <string name="yes">Enable Dark Mode?</string>
     <string name="no">Disable Dark Mode ?</string>
+    <string name="greet">Hi. How are you?</string>
+    <string name="subscribe">Subscribe</string>
 </resources>

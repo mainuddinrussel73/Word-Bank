@@ -1,8 +1,13 @@
 package com.example.mainuddin.myapplication34;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.Dialog;
+import android.app.IntentService;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,64 +18,58 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.format.DateUtils;
+import android.util.Log;
+import android.view.ContextThemeWrapper;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupMenu;
+import android.widget.PopupWindow;
+import android.widget.RemoteViews;
+import android.widget.SearchView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mainuddin.myapplication34.ui.BackupAndRestore.backup_restore;
+import com.example.mainuddin.myapplication34.ui.Mainservice;
 import com.example.mainuddin.myapplication34.ui.Quiz.quiz_page;
 import com.example.mainuddin.myapplication34.ui.data.DatabaseHelper;
 import com.example.mainuddin.myapplication34.ui.data.word;
 import com.example.mainuddin.myapplication34.ui.data.word_details;
 import com.example.mainuddin.myapplication34.ui.insert.add_page;
+import com.example.mainuddin.myapplication34.ui.share.NotificationIntentService;
 import com.example.mainuddin.myapplication34.ui.tools.MyListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.ContextThemeWrapper;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
-
 import com.google.android.material.navigation.NavigationView;
-import com.suke.widget.SwitchButton;
-import com.yarolegovich.lovelydialog.LovelyChoiceDialog;
-import com.yarolegovich.lovelydialog.LovelyStandardDialog;
-
-import androidx.core.view.MenuItemCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.view.Menu;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.PopupMenu;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
-import android.widget.SearchView;
-import android.widget.TextView;
-import android.widget.Toast;
+import com.tapadoo.alerter.Alerter;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.core.view.MenuItemCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import es.dmoral.toasty.Toasty;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -80,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ListView list;
     public static boolean isDark=false;
     private Context mContext;
-    private Activity mActivity;
+    public  static  Activity mActivity;
     public  static  int score = 0;
     private PopupWindow mPopupWindow;
     public static  boolean isChecked = false;
@@ -93,6 +92,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     MyListAdapter adapter;
     private DrawerLayout mRelativeLayout;
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        getWindow().setBackgroundDrawableResource(android.R.color.white);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,6 +107,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        mActivity = this;
 
 
 
@@ -151,8 +160,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TextView navUsername = (TextView) headerView.findViewById(R.id.scores);
 
         SharedPreferences prefs = this.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
-        MainActivity.score = prefs.getInt("key", 0);
+
+        if(MainActivity.score<prefs.getInt("key", 0)){
+            MainActivity.score = prefs.getInt("key",0);
+            Alerter.create(this)
+                    .setTitle("CONGRATS!")
+                    .setText("New highest score...")
+                    .setIcon(R.drawable.ic_insert_emoticon_black_24dp)
+                    .setBackgroundColorRes(R.color.colorPrimary)
+                    .setDuration(5000)
+                    .enableSwipeToDismiss() //seems to not work well with OnClickListener
+                    .show();
+
+        }
         navUsername.setText("Highest Score is : "+Integer.toString(MainActivity.score));
+
 
         navigationView.bringToFront();
         Menu menu = navigationView.getMenu();
@@ -185,6 +207,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
+
+
         final Cursor cursor = mDBHelper.getAllData();
 
         // looping through all rows and adding to list
@@ -204,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
 
-           // size = contactList.size();
+            // size = contactList.size();
             adapter = new MyListAdapter(this);
             list=(ListView)findViewById(R.id.list);
             list.setAdapter(adapter);
@@ -222,7 +246,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
                     // TODO Auto-generated method stub
-                   // System.out.println(position);
+                    // System.out.println(position);
                     Intent myIntent = new Intent(view.getContext(), word_details.class);
                     //String s = view.findViewById(R.id.subtitle).toString();
                     //String s = (String) parent.getI;
@@ -270,7 +294,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     public boolean onMenuItemClick(MenuItem item) {
                         if(item.getTitle().equals("Ascending")){
                             Collections.sort(contactList);
-                          //  adapter = new MyListAdapter(getParent());
+                            //  adapter = new MyListAdapter(getParent());
                             list=(ListView)findViewById(R.id.list);
                             list.setAdapter(adapter);
                         }else if(item.getTitle().equals("Descending")){
@@ -293,7 +317,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                         }
 
-                        Toast.makeText(MainActivity.this,"You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        Toasty.info(MainActivity.this,"You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
                         return true;
                     }
                 });
@@ -337,8 +361,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
+
+
     public void showMessage(String title ,String Message){
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        AlertDialog.Builder builder;
+        if(isDark){
+            builder = new AlertDialog.Builder(this,R.style.DialogurDark);
+        }
+        else{
+            builder = new AlertDialog.Builder(this,R.style.DialogueLight);
+        }
+
         builder.setCancelable(true);
         builder.setTitle(title);
         builder.setMessage(Message);
@@ -359,21 +393,50 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivityForResult(myIntent, 0);
 
+        }else if(id == R.id.subscription){
+            SharedPreferences prefs = this.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+            if(prefs.getInt("subs",0)==0){
+                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                PendingIntent pendingIntent = PendingIntent.getService(this, 0,
+                        new Intent(this, Mainservice.class),
+                        PendingIntent.FLAG_UPDATE_CURRENT);
+                Calendar calendar = Calendar.getInstance();
+                // set the triggered time to currentHour:08:00 for testing
+                calendar.set(Calendar.HOUR_OF_DAY, 20);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MINUTE, 13);
+
+                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                        calendar.getTimeInMillis(), 0, pendingIntent);
+
+
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putInt("subs", 1);
+                editor.commit();
+                Toasty.success(this, "Success!", Toast.LENGTH_SHORT, true).show();
+            }else {
+                Toasty.error(this, "Already subscribed.", Toast.LENGTH_SHORT, true).show();
+            }
+
+
+
         } else if (id == R.id.nav_home) {
 
-            Intent myIntent = new Intent(MainActivity.this, quiz_page.class);
-            myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivityForResult(myIntent, 0);
+            if(contactList.size()>=4){
+                Intent myIntent = new Intent(MainActivity.this, quiz_page.class);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivityForResult(myIntent, 0);}
+            else{
+                showMessage("Sorry","Collect more then 4 words.");
+            }
 
         } else if (id == R.id.nav_tools) {
             mContext = getApplicationContext();
             mActivity = MainActivity.this;
 
 
+            if(!isDark && contactList.size()!=0){
 
-
-
-            if(!isDark){
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.DialogueLight);
                 builder.setTitle(R.string.darkmode);
@@ -394,12 +457,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         list.setAdapter(adapter);
 
 
-                        Toast.makeText(mContext, "Enabled", Toast.LENGTH_SHORT).show();
+                        Toasty.success(mContext, "Enabled", Toast.LENGTH_SHORT).show();
                     }
                 });
                 builder.setNegativeButton("NO", null);
                 builder.show();
-            }else{
+            }else if(isDark && contactList.size()!=0){
                 AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.DialogurDark);
                 builder.setTitle(R.string.darkmode);
                 builder.setMessage(R.string.no);
@@ -419,13 +482,62 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         list.setAdapter(adapter);
 
 
-                        Toast.makeText(mContext, "Disabled", Toast.LENGTH_SHORT).show();
+                        Toasty.success(mContext, "Disabled", Toast.LENGTH_SHORT).show();
                     }
                 });
                 builder.setNegativeButton("NO", null);
                 builder.show();
 
 
+            }else if(!isDark && contactList.size()==0){
+                AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.DialogueLight);
+                builder.setTitle(R.string.darkmode);
+                builder.setMessage(R.string.yes);
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    ConstraintLayout constraintLayout  = findViewById(R.id.content_main);
+                    LinearLayout linearLayout =  findViewById(R.id.listview);
+
+                    NavigationView navigationView = findViewById(R.id.nav_view);
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        isDark = true;
+                        constraintLayout.setBackgroundColor(Color.rgb(64,64,64));
+                        // linearLayout.setBackgroundColor(Color.BLACK);
+                        navigationView.setBackgroundColor(Color.rgb(64,64,64));
+                        navigationView.setItemTextColor(ColorStateList.valueOf(Color.WHITE));
+                        linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.list_viewdark));
+
+
+                        Toasty.success(mContext, "Enabled", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                builder.setNegativeButton("NO", null);
+                builder.show();
+            }else if(isDark && contactList.size()==0){
+                AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.DialogurDark);
+                builder.setTitle(R.string.darkmode);
+                builder.setMessage(R.string.no);
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    ConstraintLayout constraintLayout  = findViewById(R.id.content_main);
+                    LinearLayout linearLayout =  findViewById(R.id.listview);
+
+                    NavigationView navigationView = findViewById(R.id.nav_view);
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        isDark = false;
+                        constraintLayout.setBackgroundColor(Color.WHITE);
+                        navigationView.setBackgroundColor(Color.WHITE);
+                        navigationView.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
+                        // linearLayout.setBackgroundColor(Color.WHITE);
+                        linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.listview_border));
+
+
+
+                        Toasty.success(mContext, "Disabled", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                builder.setNegativeButton("NO", null);
+                builder.show();
             }
 
 
@@ -437,10 +549,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
+
+
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -462,7 +579,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void requestPermission() {
 
         if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(MainActivity.this, "Write External Storage permission allows us to do store images. Please allow this permission in App Settings.", Toast.LENGTH_LONG).show();
+            Toasty.info(MainActivity.this, "Write External Storage permission allows us to do store images. Please allow this permission in App Settings.", Toast.LENGTH_LONG).show();
         } else {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
         }
@@ -508,5 +625,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
         return super.onCreateOptionsMenu(menu);
     }
+
+
 
 }

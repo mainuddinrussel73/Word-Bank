@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
+import es.dmoral.toasty.Toasty;
 
 import android.os.Environment;
 import android.os.Handler;
@@ -146,13 +147,13 @@ public class backup_restore extends AppCompatActivity {
                         pw.flush();
                         pw.close();
                         f.close();
-                        Toast.makeText(getApplicationContext(),"Done.",Toast.LENGTH_SHORT).show();
+                        Toasty.success(getApplicationContext(),"Done.",Toast.LENGTH_SHORT).show();
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
+                        Toasty.error(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {
                         e.printStackTrace();
-                        Toast.makeText(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
+                        Toasty.error(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
                     }
 
                 }
@@ -181,7 +182,7 @@ public class backup_restore extends AppCompatActivity {
             public void onClick(View v) {
 
 
-                Intent chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
+                Intent chooseFile = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 chooseFile.setType("*/*");
                 chooseFile = Intent.createChooser(chooseFile, "Choose a file");
                 startActivityForResult(chooseFile, PICKFILE_RESULT_CODE);
@@ -216,12 +217,12 @@ public class backup_restore extends AppCompatActivity {
 
                 if(number.get()==1){
                     System.out.println("then");
-                    Toast.makeText(getApplicationContext(),"Done.",Toast.LENGTH_SHORT).show();
+                    Toasty.success(getApplicationContext(),"Done.",Toast.LENGTH_SHORT).show();
                     Intent myIntent = new Intent(v.getContext(), MainActivity.class);
                     myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivityForResult(myIntent, 0);
                 }else{
-                    Toast.makeText(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
+                    Toasty.error(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -441,7 +442,7 @@ public class backup_restore extends AppCompatActivity {
 
             } catch (JSONException e) {
                 e.printStackTrace();
-                Toast.makeText(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
             }
             //Toast.makeText(getApplicationContext(),"Done.",Toast.LENGTH_SHORT).show();
             return 1;
