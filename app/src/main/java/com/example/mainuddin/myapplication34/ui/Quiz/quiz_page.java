@@ -78,13 +78,14 @@ public class quiz_page extends AppCompatActivity {
             public void onClick(View view) {
 
                 SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putInt("key", score);
-                editor.commit();
 
+                if(score>prefs.getInt("highscore", 0)){
 
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putInt("highscore", score);
+                    editor.commit();
 
-
+                }
 
 
                 Intent myIntent = new Intent(view.getContext(), MainActivity.class);
@@ -108,7 +109,6 @@ public class quiz_page extends AppCompatActivity {
         RadioGroup radioGroup = (RadioGroup)findViewById(R.id.radioGroup);
 
         for (int i = 0; i < radioGroup .getChildCount(); i++) {
-
 
             ((RadioButton) radioGroup.getChildAt(i)).setText(randommean(randomInt));
         }
@@ -202,9 +202,6 @@ public class quiz_page extends AppCompatActivity {
                                 "congrats", Toast.LENGTH_SHORT).show();
 
 
-
-
-
                         for (int i = 0; i < radioSexGroup .getChildCount(); i++) {
 
 
@@ -215,6 +212,7 @@ public class quiz_page extends AppCompatActivity {
 
                                 //rb_flash.setTextColor(Color.BLACK);
                             }
+
 
                         }
                         score++;

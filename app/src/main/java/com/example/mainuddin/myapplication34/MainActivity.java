@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static boolean isDark=false;
     private Context mContext;
     public  static  Activity mActivity;
-    public  static  int score = 0;
+    public  static  int score = 1111111;
     private PopupWindow mPopupWindow;
     public static  boolean isChecked = false;
     public static int size = 0;
@@ -148,10 +148,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         View headerView = navigationView.getHeaderView(0);
         TextView navUsername = (TextView) headerView.findViewById(R.id.scores);
 
+
         SharedPreferences prefs = this.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
 
-        if(MainActivity.score<prefs.getInt("key", 0)){
-            MainActivity.score = prefs.getInt("key",0);
+        if(prefs.getInt("highscore", 0)>MainActivity.score){
+
+
             Alerter.create(this)
                     .setTitle("CONGRATS!")
                     .setText("New highest score...")
@@ -161,8 +163,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     .enableSwipeToDismiss() //seems to not work well with OnClickListener
                     .show();
 
+
         }
-        navUsername.setText("Highest Score is : "+Integer.toString(MainActivity.score));
+        navUsername.setText("Highest Score is : "+Integer.toString(prefs.getInt("highscore", 0)));
 
 
         navigationView.bringToFront();
@@ -412,6 +415,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_home) {
 
             if(contactList.size()>=4){
+                SharedPreferences prefs = this.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+                MainActivity.score = prefs.getInt("highscore", 0);
                 Intent myIntent = new Intent(MainActivity.this, quiz_page.class);
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(myIntent, 0);}

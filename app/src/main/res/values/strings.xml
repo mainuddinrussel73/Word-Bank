@@ -128,4 +128,8 @@
         "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
         "when a user tries to pick up one of cards.\n\n"
     </string>
+    <string name="update">Update</string>
+    <string name="delete">Delete</string>
+    <string name="update_news">Update News</string>
+    <string name="pdf">Save as PDF</string>
 </resources>

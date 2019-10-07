@@ -11,6 +11,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".ui.data.news_update"
+            android:label="@string/update_news"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".news_details"
             android:label="@string/title_activity_news_details"
             android:theme="@style/AppTheme.NoActionBar"></activity>
@@ -48,6 +52,7 @@
             android:name=".ui.Quiz.quiz_page"
             android:label="@string/title_quiz"
             android:theme="@style/AppTheme.NoActionBar" />
+
 
         <service android:name=".ui.share.NotificationIntentService">
             <intent-filter android:priority="10000">

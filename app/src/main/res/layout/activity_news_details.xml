@@ -26,11 +26,23 @@
             app:toolbarId="@+id/toolbar">
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
+                android:id="@+id/toolbar1"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+                app:popupTheme="@style/AppTheme.PopupOverlay" >
+
+                <Button
+                    android:id="@+id/opt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:drawableBottom="@drawable/ic_expand_more_black_24dp"
+                    android:layout_gravity="right"
+                    />
+            </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>

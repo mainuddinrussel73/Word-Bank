@@ -70,6 +70,7 @@ public class word_details extends AppCompatActivity {
 
 
 
+
         update = (Button) findViewById(R.id.update);
         delete = (Button) findViewById(R.id.delete);
 

@@ -26,6 +26,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import es.dmoral.toasty.Toasty;
 
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
@@ -159,5 +161,6 @@ public class news_activity extends AppCompatActivity {
 
         }
     }
+
 
 }
