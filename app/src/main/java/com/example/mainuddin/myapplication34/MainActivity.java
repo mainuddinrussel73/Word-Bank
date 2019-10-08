@@ -37,6 +37,8 @@ import com.example.mainuddin.myapplication34.ui.data.DatabaseHelper;
 import com.example.mainuddin.myapplication34.ui.data.word;
 import com.example.mainuddin.myapplication34.ui.data.word_details;
 import com.example.mainuddin.myapplication34.ui.insert.add_page;
+import com.example.mainuddin.myapplication34.ui.media.MediaActivity;
+import com.example.mainuddin.myapplication34.ui.media.Media_list_activity;
 import com.example.mainuddin.myapplication34.ui.tools.MyListAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -394,8 +396,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         PendingIntent.FLAG_UPDATE_CURRENT);
                 Calendar calendar = Calendar.getInstance();
                 // set the triggered time to currentHour:08:00 for testing
-                calendar.set(Calendar.HOUR_OF_DAY, 20);
-                calendar.set(Calendar.MINUTE, 54);
+                calendar.set(Calendar.HOUR_OF_DAY, 23);
+                calendar.set(Calendar.MINUTE, 0);
                 calendar.set(Calendar.SECOND, 0);
 
                 alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
@@ -434,7 +436,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 e.getMessage();
             }
 
-        }else if (id == R.id.nav_tools) {
+        }else if( id == R.id.music){
+            try{
+                Intent myIntent = new Intent(MainActivity.this, Media_list_activity.class);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivityForResult(myIntent, 0);}
+            catch (Exception e){
+                e.getMessage();
+            }
+        } else if (id == R.id.nav_tools) {
             mContext = getApplicationContext();
             mActivity = MainActivity.this;
 

@@ -3,6 +3,14 @@
     xmlns:dist="http://schemas.android.com/apk/distribution"
     package="com.example.mainuddin.myapplication34">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
+
+    <!--danger permissions-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -53,6 +61,17 @@
             android:label="@string/title_quiz"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name=".ui.media.MediaActivity"
+            android:label="@string/music_play"
+            android:theme="@style/FullScreenTheme">
+        </activity>
+
+
+        <activity android:name=".ui.media.Media_list_activity"
+            android:label="@string/music_play"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
 
         <service android:name=".ui.share.NotificationIntentService">
             <intent-filter android:priority="10000">
@@ -62,6 +81,17 @@
         <service
             android:name=".ui.Mainservice"
             android:enabled="true" />
+
+        <service android:name=".ui.media.NotificationService" />
+
+        <receiver android:name=".ui.media.MyNotificationReceiver">
+            <intent-filter>
+                <action android:name="RESUME_ACTION"/>
+                <action android:name="STOP_ACTION"/>
+                <action android:name="CANCEL_ACTION"/>
+
+            </intent-filter>
+        </receiver>
     </application>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 

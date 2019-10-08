@@ -42,4 +42,15 @@
         <item name="android:textColorPrimary">@android:color/black</item>
         <item name="android:background">@android:color/background_light</item>
     </style>
+
+    <style name="FullScreenTheme" parent="AppTheme">
+        <!--this property will help hide the ActionBar-->
+        <item name="windowNoTitle">true</item>
+        <!--currently, I don't know why we need this property since use windowNoTitle only already help hide actionbar. I use it because it is used inside Theme.AppCompat.Light.NoActionBar (you can check Theme.AppCompat.Light.NoActionBar code). I think there are some missing case that I don't know-->
+        <item name="windowActionBar">false</item>
+        <!--this property is used for hiding StatusBar-->
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+
 </resources>
