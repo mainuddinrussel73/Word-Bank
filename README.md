@@ -1,8 +1,16 @@
 # Word-Bank(unfinishe) 
  Some preview 
-![alt text](https://github.com/mainuddinrussel73/Word-Bank/blob/master/Screenshot_2019-10-08-23-50-53-597_com.example.mainuddin.myapplication34.jpg)
+ 
+<img src="https://github.com/mainuddinrussel73/Word-Bank/blob/master/Screenshot_2019-10-08-23-50-53-597_com.example.mainuddin.myapplication34.jpg" width=200 align=right>
+<p align="center">
+<img src="https://github.com/mainuddinrussel73/Word-Bank/blob/master/Screenshot_2019-10-08-23-51-29-416_com.example.mainuddin.myapplication34.jpg" width=200>
+</p> 
+<img src="https://github.com/mainuddinrussel73/Word-Bank/blob/master/Screenshot_2019-10-08-23-51-44-864_com.example.mainuddin.myapplication34.jpg" width=200 align=left>
 
-![alt text](https://github.com/mainuddinrussel73/Word-Bank/blob/master/Screenshot_2019-10-08-23-51-29-416_com.example.mainuddin.myapplication34.jpg)
+
+
+
+
 ![alt text](https://github.com/mainuddinrussel73/Word-Bank/blob/master/Screenshot_2019-10-08-23-51-44-864_com.example.mainuddin.myapplication34.jpg)
 ![alt text](https://github.com/mainuddinrussel73/Word-Bank/blob/master/Screenshot_2019-10-08-23-52-10-909_com.example.mainuddin.myapplication34.jpg)
 ![alt text](https://github.com/mainuddinrussel73/Word-Bank/blob/master/Screenshot_2019-10-08-23-52-23-321_com.example.mainuddin.myapplication34.jpg)
