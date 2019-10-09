@@ -43,9 +43,9 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
 
 
-                    if(!MediaActivity.mp.isPlaying()){
-                        MediaActivity.mp.start();
-                        MediaActivity.playBtn.setBackgroundResource(R.drawable.ic_pause_black_24dp);
+                    if(!Media_list_activity.mp.isPlaying()){
+                        Media_list_activity.mp.start();
+                        Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_pause_black_24dp);
 
                         NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
                         NotificationService.notification.setCustomContentView(notificationView);
@@ -53,8 +53,8 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                         NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
 
                     }else {
-                        MediaActivity.mp.pause();
-                        MediaActivity.playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
+                        Media_list_activity.mp.pause();
+                        Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
 
                         NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
                         NotificationService.notification.setCustomContentView(notificationView);
@@ -65,17 +65,17 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 // you resume action
                     break;
                 case STOP_ACTION :
-                    if(MediaActivity.mp.isPlaying()){
-                        MediaActivity.mp.pause();
-                        MediaActivity.playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
+                    if(Media_list_activity.mp.isPlaying()){
+                        Media_list_activity.mp.pause();
+                        Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
 
                         notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
                         notification.setCustomContentView(notificationView);
                         notificationView.setTextViewText(R.id.status_bar_track_name, "pllll");
                     }else{
 
-                            MediaActivity.mp.start();
-                            MediaActivity.playBtn.setBackgroundResource(R.drawable.ic_pause_black_24dp);
+                        Media_list_activity.mp.start();
+                        Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_pause_black_24dp);
 
                             notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
                             notification.setCustomContentView(notificationView);
@@ -91,8 +91,8 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 // you cancel action
                     break;
                 case NEXT_ACTION:
-                    if(MediaActivity.mp.isPlaying()){
-                        MediaActivity.nxt = true;
+                    if(Media_list_activity.mp.isPlaying()){
+                        //Media_list_activity.nxt = true;
                         //MediaActivity.playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
 
                     }

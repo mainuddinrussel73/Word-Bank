@@ -13,18 +13,17 @@
 
     <ListView
         android:id="@+id/listviews"
-
-        android:layout_width="330dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:layout_marginBottom="@dimen/activity_horizontal_margin"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_height="match_parent"
-        android:background="?android:selectableItemBackground"
+        android:paddingLeft="@dimen/alerter_activity_horizontal_margin"
+        android:paddingRight="@dimen/alerter_activity_horizontal_margin"
+        android:background="@drawable/backgroundborder"
 
-        android:divider="@null"
 
-        android:dividerHeight="10dp"
         >
 
 
