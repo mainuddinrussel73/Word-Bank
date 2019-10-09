@@ -193,12 +193,12 @@ public class NotificationService extends Service {
         notificationView.setImageViewBitmap(R.id.status_bar_album_art,bm);
 
 
-        if(!MediaActivity.mp.isPlaying()) {
+        if(!Media_list_activity.mp.isPlaying()) {
 
             notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
 
 
-        }else if(MediaActivity.mp.isPlaying()){
+        }else if(Media_list_activity.mp.isPlaying()){
 
             notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
 

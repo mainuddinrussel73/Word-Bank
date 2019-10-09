@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/cardview"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="6dp"
-    android:elevation="100dp">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="350dp"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    >
 
-    <!--android:background="#00bcd4"-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/cardview_light_background"
-        android:orientation="horizontal"
-        android:padding="10dp"
-        android:id="@+id/list_item">
+
+
+
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingLeft="15dp"
+    android:paddingTop="15dp"
+    android:paddingBottom="15dp"
+    android:paddingRight="15dp"
+    android:id="@+id/list_item"
+    android:background="@drawable/backgroundborder"
+    android:descendantFocusability="afterDescendants"
+    >
+
+
+
 
         <ImageView
             android:id="@+id/play_pause"
@@ -29,11 +37,10 @@
 
         <TextView
             android:id="@+id/title5"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Title"
             android:textSize="@dimen/activity_horizontal_margin"
-            android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/primary_text"
             android:layout_gravity="center_vertical"
             android:foregroundGravity="center_horizontal"
@@ -42,4 +49,4 @@
 
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</LinearLayout>

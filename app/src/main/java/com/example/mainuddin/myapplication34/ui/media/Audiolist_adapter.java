@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.mainuddin.myapplication34.MainActivity;
@@ -74,12 +75,13 @@ public class Audiolist_adapter extends BaseAdapter {
 
         tt.setText((Media_list_activity.ListElementsArrayList.get(position).getTitle()));
 
-        //LinearLayout listitem = rowView.findViewById(R.id.list_item);
+        LinearLayout listitem = rowView.findViewById(R.id.list_item);
 
         if(MainActivity.isDark){
 
             //System.out.println("klklkl");
-            // listitem.setBackgroundColor(Color.BLACK);
+            listitem.setBackgroundColor(Color.rgb(64,64,64));
+           
 
             tt.setTextColor(Color.WHITE);
 
@@ -87,6 +89,7 @@ public class Audiolist_adapter extends BaseAdapter {
 
         }else {
 
+            listitem.setBackgroundColor(Color.WHITE);
             tt.setTextColor(Color.BLACK);
         }
 

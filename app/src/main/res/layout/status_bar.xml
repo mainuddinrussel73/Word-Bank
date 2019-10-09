@@ -15,7 +15,7 @@
         android:id="@+id/status_bar_icon"
         android:layout_width="@dimen/status_bar_album_art"
         android:layout_height="@dimen/status_bar_album_art"
-        android:background="@drawable/status_bg"
+        android:background="@drawable/ic_launcher_background"
         android:scaleType="center"
         android:src="@drawable/ic_launcher_background"
         android:visibility="gone" />

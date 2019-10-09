@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="match_parent"
 
     android:layout_marginLeft="@dimen/activity_vertical_margin"
     android:layout_marginBottom="@dimen/activity_vertical_margin"
@@ -14,17 +14,15 @@
     <ListView
         android:id="@+id/news_list"
 
-        android:layout_width="330dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:layout_marginBottom="@dimen/activity_horizontal_margin"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_height="match_parent"
-        android:background="?android:selectableItemBackground"
-
-        android:divider="@null"
-
-        android:dividerHeight="10dp"
+        android:paddingLeft="@dimen/alerter_activity_horizontal_margin"
+        android:paddingRight="@dimen/alerter_activity_horizontal_margin"
+        android:background="@drawable/backgroundborder"
         >
 
 
