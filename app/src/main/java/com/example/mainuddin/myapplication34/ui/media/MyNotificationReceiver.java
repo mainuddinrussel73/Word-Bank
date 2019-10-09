@@ -17,6 +17,8 @@ import com.example.mainuddin.myapplication34.R;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import es.dmoral.toasty.Toasty;
+
 import static com.example.mainuddin.myapplication34.ui.media.NotificationService.notification;
 import static com.example.mainuddin.myapplication34.ui.media.NotificationService.notificationView;
 
@@ -61,7 +63,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                        // NotificationService.notificationView.setTextViewText(R.id.status_bar_track_name, "pllll");
                         NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
                     }
-                    Toast.makeText(context, "resume", Toast.LENGTH_SHORT).show();
+                    Toasty.success(context, "Resume", Toast.LENGTH_SHORT).show();
 // you resume action
                     break;
                 case STOP_ACTION :

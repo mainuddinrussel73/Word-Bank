@@ -33,6 +33,7 @@ import java.io.InputStream;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+import es.dmoral.toasty.Toasty;
 
 public class NotificationService extends Service {
 
@@ -80,7 +81,7 @@ public class NotificationService extends Service {
                 System.out.println(e.getMessage());
 
             }
-            Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show();
+            Toasty.success(this, "Song Playing", Toast.LENGTH_SHORT).show();
 
 
             title = intent.getStringExtra("pos");
