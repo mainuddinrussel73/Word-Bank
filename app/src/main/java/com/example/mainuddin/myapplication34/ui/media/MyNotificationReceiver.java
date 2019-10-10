@@ -31,6 +31,13 @@ public class MyNotificationReceiver extends BroadcastReceiver {
     public static final String NEXT_ACTION = "NEXT_ACTION";
 
 
+    Media_list_activity mediaListActivity;
+
+
+    public void  setMainActivityHandler(Media_list_activity main){
+        mediaListActivity = main;
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
@@ -45,9 +52,9 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
 
 
-                    if(!Media_list_activity.mp.isPlaying()){
-                        Media_list_activity.mp.start();
-                        Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_pause_black_24dp);
+                    if(!mediaListActivity.mp.isPlaying()){
+                        mediaListActivity.mp.start();
+                        mediaListActivity.playBtn.setBackgroundResource(R.drawable.ic_pause_black_24dp);
 
                         NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
                         NotificationService.notification.setCustomContentView(notificationView);
@@ -55,8 +62,8 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                         NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
 
                     }else {
-                        Media_list_activity.mp.pause();
-                        Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
+                        mediaListActivity.mp.pause();
+                        mediaListActivity.playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
 
                         NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
                         NotificationService.notification.setCustomContentView(notificationView);
@@ -67,38 +74,45 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 // you resume action
                     break;
                 case STOP_ACTION :
-                    if(Media_list_activity.mp.isPlaying()){
-                        Media_list_activity.mp.pause();
-                        Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
 
-                        notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
-                        notification.setCustomContentView(notificationView);
-                        notificationView.setTextViewText(R.id.status_bar_track_name, "pllll");
-                    }else{
-
-                        Media_list_activity.mp.start();
-                        Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_pause_black_24dp);
-
-                            notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
-                            notification.setCustomContentView(notificationView);
-                            notificationView.setTextViewText(R.id.status_bar_track_name, "pllll");
-
-
-                    }
                     Toast.makeText(context, "stop", Toast.LENGTH_SHORT).show();
+                    System.out.println("stop");
 // you stop action
                     break;
                 case CANCEL_ACTION:
-                    Toast.makeText(context, "cancel", Toast.LENGTH_SHORT).show();
-// you cancel action
-                    break;
-                case NEXT_ACTION:
-                    if(Media_list_activity.mp.isPlaying()){
+                    if(mediaListActivity.mp.isPlaying()){
+
+
+                           try{ mediaListActivity.prevsong();}
+                           catch (Exception e){
+                               System.out.println(e.getMessage());
+                           }
+
                         //Media_list_activity.nxt = true;
                         //MediaActivity.playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
 
                     }
-                    Toast.makeText(context, "next button", Toast.LENGTH_SHORT).show();
+
+
+                    Toasty.success(context, "Previous.", Toast.LENGTH_SHORT).show();
+
+
+// you cancel action
+                    break;
+                case NEXT_ACTION:
+                    if(mediaListActivity.mp.isPlaying()){
+
+
+                        try{ mediaListActivity.nxtsong();}
+                        catch (Exception e){
+                            System.out.println(e.getMessage());
+                        }
+
+                        //Media_list_activity.nxt = true;
+                        //MediaActivity.playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
+
+                    }
+                    Toasty.success(context, "Next.", Toast.LENGTH_SHORT).show();
                     break;
             }
         }

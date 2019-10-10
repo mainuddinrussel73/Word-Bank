@@ -50,9 +50,11 @@ public class Mainservice extends IntentService {
     private String CONTENT_TEXT = "Expand me to see a detailed message!";
     private static final String CHANNEL_ID = "channel_id01";
     public static final int NOTIFICATION_ID = 1;
+    //SharedPreferences prefs ;
     public Mainservice() {
         super("mainservice");
     }
+
 
     public Mainservice(String name) {
         super(name);
@@ -65,6 +67,7 @@ public class Mainservice extends IntentService {
      */
     @Override
     protected void onHandleIntent(Intent intent) {
+
         showNotification();
 
 
@@ -79,10 +82,12 @@ public class Mainservice extends IntentService {
 
 
         double randomDouble = Math.random();
-        SharedPreferences prefs = this.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
-        randomDouble = randomDouble * prefs.getInt("size",0) + 0;
+
+
+        randomDouble = randomDouble * MainActivity.sizee.getInt( "size", 0 ) + 0;
         int randomInt = (int) randomDouble;
-        word = randomword(7);
+        word = randomword(randomInt);
+        System.out.println(MainActivity.sizee.getInt( "size", 0 ));
 
 
 
@@ -128,6 +133,8 @@ public class Mainservice extends IntentService {
 
         //notification manager
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(this);
+
+
         notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
 
 

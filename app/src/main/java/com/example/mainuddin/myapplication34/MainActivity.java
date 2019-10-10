@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     MyListAdapter adapter;
     SharedPreferences prefs;
     private DrawerLayout mRelativeLayout;
-
+    public  static SharedPreferences sizee;
 
     @Override
     protected void onStart() {
@@ -199,6 +199,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DatabaseHelper mDBHelper = new DatabaseHelper(this);
 
 
+
         contactList.clear();
 
 
@@ -228,6 +229,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 // subtitle.add(word.MEANING);
 
             }
+
 
             // size = contactList.size();
             adapter = new MyListAdapter(this);
@@ -264,7 +266,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             showMessage("Error","Nothing found");
         }
+
         size = contactList.size();
+
+        sizee = this.getSharedPreferences("ok", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor  = sizee.edit();
+        editor.putInt("size",size);
+        editor.commit();
+
+        System.out.println(MainActivity.sizee.getInt( "size", 0 ));
+
 
 
 
@@ -397,9 +408,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }else if(id == R.id.subscription){
 
 
-            SharedPreferences prefs = this.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor  = prefs.edit();
-            editor.putInt("size", contactList.size());
+
 
 
                 Calendar mcurrentTime = Calendar.getInstance();
@@ -421,10 +430,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         calendar.set(Calendar.SECOND, 0);
 
                         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-                                calendar.getTimeInMillis(), 0, pendingIntent);
+                                calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
 
 
-                        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
+                        //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), , pendingIntent);
 
 
                         Toasty.success(MainActivity.this, "Success! "+selectedHour + ":" + selectedMinute, Toast.LENGTH_SHORT, true).show();

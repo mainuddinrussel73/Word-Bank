@@ -22,6 +22,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -41,11 +42,13 @@ public class NotificationService extends Service {
     public static  RemoteViews notificationView1;
     public static  PendingIntent pendingIntentYes;
     public static  PendingIntent pendingIntentNo;
+    public static  PendingIntent pendingIntentNx;
     public static   NotificationManager manager;
     public  static NotificationCompat.Builder notificationBuilder;
     public static NotificationCompat.Builder notification;
     public  static  Intent yesReceive = new Intent();
     public  static  Intent noReceive = new Intent();
+    public  static  Intent nxReceive = new Intent();
 
     String title;
     String artist;
@@ -100,6 +103,18 @@ public class NotificationService extends Service {
             Log.i("ok", "Clicked Next");
         } else if (intent.getAction().equals(
                 Constants.ACTION.STOPFOREGROUND_ACTION)) {
+
+
+            try{
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                    Stopfunc();
+                }
+
+            }
+            catch (Exception e){
+                System.out.println(e.getMessage());
+
+            }
             Log.i("ok", "Received Stop Foreground Intent");
             Toast.makeText(this, "Service Stoped", Toast.LENGTH_SHORT).show();
             stopForeground(true);
@@ -148,6 +163,17 @@ public class NotificationService extends Service {
         nm.notify(MyNotificationReceiver.REQUEST_CODE, notif.getNotification());
 
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void Stopfunc(){
+
+        yesReceive = new Intent();
+        yesReceive.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        yesReceive.setAction(MyNotificationReceiver.STOP_ACTION);
+        pendingIntentYes = PendingIntent.getBroadcast(this, MyNotificationReceiver.REQUEST_CODE_NOTIFICATION, yesReceive, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        notificationView.setOnClickPendingIntent(R.id.status_bar_collapse, pendingIntentYes);
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void startMyOwnForeground(){
@@ -210,9 +236,24 @@ public class NotificationService extends Service {
 
 
         yesReceive = new Intent();
-        yesReceive.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         yesReceive.setAction(MyNotificationReceiver.RESUME_ACTION);
         pendingIntentYes = PendingIntent.getBroadcast(this, MyNotificationReceiver.REQUEST_CODE_NOTIFICATION, yesReceive, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        noReceive = new Intent();
+        noReceive.setAction(MyNotificationReceiver.CANCEL_ACTION);
+        pendingIntentNo = PendingIntent.getBroadcast(this, MyNotificationReceiver.REQUEST_CODE_NOTIFICATION, noReceive, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        notificationView.setOnClickPendingIntent(R.id.status_bar_prev, pendingIntentNo);
+
+
+        nxReceive = new Intent();
+        nxReceive.setAction(MyNotificationReceiver.NEXT_ACTION);
+        pendingIntentNx = PendingIntent.getBroadcast(this, MyNotificationReceiver.REQUEST_CODE_NOTIFICATION, nxReceive, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        notificationView.setOnClickPendingIntent(R.id.status_bar_next, pendingIntentNx);
+
+
 
         notificationView.setOnClickPendingIntent(R.id.status_bar_play, pendingIntentYes);
         notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);

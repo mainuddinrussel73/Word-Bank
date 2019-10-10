@@ -80,7 +80,10 @@
         </service>
         <service
             android:name=".ui.Mainservice"
-            android:enabled="true" />
+            android:enabled="true"
+            >
+
+        </service>
 
         <service android:name=".ui.media.NotificationService" />
 
@@ -92,6 +95,7 @@
 
             </intent-filter>
         </receiver>
+
     </application>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
