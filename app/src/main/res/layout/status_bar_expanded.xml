@@ -24,6 +24,7 @@
         android:layout_alignParentBottom="true"
         android:showDividers="middle"
         android:dividerPadding="12.0dip"
+        android:background="@color/colorPrimary"
         >
         <ImageButton
             android:id="@+id/status_bar_prev"

@@ -13,6 +13,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -34,6 +35,7 @@ import java.io.InputStream;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+import androidx.palette.graphics.Palette;
 import es.dmoral.toasty.Toasty;
 
 public class NotificationService extends Service {
@@ -209,25 +211,32 @@ public class NotificationService extends Service {
 
 
         notificationView1 = new RemoteViews(getPackageName(), R.layout.status_bar );
-
         notificationView1.setTextViewText(R.id.status_bar_track_name,Media_list_activity.ListElementsArrayList.get((p)).getTitle());
+        notificationView1.setTextViewText(R.id.status_bar_artist_name,Media_list_activity.ListElementsArrayList.get((p)).getArtist());
+
 
         notificationView = new RemoteViews(getPackageName(), R.layout.status_bar_expanded);
-
         notificationView.setTextViewText(R.id.status_bar_track_name,Media_list_activity.ListElementsArrayList.get((p)).getTitle());
         notificationView.setTextViewText(R.id.status_bar_artist_name,Media_list_activity.ListElementsArrayList.get((p)).getArtist());
-
+        notificationView.setTextViewText(R.id.status_bar_album_name,Media_list_activity.ListElementsArrayList.get((p)).getArtist());
         notificationView.setImageViewBitmap(R.id.status_bar_album_art,bm);
+
+
+
+
 
 
         if(!Media_list_activity.mp.isPlaying()) {
 
             notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
+            notificationView1.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
 
 
         }else if(Media_list_activity.mp.isPlaying()){
 
             notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
+            notificationView1.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
+
 
 
         }
@@ -245,6 +254,7 @@ public class NotificationService extends Service {
         pendingIntentNo = PendingIntent.getBroadcast(this, MyNotificationReceiver.REQUEST_CODE_NOTIFICATION, noReceive, PendingIntent.FLAG_UPDATE_CURRENT);
 
         notificationView.setOnClickPendingIntent(R.id.status_bar_prev, pendingIntentNo);
+        notificationView1.setOnClickPendingIntent(R.id.status_bar_prev, pendingIntentNo);
 
 
         nxReceive = new Intent();
@@ -253,9 +263,38 @@ public class NotificationService extends Service {
 
         notificationView.setOnClickPendingIntent(R.id.status_bar_next, pendingIntentNx);
 
+        notificationView.setInt(R.id.notificationbg,"setBackgroundColor",getDominantColor(bm));
+        notificationView.setInt(R.id.textarea,"setBackgroundColor",getDominantColor(bm));
+        notificationView.setInt(R.id.status_bar_track_name,"setBackgroundColor",getDominantColor(bm));
+        notificationView.setInt(R.id.status_bar_artist_name,"setBackgroundColor",getDominantColor(bm));
+        notificationView.setInt(R.id.status_bar_album_name,"setBackgroundColor",getDominantColor(bm));
+        notificationView.setInt(R.id.status_bar_prev,"setBackgroundColor",getDominantColor(bm));
+        notificationView.setInt(R.id.status_bar_next,"setBackgroundColor",getDominantColor(bm));
+        notificationView.setInt(R.id.status_bar_play,"setBackgroundColor",getDominantColor(bm));
 
+
+
+
+
+        notificationView.setTextColor(R.id.status_bar_track_name,getComplimentColor(getDominantColor(bm)));
+        notificationView.setTextColor(R.id.status_bar_artist_name,getComplimentColor(getDominantColor(bm)));
+        notificationView.setTextColor(R.id.status_bar_album_name,getComplimentColor(getDominantColor(bm)));
+
+
+        notificationView1.setOnClickPendingIntent(R.id.status_bar_next, pendingIntentNx);
+
+        notificationView1.setInt(R.id.notificationbg,"setBackgroundColor",getDominantColor(bm));
+        notificationView1.setInt(R.id.area,"setBackgroundColor",getDominantColor(bm));
+        notificationView1.setInt(R.id.status_bar_track_name,"setBackgroundColor",getDominantColor(bm));
+        notificationView1.setInt(R.id.status_bar_artist_name,"setBackgroundColor",getDominantColor(bm));
+        notificationView1.setInt(R.id.status_bar_next,"setBackgroundColor",getDominantColor(bm));
+        notificationView1.setInt(R.id.status_bar_prev,"setBackgroundColor",getDominantColor(bm));
+        notificationView1.setInt(R.id.status_bar_play,"setBackgroundColor",getDominantColor(bm));
+        notificationView1.setTextColor(R.id.status_bar_track_name,getComplimentColor(getDominantColor(bm)));
+        notificationView1.setTextColor(R.id.status_bar_artist_name,getComplimentColor(getDominantColor(bm)));
 
         notificationView.setOnClickPendingIntent(R.id.status_bar_play, pendingIntentYes);
+        notificationView1.setOnClickPendingIntent(R.id.status_bar_play, pendingIntentYes);
         notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
 
         notification = notificationBuilder.setOngoing(true)
@@ -263,9 +302,11 @@ public class NotificationService extends Service {
                 .setContentTitle("App is running in background")
                 .setPriority(NotificationManager.IMPORTANCE_MIN)
                 .setCategory(Notification.CATEGORY_SERVICE)
+                .setColor(getDominantColor(bm))
                 .setCustomContentView(notificationView1)
                 .setCustomBigContentView(notificationView);
         notification.setCustomContentView(notificationView);
+        notification.setCustomContentView(notificationView1);
         startForeground(2, notification.build());
 
 
@@ -346,5 +387,28 @@ public class NotificationService extends Service {
         startForeground(Constants.NOTIFICATION_ID.FOREGROUND_SERVICE, status);
     }
 
+
+    public int getComplimentColor(int color) {
+        // get existing colors
+        int alpha = Color.alpha(color);
+        int red = Color.red(color);
+        int blue = Color.blue(color);
+        int green = Color.green(color);
+
+        // find compliments
+        red = (~red) & 0xff;
+        blue = (~blue) & 0xff;
+        green = (~green) & 0xff;
+
+        return Color.argb(alpha, red, green, blue);
+    }
+
+
+    public static int getDominantColor(Bitmap bitmap) {
+        Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, 1, 1, true);
+        final int color = newBitmap.getPixel(0, 0);
+        newBitmap.recycle();
+        return color;
+    }
 
 }

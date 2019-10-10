@@ -21,6 +21,7 @@ import es.dmoral.toasty.Toasty;
 
 import static com.example.mainuddin.myapplication34.ui.media.NotificationService.notification;
 import static com.example.mainuddin.myapplication34.ui.media.NotificationService.notificationView;
+import static com.example.mainuddin.myapplication34.ui.media.NotificationService.notificationView1;
 
 public class MyNotificationReceiver extends BroadcastReceiver {
     public static int REQUEST_CODE_NOTIFICATION = 1212;
@@ -58,6 +59,9 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
                         NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
                         NotificationService.notification.setCustomContentView(notificationView);
+
+                        notificationView1.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
+                        NotificationService.notification.setCustomContentView(notificationView1);
                        // NotificationService.notificationView.setTextViewText(R.id.status_bar_track_name, "pllll");
                         NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
 
@@ -67,6 +71,10 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
                         NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
                         NotificationService.notification.setCustomContentView(notificationView);
+
+                        NotificationService.notificationView1.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
+                        NotificationService.notification.setCustomContentView(notificationView1);
+
                        // NotificationService.notificationView.setTextViewText(R.id.status_bar_track_name, "pllll");
                         NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
                     }
@@ -80,7 +88,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 // you stop action
                     break;
                 case CANCEL_ACTION:
-                    if(mediaListActivity.mp.isPlaying()){
+                    //if(mediaListActivity.mp.isPlaying()){
 
 
                            try{ mediaListActivity.prevsong();}
@@ -91,7 +99,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                         //Media_list_activity.nxt = true;
                         //MediaActivity.playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
 
-                    }
+                    //}
 
 
                     Toasty.success(context, "Previous.", Toast.LENGTH_SHORT).show();
@@ -100,7 +108,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 // you cancel action
                     break;
                 case NEXT_ACTION:
-                    if(mediaListActivity.mp.isPlaying()){
+                    //if(mediaListActivity.mp.isPlaying()){
 
 
                         try{ mediaListActivity.nxtsong();}
@@ -111,7 +119,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                         //Media_list_activity.nxt = true;
                         //MediaActivity.playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
 
-                    }
+                    //}
                     Toasty.success(context, "Next.", Toast.LENGTH_SHORT).show();
                     break;
             }
