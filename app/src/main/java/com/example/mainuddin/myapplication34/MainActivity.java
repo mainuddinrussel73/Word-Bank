@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,6 +29,7 @@ import android.widget.PopupMenu;
 import android.widget.PopupWindow;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.mainuddin.myapplication34.ui.BackupAndRestore.backup_restore;
@@ -68,7 +70,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     com.suke.widget.SwitchButton switchButton;
     Button sort ;
     ListView list;
-    public static boolean isDark=false;
+
+    public static boolean isDark;
+
     private Context mContext;
     public  static  Activity mActivity;
     public  static  int score = 1111111;
@@ -81,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int PERMISSION_REQUEST_CODE = 1;
     SearchView searchView;
     MyListAdapter adapter;
+    SharedPreferences prefs;
     private DrawerLayout mRelativeLayout;
 
 
@@ -103,6 +108,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
+        prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+        isDark = prefs.getBoolean("isDark",false);
 
         if (Build.VERSION.SDK_INT >= 23)
         {
@@ -151,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TextView navUsername = (TextView) headerView.findViewById(R.id.scores);
 
 
-        SharedPreferences prefs = this.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+        //prefs = this.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
 
         if(prefs.getInt("highscore", 0)>MainActivity.score){
 
@@ -388,29 +395,49 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivityForResult(myIntent, 0);
 
         }else if(id == R.id.subscription){
+
+
             SharedPreferences prefs = this.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
-            if(prefs.getInt("subs",0)==0){
-                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                PendingIntent pendingIntent = PendingIntent.getService(this, 0,
-                        new Intent(this, Mainservice.class),
-                        PendingIntent.FLAG_UPDATE_CURRENT);
-                Calendar calendar = Calendar.getInstance();
-                // set the triggered time to currentHour:08:00 for testing
-                calendar.set(Calendar.HOUR_OF_DAY, 23);
-                calendar.set(Calendar.MINUTE, 0);
-                calendar.set(Calendar.SECOND, 0);
-
-                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
-                        calendar.getTimeInMillis(), 0, pendingIntent);
+            SharedPreferences.Editor editor  = prefs.edit();
+            editor.putInt("size", contactList.size());
 
 
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putInt("subs", 1);
-                editor.commit();
-                Toasty.success(this, "Success!", Toast.LENGTH_SHORT, true).show();
-            }else {
-                Toasty.error(this, "Already subscribed.", Toast.LENGTH_SHORT, true).show();
-            }
+                Calendar mcurrentTime = Calendar.getInstance();
+                final int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+                final int minute = mcurrentTime.get(Calendar.MINUTE);
+                TimePickerDialog mTimePicker;
+                mTimePicker = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+
+                        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                        PendingIntent pendingIntent = PendingIntent.getService(MainActivity.this, 0,
+                                new Intent(MainActivity.this, Mainservice.class),
+                                PendingIntent.FLAG_UPDATE_CURRENT);
+                        Calendar calendar = Calendar.getInstance();
+                        // set the triggered time to currentHour:08:00 for testing
+                        calendar.set(Calendar.HOUR_OF_DAY, selectedHour);
+                        calendar.set(Calendar.MINUTE, selectedMinute);
+                        calendar.set(Calendar.SECOND, 0);
+
+                        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                                calendar.getTimeInMillis(), 0, pendingIntent);
+
+
+                        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_HOUR, pendingIntent);
+
+
+                        Toasty.success(MainActivity.this, "Success! "+selectedHour + ":" + selectedMinute, Toast.LENGTH_SHORT, true).show();
+                    }}, hour, minute, true);//Yes 24 hour time
+                mTimePicker.setTitle("Select Time");
+                mTimePicker.show();
+
+
+
+
+
+
+
 
 
 
@@ -460,7 +487,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     NavigationView navigationView = findViewById(R.id.nav_view);
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+
+
                         isDark = true;
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putBoolean("isDark", isDark);
+                        editor.commit();
                         constraintLayout.setBackgroundColor(Color.rgb(64,64,64));
                         // linearLayout.setBackgroundColor(Color.BLACK);
                         navigationView.setBackgroundColor(Color.rgb(64,64,64));
@@ -487,6 +519,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         isDark = false;
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putBoolean("isDark", isDark);
+                        editor.commit();
                         constraintLayout.setBackgroundColor(Color.WHITE);
                         navigationView.setBackgroundColor(Color.WHITE);
                         navigationView.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
@@ -515,6 +550,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         isDark = true;
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putBoolean("isDark", isDark);
+                        editor.commit();
                         constraintLayout.setBackgroundColor(Color.rgb(64,64,64));
                         // linearLayout.setBackgroundColor(Color.BLACK);
                         navigationView.setBackgroundColor(Color.rgb(64,64,64));
@@ -540,6 +578,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         isDark = false;
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putBoolean("isDark", isDark);
+                        editor.commit();
                         constraintLayout.setBackgroundColor(Color.WHITE);
                         navigationView.setBackgroundColor(Color.WHITE);
                         navigationView.setItemTextColor(ColorStateList.valueOf(Color.BLACK));

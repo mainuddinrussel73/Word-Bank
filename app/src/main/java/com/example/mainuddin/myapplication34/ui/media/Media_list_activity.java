@@ -24,6 +24,8 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.view.ContextThemeWrapper;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -33,6 +35,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -40,12 +43,15 @@ import android.widget.Toast;
 
 import com.example.mainuddin.myapplication34.MainActivity;
 import com.example.mainuddin.myapplication34.R;
+import com.example.mainuddin.myapplication34.ui.data.word;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.muddzdev.styleabletoast.StyleableToast;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import androidx.appcompat.app.AlertDialog;
@@ -75,6 +81,7 @@ public class Media_list_activity extends AppCompatActivity {
     private Toast mToastToShow;
     Cursor cursor;
 
+    Button sort;
     public static int position;
     Uri uri;
     boolean isUp;
@@ -109,6 +116,7 @@ public class Media_list_activity extends AppCompatActivity {
     Button pauseBtn, nxtBtn;
     FloatingActionButton fab;
 
+    Button button;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -157,8 +165,8 @@ public class Media_list_activity extends AppCompatActivity {
 
         AndroidRuntimePermission();
 
-
-        GetAllMediaMp3Files();
+        if(ListElementsArrayList.isEmpty())
+            GetAllMediaMp3Files();
         for (int i = 0; i < ListElementsArrayList.size(); i++) {
             // System.out.println("list : "+ListElementsArrayList.get(i).getTitle());
         }
@@ -191,12 +199,13 @@ public class Media_list_activity extends AppCompatActivity {
 
 
 
+        button = toolbar.findViewById(R.id.sortsong);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                showToast(view);
+                //showToast(view);
                 //Toasty.info(Media_list_activity.this,"Total : "+ ListElementsArrayList.size(),Toasty.LENGTH_LONG);
                 System.out.println(pro);
                 if (isClicked || mp.isPlaying()) {
@@ -269,6 +278,11 @@ public class Media_list_activity extends AppCompatActivity {
 
                                     fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
                                     toolbar.getNavigationIcon().setTint(mutedDark);
+
+                                    Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
+                                    icon.setTint(mutedDark);
+                                    button.setBackground(icon);
+
                                     if(isClicked){
 
                                         Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
@@ -468,6 +482,10 @@ public class Media_list_activity extends AppCompatActivity {
 
                                     fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
                                     toolbar.getNavigationIcon().setTint(mutedDark);
+
+                                    Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
+                                    icon.setTint(mutedDark);
+                                    button.setBackground(icon);
                                     if(isClicked){
 
                                         Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
@@ -668,7 +686,10 @@ public class Media_list_activity extends AppCompatActivity {
 
 
                                     fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
-                                    toolbar.getNavigationIcon().setTint(mutedDark);
+
+                            Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
+                            icon.setTint(mutedDark);
+                            button.setBackground(icon);
                                     if(isClicked){
 
                                         Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
@@ -868,6 +889,10 @@ public class Media_list_activity extends AppCompatActivity {
 
                                     fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
                                     toolbar.getNavigationIcon().setTint(mutedDark);
+
+                                    Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
+                                    icon.setTint(mutedDark);
+                                    button.setBackground(icon);
                                     if(isClicked){
 
                                         Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
@@ -1069,6 +1094,10 @@ public class Media_list_activity extends AppCompatActivity {
 
                                     fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
                                     toolbar.getNavigationIcon().setTint(mutedDark);
+
+                                    Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
+                                    icon.setTint(mutedDark);
+                                    button.setBackground(icon);
                                     if(isClicked){
 
                                         Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
@@ -1268,6 +1297,10 @@ public class Media_list_activity extends AppCompatActivity {
 
                                     fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
                                     toolbar.getNavigationIcon().setTint(mutedDark);
+
+                                    Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
+                                    icon.setTint(mutedDark);
+                                    button.setBackground(icon);
                                     if(isClicked){
 
                                         Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
@@ -1469,6 +1502,10 @@ public class Media_list_activity extends AppCompatActivity {
 
                                     fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
                                     toolbar.getNavigationIcon().setTint(mutedDark);
+
+                                    Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
+                                    icon.setTint(mutedDark);
+                                    button.setBackground(icon);
                                     if(isClicked){
 
                                         Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
@@ -1668,6 +1705,10 @@ public class Media_list_activity extends AppCompatActivity {
 
                                     fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
                                     toolbar.getNavigationIcon().setTint(mutedDark);
+
+                                    Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
+                                    icon.setTint(mutedDark);
+                                    button.setBackground(icon);
                                     if(isClicked){
 
                                         Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
@@ -1924,6 +1965,9 @@ public class Media_list_activity extends AppCompatActivity {
 
                             fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
                             toolbar.getNavigationIcon().setTint(mutedDark);
+                            Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
+                            icon.setTint(mutedDark);
+                            button.setBackground(icon);
                             if(isClicked){
 
                                 Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
@@ -2193,6 +2237,10 @@ public class Media_list_activity extends AppCompatActivity {
                             fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
                             toolbar.getNavigationIcon().setTint(mutedDark);
 
+                            Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
+                            icon.setTint(mutedDark);
+                            button.setBackground(icon);
+
                             if(isClicked){
 
                                 Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
@@ -2440,6 +2488,12 @@ public class Media_list_activity extends AppCompatActivity {
 
                             fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
                             toolbar.getNavigationIcon().setTint(mutedDark);
+
+
+                            Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
+                            icon.setTint(mutedDark);
+                            button.setBackground(icon);
+
                             if(isClicked){
 
                                 Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
@@ -2467,7 +2521,7 @@ public class Media_list_activity extends AppCompatActivity {
                             myIcon2.setTint(play);
                             nxtBtn.setBackground(myIcon3);
                             pauseBtn.setBackground(myIcon);
-                            playBtn.setBackground(myIcon1);
+                            playBtn.setBackground(myIcon2);
 
                             textView.setTextColor(mutedDark);
                             textView1.setTextColor(mutedDark);
@@ -2608,6 +2662,65 @@ public class Media_list_activity extends AppCompatActivity {
         });
 
 
+
+
+        sort = findViewById(R.id.sortsong);
+        sort.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                //Creating the instance of PopupMenu
+                //PopupMenu popup = new PopupMenu(MainActivity.this, sort);
+                //Inflating the Popup using xml file
+                Context wrapper = new ContextThemeWrapper(Media_list_activity.this, R.style.YOURSTYLE1);
+                if(MainActivity.isDark){
+                    wrapper = new ContextThemeWrapper(Media_list_activity.this, R.style.YOURSTYLE);
+
+                }else{
+                    wrapper = new ContextThemeWrapper(Media_list_activity.this, R.style.YOURSTYLE1);
+                }
+
+                PopupMenu popup = new PopupMenu(wrapper, sort);
+                popup.getMenuInflater().inflate(R.menu.pop_up, popup.getMenu());
+
+
+
+                //registering popup with OnMenuItemClickListener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if(item.getTitle().equals("Ascending")){
+                            Collections.sort(ListElementsArrayList);
+                            //  adapter = new MyListAdapter(getParent());
+                            listView=(ListView)findViewById(R.id.listviews);
+                            listView.setAdapter(adapter);
+                        }else if(item.getTitle().equals("Descending")){
+                            Collections.sort(ListElementsArrayList,Collections.reverseOrder());
+                            //adapter = new MyListAdapter(getParent());
+                            listView=(ListView)findViewById(R.id.listviews);
+                            listView.setAdapter(adapter);
+                        }else if(item.getTitle().equals("Time Added")){
+                            Collections.sort(ListElementsArrayList,
+                                    new Comparator<Audio>()
+                                    {
+                                        public int compare(Audio f1, Audio f2)
+                                        {
+                                            return f1.getData().compareTo(f2.getData());
+                                        }
+                                    });
+                            listView=(ListView)findViewById(R.id.listviews);
+                            listView.setAdapter(adapter);
+                        }else{
+
+                        }
+
+                        Toasty.info(Media_list_activity.this,"You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                });
+
+                popup.show();//showing popup menu
+            }
+        });//closing the setOnClickListener method
     }
 
     //
@@ -2876,25 +2989,6 @@ public class Media_list_activity extends AppCompatActivity {
         return color;
     }
 
-    public void showToast(View view) {
-        // Set the toast and duration
-        int toastDurationInMilliSeconds = 10000;
-        mToastToShow = Toasty.info(this, "Total : "+ ListElementsArrayList.size()+" songs.", Toast.LENGTH_LONG);
 
-        // Set the countdown to display the toast
-        CountDownTimer toastCountDown;
-        toastCountDown = new CountDownTimer(toastDurationInMilliSeconds, 1000 /*Tick duration*/) {
-            public void onTick(long millisUntilFinished) {
-                mToastToShow.show();
-            }
-            public void onFinish() {
-                mToastToShow.cancel();
-            }
-        };
-
-        // Show the toast and starts the countdown
-        mToastToShow.show();
-        toastCountDown.start();
-    }
 
 }

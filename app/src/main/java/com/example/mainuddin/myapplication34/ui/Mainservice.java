@@ -8,6 +8,7 @@ import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.RingtoneManager;
@@ -78,9 +79,10 @@ public class Mainservice extends IntentService {
 
 
         double randomDouble = Math.random();
-        randomDouble = randomDouble * contactList.size() + 0;
+        SharedPreferences prefs = this.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+        randomDouble = randomDouble * prefs.getInt("size",0) + 0;
         int randomInt = (int) randomDouble;
-        word = randomword(randomInt);
+        word = randomword(7);
 
 
 
@@ -159,7 +161,7 @@ public class Mainservice extends IntentService {
 
 
         //mDBHelper.getAllData();
-        mDb = mDBHelper.getWritableDatabase();
+        mDb = mDBHelper.getReadableDatabase();
 
 
 

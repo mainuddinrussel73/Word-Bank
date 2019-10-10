@@ -1,11 +1,13 @@
 package com.example.mainuddin.myapplication34.ui.media;
 
+import com.example.mainuddin.myapplication34.ui.data.word;
+
 import java.io.Serializable;
 
 /**
  * Created by Valdio Veliu on 16-07-18.
  */
-public class Audio implements Serializable {
+public class Audio implements Serializable, Comparable< Audio > {
 
     private String data;
     private String title;
@@ -63,6 +65,13 @@ public class Audio implements Serializable {
 
     public void setImagepath(String imagepath) {
         this.imagepath = imagepath;
+    }
+
+
+
+    @Override
+    public int compareTo(Audio audio) {
+        return this.getTitle().compareTo(audio.getTitle());
     }
 
 
