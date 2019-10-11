@@ -42,7 +42,7 @@ public class word_details extends AppCompatActivity {
         LinearLayout additem = findViewById(R.id.item_detail);
 
         if(MainActivity.isDark){
-            additem.setBackgroundColor(Color.rgb(64,64,64));
+            additem.setBackgroundColor(Color.BLACK);
             word.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
             meaning.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
             word.setTextColor(Color.WHITE);

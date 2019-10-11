@@ -227,7 +227,7 @@ public class Media_list_activity extends AppCompatActivity {
             public void onClick(View view) {
 
                 //showToast(view);
-                //Toasty.info(Media_list_activity.this,"Total : "+ ListElementsArrayList.size(),Toasty.LENGTH_LONG);
+                //Toasty.info(Media_list_.activity.this,"Total : "+ ListElementsArrayList.size(),Toasty.LENGTH_LONG);
                 System.out.println(pro);
                 if (isClicked || mp.isPlaying()) {
                     if (!isUp) {
@@ -1881,7 +1881,7 @@ public class Media_list_activity extends AppCompatActivity {
         if (MainActivity.isDark && ListElementsArrayList.size() != 0) {
 
 
-            relativeLayout.setBackgroundColor(Color.rgb(64, 64, 64));
+            relativeLayout.setBackgroundColor(Color.BLACK);
             linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.list_viewdark));
             listView.setAdapter(adapter);
         } else if (!MainActivity.isDark && ListElementsArrayList.size() != 0) {
@@ -1892,7 +1892,7 @@ public class Media_list_activity extends AppCompatActivity {
 
         } else if (MainActivity.isDark && ListElementsArrayList.size() == 0) {
 
-            relativeLayout.setBackgroundColor(Color.rgb(64, 64, 64));
+            relativeLayout.setBackgroundColor(Color.BLACK);
             linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.list_viewdark));
 
         } else if (!MainActivity.isDark && ListElementsArrayList.size() == 0) {
@@ -2073,7 +2073,7 @@ public class Media_list_activity extends AppCompatActivity {
                     playBtn.setBackground(myIcon2);
                     //myIcon3.setTint(play);
                     // myIcon2.setTint(play);
-                    mp.setVolume(0.5f, 0.5f);
+                    mp.setVolume(2.5f, 2.5f);
                     totalTime = mp.getDuration();
 
                     // Position Bar
@@ -2333,7 +2333,7 @@ public class Media_list_activity extends AppCompatActivity {
                     myIcon2.setTint(play);
                     playBtn.setBackground(myIcon2);
                     // myIcon3.setTint(play);
-                    mp.setVolume(0.5f, 0.5f);
+                    mp.setVolume(5.5f, 5.5f);
                     totalTime = mp.getDuration();
 
                     // Position Bar
@@ -2585,7 +2585,7 @@ public class Media_list_activity extends AppCompatActivity {
                     myIcon2.setTint(play);
                     playBtn.setBackground(myIcon2);
                     // playBtn.setBackgroundColor(play);
-                    mp.setVolume(0.5f, 0.5f);
+                    mp.setVolume(2.5f, 2.5f);
                     totalTime = mp.getDuration();
 
                     // Position Bar
@@ -2920,7 +2920,7 @@ public class Media_list_activity extends AppCompatActivity {
             myIcon2.setTint(play);
             playBtn.setBackground(myIcon2);
             // myIcon3.setTint(play);
-            mp.setVolume(0.5f, 0.5f);
+            mp.setVolume(2.5f, 2.5f);
             totalTime = mp.getDuration();
 
             // Position Bar
@@ -3163,7 +3163,7 @@ public class Media_list_activity extends AppCompatActivity {
                     myIcon2.setTint(play);
                     playBtn.setBackground(myIcon2);
                     // playBtn.setBackgroundColor(play);
-                    mp.setVolume(0.5f, 0.5f);
+                    mp.setVolume(2.5f, 2.5f);
                     totalTime = mp.getDuration();
 
                     // Position Bar

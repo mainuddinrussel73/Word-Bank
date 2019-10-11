@@ -99,7 +99,7 @@ public class news_details extends AppCompatActivity {
         CoordinatorLayout additem = findViewById(R.id.content_detail);
 
         if (MainActivity.isDark) {
-            additem.setBackgroundColor(Color.rgb(64, 64, 64));
+            additem.setBackgroundColor(Color.BLACK);
             news_details.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
             news_details.setTextColor(Color.WHITE);
 

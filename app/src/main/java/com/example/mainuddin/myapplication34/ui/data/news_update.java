@@ -46,7 +46,7 @@ public class news_update  extends AppCompatActivity {
         imm.showSoftInput(title, InputMethodManager.SHOW_IMPLICIT);
 
         if(MainActivity.isDark){
-            additem.setBackgroundColor(Color.rgb(64,64,64));
+            additem.setBackgroundColor(Color.BLACK);
             title.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
             body.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
             title.setTextColor(Color.WHITE);

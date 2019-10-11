@@ -15,6 +15,8 @@ import android.content.pm.ShortcutManager;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
@@ -362,11 +364,56 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView1 = findViewById(R.id.nav_view);
 
+        int flag = 0;
+        int flag1 = 1;
+        int[][] states;
+        int [] colors;
+        ColorStateList colorStateList = null;
         if(isDark){
 
-            constraintLayout1.setBackgroundColor(Color.rgb(64,64,64));
+            states = new int[][]{
+                    new int[]{android.R.attr.state_enabled}, // checked
+                    new int[]{-android.R.attr.state_enabled} // unchecked
+            };
+            colors = new int[]{
+                    Color.WHITE,
+                    Color.BLACK,
+            };
+            colorStateList = new ColorStateList(states, colors);
+            
+        }
+        if(!isDark){
+            states = new int[][]{
+                    new int[]{android.R.attr.state_enabled}, // checked
+                    new int[]{-android.R.attr.state_enabled} // unchecked
+            };
+            colors = new int[]{
+                    Color.BLACK,
+                    Color.WHITE,
+            };
+            System.out.println("Darljkkj");
+            colorStateList = new ColorStateList(states, colors);
+            
+        }
+
+        navigationView1.setItemIconTintList(colorStateList);
+
+        if(isDark){
+
+            constraintLayout1.setBackgroundColor(Color.BLACK);
             // linearLayout.setBackgroundColor(Color.BLACK);
-            navigationView1.setBackgroundColor(Color.rgb(64,64,64));
+            navigationView1.setBackgroundColor(Color.BLACK);
+
+            Drawable icon = getResources().getDrawable(R.drawable.ic_content_paste_black_24dp);
+            icon.setTint(Color.WHITE);
+            navigationView1.getMenu().getItem(0).setIcon(icon);
+
+
+
+           // ColorStateList colorStateList = new ColorStateList(states, colors);
+            //navigationView1.setItemIconTintList(colorStateList);
+
+
             navigationView1.setItemTextColor(ColorStateList.valueOf(Color.WHITE));
             linearLayout1.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.list_viewdark));
             if(contactList.size()!=0)list.setAdapter(adapter);
@@ -547,9 +594,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putBoolean("isDark", isDark);
                         editor.commit();
-                        constraintLayout.setBackgroundColor(Color.rgb(64,64,64));
+                        constraintLayout.setBackgroundColor(Color.BLACK);
                         // linearLayout.setBackgroundColor(Color.BLACK);
-                        navigationView.setBackgroundColor(Color.rgb(64,64,64));
+                        navigationView.setBackgroundColor(Color.BLACK);
                         navigationView.setItemTextColor(ColorStateList.valueOf(Color.WHITE));
                         linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.list_viewdark));
                         list.setAdapter(adapter);
@@ -607,9 +654,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putBoolean("isDark", isDark);
                         editor.commit();
-                        constraintLayout.setBackgroundColor(Color.rgb(64,64,64));
+                        constraintLayout.setBackgroundColor(Color.BLACK);
                         // linearLayout.setBackgroundColor(Color.BLACK);
-                        navigationView.setBackgroundColor(Color.rgb(64,64,64));
+                        navigationView.setBackgroundColor(Color.BLACK);
                         navigationView.setItemTextColor(ColorStateList.valueOf(Color.WHITE));
                         linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.list_viewdark));
 

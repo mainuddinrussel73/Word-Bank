@@ -142,7 +142,7 @@ public class quiz_page extends AppCompatActivity {
 
 
         if(MainActivity.isDark){
-            textView.setBackgroundColor(Color.rgb(64,64,64));
+            textView.setBackgroundColor(Color.BLACK);
             scoress.setTextColor(Color.WHITE);
             textView.setTextColor(Color.WHITE);
             for (int i = 0; i < radioGroup .getChildCount(); i++) {
@@ -150,7 +150,7 @@ public class quiz_page extends AppCompatActivity {
 
                 ((RadioButton) radioGroup.getChildAt(i)).setTextColor(Color.WHITE);
             }
-            relativeLayout.setBackgroundColor(Color.rgb(64,64,64));
+            relativeLayout.setBackgroundColor(Color.BLACK);
         }else{
             textView.setBackgroundColor(Color.WHITE);
             scoress.setTextColor(Color.BLACK);

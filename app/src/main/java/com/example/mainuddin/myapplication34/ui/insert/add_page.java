@@ -54,7 +54,7 @@ public class add_page extends AppCompatActivity {
         final LinearLayout additem = findViewById(R.id.add_item);
 
         if(MainActivity.isDark){
-            additem.setBackgroundColor(Color.rgb(64,64,64));
+            additem.setBackgroundColor(Color.BLACK);
             word.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
             meaning.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
             word.setHintTextColor(Color.rgb(185,185,185));
@@ -65,10 +65,10 @@ public class add_page extends AppCompatActivity {
             additem.setBackgroundColor(Color.WHITE);
             word.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
             meaning.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
-            word.setHintTextColor(Color.rgb(64,64,64));
-            meaning.setHintTextColor(Color.rgb(64,64,64));
-            word.setTextColor(Color.rgb(64,64,64));
-            meaning.setTextColor(Color.rgb(64,64,64));
+            word.setHintTextColor(Color.BLACK);
+            meaning.setHintTextColor(Color.BLACK);
+            word.setTextColor(Color.BLACK);
+            meaning.setTextColor(Color.BLACK);
         }
 
 

@@ -129,7 +129,7 @@ public class news_activity extends AppCompatActivity {
 
             ConstraintLayout constraintLayout  = findViewById(R.id.content_newsre);
             LinearLayout linearLayout =  findViewById(R.id.newslistview);
-            constraintLayout.setBackgroundColor(Color.rgb(64,64,64));
+            constraintLayout.setBackgroundColor(Color.BLACK);
             linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.list_viewdark));
             list.setAdapter(adapter);
         }
@@ -147,7 +147,7 @@ public class news_activity extends AppCompatActivity {
             ConstraintLayout constraintLayout  = findViewById(R.id.content_newsre);
             LinearLayout linearLayout =  findViewById(R.id.newslistview);
 
-            constraintLayout.setBackgroundColor(Color.rgb(64,64,64));
+            constraintLayout.setBackgroundColor(Color.BLACK);
             linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.list_viewdark));
 
         }

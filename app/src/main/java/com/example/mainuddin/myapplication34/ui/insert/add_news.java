@@ -56,7 +56,7 @@ public class add_news extends AppCompatActivity {
         final LinearLayout additem = findViewById(R.id.add_news_item);
 
         if(MainActivity.isDark){
-            additem.setBackgroundColor(Color.rgb(64,64,64));
+            additem.setBackgroundColor(Color.BLACK);
             title.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
             body.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
             title.setHintTextColor(Color.rgb(185,185,185));
@@ -67,10 +67,10 @@ public class add_news extends AppCompatActivity {
             additem.setBackgroundColor(Color.WHITE);
             title.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
             body.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
-            title.setHintTextColor(Color.rgb(64,64,64));
-            body.setHintTextColor(Color.rgb(64,64,64));
-            title.setTextColor(Color.rgb(64,64,64));
-            body.setTextColor(Color.rgb(64,64,64));
+            title.setHintTextColor(Color.BLACK);
+            body.setHintTextColor(Color.BLACK);
+            title.setTextColor(Color.BLACK);
+            body.setTextColor(Color.BLACK);
         }
 
 

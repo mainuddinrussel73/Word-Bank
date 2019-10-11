@@ -126,7 +126,7 @@ public class Audiolist_adapter extends BaseAdapter {
         if(MainActivity.isDark){
 
             //System.out.println("klklkl");
-            listitem.setBackgroundColor(Color.rgb(64,64,64));
+            listitem.setBackgroundColor(Color.BLACK);
            
 
             tt.setTextColor(getComplimentColor(tt.getCurrentTextColor()));

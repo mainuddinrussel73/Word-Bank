@@ -250,6 +250,7 @@ public class backup_restore extends AppCompatActivity {
             mainlayout.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.backgroundborderwhite));
             coordinatorLayout.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.backgroundborderwhite));
             retext.setHintTextColor(Color.rgb(185,185,185));
+            retext.setTextColor(Color.WHITE);
         }else{
             retext.setBackgroundColor(Color.WHITE);
             retext.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.backgroundborder));
@@ -259,6 +260,7 @@ public class backup_restore extends AppCompatActivity {
             mainlayout.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.backgroundborder));
             coordinatorLayout.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.backgroundborder));
             retext.setHintTextColor(Color.rgb(64,64,64));
+            retext.setTextColor(Color.BLACK);
         }
     }
     public void showMessage(String title ,String Message){

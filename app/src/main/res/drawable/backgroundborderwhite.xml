@@ -5,11 +5,11 @@
     <item>
         <shape
             android:shape="rectangle">
-            <solid android:color="@color/cardview_dark_background"/>
+            <solid android:color="@android:color/black"/>
             <stroke
 
                 android:width="1px"
-                android:color="@android:color/black"/>
+                android:color="@color/cardview_dark_background"/>
             <corners android:radius="5dp"/>
         </shape>
     </item>
