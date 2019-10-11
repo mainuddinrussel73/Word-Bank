@@ -139,4 +139,9 @@
     <string name="cd_previous">Skip backwards</string>
     <string name="cd_play">Play and pause</string>
     <string name="cd_next">Skip forwards</string>
+    <string name="static_shortcut_disabled_message">ok</string>
+    <string name="shortcut_long_label">Start a quiz to check your skills.</string>
+    <string name="shortcut_short_label">Quick quiz!</string>
+    <string name="shortcut_long_label1">Start a quiz to check your skills.</string>
+    <string name="shortcut_short_label1">Add Word!</string>
 </resources>

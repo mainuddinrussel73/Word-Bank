@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:statusBarColor">@color/colorPrimary</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -66,5 +67,13 @@
         <item name="stGravity">top</item> top or center
         <item name="stRadius">5dp</item>
     </style>
+
+    <style name="fastscroll">
+        <item name="android:fastScrollThumbDrawable">@drawable/fast_scroll_thumb</item>
+        <item name="android:fastScrollPreviewBackgroundRight">@drawable/fast_scrollbar_preview </item>
+        <item name="android:fastScrollOverlayPosition">aboveThumb</item>
+        <item name="android:fastScrollTextColor">@color/cardview_light_background</item>
+    </style>
+
 
 </resources>

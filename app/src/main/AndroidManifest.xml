@@ -3,14 +3,6 @@
     xmlns:dist="http://schemas.android.com/apk/distribution"
     package="com.example.mainuddin.myapplication34">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
-
-    <!--danger permissions-->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -18,14 +10,15 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Quiz_confirm"></activity>
         <activity
             android:name=".ui.data.news_update"
             android:label="@string/update_news"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".news_details"
             android:label="@string/title_activity_news_details"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".news_activity"
             android:label="@string/title_activity_news"
@@ -40,7 +33,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".MainActivity"
+            android:allowBackup="true"
             android:label="@string/app_name"
+            android:supportsRtl="true"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -59,20 +54,24 @@
         <activity
             android:name=".ui.Quiz.quiz_page"
             android:label="@string/title_quiz"
-            android:theme="@style/AppTheme.NoActionBar" />
-
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".ui.media.MediaActivity"
             android:label="@string/music_play"
-            android:theme="@style/FullScreenTheme">
-        </activity>
-
-
-        <activity android:name=".ui.media.Media_list_activity"
+            android:theme="@style/FullScreenTheme"></activity>
+        <activity
+            android:name=".ui.media.Media_list_activity"
             android:label="@string/music_play"
-            android:theme="@style/AppTheme.NoActionBar"
-            />
+            android:theme="@style/AppTheme.NoActionBar" />
 
+        <receiver android:name=".ui.media.MyNotificationReceiver">
+            <intent-filter>
+                <action android:name="RESUME_ACTION" />
+                <action android:name="STOP_ACTION" />
+                <action android:name="CANCEL_ACTION" />
+            </intent-filter>
+        </receiver>
         <service android:name=".ui.share.NotificationIntentService">
             <intent-filter android:priority="10000">
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
@@ -80,23 +79,19 @@
         </service>
         <service
             android:name=".ui.Mainservice"
-            android:enabled="true"
-            >
-
-        </service>
+            android:enabled="true"></service>
 
         <service android:name=".ui.media.NotificationService" />
-
-        <receiver android:name=".ui.media.MyNotificationReceiver">
-            <intent-filter>
-                <action android:name="RESUME_ACTION"/>
-                <action android:name="STOP_ACTION"/>
-                <action android:name="CANCEL_ACTION"/>
-
-            </intent-filter>
-        </receiver>
-
     </application>
+
+    <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_REPLACED" /> <!-- danger permissions -->
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />

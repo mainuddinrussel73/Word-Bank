@@ -1,9 +1,11 @@
 package com.example.mainuddin.myapplication34.ui.data;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -39,6 +41,9 @@ public class news_update  extends AppCompatActivity {
         body.setText(intent.getStringExtra("body"));
 
         LinearLayout additem = findViewById(R.id.update_news_item);
+        title.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(title, InputMethodManager.SHOW_IMPLICIT);
 
         if(MainActivity.isDark){
             additem.setBackgroundColor(Color.rgb(64,64,64));
@@ -78,6 +83,7 @@ public class news_update  extends AppCompatActivity {
                 // TODO Auto-generated method stub
                     titles = title.getText().toString();
                     bodies = body.getText().toString();
+
                     id = intent.getExtras().getInt("id");
                     id++;
                     boolean b = mDBHelper.updateData(String.valueOf(id),intent.getStringExtra("title"),titles,bodies);

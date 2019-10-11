@@ -59,12 +59,16 @@ public class add_page extends AppCompatActivity {
             meaning.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
             word.setHintTextColor(Color.rgb(185,185,185));
             meaning.setHintTextColor(Color.rgb(185,185,185));
+            word.setTextColor(Color.rgb(185,185,185));
+            meaning.setTextColor(Color.rgb(185,185,185));
         }else{
             additem.setBackgroundColor(Color.WHITE);
             word.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
             meaning.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
             word.setHintTextColor(Color.rgb(64,64,64));
             meaning.setHintTextColor(Color.rgb(64,64,64));
+            word.setTextColor(Color.rgb(64,64,64));
+            meaning.setTextColor(Color.rgb(64,64,64));
         }
 
 

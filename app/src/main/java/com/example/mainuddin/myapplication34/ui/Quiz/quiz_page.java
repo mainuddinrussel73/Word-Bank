@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +52,7 @@ public class quiz_page extends AppCompatActivity {
     private TextView textView,scoress;
     static int score = 0;
     SharedPreferences gamePrefs;
+    ScrollView scrollView;
 
     List<String> word = new ArrayList<>();
 
@@ -62,11 +64,12 @@ public class quiz_page extends AppCompatActivity {
         final Intent intent = getIntent();
         score = intent.getIntExtra("s",0);
         scoress = findViewById(R.id.scores);
-        scoress.setText(String.valueOf(score));
+        scoress.setText("Current score : "+String.valueOf(score));
         btnDisplay = findViewById(R.id.btnDisplay);
         btnDisplay.setEnabled(true);
         textView = findViewById(R.id.quiz_question);
 
+        scrollView = findViewById(R.id.scrollButtons);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
@@ -106,7 +109,7 @@ public class quiz_page extends AppCompatActivity {
         }
         textView.setText(word.get(0));
 
-        RadioGroup radioGroup = (RadioGroup)findViewById(R.id.radioGroup);
+        RadioGroup radioGroup = (RadioGroup)scrollView.findViewById(R.id.radioGroup);
 
         for (int i = 0; i < radioGroup .getChildCount(); i++) {
 

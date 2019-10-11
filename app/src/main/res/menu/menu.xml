@@ -8,4 +8,13 @@
         android:title="Search"
         app:showAsAction="ifRoom|withText"
         app:actionViewClass="android.widget.SearchView"/>
+
+
+    <item
+        android:id="@+id/app_bar_search1"
+        android:icon="@android:drawable/ic_search_category_default"
+        android:title="Search"
+        app:showAsAction="ifRoom|withText"
+        app:actionViewClass="android.widget.SearchView"/>
+    
 </menu>

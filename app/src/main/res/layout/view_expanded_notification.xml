@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:padding="8dp"
+    android:background="@color/cardview_dark_background">
 
     <RelativeLayout
         android:id="@+id/icon_container"
@@ -87,13 +88,15 @@
         android:layout_below="@id/notification_info"
         android:layout_centerInParent="true">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/left_button"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:textColor="@color/cardview_light_background"
             android:shadowRadius="@android:integer/config_longAnimTime"
             android:text="Done"
-            android:background="@drawable/background_button"
             />
 
             />

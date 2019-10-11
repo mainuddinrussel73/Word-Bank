@@ -10,9 +10,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.pm.ShortcutInfo;
+import android.content.pm.ShortcutManager;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,6 +50,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.tapadoo.alerter.Alerter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -88,6 +92,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SharedPreferences prefs;
     private DrawerLayout mRelativeLayout;
     public  static SharedPreferences sizee;
+    private final static String CUSTOM_ACTION = "custom_action";
 
     @Override
     protected void onStart() {
@@ -96,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getWindow().setBackgroundDrawableResource(android.R.color.white);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -143,6 +149,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
+                ///Intent intent=new Intent(MainActivity.this,quiz_page.class);
+                //Intent intent = new Intent(Intent.ACTION_VIEW, null, MainActivity.this, quiz_page.class);
+
+
+
+
+
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -156,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         View headerView = navigationView.getHeaderView(0);
         TextView navUsername = (TextView) headerView.findViewById(R.id.scores);
+        TextView wordcount = (TextView) headerView.findViewById(R.id.wordcount);
 
 
         //prefs = this.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
@@ -234,6 +248,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // size = contactList.size();
             adapter = new MyListAdapter(this);
             list=(ListView)findViewById(R.id.list);
+            //list.setFastScrollEnabled(true);
             list.setAdapter(adapter);
 
             //textView = findViewById(R.id.board);
@@ -277,6 +292,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         System.out.println(MainActivity.sizee.getInt( "size", 0 ));
 
 
+        wordcount.setText("Total Number Of Words : "+MainActivity.sizee.getInt( "size", 0 ));
 
 
 
@@ -364,6 +380,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             if(contactList.size()!=0)list.setAdapter(adapter);
         }
+
+
+            editor = prefs.edit();
+            editor.putBoolean("isDark", isDark);
+            editor.commit();
+
+        ShortcutManager shortcutManager= (ShortcutManager) getSystemService(ShortcutManager.class);
+        Intent intent=new Intent(this,Quiz_confirm.class);
+
+        intent.setAction(Intent.ACTION_VIEW);
+        ShortcutInfo shortcutInfo=new ShortcutInfo.Builder(MainActivity.this,"Shortcut_1")
+                .setLongLabel("Quiz!")
+                .setShortLabel("Quiz!")
+                .setIcon(Icon.createWithResource(this, R.mipmap.ic_quiz))
+                .setIntent(intent)
+                .build();
+        shortcutManager.addDynamicShortcuts(Arrays.asList(shortcutInfo));
+
+        //  ShortcutManager shortcutManager= (ShortcutManager) getSystemService(ShortcutManager.class);
+        Intent intent1=new Intent(this,add_page.class);
+
+        intent1.setAction(Intent.ACTION_VIEW);
+        ShortcutInfo shortcutInfo1=new ShortcutInfo.Builder(MainActivity.this,"Shortcut_2")
+                .setLongLabel("Add")
+                .setShortLabel("Add")
+                .setIcon(Icon.createWithResource(this, R.mipmap.ic_add))
+                .setIntent(intent1)
+                .build();
+        shortcutManager.addDynamicShortcuts(Arrays.asList(shortcutInfo1));
 
 
     }
@@ -668,7 +713,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         MenuItem searchViewItem = menu.findItem(R.id.app_bar_search);
+        MenuItem searchViewItem1 = menu.findItem(R.id.app_bar_search1);
+
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchViewItem);
+        final SearchView searchView1 = (SearchView) MenuItemCompat.getActionView(searchViewItem1);
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -687,6 +736,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 adapter.filter(newText);
                 return false;
             }
+
+        });
+        searchView1.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchView1.clearFocus();
+             /*   if(list.contains(query)){
+                    adapter.getFilter().filter(query);
+                }else{
+                    Toast.makeText(MainActivity.this, "No Match found",Toast.LENGTH_LONG).show();
+                }*/
+                return false;
+
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.filter1(newText);
+                return false;
+            }
+
         });
         return super.onCreateOptionsMenu(menu);
     }

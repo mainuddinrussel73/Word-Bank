@@ -61,12 +61,16 @@ public class add_news extends AppCompatActivity {
             body.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
             title.setHintTextColor(Color.rgb(185,185,185));
             body.setHintTextColor(Color.rgb(185,185,185));
+            title.setTextColor(Color.rgb(185,185,185));
+            body.setTextColor(Color.rgb(185,185,185));
         }else{
             additem.setBackgroundColor(Color.WHITE);
             title.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
             body.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
             title.setHintTextColor(Color.rgb(64,64,64));
             body.setHintTextColor(Color.rgb(64,64,64));
+            title.setTextColor(Color.rgb(64,64,64));
+            body.setTextColor(Color.rgb(64,64,64));
         }
 
 
