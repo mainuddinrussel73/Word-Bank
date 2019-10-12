@@ -57,7 +57,8 @@ dependencies {
     implementation 'com.android.support:palette-v7:28.0.0'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.github.turing-tech:MaterialScrollBar:13.+'
-
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0-alpha'
+    implementation 'com.github.lecho:hellocharts-library:1.5.8@aar'
     implementation "com.android.support:support-compat:28.0.0"
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'

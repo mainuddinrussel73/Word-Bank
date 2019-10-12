@@ -10,6 +10,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +25,7 @@ import android.widget.Toast;
 
 import com.example.mainuddin.myapplication34.MainActivity;
 import com.example.mainuddin.myapplication34.R;
+import com.example.mainuddin.myapplication34.quiz_result;
 import com.example.mainuddin.myapplication34.ui.data.DatabaseHelper;
 import com.google.android.material.navigation.NavigationView;
 import com.tapadoo.alerter.Alerter;
@@ -50,11 +53,15 @@ public class quiz_page extends AppCompatActivity {
     private DatabaseHelper mDBHelper;
     private SQLiteDatabase mDb;
     private TextView textView,scoress;
-    static int score = 0;
+    public static int score = 0;
     SharedPreferences gamePrefs;
     ScrollView scrollView;
-
+    CountDownTimer cTimer = null;
     List<String> word = new ArrayList<>();
+    TextView timer;
+    public static int correct = 0;
+    public static int wrong = 0;
+    public static int ignored = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -90,9 +97,11 @@ public class quiz_page extends AppCompatActivity {
 
                 }
 
+                cancelTimer();
 
-                Intent myIntent = new Intent(view.getContext(), MainActivity.class);
+                Intent myIntent = new Intent(view.getContext(), quiz_result.class);
 
+                myIntent.putExtra("score",score);
 
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(myIntent, 0);
@@ -127,6 +136,10 @@ public class quiz_page extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 word.clear();
+                cancelTimer();
+                ignored++;
+                score--;
+                if(score<0)score = 0;
                 Intent myIntent = new Intent(view.getContext(), quiz_page.class);
                 //String s = view.findViewById(R.id.subtitle).toString();
                 //String s = (String) parent.getI;
@@ -140,11 +153,13 @@ public class quiz_page extends AppCompatActivity {
 
         RelativeLayout relativeLayout = findViewById(R.id.relative_quiz);
 
+        timer = findViewById(R.id.timer);
 
         if(MainActivity.isDark){
             textView.setBackgroundColor(Color.BLACK);
             scoress.setTextColor(Color.WHITE);
             textView.setTextColor(Color.WHITE);
+            timer.setTextColor(Color.WHITE);
             for (int i = 0; i < radioGroup .getChildCount(); i++) {
 
 
@@ -155,6 +170,7 @@ public class quiz_page extends AppCompatActivity {
             textView.setBackgroundColor(Color.WHITE);
             scoress.setTextColor(Color.BLACK);
             textView.setTextColor(Color.BLACK);
+            timer.setTextColor(Color.BLACK);
             for (int i = 0; i < radioGroup .getChildCount(); i++) {
 
 
@@ -164,9 +180,41 @@ public class quiz_page extends AppCompatActivity {
         }
 
 
+
+
+        startTimer();
+
+    }
+
+    void startTimer() {
+        cTimer = new CountDownTimer(30000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                timer.setText("Time remaining: " + millisUntilFinished / 1000);
+            }
+            public void onFinish() {
+                timer.setText("Finished!");
+
+                ignored++;
+                score--;
+                if(score<0)score = 0;
+                Intent myIntent = new Intent(quiz_page.this, quiz_page.class);
+                //String s = view.findViewById(R.id.subtitle).toString();
+                //String s = (String) parent.getI;
+                myIntent.putExtra("s",score);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivityForResult(myIntent, 0);
+                cancelTimer();
+            }
+        };
+        cTimer.start();
     }
 
 
+    //cancel timer
+    void cancelTimer() {
+        if(cTimer!=null)
+            cTimer.cancel();
+    }
 
 
     @Override
@@ -223,7 +271,17 @@ public class quiz_page extends AppCompatActivity {
 
                         btnDisplay.setEnabled(false);
 
+
+
+                        correct++;
                         scoress.setText(String.valueOf(score));
+                        Intent myIntent = new Intent(quiz_page.this, quiz_page.class);
+                        //String s = view.findViewById(R.id.subtitle).toString();
+                        //String s = (String) parent.getI;
+                        myIntent.putExtra("s",score);
+                        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivityForResult(myIntent, 0);
+                        cancelTimer();
                     }else {
                         Toasty.error(quiz_page.this,
                                 "Alas!", Toast.LENGTH_SHORT).show();
@@ -246,10 +304,18 @@ public class quiz_page extends AppCompatActivity {
 
 
                         score--;
+                        wrong++;
                         if(score<0)score = 0;
 
                         scoress.setText(String.valueOf(score));
                         btnDisplay.setEnabled(false);
+                        Intent myIntent = new Intent(quiz_page.this, quiz_page.class);
+                        //String s = view.findViewById(R.id.subtitle).toString();
+                        //String s = (String) parent.getI;
+                        myIntent.putExtra("s",score);
+                        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivityForResult(myIntent, 0);
+                        cancelTimer();
                     }
                 }else {
                     Toasty.warning(quiz_page.this,

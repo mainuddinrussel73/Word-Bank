@@ -146,4 +146,6 @@
     <string name="shortcut_short_label1">Add Word!</string>
     <string name="menu_back">News Backup and Restore</string>
     <string name="title_activity_news_backup">Backup and Restore News</string>
+    <string name="Time">Time Remaining :</string>
+    <string name="result">Quiz result</string>
 </resources>

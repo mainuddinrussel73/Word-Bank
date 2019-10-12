@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Quiz_confirm">
+    tools:context=".Quiz_confirm"
+    android:id="@+id/confirm">
 
 
     <com.google.android.material.button.MaterialButton
@@ -14,6 +15,7 @@
         android:layout_marginTop="300dp"
         android:text="Start !"
         android:textSize="70dp"
+        android:textColor="@android:color/white"
         android:id="@+id/strtquiz"
 
         >

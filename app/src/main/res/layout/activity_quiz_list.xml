@@ -25,9 +25,9 @@
 
         android:id="@+id/quiz_question"
 
-        android:layout_width="373dp"
+        android:layout_width="191dp"
 
-        android:layout_height="54dp"
+        android:layout_height="93dp"
 
         android:layout_alignParentLeft="true"
 
@@ -231,21 +231,40 @@
 
     <TextView
         android:id="@+id/scores"
-        android:layout_width="352dp"
-        android:layout_height="64dp"
+        android:layout_width="111dp"
+        android:layout_height="77dp"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="100dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="5dp"
 
-        android:layout_marginTop="652dp"
+        android:layout_marginStart="53dp"
+
+        android:layout_marginTop="84dp"
+        android:layout_toEndOf="@+id/quiz_question"
 
         android:background="@drawable/backgroundborder"
+
         android:paddingLeft="10dp"
-
         android:paddingTop="8dp"
-
         android:text="@string/Score"
+        android:textColor="@color/cardview_dark_background"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/timer"
+        android:layout_width="355dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="100dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="5dp"
+
+        android:layout_marginTop="688dp"
+
+        android:background="@drawable/backgroundborder"
+
+        android:text="@string/Time"
         android:textColor="@color/cardview_dark_background"
         android:textSize="20dp" />
 

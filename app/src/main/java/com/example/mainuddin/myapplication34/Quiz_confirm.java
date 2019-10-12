@@ -7,11 +7,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.mainuddin.myapplication34.ui.Quiz.quiz_page;
@@ -26,6 +30,7 @@ import java.util.List;
 public class Quiz_confirm extends AppCompatActivity {
 
     List<word> contactList = new ArrayList<>();
+    private Animation mScaleAnimation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,16 +62,27 @@ public class Quiz_confirm extends AppCompatActivity {
             Toasty.error(Quiz_confirm.this,"Error Nothing found", Toast.LENGTH_LONG).show();
         }
 
+        RelativeLayout relativeLayout = findViewById(R.id.confirm);
 
+
+        mScaleAnimation = AnimationUtils.loadAnimation(this,R.anim.scale_animation);
+
+        if(MainActivity.isDark){
+            relativeLayout.setBackgroundColor(Color.BLACK);
+
+        }else{
+            relativeLayout.setBackgroundColor(Color.WHITE);
+        }
 
         Button button = findViewById(R.id.strtquiz);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                button.startAnimation(mScaleAnimation);
                 if(contactList.size()>=4){
                     //SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
                    // MainActivity.score = prefs.getInt("highscore", 0);
-                    Intent myIntent = new Intent(Quiz_confirm.this, MainActivity.class);
+                    Intent myIntent = new Intent(Quiz_confirm.this, quiz_page.class);
                     myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivityForResult(myIntent, 1);}
                 else{

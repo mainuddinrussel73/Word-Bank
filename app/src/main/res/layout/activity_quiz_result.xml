@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".quiz_result"
+    android:id="@+id/quiz_res"
+    android:theme="@style/AppTheme.NoActionBar">
+
+
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/goback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="150dp"
+        android:layout_marginTop="498dp"
+        android:textColor="@android:color/white"
+        android:paddingBottom="@dimen/alerter_activity_horizontal_margin"
+        android:paddingLeft="@dimen/alerter_activity_horizontal_margin"
+        android:paddingRight="@dimen/alerter_activity_horizontal_margin"
+        android:paddingTop="@dimen/alerter_activity_horizontal_margin"
+        android:text="GO HOME" />
+
+    <TextView
+        android:id="@+id/result"
+        android:layout_width="197dp"
+        android:layout_height="317dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="153dp"
+        android:background="@drawable/backgroundborder"
+        android:paddingBottom="@dimen/alerter_activity_horizontal_margin"
+        android:paddingLeft="@dimen/alerter_activity_horizontal_margin"
+        android:paddingRight="@dimen/alerter_activity_horizontal_margin"
+        android:paddingTop="@dimen/alerter_activity_horizontal_margin"
+        android:text="@string/appbar_scrolling_view_behavior"
+        android:textSize="20dp"
+        android:textStyle="bold|italic">
+
+
+    </TextView>
+
+    <RelativeLayout
+        android:layout_width="190dp"
+        android:layout_height="190dp"
+
+        android:layout_marginTop="153dp"
+        android:layout_marginLeft="220dp"
+       >
+
+        <lecho.lib.hellocharts.view.PieChartView
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+
+    </TextView>
+
+
+
+</RelativeLayout>

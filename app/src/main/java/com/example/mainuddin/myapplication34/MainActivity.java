@@ -44,6 +44,7 @@ import com.example.mainuddin.myapplication34.ui.Quiz.quiz_page;
 import com.example.mainuddin.myapplication34.ui.data.DatabaseHelper;
 import com.example.mainuddin.myapplication34.ui.data.word;
 import com.example.mainuddin.myapplication34.ui.data.word_details;
+import com.example.mainuddin.myapplication34.ui.insert.add_news;
 import com.example.mainuddin.myapplication34.ui.insert.add_page;
 import com.example.mainuddin.myapplication34.ui.media.MediaActivity;
 import com.example.mainuddin.myapplication34.ui.media.Media_list_activity;
@@ -178,20 +179,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //prefs = this.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
 
-        if(prefs.getInt("highscore", 0)>MainActivity.score){
 
-
-            Alerter.create(this)
-                    .setTitle("CONGRATS!")
-                    .setText("New highest score...")
-                    .setIcon(R.drawable.ic_insert_emoticon_black_24dp)
-                    .setBackgroundColorRes(R.color.colorPrimary)
-                    .setDuration(5000)
-                    .enableSwipeToDismiss() //seems to not work well with OnClickListener
-                    .show();
-
-
-        }
         navUsername.setText("Highest Score is : "+Integer.toString(prefs.getInt("highscore", 0)));
 
 
@@ -436,12 +424,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             editor.commit();
 
         ShortcutManager shortcutManager= (ShortcutManager) getSystemService(ShortcutManager.class);
-        Intent intent=new Intent(this,Quiz_confirm.class);
+        Intent intent=new Intent(this, add_news.class);
 
         intent.setAction(Intent.ACTION_VIEW);
         ShortcutInfo shortcutInfo=new ShortcutInfo.Builder(MainActivity.this,"Shortcut_1")
-                .setLongLabel("Quiz!")
-                .setShortLabel("Quiz!")
+                .setLongLabel("Add News!")
+                .setShortLabel("Add News!")
                 .setIcon(Icon.createWithResource(this, R.mipmap.ic_quiz))
                 .setIntent(intent)
                 .build();
@@ -452,8 +440,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         intent1.setAction(Intent.ACTION_VIEW);
         ShortcutInfo shortcutInfo1=new ShortcutInfo.Builder(MainActivity.this,"Shortcut_2")
-                .setLongLabel("Add")
-                .setShortLabel("Add")
+                .setLongLabel("Add Word")
+                .setShortLabel("Add Word")
                 .setIcon(Icon.createWithResource(this, R.mipmap.ic_add))
                 .setIntent(intent1)
                 .build();
@@ -554,7 +542,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if(contactList.size()>=4){
                 SharedPreferences prefs = this.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
                 MainActivity.score = prefs.getInt("highscore", 0);
-                Intent myIntent = new Intent(MainActivity.this, quiz_page.class);
+                Intent myIntent = new Intent(MainActivity.this, Quiz_confirm.class);
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(myIntent, 0);}
             else{
