@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="8dp"
-    android:background="@color/cardview_dark_background">
+    android:background="@android:color/black">
 
     <RelativeLayout
         android:id="@+id/icon_container"
@@ -88,15 +88,17 @@
         android:layout_below="@id/notification_info"
         android:layout_centerInParent="true">
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/left_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:paddingTop="10dp"
-            android:paddingLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="8dp"
+            android:paddingLeft="8dp"
+            android:background="@color/colorPrimary"
             android:textColor="@color/cardview_light_background"
             android:shadowRadius="@android:integer/config_longAnimTime"
             android:text="Done"
+
             />
 
             />

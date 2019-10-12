@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:statusBarColor">@color/colorPrimary</item>
+        <item name="searchViewStyle">@style/CitySearchView</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -76,5 +77,11 @@
         <item name="android:fastScrollTextColor">@color/cardview_light_background</item>
     </style>
 
+    <style name="CitySearchView" parent="Base.Widget.AppCompat.SearchView">
+        <item name="searchIcon">@drawable/ic_searchw</item>
+        <item name="closeIcon">@drawable/ic_close_black_24dp</item>
+        <item name="searchHintIcon">@null</item>
+
+    </style>
 
 </resources>

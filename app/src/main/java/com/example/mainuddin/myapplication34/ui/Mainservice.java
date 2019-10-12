@@ -136,6 +136,7 @@ public class Mainservice extends IntentService {
 
 
         notificationManagerCompat.notify(NOTIFICATION_ID, builder.build());
+        System.out.println("created");
 
 
 

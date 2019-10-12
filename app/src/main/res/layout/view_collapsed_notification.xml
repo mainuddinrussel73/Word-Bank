@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="8dp"
-    android:background="@color/cardview_dark_background">
+    android:background="@android:color/black">
 
     <RelativeLayout
         android:id="@+id/icon_container"

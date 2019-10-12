@@ -4,17 +4,23 @@
 
     <item
         android:id="@+id/app_bar_search"
-        android:icon="@android:drawable/ic_search_category_default"
+        android:icon="@drawable/ic_searchm"
+        android:actionLayout="@layout/menu_filter"
         android:title="Search"
-        app:showAsAction="ifRoom|withText"
-        app:actionViewClass="android.widget.SearchView"/>
+        android:orderInCategory="10"
+        app:showAsAction="always|never"
+        android:scaleType="fitXY"
+        app:actionViewClass="android.widget.SearchView" />
 
 
     <item
         android:id="@+id/app_bar_search1"
-        android:icon="@android:drawable/ic_search_category_default"
+        android:icon="@drawable/ic_searchw"
+        android:actionLayout="@layout/menu_filter1"
         android:title="Search"
-        app:showAsAction="ifRoom|withText"
-        app:actionViewClass="android.widget.SearchView"/>
+        android:orderInCategory="10"
+        app:showAsAction="always|never"
+        android:scaleType="fitXY"
+        app:actionViewClass="android.widget.SearchView" />
     
 </menu>

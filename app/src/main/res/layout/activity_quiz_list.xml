@@ -25,9 +25,9 @@
 
         android:id="@+id/quiz_question"
 
-        android:layout_width="370dp"
+        android:layout_width="373dp"
 
-        android:layout_height="58dp"
+        android:layout_height="54dp"
 
         android:layout_alignParentLeft="true"
 
@@ -64,7 +64,7 @@
         android:layout_alignLeft="@+id/quiz_question"
 
         android:layout_alignStart="@+id/quiz_question"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="20dp"
         android:paddingLeft="5dp">
 
         <RadioGroup
@@ -231,14 +231,14 @@
 
     <TextView
         android:id="@+id/scores"
-        android:layout_width="248dp"
-        android:layout_height="55dp"
+        android:layout_width="352dp"
+        android:layout_height="64dp"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="100dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="5dp"
 
-        android:layout_marginTop="665dp"
+        android:layout_marginTop="652dp"
 
         android:background="@drawable/backgroundborder"
         android:paddingLeft="10dp"

@@ -13,7 +13,7 @@
     <string name="menu_tools">DARK MODE</string>
     <string name="menu_share">Backup And Restore</string>
     <string name="menu_send">Backup Nad Restore</string>
-    <string name="title_activity_backup_restore">backup_restore</string>
+    <string name="title_activity_backup_restore">Backup and Restore Words</string>
     <string name="Ok">Ok</string>
     <string name="File">File</string>
     <string name="restore">Restore .json</string>
@@ -144,4 +144,6 @@
     <string name="shortcut_short_label">Quick quiz!</string>
     <string name="shortcut_long_label1">Start a quiz to check your skills.</string>
     <string name="shortcut_short_label1">Add Word!</string>
+    <string name="menu_back">News Backup and Restore</string>
+    <string name="title_activity_news_backup">Backup and Restore News</string>
 </resources>

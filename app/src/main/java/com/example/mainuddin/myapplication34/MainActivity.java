@@ -28,6 +28,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
@@ -65,6 +66,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -497,7 +499,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivityForResult(myIntent, 0);
 
-        }else if(id == R.id.subscription){
+        }else if(id == R.id.nav_view){
+            Intent myIntent = new Intent(MainActivity.this, news_backup.class);
+            myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivityForResult(myIntent, 0);
+        } else if(id == R.id.subscription){
 
 
 
@@ -512,6 +518,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
 
                         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
                         PendingIntent pendingIntent = PendingIntent.getService(MainActivity.this, 0,
                                 new Intent(MainActivity.this, Mainservice.class),
                                 PendingIntent.FLAG_UPDATE_CURRENT);
@@ -759,11 +766,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
-        MenuItem searchViewItem = menu.findItem(R.id.app_bar_search);
-        MenuItem searchViewItem1 = menu.findItem(R.id.app_bar_search1);
 
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchViewItem);
-        final SearchView searchView1 = (SearchView) MenuItemCompat.getActionView(searchViewItem1);
+
+        final SearchView searchView;
+        final SearchView searchView1;
+
+        searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
+        int searchImgId = getResources().getIdentifier("android:id/search_button", null, null);
+        ImageView v = (ImageView) searchView.findViewById(searchImgId);
+        v.setImageResource(R.drawable.ic_searchw);
+
+        searchView1 = (SearchView) menu.findItem(R.id.app_bar_search1).getActionView();
+        searchImgId = getResources().getIdentifier("android:id/search_button", null, null);
+        v = (ImageView) searchView1.findViewById(searchImgId);
+        v.setImageResource(R.drawable.ic_searchm);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
