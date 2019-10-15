@@ -3,33 +3,29 @@ package com.example.mainuddin.myapplication34.ui.media;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.media.Image;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.mainuddin.myapplication34.MainActivity;
+import com.example.mainuddin.myapplication34.ui.words.MainActivity;
 import com.example.mainuddin.myapplication34.R;
-import com.example.mainuddin.myapplication34.ui.data.word;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.palette.graphics.Palette;
-
-import static com.example.mainuddin.myapplication34.ui.media.Media_list_activity.getDominantColor;
 
 public class Audiolist_adapter extends BaseAdapter {
 
@@ -122,8 +118,10 @@ public class Audiolist_adapter extends BaseAdapter {
 
         LinearLayout listitem = rowView.findViewById(R.id.list_item);
         titleText.setImageBitmap(bm);
+        SharedPreferences prefs = context.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+        boolean isDark = prefs.getBoolean("isDark",false);
 
-        if(MainActivity.isDark){
+        if(isDark){
 
             //System.out.println("klklkl");
             listitem.setBackgroundColor(Color.BLACK);

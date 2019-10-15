@@ -2,13 +2,13 @@ package com.example.mainuddin.myapplication34.ui.media;
 
 
 import android.Manifest;
-import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
@@ -22,7 +22,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -43,11 +42,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mainuddin.myapplication34.MainActivity;
+import com.example.mainuddin.myapplication34.ui.words.MainActivity;
 import com.example.mainuddin.myapplication34.R;
-import com.example.mainuddin.myapplication34.ui.data.word;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.muddzdev.styleabletoast.StyleableToast;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
@@ -63,8 +60,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
 import es.dmoral.toasty.Toasty;
-
-import static com.example.mainuddin.myapplication34.ui.media.MyNotificationReceiver.CANCEL_ACTION;
 
 public class Media_list_activity extends AppCompatActivity {
 
@@ -1878,24 +1873,26 @@ public class Media_list_activity extends AppCompatActivity {
         RelativeLayout relativeLayout = findViewById(R.id.content_music);
         LinearLayout linearLayout = relativeLayout.findViewById(R.id.listview);
 
-        if (MainActivity.isDark && ListElementsArrayList.size() != 0) {
+        SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+        boolean isDark = prefs.getBoolean("isDark",false);
+        if (isDark && ListElementsArrayList.size() != 0) {
 
 
             relativeLayout.setBackgroundColor(Color.BLACK);
             linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.list_viewdark));
             listView.setAdapter(adapter);
-        } else if (!MainActivity.isDark && ListElementsArrayList.size() != 0) {
+        } else if (!isDark && ListElementsArrayList.size() != 0) {
 
             relativeLayout.setBackgroundColor(Color.WHITE);
             linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.listview_border));
             listView.setAdapter(adapter);
 
-        } else if (MainActivity.isDark && ListElementsArrayList.size() == 0) {
+        } else if (isDark && ListElementsArrayList.size() == 0) {
 
             relativeLayout.setBackgroundColor(Color.BLACK);
             linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.list_viewdark));
 
-        } else if (!MainActivity.isDark && ListElementsArrayList.size() == 0) {
+        } else if (!isDark && ListElementsArrayList.size() == 0) {
 
             relativeLayout.setBackgroundColor(Color.WHITE);
             linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.listview_border));
@@ -2694,7 +2691,9 @@ public class Media_list_activity extends AppCompatActivity {
                 //PopupMenu popup = new PopupMenu(MainActivity.this, sort);
                 //Inflating the Popup using xml file
                 Context wrapper = new ContextThemeWrapper(Media_list_activity.this, R.style.YOURSTYLE1);
-                if(MainActivity.isDark){
+                SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+                boolean isDark = prefs.getBoolean("isDark",false);
+                if(isDark){
                     wrapper = new ContextThemeWrapper(Media_list_activity.this, R.style.YOURSTYLE);
 
                 }else{

@@ -2,7 +2,6 @@ package com.example.mainuddin.myapplication34.ui.media;
 
 
 
-import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -13,8 +12,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -23,11 +20,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
-import com.example.mainuddin.myapplication34.MainActivity;
 import com.example.mainuddin.myapplication34.R;
 
 import java.io.FileNotFoundException;
@@ -35,7 +30,6 @@ import java.io.InputStream;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
-import androidx.palette.graphics.Palette;
 import es.dmoral.toasty.Toasty;
 
 public class NotificationService extends Service {

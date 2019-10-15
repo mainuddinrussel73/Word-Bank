@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".news_backup"
+    tools:context=".ui.news.news_backup"
     tools:showIn="@layout/activity_backup_restore"
     android:layout_marginTop="40dp"
     android:id="@+id/coordinate">
@@ -15,6 +15,9 @@
         android:layout_height="530dp"
         android:layout_marginEnd="31dp"
         android:layout_marginLeft="30dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:layout_marginStart="30dp"
         android:layout_marginTop="60dp"
        >

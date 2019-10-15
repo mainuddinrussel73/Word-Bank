@@ -25,9 +25,9 @@
 
         android:id="@+id/quiz_question"
 
-        android:layout_width="191dp"
+        android:layout_width="265dp"
 
-        android:layout_height="93dp"
+        android:layout_height="70dp"
 
         android:layout_alignParentLeft="true"
 
@@ -45,8 +45,9 @@
         android:layout_marginTop="85dp"
 
         android:paddingLeft="@dimen/padd"
+        android:scrollbars="vertical"
 
-        android:text="@string/question"
+        android:text="What is the meaning of the word    sjdfasdf  ?"
 
         android:textColor="@color/colorPrimaryDark"
         android:textSize="20sp"
@@ -55,145 +56,135 @@
         android:textStyle="bold|italic" />
 
     <ScrollView
-        android:layout_width="370dp"
-        android:layout_height="400dp"
         android:id="@+id/scrollButtons"
-        android:layout_below="@+id/quiz_question"
-        android:background="@drawable/backgroundborder"
-
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
         android:layout_alignLeft="@+id/quiz_question"
-
+        android:layout_alignParentEnd="true"
         android:layout_alignStart="@+id/quiz_question"
+
+        android:layout_below="@+id/quiz_question"
+
+        android:layout_marginEnd="15dp"
+        android:layout_marginRight="30dp"
         android:layout_marginTop="20dp"
+        android:background="@drawable/backgroundborder"
         android:paddingLeft="5dp">
 
         <RadioGroup
 
-            android:layout_width="360dp"
+            android:id="@+id/radioGroup"
+
+            android:layout_width="match_parent"
 
             android:layout_height="wrap_content"
 
-            android:paddingTop="5dp"
+            android:paddingRight="5dp"
 
-
-            android:id="@+id/radioGroup">
-
-
-
-
+            android:paddingTop="5dp">
 
 
             <RadioButton
 
-                android:layout_height="wrap_content"
+                android:id="@+id/radio0"
 
                 android:layout_width="match_parent"
 
-                android:id="@+id/radio0"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+
                 android:background="@drawable/backgroundborder"
 
-                android:textSize="15sp"
+                android:button="@drawable/radio_btn"
 
-                android:textColor="@color/colorPrimaryDark"
-
-                android:text="@string/app_name"
-
-                android:layout_marginBottom="10dp"
-                android:paddingTop="@dimen/padd"
                 android:paddingBottom="@dimen/padd"
 
                 android:paddingLeft="20dp"
-                android:button="@drawable/radio_btn"
-                />
+                android:paddingTop="@dimen/padd"
+                android:text="@string/app_name"
 
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="15sp" />
 
 
             <RadioButton
-
-                android:layout_height="wrap_content"
-
-                android:layout_width="match_parent"
 
                 android:id="@+id/radio1"
 
-                android:textSize="15sp"
-                android:background="@drawable/backgroundborder"
-                android:textColor="@color/colorPrimaryDark"
-
-                android:text="@string/app_name"
-
-                android:layout_marginBottom="10dp"
-                android:paddingTop="@dimen/padd"
-                android:paddingBottom="@dimen/padd"
-
-                android:paddingLeft="20dp"
-                android:button="@drawable/radio_btn"
-                />
-
-            <RadioButton
+                android:layout_width="match_parent"
 
                 android:layout_height="wrap_content"
 
-                android:layout_width="match_parent"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/backgroundborder"
+                android:button="@drawable/radio_btn"
+
+                android:paddingBottom="@dimen/padd"
+
+                android:paddingLeft="20dp"
+                android:paddingTop="@dimen/padd"
+                android:text="@string/app_name"
+
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="15sp" />
+
+            <RadioButton
+
                 android:id="@+id/radio2"
 
-                android:textSize="15sp"
-
-                android:textColor="@color/colorPrimaryDark"
-
-                android:text="@string/app_name"
-
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:paddingTop="@dimen/padd"
+
+                android:background="@drawable/backgroundborder"
+
+                android:button="@drawable/radio_btn"
+
                 android:paddingBottom="@dimen/padd"
 
                 android:paddingLeft="20dp"
-                android:button="@drawable/radio_btn"
+                android:paddingTop="@dimen/padd"
+                android:text="@string/app_name"
+
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="15sp"
 
                 />
 
             <RadioButton
 
-                android:layout_height="wrap_content"
+                android:id="@+id/radio3"
 
                 android:layout_width="match_parent"
 
-                android:id="@+id/radio3"
+                android:layout_height="wrap_content"
                 android:background="@drawable/backgroundborder"
-                android:textSize="15sp"
+                android:button="@drawable/radio_btn"
 
-                android:textColor="@color/colorPrimaryDark"
-                android:paddingTop="@dimen/padd"
                 android:paddingBottom="@dimen/padd"
+                android:paddingLeft="20dp"
+                android:paddingTop="@dimen/padd"
 
                 android:text="@string/app_name"
 
-                android:paddingLeft="20dp"
-                android:button="@drawable/radio_btn"
-                />
-
-
-
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="15sp" />
 
 
         </RadioGroup>
     </ScrollView>
 
 
-
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnDisplay"
-        android:layout_width="132dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/scrollButtons"
-        android:layout_marginEnd="64dp"
         android:layout_marginLeft="30dp"
-        android:layout_marginStart="30dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginStart="15dp"
         android:layout_marginTop="12dp"
-        android:layout_toStartOf="@+id/nextquiz"
         android:paddingBottom="10dp"
         android:paddingLeft="30dp"
         android:paddingRight="10dp"
@@ -206,14 +197,14 @@
 
         android:id="@+id/nextquiz"
 
-        android:layout_width="159dp"
+        android:layout_width="wrap_content"
 
         android:layout_height="62dp"
 
         android:layout_alignParentRight="true"
         android:layout_below="@+id/scrollButtons"
 
-        android:layout_marginRight="26dp"
+        android:layout_marginRight="15dp"
 
         android:layout_marginTop="13dp"
         android:gravity="center"
@@ -231,17 +222,14 @@
 
     <TextView
         android:id="@+id/scores"
-        android:layout_width="111dp"
+        android:layout_width="100dp"
         android:layout_height="77dp"
         android:layout_alignParentTop="true"
         android:layout_marginBottom="100dp"
-        android:layout_marginLeft="30dp"
+        android:layout_marginLeft="290dp"
         android:layout_marginRight="5dp"
 
-        android:layout_marginStart="53dp"
-
-        android:layout_marginTop="84dp"
-        android:layout_toEndOf="@+id/quiz_question"
+        android:layout_marginTop="79dp"
 
         android:background="@drawable/backgroundborder"
 
@@ -249,21 +237,22 @@
         android:paddingTop="8dp"
         android:text="@string/Score"
         android:textColor="@color/cardview_dark_background"
-        android:textSize="20dp" />
+        android:textSize="14dp" />
 
     <TextView
         android:id="@+id/timer"
-        android:layout_width="355dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginBottom="100dp"
+        android:layout_width="356dp"
+        android:layout_height="56dp"
+        android:layout_alignParentEnd="true"
+
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="15dp"
+
         android:layout_marginLeft="30dp"
-        android:layout_marginRight="5dp"
-
-        android:layout_marginTop="688dp"
-
+        android:layout_marginRight="35dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="650dp"
         android:background="@drawable/backgroundborder"
-
         android:text="@string/Time"
         android:textColor="@color/cardview_dark_background"
         android:textSize="20dp" />

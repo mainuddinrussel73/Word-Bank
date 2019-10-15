@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".quiz_result"
+    tools:context=".ui.Quiz.quiz_result"
     android:id="@+id/quiz_res"
     android:theme="@style/AppTheme.NoActionBar">
 
@@ -16,7 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="150dp"
-        android:layout_marginTop="498dp"
+        android:layout_marginTop="398dp"
         android:textColor="@android:color/white"
         android:paddingBottom="@dimen/alerter_activity_horizontal_margin"
         android:paddingLeft="@dimen/alerter_activity_horizontal_margin"
@@ -29,7 +29,7 @@
         android:layout_width="197dp"
         android:layout_height="317dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="153dp"
+        android:layout_marginTop="63dp"
         android:background="@drawable/backgroundborder"
         android:paddingBottom="@dimen/alerter_activity_horizontal_margin"
         android:paddingLeft="@dimen/alerter_activity_horizontal_margin"
@@ -46,7 +46,7 @@
         android:layout_width="190dp"
         android:layout_height="190dp"
 
-        android:layout_marginTop="153dp"
+        android:layout_marginTop="63dp"
         android:layout_marginLeft="220dp"
        >
 
@@ -58,14 +58,18 @@
 
     </RelativeLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
 
+    <ListView
+        android:background="@drawable/listview_border"
+        android:id="@+id/learnlist"
+        android:layout_width="match_parent"
+        android:layout_height="330dp"
+        android:layout_marginTop="490dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="20dp">
 
-
-    </TextView>
-
+    </ListView>
 
 
 </RelativeLayout>

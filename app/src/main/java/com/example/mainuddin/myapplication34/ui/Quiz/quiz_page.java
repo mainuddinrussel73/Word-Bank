@@ -1,7 +1,5 @@
 package com.example.mainuddin.myapplication34.ui.Quiz;
 
-import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -11,9 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Handler;
-import android.preference.PreferenceManager;
-import android.view.LayoutInflater;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -23,27 +19,19 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mainuddin.myapplication34.MainActivity;
+import com.example.mainuddin.myapplication34.ui.words.MainActivity;
 import com.example.mainuddin.myapplication34.R;
-import com.example.mainuddin.myapplication34.quiz_result;
-import com.example.mainuddin.myapplication34.ui.data.DatabaseHelper;
-import com.google.android.material.navigation.NavigationView;
-import com.tapadoo.alerter.Alerter;
-import com.tapadoo.alerter.OnHideAlertListener;
-import com.tapadoo.alerter.OnShowAlertListener;
+import com.example.mainuddin.myapplication34.ui.words.DatabaseHelper;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import es.dmoral.toasty.Toasty;
+
+import static com.example.mainuddin.myapplication34.ui.Quiz.quiz_result.wordBuck;
 
 public class quiz_page extends AppCompatActivity {
 
@@ -62,11 +50,18 @@ public class quiz_page extends AppCompatActivity {
     public static int correct = 0;
     public static int wrong = 0;
     public static int ignored = 0;
+    public boolean isPause = false;
+    public long total = 30000;
+    public  long temp = 0;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_list);
+
+
 
         final Intent intent = getIntent();
         score = intent.getIntExtra("s",0);
@@ -75,6 +70,7 @@ public class quiz_page extends AppCompatActivity {
         btnDisplay = findViewById(R.id.btnDisplay);
         btnDisplay.setEnabled(true);
         textView = findViewById(R.id.quiz_question);
+        textView.setMovementMethod(new ScrollingMovementMethod());
 
         scrollView = findViewById(R.id.scrollButtons);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -83,31 +79,7 @@ public class quiz_page extends AppCompatActivity {
 
 
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
-
-                if(score>prefs.getInt("highscore", 0)){
-
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putInt("highscore", score);
-                    editor.commit();
-
-                }
-
-                cancelTimer();
-
-                Intent myIntent = new Intent(view.getContext(), quiz_result.class);
-
-                myIntent.putExtra("score",score);
-
-                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivityForResult(myIntent, 0);
-                finish();
-            }
-        });
 
         double randomDouble = Math.random();
         randomDouble = randomDouble * 3 + 0;
@@ -116,7 +88,7 @@ public class quiz_page extends AppCompatActivity {
         while (word.isEmpty()){
             word = randomword(randomInt);
         }
-        textView.setText(word.get(0));
+        textView.setText("What is the meaning of the word : "+word.get(0)+"?");
 
         RadioGroup radioGroup = (RadioGroup)scrollView.findViewById(R.id.radioGroup);
 
@@ -135,6 +107,10 @@ public class quiz_page extends AppCompatActivity {
         nxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                System.out.println("wrrrr"+word.get(0));
+                //index+=1;
+                wordBuck.add(word.get(0));
+                System.out.println("sssss"+wordBuck.toString());
                 word.clear();
                 cancelTimer();
                 ignored++;
@@ -155,7 +131,9 @@ public class quiz_page extends AppCompatActivity {
 
         timer = findViewById(R.id.timer);
 
-        if(MainActivity.isDark){
+        SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+        boolean isDark = prefs.getBoolean("isDark",false);
+        if(isDark){
             textView.setBackgroundColor(Color.BLACK);
             scoress.setTextColor(Color.WHITE);
             textView.setTextColor(Color.WHITE);
@@ -180,16 +158,53 @@ public class quiz_page extends AppCompatActivity {
         }
 
 
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+                if(score>prefs.getInt("highscore", 0)){
+
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putInt("highscore", score);
+                    editor.commit();
+
+                }
+
+                cancelTimer();
+
+
+                Intent myIntent = new Intent(view.getContext(), quiz_result.class);
+
+                myIntent.putExtra("score",score);
+
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivityForResult(myIntent, 0);
+                finish();
+            }
+        });
+
 
 
         startTimer();
 
+
+
     }
 
     void startTimer() {
-        cTimer = new CountDownTimer(30000, 1000) {
+        cTimer = new CountDownTimer(total, 1000) {
             public void onTick(long millisUntilFinished) {
-                timer.setText("Time remaining: " + millisUntilFinished / 1000);
+                if(!isPause){
+                    total = millisUntilFinished;
+                    timer.setText("Time remaining: " + millisUntilFinished / 1000);
+                }
+                else{
+                    total = temp;
+                    cancelTimer();
+                    startTimer();
+                }
             }
             public void onFinish() {
                 timer.setText("Finished!");
@@ -197,6 +212,8 @@ public class quiz_page extends AppCompatActivity {
                 ignored++;
                 score--;
                 if(score<0)score = 0;
+                wordBuck.add(word.get(0));
+
                 Intent myIntent = new Intent(quiz_page.this, quiz_page.class);
                 //String s = view.findViewById(R.id.subtitle).toString();
                 //String s = (String) parent.getI;
@@ -215,6 +232,7 @@ public class quiz_page extends AppCompatActivity {
         if(cTimer!=null)
             cTimer.cancel();
     }
+
 
 
     @Override
@@ -253,6 +271,7 @@ public class quiz_page extends AppCompatActivity {
                                 "congrats", Toast.LENGTH_SHORT).show();
 
 
+
                         for (int i = 0; i < radioSexGroup .getChildCount(); i++) {
 
 
@@ -274,7 +293,7 @@ public class quiz_page extends AppCompatActivity {
 
 
                         correct++;
-                        scoress.setText(String.valueOf(score));
+                        scoress.setText("Current score : "+String.valueOf(score));
                         Intent myIntent = new Intent(quiz_page.this, quiz_page.class);
                         //String s = view.findViewById(R.id.subtitle).toString();
                         //String s = (String) parent.getI;
@@ -301,13 +320,17 @@ public class quiz_page extends AppCompatActivity {
                             }
 
                         }
+                        System.out.println("srrr"+sr.get(0));
+                        // index++;
+                        wordBuck.add(sr.get(0));
+                        System.out.println("sssss"+wordBuck.toString());
 
 
                         score--;
                         wrong++;
                         if(score<0)score = 0;
 
-                        scoress.setText(String.valueOf(score));
+                        scoress.setText("Current score : "+String.valueOf(score));
                         btnDisplay.setEnabled(false);
                         Intent myIntent = new Intent(quiz_page.this, quiz_page.class);
                         //String s = view.findViewById(R.id.subtitle).toString();
@@ -355,7 +378,7 @@ public class quiz_page extends AppCompatActivity {
         // String selectQuery = "SELECT  * FROM " + "Word_table";
 
         String query = "SELECT * FROM Word_table WHERE ID =" + randomInt;
-        System.out.println(randomInt);
+        //System.out.println(randomInt);
 
         Cursor  cursor = mDb.rawQuery(query,null);
 
@@ -390,7 +413,7 @@ public class quiz_page extends AppCompatActivity {
         // String selectQuery = "SELECT  * FROM " + "Word_table";
 
         String query = "SELECT * FROM Word_table WHERE ID =" + randomInt;
-        System.out.println(randomInt);
+        //System.out.println(randomInt);
 
         Cursor  cursor = mDb.rawQuery(query,null);
 
@@ -399,5 +422,25 @@ public class quiz_page extends AppCompatActivity {
             cursor.close();
         }
         return str;
+    }
+    @Override
+    public void onBackPressed(){
+        cancelTimer();
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        isPause = true;
+        temp = total;
+
+
+    }
+
+    @Override
+    public  void  onResume() {
+
+        super.onResume();
+        isPause = false;
+        temp = 0;
     }
 }

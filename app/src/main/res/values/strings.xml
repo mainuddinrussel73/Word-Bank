@@ -148,4 +148,9 @@
     <string name="title_activity_news_backup">Backup and Restore News</string>
     <string name="Time">Time Remaining :</string>
     <string name="result">Quiz result</string>
+    <string name="Promotodo">Promotodo</string>
+    <string name="promotodo">Promotodo</string>
+    <string name="extended_fab_content_desc">OK</string>
+    <string name="extended_fab_label">Ok</string>
+    <string name="Confirm">Quiz Confirm</string>
 </resources>

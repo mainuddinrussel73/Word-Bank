@@ -2,38 +2,15 @@ package com.example.mainuddin.myapplication34.ui.media;
 
 
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.media.MediaPlayer;
-import android.net.Uri;
-import android.os.Build;
-import android.os.Message;
 import android.util.Log;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.Toast;
 
-import com.example.mainuddin.myapplication34.MainActivity;
 import com.example.mainuddin.myapplication34.R;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-
-import androidx.appcompat.widget.Toolbar;
-import androidx.palette.graphics.Palette;
 import es.dmoral.toasty.Toasty;
 
-import static com.example.mainuddin.myapplication34.ui.media.NotificationService.notification;
 import static com.example.mainuddin.myapplication34.ui.media.NotificationService.notificationView;
 import static com.example.mainuddin.myapplication34.ui.media.NotificationService.notificationView1;
 

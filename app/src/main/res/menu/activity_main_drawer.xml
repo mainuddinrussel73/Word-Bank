@@ -41,6 +41,11 @@
                 android:id="@+id/music"
                 android:icon="@drawable/ic_library_music_black_24dp"
                 android:title="@string/music" />
+
+            <item
+                android:id="@+id/promotodo"
+                android:icon="@drawable/ic_timer_black_24dp"
+                android:title="@string/promotodo" />
         </menu>
     </item>
 

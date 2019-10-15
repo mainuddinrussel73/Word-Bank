@@ -1,7 +1,5 @@
 package com.example.mainuddin.myapplication34.ui.media;
 
-import com.example.mainuddin.myapplication34.ui.data.word;
-
 import java.io.Serializable;
 
 /**

@@ -16,7 +16,7 @@
 
         android:fastScrollEnabled="true"
         android:fastScrollAlwaysVisible="true"
-        android:layout_width="330dp"
+        android:layout_width="match_parent"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
         android:layout_marginBottom="@dimen/activity_horizontal_margin"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"

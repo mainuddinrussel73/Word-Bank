@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dist="http://schemas.android.com/apk/distribution"
     package="com.example.mainuddin.myapplication34">
-
+    <!-- danger permissions -->
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,39 +10,48 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".quiz_result"
-            android:label="@string/result"
+        <activity android:name=".ui.promotodo.promodetail"
+            android:label="@string/Promotodo"
             android:theme="@style/AppTheme.NoActionBar"
-
-
             ></activity>
         <activity
-            android:name=".news_backup"
-            android:label="@string/title_activity_news_backup"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".Quiz_confirm" />
+            android:name=".ui.promotodo.Promotodo_activity"
+            android:label="@string/Promotodo"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.data.news_update"
+            android:name=".ui.Quiz.quiz_result"
+            android:label="@string/result"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.news.news_backup"
+            android:label="@string/title_activity_news_backup"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.Quiz.Quiz_confirm"
+            android:label="@string/Confirm"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
+        <activity
+            android:name=".ui.news.news_update"
             android:label="@string/update_news"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".news_details"
+            android:name=".ui.news.news_details"
             android:label="@string/title_activity_news_details"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".news_activity"
+            android:name=".ui.news.news_activity"
             android:label="@string/title_activity_news"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.insert.add_news"
+            android:name=".ui.news.add_news"
             android:label="@string/title_add_news"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.BackupAndRestore.backup_restore"
+            android:name=".ui.words.backup_restore"
             android:label="@string/title_activity_backup_restore"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.words.MainActivity"
             android:allowBackup="true"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
@@ -53,11 +62,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.insert.add_page"
+            android:name=".ui.words.add_page"
             android:label="@string/title_activity_addpage"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.data.word_details"
+            android:name=".ui.words.word_details"
             android:label="@string/title_activity_word_details"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -81,18 +90,19 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".ui.share.NotificationIntentService">
+        <service android:name=".ui.media.NotificationIntentService">
             <intent-filter android:priority="10000">
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
         <service
-            android:name=".ui.Mainservice"
+            android:name=".ui.words.Mainservice"
             android:enabled="true" />
         <service android:name=".ui.media.NotificationService" />
+        <service android:name=".ui.promotodo.CountService" />
     </application>
 
-    <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" /> <!-- danger permissions -->
+    <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BROADCAST_PACKAGE_REPLACED" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />

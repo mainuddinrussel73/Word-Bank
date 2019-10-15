@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@+id/main_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:showIn="@layout/activity_promotodo_activity"
+    xmlns:tools="http://schemas.android.com/tools">
+    >
+    <RelativeLayout
+        android:id="@+id/textlayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
+        android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin">
+
+
+
+        <studio.carbonylgroup.textfieldboxes.ExtendedEditText
+            android:id="@+id/text_field_boxes2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:maxLines="1"
+            android:text=""
+            android:hint="Task"
+            app:prefix="$ " />
+
+
+
+    </RelativeLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/dark_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/textlayout"
+        android:layout_marginBottom="-54dp"
+        android:layout_marginTop="30dp"
+        android:paddingLeft="@dimen/alerter_activity_horizontal_margin"
+        android:paddingRight="@dimen/alerter_activity_horizontal_margin"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="@string/Ok"
+        android:layout_marginLeft="30dp"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/listview_border"
+        android:layout_marginLeft="@dimen/activity_vertical_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginRight="@dimen/activity_vertical_margin"
+        android:layout_marginTop="110dp"
+        >
+        <com.yydcdut.sdlv.SlideAndDragListView
+            android:id="@+id/lv_edit"
+            android:layout_width="fill_parent"
+            android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
+            android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/alerter_activity_horizontal_margin"
+            android:background="?android:selectableItemBackground"
+            android:layout_height="580dp"
+            android:divider="@null"
+            android:dividerHeight="10dp"
+            android:layout_marginTop="@dimen/alerter_activity_horizontal_margin"
+            android:listSelector="@drawable/list_selector"
+
+            android:paddingLeft="8dip"
+            android:paddingRight="8dip"
+            android:paddingTop="8dip"
+            >
+        </com.yydcdut.sdlv.SlideAndDragListView>
+
+    </RelativeLayout>
+</RelativeLayout>
+

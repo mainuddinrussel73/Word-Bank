@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.BackupAndRestore.backup_restore"
+    tools:context=".ui.words.backup_restore"
     tools:showIn="@layout/activity_backup_restore"
     android:id="@+id/coordinate"
     android:layout_marginTop="10dp"
