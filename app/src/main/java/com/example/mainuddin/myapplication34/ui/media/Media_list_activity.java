@@ -179,6 +179,7 @@ public class Media_list_activity extends AppCompatActivity {
 
 
 
+
         Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 
         Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(ListElementsArrayList.get(position).getImagepath()));
@@ -487,21 +488,22 @@ public class Media_list_activity extends AppCompatActivity {
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                         Window window = getWindow();
                                         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                                        window.setStatusBarColor(vibrant);
-                                        setTitleColor(vibrant);
-                                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(vibrant));
+                                        window.setStatusBarColor(Color.parseColor("#3a9ebe"));
+                                        setTitleColor(Color.WHITE);
+                                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#3a9ebe")));
                                         Toolbar actionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
                                         if (actionBarToolbar != null)
-                                            actionBarToolbar.setTitleTextColor(mutedDark);
+                                            actionBarToolbar.setTitleTextColor(Color.WHITE);
                                     }
 
 
                                     fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
-                                    toolbar.getNavigationIcon().setTint(mutedDark);
+                                    toolbar.getNavigationIcon().setTint(Color.WHITE);
 
                                     Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
-                                    icon.setTint(mutedDark);
+                                    icon.setTint(Color.WHITE);
                                     button.setBackground(icon);
+
                                     if(isClicked){
 
                                         Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
@@ -894,20 +896,20 @@ public class Media_list_activity extends AppCompatActivity {
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                         Window window = getWindow();
                                         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                                        window.setStatusBarColor(vibrant);
-                                        setTitleColor(vibrant);
-                                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(vibrant));
+                                        window.setStatusBarColor(Color.parseColor("#3a9ebe"));
+                                        setTitleColor(Color.WHITE);
+                                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#3a9ebe")));
                                         Toolbar actionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
                                         if (actionBarToolbar != null)
-                                            actionBarToolbar.setTitleTextColor(mutedDark);
+                                            actionBarToolbar.setTitleTextColor(Color.WHITE);
                                     }
 
 
                                     fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
-                                    toolbar.getNavigationIcon().setTint(mutedDark);
+                                    toolbar.getNavigationIcon().setTint(Color.WHITE);
 
                                     Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
-                                    icon.setTint(mutedDark);
+                                    icon.setTint(Color.WHITE);
                                     button.setBackground(icon);
                                     if(isClicked){
 
@@ -2671,6 +2673,7 @@ public class Media_list_activity extends AppCompatActivity {
                 } else {
                     // Playing
                     mp.pause();
+
                     playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
                     Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
                     myIcon2.setTint(play);

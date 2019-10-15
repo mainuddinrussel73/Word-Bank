@@ -1,6 +1,8 @@
 package com.example.mainuddin.myapplication34.ui.media;
 
 
+import android.app.ActivityManager;
+import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,8 +11,12 @@ import android.widget.Toast;
 
 import com.example.mainuddin.myapplication34.R;
 
+import java.util.Iterator;
+import java.util.List;
+
 import es.dmoral.toasty.Toasty;
 
+import static android.content.Context.ACTIVITY_SERVICE;
 import static com.example.mainuddin.myapplication34.ui.media.NotificationService.notificationView;
 import static com.example.mainuddin.myapplication34.ui.media.NotificationService.notificationView1;
 
@@ -74,6 +80,33 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                     break;
                 case STOP_ACTION :
 
+
+                    if (isAppOnForeground(context,"com.example.mainuddin.myapplication34")) {
+                        // App is in Foreground
+                        if(!mediaListActivity.mp.isPlaying()){
+                           // mediaListActivity.mp.stop();
+
+                        }else {
+                            mediaListActivity.mp.pause();
+
+                        }
+
+                    } else {
+                        // App is in Background
+                        if(!mediaListActivity.mp.isPlaying()){
+                            mediaListActivity.mp.stop();
+
+                        }else {
+                            mediaListActivity.mp.pause();
+
+                        }
+
+                        Intent service = new Intent(context, NotificationService.class);
+                        context.stopService(service);
+                    }
+
+
+
                     Toast.makeText(context, "stop", Toast.LENGTH_SHORT).show();
                     System.out.println("stop");
 // you stop action
@@ -116,6 +149,26 @@ public class MyNotificationReceiver extends BroadcastReceiver {
             }
         }
     }
+
+    private boolean isAppOnForeground(Context context,String appPackageName) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+        if (appProcesses == null) {
+            //App is closed
+            return false;
+        }
+        final String packageName = appPackageName;
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appProcess.processName.equals(packageName)) {
+                //                Log.e("app",appPackageName);
+                return true;
+            }else{
+                //App is closed
+            }
+        }
+        return false;
+    }
+
 
 
 

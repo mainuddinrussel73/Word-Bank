@@ -12,6 +12,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -36,9 +37,14 @@ public class NotificationService extends Service {
 
     public static  RemoteViews notificationView;
     public static  RemoteViews notificationView1;
+    AudioManager am = null;
+
+
+    public static  RemoteViews notificationView3;
     public static  PendingIntent pendingIntentYes;
     public static  PendingIntent pendingIntentNo;
     public static  PendingIntent pendingIntentNx;
+    public static  PendingIntent pendingIntenttogg;
     public static   NotificationManager manager;
     public  static NotificationCompat.Builder notificationBuilder;
     public static NotificationCompat.Builder notification;
@@ -72,7 +78,11 @@ public class NotificationService extends Service {
             try{
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
                     p = intent.getIntExtra("p",0);
+
+                    // implementation reference
+
                     startMyOwnForeground();
+
                 }
 
             }
@@ -287,9 +297,22 @@ public class NotificationService extends Service {
         notificationView1.setTextColor(R.id.status_bar_track_name,getComplimentColor(getDominantColor(bm)));
         notificationView1.setTextColor(R.id.status_bar_artist_name,getComplimentColor(getDominantColor(bm)));
 
+
+        Intent toggle = new Intent();
+        toggle.setAction(MyNotificationReceiver.STOP_ACTION);
+        pendingIntenttogg = PendingIntent.getBroadcast(this, MyNotificationReceiver.REQUEST_CODE_NOTIFICATION, toggle, PendingIntent.FLAG_UPDATE_CURRENT);
+        notificationView1.setOnClickPendingIntent(R.id.status_bar_collapse, pendingIntenttogg);
+        notificationView.setOnClickPendingIntent(R.id.status_bar_collapse, pendingIntenttogg);
+
+
         notificationView.setOnClickPendingIntent(R.id.status_bar_play, pendingIntentYes);
         notificationView1.setOnClickPendingIntent(R.id.status_bar_play, pendingIntentYes);
         notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+        notificationBuilder.setSmallIcon(R.drawable.ic_pawprint);
+
+       // notificationChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC;
+//        notificationBuilder.setLargeIcon(R.mipmap.ic_launcher);
+        notificationBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
 
         notification = notificationBuilder.setOngoing(true)
                 .setSmallIcon(R.drawable.ic_launcher_background)
@@ -297,6 +320,8 @@ public class NotificationService extends Service {
                 .setPriority(NotificationManager.IMPORTANCE_MIN)
                 .setCategory(Notification.CATEGORY_SERVICE)
                 .setColor(getDominantColor(bm))
+                .setSmallIcon(R.drawable.ic_iconfinder_083_music_183211)
+                .setOngoing(true)
                 .setCustomContentView(notificationView1)
                 .setCustomBigContentView(notificationView);
         notification.setCustomContentView(notificationView);
