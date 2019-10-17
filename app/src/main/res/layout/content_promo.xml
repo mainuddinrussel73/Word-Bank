@@ -6,7 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:showIn="@layout/activity_promotodo_activity"
     xmlns:tools="http://schemas.android.com/tools">
-    >
+
     <RelativeLayout
         android:id="@+id/textlayout"
         android:layout_width="match_parent"
@@ -46,6 +46,7 @@
         android:layout_marginLeft="30dp"/>
 
     <RelativeLayout
+        android:id="@+id/borderss"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/listview_border"

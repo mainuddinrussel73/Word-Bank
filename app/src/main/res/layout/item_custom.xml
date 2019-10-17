@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout android:id="@+id/layout_item_edit"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/backgroundborder"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -116,7 +116,6 @@
         android:layout_height="20dp"
         android:layout_marginLeft="125dp"
         android:layout_marginTop="50dp"
-        android:layout_marginRight="50dp"
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="vertical"
@@ -134,6 +133,48 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="215dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="50dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_marginBottom="5dp">
+
+        <TextView
+            android:id="@+id/dates"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="eded/mm/kjk"
+            android:textSize="7dp"
+            android:textColor="@android:color/black"
+            >
+
+        </TextView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="215dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="50dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_marginBottom="5dp">
+
+       <ImageView
+           android:id="@+id/loopp"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:src="@drawable/ic_loop_black_24dp">
+
+       </ImageView>
+
+    </LinearLayout>
 
 
 </RelativeLayout>

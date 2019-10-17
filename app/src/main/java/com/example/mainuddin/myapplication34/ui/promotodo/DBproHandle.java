@@ -105,9 +105,9 @@ public class DBproHandle extends SQLiteOpenHelper {
                 + ID + " INTEGER PRIMARY KEY,"
                 + TITLE + " TEXT,"
                 + NUM + " INTEGER,"
-                + COMPLETED + "INTEGER,"
-                + ISREPEAT + "INTEGER,"
-                + DUE_DATE + "TEXT" + ")";
+                + COMPLETED + " INTEGER,"
+                + ISREPEAT + " INTEGER,"
+                + DUE_DATE + " TEXT" + ")";
 
         db.execSQL(CREATE_CONTACTS_TABLE);
     }
@@ -129,17 +129,32 @@ public class DBproHandle extends SQLiteOpenHelper {
             return true;
     }
 
+    public boolean insertIsreat(String title,int isrepeat,int num,String date) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(TITLE,title);
+        contentValues.put(NUM,num);
+        contentValues.put(ISREPEAT,isrepeat);
+        contentValues.put(DUE_DATE,date);
+        long result = db.insert(TABLE_NAME,null ,contentValues);
+        if(result == -1)
+            return false;
+        else
+            return true;
+    }
+
     public Cursor getAllData() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select * from "+TABLE_NAME,null);
         return res;
     }
 
-    public boolean updateIsrepeat(String id,String old_title,String title,int isRepeat) {
+    public boolean updateIsrepeat(String title,int isrepeat) {
         SQLiteDatabase db = this.getWritableDatabase();
         SQLiteDatabase db1 = this.getReadableDatabase();
+        String id = new String("1");
         try{
-            Cursor re  = db1.rawQuery("SELECT * FROM Word_table WHERE WORD = ?; ", new String[] {old_title});
+            Cursor re  = db1.rawQuery("SELECT * FROM promotodo_table WHERE TITLE = ?; ", new String[] {title});
             if (re.moveToFirst()) {
                 do {
                     System.out.println(re.getString(0));
@@ -148,15 +163,18 @@ public class DBproHandle extends SQLiteOpenHelper {
             }
 
             re.close();
+
             // System.out.println(re.getString(0));
         }catch (Exception e){
             System.out.println(e.getMessage());
         }
+
         ContentValues contentValues = new ContentValues();
         contentValues.put(ID,id);
         contentValues.put(TITLE,title);
-        contentValues.put(ISREPEAT,isRepeat);
+        contentValues.put(ISREPEAT,isrepeat);
         db.update(TABLE_NAME, contentValues, "ID = ?",new String[] {id});
+
         return true;
     }
 
@@ -182,6 +200,31 @@ public class DBproHandle extends SQLiteOpenHelper {
         contentValues.put(ID,id);
         contentValues.put(TITLE,title);
         contentValues.put(NUM,num);
+        db.update(TABLE_NAME, contentValues, "ID = ?",new String[] {id});
+        return true;
+    }
+
+    public boolean updatID(String title,int num) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db1 = this.getReadableDatabase();
+        String id = new String("1");
+        try{
+            Cursor re  = db1.rawQuery("SELECT * FROM promotodo_table WHERE TITLE = ?; ", new String[] {title});
+            if (re.moveToFirst()) {
+                do {
+                    System.out.println(re.getString(0));
+                    id =  re.getString(0);
+                } while (re.moveToNext());
+            }
+
+            re.close();
+            // System.out.println(re.getString(0));
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ID,num);
+        contentValues.put(TITLE,title);
         db.update(TABLE_NAME, contentValues, "ID = ?",new String[] {id});
         return true;
     }
@@ -212,11 +255,12 @@ public class DBproHandle extends SQLiteOpenHelper {
         db.update(TABLE_NAME, contentValues, "ID = ?",new String[] {id});
         return true;
     }
-    public boolean updateDuedate(String id,String old_title,String title,String due) {
+    public boolean updateDuedate(String title,String due) {
         SQLiteDatabase db = this.getWritableDatabase();
         SQLiteDatabase db1 = this.getReadableDatabase();
+        String id = new String("1");
         try{
-            Cursor re  = db1.rawQuery("SELECT * FROM promotodo_table WHERE TITLE = ?; ", new String[] {old_title});
+            Cursor re  = db1.rawQuery("SELECT * FROM promotodo_table WHERE TITLE = ?; ", new String[] {title});
             if (re.moveToFirst()) {
                 do {
                     System.out.println(re.getString(0));
