@@ -4,17 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="150dp"
     android:id="@+id/l_layout"
-    android:layout_margin="20dp"
-    android:background="@color/colorAccent"
+    android:background="@color/A400red"
     android:textColor="@color/white"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:shadowColor="@color/link"
-    app:shadowPercentHeight="0.8"
-    app:shadowPercentWidth="0.8"
-    app:shadowRadius="30dp"
-    app:shadowYOffset="30"
     >
 
 
@@ -33,7 +24,16 @@
                 android:textColor="@color/white"
                 android:text="HH"
                 android:layout_marginLeft="10dp"
-                android:textSize="20dp"/>
+                android:textSize="30dp"/>
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text=":"
+                android:layout_marginLeft="10dp"
+                android:textSize="30dp"/>
 
             <TextView
                 android:id="@+id/timerview1"
@@ -42,7 +42,16 @@
                 android:layout_marginLeft="10dp"
                 android:textColor="@color/white"
                 android:text="MM"
-                android:textSize="20dp"/>
+                android:textSize="30dp"/>
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text=":"
+                android:layout_marginLeft="10dp"
+                android:textSize="30dp"/>
 
             <TextView
                 android:id="@+id/timerview2"
@@ -51,7 +60,7 @@
                 android:textColor="@color/white"
                 android:text="SS"
                 android:layout_marginLeft="10dp"
-                android:textSize="20dp"/>
+                android:textSize="30dp"/>
         </LinearLayout>
 
 </LinearLayout>

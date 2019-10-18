@@ -165,9 +165,9 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
                         boolean b = mDBHelper.insertIsreat(tfb.getText().toString(),0,0,str);
                         if (b == true) {
                             Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
-                            initList();
-                            initMenu();
-                            initUiAndListener();
+                            Intent myIntent = new Intent(view.getContext(), Promotodo_activity.class);
+                            myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivityForResult(myIntent, 0);
                         } else {
                             Toasty.error(getApplicationContext(), "opps.", Toast.LENGTH_SHORT).show();
                         }
