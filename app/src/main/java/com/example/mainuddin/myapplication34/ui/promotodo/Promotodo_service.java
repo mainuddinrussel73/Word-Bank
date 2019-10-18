@@ -49,7 +49,7 @@ public class Promotodo_service extends Service {
     public  static NotificationCompat.Builder notificationBuilder;
     public static NotificationCompat.Builder notification;
 
-    public  static  long total = 10000;
+    public  static  long total = 1800000;
 
     private final static String TAG = "BroadcastService";
 
@@ -91,7 +91,7 @@ public class Promotodo_service extends Service {
                 bi.setAction(Promotodo_receiver.SET_TIME);
                 bi.putExtra("countdown", new Long(0));
                 sendBroadcast(bi);
-                total = 10000;
+                total = 1800000;
             }
         };
 
@@ -139,7 +139,7 @@ public class Promotodo_service extends Service {
                 bi.setAction(Promotodo_receiver.SET_TIME);
                 bi.putExtra("countdown", new Long(0));
                 context.sendBroadcast(bi);
-                total = 10000;
+                total = 1800000;
             }
         };
 

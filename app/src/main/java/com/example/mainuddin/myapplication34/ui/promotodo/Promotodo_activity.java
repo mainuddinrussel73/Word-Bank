@@ -61,7 +61,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
         SlideAndDragListView.OnMenuItemClickListener, SlideAndDragListView.OnItemDeleteListener {
 
 
-    long tike = 100;
+    long tike = 18000;
     public static List<promotododata> promotododataList = new ArrayList<>();
     private Menu mMenu;
     public static SlideAndDragListView mListView;

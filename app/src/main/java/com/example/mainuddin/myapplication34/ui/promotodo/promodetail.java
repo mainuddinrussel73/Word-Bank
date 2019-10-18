@@ -79,8 +79,8 @@ public class promodetail extends AppCompatActivity {
     public  static FloatingActionButton fab1 ,fab2,fab3;
     public  static  boolean toogle =false;
     private CountDownTimer cdTimer;
-    private long total = 10000;
-    long tike = 100;
+    private long total = 1800000;
+    long tike = 18000;
     public  static  CircularProgressBar circularProgressBar ;
     public  static  CircularProgressBar circularProgressBar1,circularProgressBar2,circularProgressBar3,circularProgressBar4 ;
     public  static  CircularProgressBar circularProgressBar11,circularProgressBar12,circularProgressBar13,circularProgressBar14 ;
@@ -654,7 +654,7 @@ public class promodetail extends AppCompatActivity {
                     //Promotodo_service.pause();
 
 
-                    Promotodo_service.total = 10000;
+                    Promotodo_service.total = 1800000;
 
                     Promotodo_service.ispause = true;
                     stopService(new Intent(promodetail.this, Promotodo_service.class));

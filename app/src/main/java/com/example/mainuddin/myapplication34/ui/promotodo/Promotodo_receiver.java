@@ -67,7 +67,7 @@ public class Promotodo_receiver extends BroadcastReceiver {
 
     int tp = 0;
 
-    long tike = 100;
+    long tike = 18000;
 
     int ccc = prefs.getInt("CURR",0);
     promotododata ccco= Promotodo_activity.promotododataList.get(ccc);
