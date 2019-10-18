@@ -27,6 +27,8 @@ import com.example.mainuddin.myapplication34.ui.media.Media_list_activity;
 import com.example.mainuddin.myapplication34.ui.media.MyNotificationReceiver;
 import com.example.mainuddin.myapplication34.ui.media.NotificationService;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import androidx.annotation.RequiresApi;
@@ -48,6 +50,7 @@ import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.cir
 import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.circularProgressBar4;
 import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.curr;
 import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.fab;
+import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.prefs;
 import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.shake;
 import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.textView1;
 import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.textView2;
@@ -62,11 +65,14 @@ public class Promotodo_receiver extends BroadcastReceiver {
     public static final String GET_TIME = "GET_TIME";
     public static final String SET_TIME = "SET_TIME";
 
+    int tp = 0;
 
+    long tike = 100;
 
-    int ccc = promodetail.prefs.getInt("CURR",0);
+    int ccc = prefs.getInt("CURR",0);
     promotododata ccco= Promotodo_activity.promotododataList.get(ccc);
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
@@ -75,12 +81,12 @@ public class Promotodo_receiver extends BroadcastReceiver {
 
 
         if(action.equals(GET_TIME)){
-            updateGUI(intent);
+            updateGUI(context,intent);
         }
         if(action.equals(SET_TIME)){
             Intent service = new Intent(context, Promotodo_service.class);
             context.stopService(service);
-            updateGUI(intent);
+            updateGUI(context,intent);
         }
 
 
@@ -107,7 +113,8 @@ public class Promotodo_receiver extends BroadcastReceiver {
         return false;
     }
 
-    private void updateGUI(Intent intent) {
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void updateGUI(Context context,Intent intent) {
 
         System.out.println("finishd       jjj");
 
@@ -152,20 +159,20 @@ public class Promotodo_receiver extends BroadcastReceiver {
 
 
                 if(ccco.getNum_of_promotodo()==1){
-                    circularProgressBar11.setProgressWithAnimation(18000, (long) 1000);
+                    circularProgressBar11.setProgressWithAnimation(tike, (long) 1000);
                 }else if(ccco.getNum_of_promotodo()==2){
 
-                    circularProgressBar11.setProgressWithAnimation(18000, (long) 1000);
-                    circularProgressBar12.setProgressWithAnimation(18000, (long) 1000);
+                    circularProgressBar11.setProgressWithAnimation(tike, (long) 1000);
+                    circularProgressBar12.setProgressWithAnimation(tike, (long) 1000);
                 }else if(ccco.getNum_of_promotodo()==3){
-                    circularProgressBar11.setProgressWithAnimation(18000, (long) 1000);
-                    circularProgressBar12.setProgressWithAnimation(18000, (long) 1000);
-                    circularProgressBar13.setProgressWithAnimation(18000, (long) 1000);
+                    circularProgressBar11.setProgressWithAnimation(tike, (long) 1000);
+                    circularProgressBar12.setProgressWithAnimation(tike, (long) 1000);
+                    circularProgressBar13.setProgressWithAnimation(tike, (long) 1000);
                 }else if(ccco.getNum_of_promotodo()==4){
-                    circularProgressBar11.setProgressWithAnimation(18000, (long) 1000);
-                    circularProgressBar12.setProgressWithAnimation(18000, (long) 1000);
-                    circularProgressBar13.setProgressWithAnimation(18000, (long) 1000);
-                    circularProgressBar14.setProgressWithAnimation(18000, (long) 1000);
+                    circularProgressBar11.setProgressWithAnimation(tike, (long) 1000);
+                    circularProgressBar12.setProgressWithAnimation(tike, (long) 1000);
+                    circularProgressBar13.setProgressWithAnimation(tike, (long) 1000);
+                    circularProgressBar14.setProgressWithAnimation(tike, (long) 1000);
                 }else {
 
                 }
@@ -176,16 +183,95 @@ public class Promotodo_receiver extends BroadcastReceiver {
                 fab.setImageBitmap(textAsBitmap(00+":"+00 , 40, Color.WHITE));
 
                 //mediaPlayer.stop();
+
+
+
                 int p= 0 ;
+
+                int k = Promotodo_activity.promotododataList.get(ccc).ISREPEAT;
+                String s = Promotodo_activity.promotododataList.get(ccc).TITLE;
+
+                String d =  Promotodo_activity.promotododataList.get(ccc).getDue_date();
+                //int c = Promotodo_activity.promotododataList.get(ccc).getCompleted_promotodo();
+                //int n = Promotodo_activity.promotododataList.get(ccc).NUM;
+
                 Promotodo_activity.mDBHelper.updateNum(ccco.getTitle(),ccco.getNum_of_promotodo()-1);
                 Promotodo_activity.mDBHelper.updateCompleted(ccco.getTitle(),ccco.getCompleted_promotodo()+1);
                 p = Promotodo_activity.promotododataList.get(ccc).getNum_of_promotodo()-1;
                 Promotodo_activity.promotododataList.get(ccc).setNum_of_promotodo(p);
-                if(p<0){
+
+
+
+                //int sub = prefs.getInt("t",0);
+
+
+                int t  = Promotodo_activity.promotododataList.get(ccc).getCompleted_promotodo()+1;
+
+
+
+                Promotodo_activity.promotododataList.get(ccc).setCompleted_promotodo(t);
+
+
+                int c = Promotodo_activity.promotododataList.get(ccc).getCompleted_promotodo();
+                int n = c+Promotodo_activity.promotododataList.get(ccc).NUM;
+
+                if(p<=0){
                     fab.setActivated(false);
+
+
+                    c = 0;
+
+                    int sub = prefs.getInt("t",0);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putInt("t", sub+1);
+                    editor.commit();
+
+
+                    // System.out.println(k + "isrepeat");
+                    promotododata promotododata = Promotodo_activity.promotododataList.get(ccc);
+                    int i = Promotodo_activity.mDBHelper.deleteData(Promotodo_activity.promotododataList.get(ccc).getTitle());
+                    Promotodo_activity.promotododataList.remove(ccc);
+                    if (k == 1) {
+                        LocalDate parsedDate = LocalDate.parse(d); //Parse date from String
+                        LocalDate addedDate = parsedDate.plusDays(1);
+                        String str = addedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                        boolean b = Promotodo_activity.mDBHelper.insertAll(s, k, n,str,c);
+                        if (b == true) {
+                            //Toasty.success(intent.get(), "Repeated.", Toast.LENGTH_SHORT).show();
+                            promotododata.setDue_date(str);
+                            promotododata.setNum_of_promotodo(0);
+                            Promotodo_activity.promotododataList.add(Promotodo_activity.promotododataList.size(), promotododata);
+                            //Promotodo_activity.mAdapter.notifyDataSetChanged();
+                            Toasty.success(context, "Repeated.", Toast.LENGTH_SHORT).show();
+
+
+                        } else {
+                            Toasty.error(context, "opps.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    //promodetail.fab1.setImageResource(R.drawable.ic_play_arrow_black_24dp);
+                   // toogle=!toogle;
+
+                    Promotodo_service.ispause = true;
+                    Intent myIntent = new Intent();
+
+
+                    try{
+                        myIntent.setClassName(context.getApplicationContext().getPackageName(), "com.example.mainuddin.myapplication34.ui.promotodo.Promotodo_activity");
+                        myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        context.startActivity(myIntent);}catch (Exception e){
+                        System.out.println(e.getMessage());
+                    }
+
+
                 }
                 else {
 
+                    int sub = prefs.getInt("t",0);
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putInt("t", sub+1);
+                    editor.commit();
 
                     System.out.println("close it");
                     textView2.setText(String.format("%02d", 00));
@@ -202,31 +288,31 @@ public class Promotodo_receiver extends BroadcastReceiver {
 
                     if(p==1){
                         fab.setActivated(true);
-                        circularProgressBar1.setProgressWithAnimation(18000, (long) 1000);
+                        circularProgressBar1.setProgressWithAnimation(tike, (long) 1000);
 
                         circularProgressBar2.setProgressWithAnimation(0, (long) 1000);
                         circularProgressBar3.setProgressWithAnimation(0, (long) 1000);
                         circularProgressBar4.setProgressWithAnimation(0, (long) 1000);
                     }else if(p==2){
                         fab.setActivated(true);
-                        circularProgressBar1.setProgressWithAnimation(18000, (long) 1000);
-                        circularProgressBar2.setProgressWithAnimation(18000, (long) 1000);
+                        circularProgressBar1.setProgressWithAnimation(tike, (long) 1000);
+                        circularProgressBar2.setProgressWithAnimation(tike, (long) 1000);
 
                         circularProgressBar3.setProgressWithAnimation(0, (long) 1000);
                         circularProgressBar4.setProgressWithAnimation(0, (long) 1000);
                     }else if(p==3){
                         fab.setActivated(true);
-                        circularProgressBar1.setProgressWithAnimation(18000, (long) 1000);
-                        circularProgressBar2.setProgressWithAnimation(18000, (long) 1000);
-                        circularProgressBar3.setProgressWithAnimation(18000, (long) 1000);
+                        circularProgressBar1.setProgressWithAnimation(tike, (long) 1000);
+                        circularProgressBar2.setProgressWithAnimation(tike, (long) 1000);
+                        circularProgressBar3.setProgressWithAnimation(tike, (long) 1000);
 
                         circularProgressBar4.setProgressWithAnimation(0, (long) 1000);
                     }else if(p==4){
                         fab.setActivated(true);
-                        circularProgressBar1.setProgressWithAnimation(18000, (long) 1000);
-                        circularProgressBar2.setProgressWithAnimation(18000, (long) 1000);
-                        circularProgressBar3.setProgressWithAnimation(18000, (long) 1000);
-                        circularProgressBar4.setProgressWithAnimation(18000, (long) 1000);
+                        circularProgressBar1.setProgressWithAnimation(tike, (long) 1000);
+                        circularProgressBar2.setProgressWithAnimation(tike, (long) 1000);
+                        circularProgressBar3.setProgressWithAnimation(tike, (long) 1000);
+                        circularProgressBar4.setProgressWithAnimation(tike, (long) 1000);
                     }else {
                         circularProgressBar1.setProgressWithAnimation(0, (long) 1000);
                         circularProgressBar2.setProgressWithAnimation(0, (long) 1000);
@@ -237,31 +323,31 @@ public class Promotodo_receiver extends BroadcastReceiver {
 
                         if(p==1){
                            // promodetail.fab.setActivated(true);
-                            circularProgressBar11.setProgressWithAnimation(18000, (long) 1000);
+                            circularProgressBar11.setProgressWithAnimation(tike, (long) 1000);
 
                             circularProgressBar12.setProgressWithAnimation(0, (long) 1000);
                             circularProgressBar13.setProgressWithAnimation(0, (long) 1000);
                             circularProgressBar14.setProgressWithAnimation(0, (long) 1000);
                         }else if(p==2){
                            // promodetail.fab.setActivated(true);
-                            circularProgressBar11.setProgressWithAnimation(18000, (long) 1000);
-                            circularProgressBar12.setProgressWithAnimation(18000, (long) 1000);
+                            circularProgressBar11.setProgressWithAnimation(tike, (long) 1000);
+                            circularProgressBar12.setProgressWithAnimation(tike, (long) 1000);
 
                             circularProgressBar13.setProgressWithAnimation(0, (long) 1000);
                             circularProgressBar14.setProgressWithAnimation(0, (long) 1000);
                         }else if(p==3){
                            // promodetail.fab.setActivated(true);
-                            circularProgressBar11.setProgressWithAnimation(18000, (long) 1000);
-                            circularProgressBar12.setProgressWithAnimation(18000, (long) 1000);
-                            circularProgressBar13.setProgressWithAnimation(18000, (long) 1000);
+                            circularProgressBar11.setProgressWithAnimation(tike, (long) 1000);
+                            circularProgressBar12.setProgressWithAnimation(tike, (long) 1000);
+                            circularProgressBar13.setProgressWithAnimation(tike, (long) 1000);
 
                             circularProgressBar14.setProgressWithAnimation(0, (long) 1000);
                         }else if(p==4){
                            // promodetail.fab.setActivated(true);
-                            circularProgressBar1.setProgressWithAnimation(18000, (long) 1000);
-                            circularProgressBar2.setProgressWithAnimation(18000, (long) 1000);
-                            circularProgressBar3.setProgressWithAnimation(18000, (long) 1000);
-                            circularProgressBar4.setProgressWithAnimation(18000, (long) 1000);
+                            circularProgressBar1.setProgressWithAnimation(tike, (long) 1000);
+                            circularProgressBar2.setProgressWithAnimation(tike, (long) 1000);
+                            circularProgressBar3.setProgressWithAnimation(tike, (long) 1000);
+                            circularProgressBar4.setProgressWithAnimation(tike, (long) 1000);
                         }else {
                             circularProgressBar11.setProgressWithAnimation(0, (long) 1000);
                             circularProgressBar12.setProgressWithAnimation(0, (long) 1000);
@@ -272,9 +358,11 @@ public class Promotodo_receiver extends BroadcastReceiver {
                     }
 
 
-                    promodetail.fab1.setImageResource(R.drawable.ic_play_arrow_black_24dp);
-                    toogle=!toogle;
-                    promodetail.revealShow(true);
+                    Promotodo_service.ispause = true;
+                    //promodetail.fab1.setImageResource(R.drawable.ic_play_arrow_black_24dp);
+                    //toogle=!toogle;
+                    if(!promodetail.toogleview)
+                    promodetail.revealShow(false);
 
 
                 }

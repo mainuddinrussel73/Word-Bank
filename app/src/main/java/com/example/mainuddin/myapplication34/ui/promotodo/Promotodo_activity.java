@@ -61,6 +61,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
         SlideAndDragListView.OnMenuItemClickListener, SlideAndDragListView.OnItemDeleteListener {
 
 
+    long tike = 100;
     public static List<promotododata> promotododataList = new ArrayList<>();
     private Menu mMenu;
     public static SlideAndDragListView mListView;
@@ -118,11 +119,8 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
         }
         totalhour.setText("Total hour : "+ (tasktime*0.5));
 
-        float remaintime = 0;
-        for (int i = 0; i <promotododataList.size() ; i++) {
-            remaintime+=promotododataList.get(i).getCompleted_promotodo();
-        }
-        remain.setText("Completed Hours : "+ (remaintime*0.5));
+        SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+        remain.setText("Completed Hours : "+ (prefs1.getInt("t",0)*0.5));
 
         mToast = Toast.makeText(Promotodo_activity.this, "", Toast.LENGTH_SHORT);
 
@@ -448,7 +446,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
         mToast.show();
     }
 
-    private BaseAdapter mAdapter = new BaseAdapter() {
+    public BaseAdapter mAdapter = new BaseAdapter() {
 
 
         CustomViewHolder cvh;
@@ -486,13 +484,13 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
                 cvh.date = rowView.findViewById(R.id.dates);
                 cvh.imgLogo2 = (ImageView) rowView.findViewById(R.id.img_item_edit2);
                 cvh.circularProgressBar = rowView.findViewById(R.id.circularProgressBar);
-                cvh.circularProgressBar.setProgressMax(18000);
+                cvh.circularProgressBar.setProgressMax(tike);
                 cvh.circularProgressBar1 = rowView.findViewById(R.id.circularProgressBar1);
-                cvh.circularProgressBar1.setProgressMax(18000);
+                cvh.circularProgressBar1.setProgressMax(tike);
                 cvh.circularProgressBar2 = rowView.findViewById(R.id.circularProgressBar2);
-                cvh.circularProgressBar2.setProgressMax(18000);
+                cvh.circularProgressBar2.setProgressMax(tike);
                 cvh.circularProgressBar3 = rowView.findViewById(R.id.circularProgressBar3);
-                cvh.circularProgressBar3.setProgressMax(18000);
+                cvh.circularProgressBar3.setProgressMax(tike);
                 cvh.imgLogo2.setOnTouchListener(mOnTouchListener);
                 cvh.imgLogo.setOnClickListener(mOnTouchListener1);
                 rowView.setTag(cvh);
@@ -576,25 +574,25 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
             cvh.circularProgressBar2.setProgressBarColor(Color.RED);
             cvh.circularProgressBar3.setProgressBarColor(Color.RED);
             if (promotododataList.get(position).getNum_of_promotodo() == 1) {
-                cvh.circularProgressBar.setProgressWithAnimation(18000, (long) 1000);
+                cvh.circularProgressBar.setProgressWithAnimation(tike, (long) 1000);
                 cvh.circularProgressBar1.setProgressWithAnimation(0, (long) 1000);
                 cvh.circularProgressBar2.setProgressWithAnimation(0, (long) 1000);
                 cvh.circularProgressBar3.setProgressWithAnimation(0, (long) 1000);
             } else if (promotododataList.get(position).getNum_of_promotodo() == 2) {
-                cvh.circularProgressBar.setProgressWithAnimation(18000, (long) 1000);
-                cvh.circularProgressBar1.setProgressWithAnimation(18000, (long) 1000);
+                cvh.circularProgressBar.setProgressWithAnimation(tike, (long) 1000);
+                cvh.circularProgressBar1.setProgressWithAnimation(tike, (long) 1000);
                 cvh.circularProgressBar2.setProgressWithAnimation(0, (long) 1000);
                 cvh.circularProgressBar3.setProgressWithAnimation(0, (long) 1000);
             } else if (promotododataList.get(position).getNum_of_promotodo() == 3) {
-                cvh.circularProgressBar.setProgressWithAnimation(18000, (long) 1000);
-                cvh.circularProgressBar1.setProgressWithAnimation(18000, (long) 1000);
-                cvh.circularProgressBar2.setProgressWithAnimation(18000, (long) 1000);
+                cvh.circularProgressBar.setProgressWithAnimation(tike, (long) 1000);
+                cvh.circularProgressBar1.setProgressWithAnimation(tike, (long) 1000);
+                cvh.circularProgressBar2.setProgressWithAnimation(tike, (long) 1000);
                 cvh.circularProgressBar3.setProgressWithAnimation(0, (long) 1000);
             } else if (promotododataList.get(position).getNum_of_promotodo() == 4) {
-                cvh.circularProgressBar.setProgressWithAnimation(18000, (long) 1000);
-                cvh.circularProgressBar1.setProgressWithAnimation(18000, (long) 1000);
-                cvh.circularProgressBar2.setProgressWithAnimation(18000, (long) 1000);
-                cvh.circularProgressBar3.setProgressWithAnimation(18000, (long) 1000);
+                cvh.circularProgressBar.setProgressWithAnimation(tike, (long) 1000);
+                cvh.circularProgressBar1.setProgressWithAnimation(tike, (long) 1000);
+                cvh.circularProgressBar2.setProgressWithAnimation(tike, (long) 1000);
+                cvh.circularProgressBar3.setProgressWithAnimation(tike, (long) 1000);
             } else {
 
             }

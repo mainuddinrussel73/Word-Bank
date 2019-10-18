@@ -143,6 +143,21 @@ public class DBproHandle extends SQLiteOpenHelper {
             return true;
     }
 
+    public boolean insertAll(String title,int isrepeat,int num,String date,int completed) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(TITLE,title);
+        contentValues.put(NUM,num);
+        contentValues.put(ISREPEAT,isrepeat);
+        contentValues.put(DUE_DATE,date);
+        contentValues.put(COMPLETED,completed);
+        long result = db.insert(TABLE_NAME,null ,contentValues);
+        if(result == -1)
+            return false;
+        else
+            return true;
+    }
+
     public Cursor getAllData() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select * from "+TABLE_NAME,null);

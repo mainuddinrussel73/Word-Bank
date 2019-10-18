@@ -79,7 +79,8 @@ public class promodetail extends AppCompatActivity {
     public  static FloatingActionButton fab1 ,fab2,fab3;
     public  static  boolean toogle =false;
     private CountDownTimer cdTimer;
-    private long total = 1800000;
+    private long total = 10000;
+    long tike = 100;
     public  static  CircularProgressBar circularProgressBar ;
     public  static  CircularProgressBar circularProgressBar1,circularProgressBar2,circularProgressBar3,circularProgressBar4 ;
     public  static  CircularProgressBar circularProgressBar11,circularProgressBar12,circularProgressBar13,circularProgressBar14 ;
@@ -101,6 +102,7 @@ public class promodetail extends AppCompatActivity {
     public static View view ;
     public static View dialogView ;
 
+    public static  boolean toogleview = false;
     public static Dialog dialog ;
 
 
@@ -154,13 +156,13 @@ public class promodetail extends AppCompatActivity {
 
 
         circularProgressBar1  = findViewById(R.id.circularProgressBar2);
-        circularProgressBar1.setProgressMax(18000);
+        circularProgressBar1.setProgressMax(tike);
         circularProgressBar2  = findViewById(R.id.circularProgressBar3);
-        circularProgressBar2.setProgressMax(18000);
+        circularProgressBar2.setProgressMax(tike);
         circularProgressBar3  = findViewById(R.id.circularProgressBar4);
-        circularProgressBar3.setProgressMax(18000);
+        circularProgressBar3.setProgressMax(tike);
         circularProgressBar4  = findViewById(R.id.circularProgressBar5);
-        circularProgressBar4.setProgressMax(18000);
+        circularProgressBar4.setProgressMax(tike);
 
 
 
@@ -176,41 +178,41 @@ public class promodetail extends AppCompatActivity {
             fab.setActivated(true);
             // circularProgressBar1.setBackgroundProgressBarColor(Color.TRANSPARENT);
             System.out.println(currenttask.getNum_of_promotodo());
-            circularProgressBar1.setProgressWithAnimation(18000, (long) 1000);
-            //circularProgressBar11.setProgressWithAnimation(18000, (long) 1000);
+            circularProgressBar1.setProgressWithAnimation(tike, (long) 1000);
+            //circularProgressBar11.setProgressWithAnimation(tike, (long) 1000);
         }else if(currenttask.getNum_of_promotodo()==2){
             fab.setActivated(true);
             //circularProgressBar1.setBackgroundProgressBarColor(Color.TRANSPARENT);
-            circularProgressBar1.setProgressWithAnimation(18000, (long) 1000);
-            // circularProgressBar11.setProgressWithAnimation(18000, (long) 1000);
+            circularProgressBar1.setProgressWithAnimation(tike, (long) 1000);
+            // circularProgressBar11.setProgressWithAnimation(tike, (long) 1000);
             // circularProgressBar2.setBackgroundProgressBarColor(Color.TRANSPARENT);
-            circularProgressBar2.setProgressWithAnimation(18000, (long) 1000);
-            //circularProgressBar12.setProgressWithAnimation(18000, (long) 1000);
+            circularProgressBar2.setProgressWithAnimation(tike, (long) 1000);
+            //circularProgressBar12.setProgressWithAnimation(tike, (long) 1000);
         }else if(currenttask.getNum_of_promotodo()==3){
             fab.setActivated(true);
             //circularProgressBar1.setBackgroundProgressBarColor(Color.TRANSPARENT);
-            circularProgressBar1.setProgressWithAnimation(18000, (long) 1000);
-            // circularProgressBar11.setProgressWithAnimation(18000, (long) 1000);
+            circularProgressBar1.setProgressWithAnimation(tike, (long) 1000);
+            // circularProgressBar11.setProgressWithAnimation(tike, (long) 1000);
             //circularProgressBar2.setBackgroundProgressBarColor(Color.TRANSPARENT);
-            circularProgressBar2.setProgressWithAnimation(18000, (long) 1000);
-            // circularProgressBar12.setProgressWithAnimation(18000, (long) 1000);
+            circularProgressBar2.setProgressWithAnimation(tike, (long) 1000);
+            // circularProgressBar12.setProgressWithAnimation(tike, (long) 1000);
             //circularProgressBar3.setBackgroundProgressBarColor(Color.TRANSPARENT);
-            circularProgressBar3.setProgressWithAnimation(18000, (long) 1000);
-            // circularProgressBar13.setProgressWithAnimation(18000, (long) 1000);
+            circularProgressBar3.setProgressWithAnimation(tike, (long) 1000);
+            // circularProgressBar13.setProgressWithAnimation(tike, (long) 1000);
         }else if(currenttask.getNum_of_promotodo()==4){
             fab.setActivated(true);
             //circularProgressBar1.setBackgroundProgressBarColor(Color.TRANSPARENT);
-            circularProgressBar1.setProgressWithAnimation(18000, (long) 1000);
-            // circularProgressBar11.setProgressWithAnimation(18000, (long) 1000);
+            circularProgressBar1.setProgressWithAnimation(tike, (long) 1000);
+            // circularProgressBar11.setProgressWithAnimation(tike, (long) 1000);
             //circularProgressBar2.setBackgroundProgressBarColor(Color.TRANSPARENT);
-            circularProgressBar2.setProgressWithAnimation(18000, (long) 1000);
-            //circularProgressBar12.setProgressWithAnimation(18000, (long) 1000);
+            circularProgressBar2.setProgressWithAnimation(tike, (long) 1000);
+            //circularProgressBar12.setProgressWithAnimation(tike, (long) 1000);
             //circularProgressBar3.setBackgroundProgressBarColor(Color.TRANSPARENT);
-            circularProgressBar3.setProgressWithAnimation(18000, (long) 1000);
-            // circularProgressBar13.setProgressWithAnimation(18000, (long) 1000);
+            circularProgressBar3.setProgressWithAnimation(tike, (long) 1000);
+            // circularProgressBar13.setProgressWithAnimation(tike, (long) 1000);
             //circularProgressBar4.setBackgroundProgressBarColor(Color.TRANSPARENT);
-            circularProgressBar4.setProgressWithAnimation(18000, (long) 1000);
-            //circularProgressBar14.setProgressWithAnimation(18000, (long) 1000);
+            circularProgressBar4.setProgressWithAnimation(tike, (long) 1000);
+            //circularProgressBar14.setProgressWithAnimation(tike, (long) 1000);
         }else {
             fab.setActivated(false);
         }
@@ -244,68 +246,71 @@ public class promodetail extends AppCompatActivity {
                 Promotodo_activity.mDBHelper.updateNum(currenttask.getTitle(),item.intValue());
                 Promotodo_activity.promotododataList.get(curr).setNum_of_promotodo(item.intValue());
 
+                Promotodo_activity.mDBHelper.updateCompleted(currenttask.getTitle(),0);
+                Promotodo_activity.promotododataList.get(curr).setCompleted_promotodo(0);
+
                 System.out.println("item   "+ Promotodo_activity.promotododataList.get(curr).getTitle()+"<>"+Promotodo_activity.promotododataList.get(curr).getNum_of_promotodo());
                 if(item.intValue()==1){
                     fab.setActivated(true);
                     // circularProgressBar1.setBackgroundProgressBarColor(Color.TRANSPARENT);
                     System.out.println(item.intValue());
-                    circularProgressBar1.setProgressWithAnimation(18000, (long) 1000);
+                    circularProgressBar1.setProgressWithAnimation(tike, (long) 1000);
                     circularProgressBar2.setProgressWithAnimation(0, (long) 1000);
                     circularProgressBar3.setProgressWithAnimation(0, (long) 1000);
                     circularProgressBar4.setProgressWithAnimation(0, (long) 1000);
 
-                    //  circularProgressBar11.setProgressWithAnimation(18000, (long) 1000);
+                    //  circularProgressBar11.setProgressWithAnimation(tike, (long) 1000);
                     //circularProgressBar12.setProgressWithAnimation(0, (long) 1000);
                     //circularProgressBar13.setProgressWithAnimation(0, (long) 1000);
                     //circularProgressBar14.setProgressWithAnimation(0, (long) 1000);
                 }else if(item.intValue()==2){
                     fab.setActivated(true);
                     //circularProgressBar1.setBackgroundProgressBarColor(Color.TRANSPARENT);
-                    circularProgressBar1.setProgressWithAnimation(18000, (long) 1000);
+                    circularProgressBar1.setProgressWithAnimation(tike, (long) 1000);
                     // circularProgressBar2.setBackgroundProgressBarColor(Color.TRANSPARENT);
-                    circularProgressBar2.setProgressWithAnimation(18000, (long) 1000);
+                    circularProgressBar2.setProgressWithAnimation(tike, (long) 1000);
                     circularProgressBar3.setProgressWithAnimation(0, (long) 1000);
                     circularProgressBar4.setProgressWithAnimation(0, (long) 1000);
 
-                    //circularProgressBar11.setProgressWithAnimation(18000, (long) 1000);
+                    //circularProgressBar11.setProgressWithAnimation(tike, (long) 1000);
                     // circularProgressBar2.setBackgroundProgressBarColor(Color.TRANSPARENT);
-                    //circularProgressBar12.setProgressWithAnimation(18000, (long) 1000);
+                    //circularProgressBar12.setProgressWithAnimation(tike, (long) 1000);
                     //circularProgressBar13.setProgressWithAnimation(0, (long) 1000);
                     //circularProgressBar14.setProgressWithAnimation(0, (long) 1000);
                 }else if(item.intValue()==3){
                     fab.setActivated(true);
                     //circularProgressBar1.setBackgroundProgressBarColor(Color.TRANSPARENT);
-                    circularProgressBar1.setProgressWithAnimation(18000, (long) 1000);
+                    circularProgressBar1.setProgressWithAnimation(tike, (long) 1000);
                     //circularProgressBar2.setBackgroundProgressBarColor(Color.TRANSPARENT);
-                    circularProgressBar2.setProgressWithAnimation(18000, (long) 1000);
+                    circularProgressBar2.setProgressWithAnimation(tike, (long) 1000);
                     //circularProgressBar3.setBackgroundProgressBarColor(Color.TRANSPARENT);
-                    circularProgressBar3.setProgressWithAnimation(18000, (long) 1000);
+                    circularProgressBar3.setProgressWithAnimation(tike, (long) 1000);
                     circularProgressBar4.setProgressWithAnimation(0, (long) 1000);
 
-                    //circularProgressBar11.setProgressWithAnimation(18000, (long) 1000);
+                    //circularProgressBar11.setProgressWithAnimation(tike, (long) 1000);
                     //circularProgressBar2.setBackgroundProgressBarColor(Color.TRANSPARENT);
-                    //circularProgressBar12.setProgressWithAnimation(18000, (long) 1000);
+                    //circularProgressBar12.setProgressWithAnimation(tike, (long) 1000);
                     //circularProgre1ssBar3.setBackgroundProgressBarColor(Color.TRANSPARENT);
-                    //circularProgressBar13.setProgressWithAnimation(18000, (long) 1000);
+                    //circularProgressBar13.setProgressWithAnimation(tike, (long) 1000);
                     //circularProgressBar14.setProgressWithAnimation(0, (long) 1000);
                 }else if(item.intValue()==4){
                     fab.setActivated(true);
                     //circularProgressBar1.setBackgroundProgressBarColor(Color.TRANSPARENT);
-                    circularProgressBar1.setProgressWithAnimation(18000, (long) 1000);
+                    circularProgressBar1.setProgressWithAnimation(tike, (long) 1000);
                     //circularProgressBar2.setBackgroundProgressBarColor(Color.TRANSPARENT);
-                    circularProgressBar2.setProgressWithAnimation(18000, (long) 1000);
+                    circularProgressBar2.setProgressWithAnimation(tike, (long) 1000);
                     //circularProgressBar3.setBackgroundProgressBarColor(Color.TRANSPARENT);
-                    circularProgressBar3.setProgressWithAnimation(18000, (long) 1000);
+                    circularProgressBar3.setProgressWithAnimation(tike, (long) 1000);
                     //circularProgressBar4.setBackgroundProgressBarColor(Color.TRANSPARENT);
-                    circularProgressBar4.setProgressWithAnimation(18000, (long) 1000);
+                    circularProgressBar4.setProgressWithAnimation(tike, (long) 1000);
 
-                    //circularProgressBar11.setProgressWithAnimation(18000, (long) 1000);
+                    //circularProgressBar11.setProgressWithAnimation(tike, (long) 1000);
                     //circularProgressBar2.setBackgroundProgressBarColor(Color.TRANSPARENT);
-                    //circularProgressBar12.setProgressWithAnimation(18000, (long) 1000);
+                    //circularProgressBar12.setProgressWithAnimation(tike, (long) 1000);
                     //circularProgressBar3.setBackgroundProgressBarColor(Color.TRANSPARENT);
-                    //circularProgressBar13.setProgressWithAnimation(18000, (long) 1000);
+                    //circularProgressBar13.setProgressWithAnimation(tike, (long) 1000);
                     //circularProgressBar4.setBackgroundProgressBarColor(Color.TRANSPARENT);
-                    //circularProgressBar14.setProgressWithAnimation(18000, (long) 1000);
+                    //circularProgressBar14.setProgressWithAnimation(tike, (long) 1000);
                 }else {
                     fab.setActivated(false);
                 }
@@ -482,6 +487,7 @@ public class promodetail extends AppCompatActivity {
     private void showSecond() {
 
 
+        toogleview = false;
 
         dialogView = View.inflate(this,R.layout.content_promosec,null);
         view = dialogView.findViewById(R.id.secondary_view);
@@ -527,13 +533,13 @@ public class promodetail extends AppCompatActivity {
         textView3.setText(String.format("%02d", 30));
 
         circularProgressBar11  = dialogView.findViewById(R.id.circularProgressBar01);
-        circularProgressBar11.setProgressMax(18000);
+        circularProgressBar11.setProgressMax(tike);
         circularProgressBar12  = dialogView.findViewById(R.id.circularProgressBar11);
-        circularProgressBar12.setProgressMax(18000);
+        circularProgressBar12.setProgressMax(tike);
         circularProgressBar13  = dialogView.findViewById(R.id.circularProgressBar12);
-        circularProgressBar13.setProgressMax(18000);
+        circularProgressBar13.setProgressMax(tike);
         circularProgressBar14  = dialogView.findViewById(R.id.circularProgressBar13);
-        circularProgressBar14.setProgressMax(18000);
+        circularProgressBar14.setProgressMax(tike);
 
         circularProgressBar  = dialogView.findViewById(R.id.circularProgressBar1);
         circularProgressBar.setProgressMax(total);
@@ -648,7 +654,7 @@ public class promodetail extends AppCompatActivity {
                     //Promotodo_service.pause();
 
 
-                    Promotodo_service.total = 1800000;
+                    Promotodo_service.total = 10000;
 
                     Promotodo_service.ispause = true;
                     stopService(new Intent(promodetail.this, Promotodo_service.class));
@@ -743,6 +749,7 @@ public class promodetail extends AppCompatActivity {
 
 
 
+        toogleview = true;
         int w = view.getWidth();
         int h = view.getHeight();
 
