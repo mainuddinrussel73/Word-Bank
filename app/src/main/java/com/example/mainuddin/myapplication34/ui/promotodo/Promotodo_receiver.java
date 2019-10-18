@@ -8,10 +8,17 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.util.Log;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -26,6 +33,7 @@ import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import es.dmoral.toasty.Toasty;
 
+import static com.android.volley.VolleyLog.TAG;
 import static com.example.mainuddin.myapplication34.ui.media.NotificationService.notificationView;
 import static com.example.mainuddin.myapplication34.ui.media.NotificationService.notificationView1;
 import static com.example.mainuddin.myapplication34.ui.promotodo.Promotodo_service.manager;
@@ -39,7 +47,8 @@ import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.cir
 import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.circularProgressBar3;
 import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.circularProgressBar4;
 import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.curr;
-import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.fabRevealLayout;
+import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.fab;
+import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.shake;
 import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.textView1;
 import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.textView2;
 import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.textView3;
@@ -54,7 +63,8 @@ public class Promotodo_receiver extends BroadcastReceiver {
     public static final String SET_TIME = "SET_TIME";
 
 
-    int ccc = promodetail.prefs.getInt("CURR",-1);
+
+    int ccc = promodetail.prefs.getInt("CURR",0);
     promotododata ccco= Promotodo_activity.promotododataList.get(ccc);
 
     @Override
@@ -123,6 +133,8 @@ public class Promotodo_receiver extends BroadcastReceiver {
 
             if( millisUntilFinished !=0 ) {
 
+
+
                 Promotodo_service.notificationView.setTextViewText(R.id.timerview,Integer.toString(hours));
                 Promotodo_service.notificationView.setTextViewText(R.id.timerview1,Integer.toString(minutes));
                 Promotodo_service.notificationView.setTextViewText(R.id.timerview2,Integer.toString(seconds));
@@ -132,17 +144,45 @@ public class Promotodo_receiver extends BroadcastReceiver {
                 textView2.setText(String.format("%02d", minutes));
                 textView3.setText(String.format("%02d", seconds));
                 circularProgressBar.setProgressWithAnimation(millisUntilFinished, (long) 1000); // =1s
+                fab.setImageBitmap(textAsBitmap(minutes+":"+seconds , 40, Color.WHITE));
+
+                MyBounceInterpolator interpolator = new MyBounceInterpolator(0.2, 20);
+                shake.setInterpolator(interpolator);
+                fab.startAnimation(shake);
+
+
+                if(ccco.getNum_of_promotodo()==1){
+                    circularProgressBar11.setProgressWithAnimation(18000, (long) 1000);
+                }else if(ccco.getNum_of_promotodo()==2){
+
+                    circularProgressBar11.setProgressWithAnimation(18000, (long) 1000);
+                    circularProgressBar12.setProgressWithAnimation(18000, (long) 1000);
+                }else if(ccco.getNum_of_promotodo()==3){
+                    circularProgressBar11.setProgressWithAnimation(18000, (long) 1000);
+                    circularProgressBar12.setProgressWithAnimation(18000, (long) 1000);
+                    circularProgressBar13.setProgressWithAnimation(18000, (long) 1000);
+                }else if(ccco.getNum_of_promotodo()==4){
+                    circularProgressBar11.setProgressWithAnimation(18000, (long) 1000);
+                    circularProgressBar12.setProgressWithAnimation(18000, (long) 1000);
+                    circularProgressBar13.setProgressWithAnimation(18000, (long) 1000);
+                    circularProgressBar14.setProgressWithAnimation(18000, (long) 1000);
+                }else {
+
+                }
 
             }
             else {
 
+                fab.setImageBitmap(textAsBitmap(00+":"+00 , 40, Color.WHITE));
 
+                //mediaPlayer.stop();
                 int p= 0 ;
                 Promotodo_activity.mDBHelper.updateNum(ccco.getTitle(),ccco.getNum_of_promotodo()-1);
+                Promotodo_activity.mDBHelper.updateCompleted(ccco.getTitle(),ccco.getCompleted_promotodo()+1);
                 p = Promotodo_activity.promotododataList.get(ccc).getNum_of_promotodo()-1;
                 Promotodo_activity.promotododataList.get(ccc).setNum_of_promotodo(p);
                 if(p<0){
-                    promodetail.fab.setActivated(false);
+                    fab.setActivated(false);
                 }
                 else {
 
@@ -161,28 +201,28 @@ public class Promotodo_receiver extends BroadcastReceiver {
                     //Promotodo_activity.mDBHelper.updateCompleted(currenttask.getTitle(),1);
 
                     if(p==1){
-                        promodetail.fab.setActivated(true);
+                        fab.setActivated(true);
                         circularProgressBar1.setProgressWithAnimation(18000, (long) 1000);
 
                         circularProgressBar2.setProgressWithAnimation(0, (long) 1000);
                         circularProgressBar3.setProgressWithAnimation(0, (long) 1000);
                         circularProgressBar4.setProgressWithAnimation(0, (long) 1000);
                     }else if(p==2){
-                        promodetail.fab.setActivated(true);
+                        fab.setActivated(true);
                         circularProgressBar1.setProgressWithAnimation(18000, (long) 1000);
                         circularProgressBar2.setProgressWithAnimation(18000, (long) 1000);
 
                         circularProgressBar3.setProgressWithAnimation(0, (long) 1000);
                         circularProgressBar4.setProgressWithAnimation(0, (long) 1000);
                     }else if(p==3){
-                        promodetail.fab.setActivated(true);
+                        fab.setActivated(true);
                         circularProgressBar1.setProgressWithAnimation(18000, (long) 1000);
                         circularProgressBar2.setProgressWithAnimation(18000, (long) 1000);
                         circularProgressBar3.setProgressWithAnimation(18000, (long) 1000);
 
                         circularProgressBar4.setProgressWithAnimation(0, (long) 1000);
                     }else if(p==4){
-                        promodetail.fab.setActivated(true);
+                        fab.setActivated(true);
                         circularProgressBar1.setProgressWithAnimation(18000, (long) 1000);
                         circularProgressBar2.setProgressWithAnimation(18000, (long) 1000);
                         circularProgressBar3.setProgressWithAnimation(18000, (long) 1000);
@@ -192,7 +232,7 @@ public class Promotodo_receiver extends BroadcastReceiver {
                         circularProgressBar2.setProgressWithAnimation(0, (long) 1000);
                         circularProgressBar3.setProgressWithAnimation(0, (long) 1000);
                         circularProgressBar4.setProgressWithAnimation(0, (long) 1000);
-                        promodetail.fab.setActivated(false);
+                        fab.setActivated(false);
                     }
 
                         if(p==1){
@@ -234,7 +274,7 @@ public class Promotodo_receiver extends BroadcastReceiver {
 
                     promodetail.fab1.setImageResource(R.drawable.ic_play_arrow_black_24dp);
                     toogle=!toogle;
-                    fabRevealLayout.revealMainView();
+                    promodetail.revealShow(true);
 
 
                 }
@@ -244,7 +284,20 @@ public class Promotodo_receiver extends BroadcastReceiver {
             }
         }
     }
+    public static Bitmap textAsBitmap(String text, float textSize, int textColor) {
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setTextSize(textSize);
+        paint.setColor(textColor);
+        paint.setTextAlign(Paint.Align.LEFT);
+        float baseline = -paint.ascent(); // ascent() is negative
+        int width = (int) (paint.measureText(text) + 0.0f); // round
+        int height = (int) (baseline + paint.descent() + 0.0f);
+        Bitmap image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 
+        Canvas canvas = new Canvas(image);
+        canvas.drawText(text, 0, baseline, paint);
+        return image;
+    }
 
 
 

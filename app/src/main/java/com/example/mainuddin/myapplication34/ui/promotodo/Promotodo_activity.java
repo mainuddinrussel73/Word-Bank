@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -34,6 +35,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mainuddin.myapplication34.R;
+import com.example.mainuddin.myapplication34.ui.words.DatabaseHelper;
+import com.example.mainuddin.myapplication34.ui.words.add_page;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.yydcdut.sdlv.Menu;
@@ -64,6 +67,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
     private Toast mToast;
     private promotododata mDraggedEntity;
     ExtendedEditText tfb;
+    TextView totaltask,totalhour,remain;
     Button button;
     public static DBproHandle mDBHelper;
     promotododata currenttask;
@@ -93,7 +97,9 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
         tfb = findViewById(R.id.text_field_boxes2);
         button = findViewById(R.id.dark_button);
 
-
+        totaltask = findViewById(R.id.totaltask);
+        totalhour = findViewById(R.id.totalhour);
+        remain = findViewById(R.id.taskremain);
         mDBHelper = new DBproHandle(this);
 
         initList();
@@ -104,25 +110,70 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
             System.out.println(e.getMessage());
         }
 
+        totaltask.setText("Num of Tasks : "+promotododataList.size());
+
+        float tasktime = 0;
+        for (int i = 0; i <promotododataList.size() ; i++) {
+            tasktime+=promotododataList.get(i).getNum_of_promotodo();
+        }
+        totalhour.setText("Total hour : "+ (tasktime*0.5));
+
+        float remaintime = 0;
+        for (int i = 0; i <promotododataList.size() ; i++) {
+            remaintime+=promotododataList.get(i).getCompleted_promotodo();
+        }
+        remain.setText("Completed Hours : "+ (remaintime*0.5));
 
         mToast = Toast.makeText(Promotodo_activity.this, "", Toast.LENGTH_SHORT);
 
         button.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View view) {
+                //DatabaseHelper mDBHelper = new DatabaseHelper(Promotodo_activity.this);;
+                // SQLiteDatabase mDb;
+
                 if(tfb.getText().toString().isEmpty() || tfb.getText().toString().trim().length()<=0){
                     Toasty.error(getApplicationContext(),"No input.", Toast.LENGTH_SHORT).show();
                 }
                 else{
-                boolean b = mDBHelper.insertData(tfb.getText().toString());
-                if (b == true) {
-                    Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
-                    initList();
-                    initMenu();
-                    initUiAndListener();
-                } else {
-                    Toasty.error(getApplicationContext(), "opps.", Toast.LENGTH_SHORT).show();
-                }
+                    String id = "-1";
+                    //SQLiteDatabase db = mDBHelper.getWritableDatabase();
+                    SQLiteDatabase db1 = mDBHelper.getReadableDatabase();
+                    try{
+                        Cursor re  = db1.rawQuery("SELECT * FROM promotodo_table WHERE TITLE = ?; ", new String[] {tfb.getText().toString()});
+                        if (re.moveToFirst()) {
+                            do {
+                                System.out.println(re.getString(0));
+                                id =  re.getString(0);
+                            } while (re.moveToNext());
+                        }
+
+                        re.close();
+                        // System.out.println(re.getString(0));
+                    }catch (Exception e){
+                        System.out.println(e.getMessage());
+                    }
+                    if(!id.equals("-1")){
+                        Toasty.warning(Promotodo_activity.this,"Data already exist",Toasty.LENGTH_LONG).show();
+                        //.setEnabled(false);
+                    }else{
+                        //done.setEnabled(true);
+                        LocalDate parsedDate = LocalDate.now(); //Parse date from String
+
+                        String str = parsedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                        boolean b = mDBHelper.insertIsreat(tfb.getText().toString(),0,0,str);
+                        if (b == true) {
+                            Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
+                            initList();
+                            initMenu();
+                            initUiAndListener();
+                        } else {
+                            Toasty.error(getApplicationContext(), "opps.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+
                 }
             }
         });
@@ -133,6 +184,9 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark",false);
         if(isDark){
+            totalhour.setTextColor(Color.WHITE);
+            totaltask.setTextColor(Color.WHITE);
+            remain.setTextColor(Color.WHITE);
             mListView.setBackgroundColor(Color.BLACK);
             relativeLayout1.setBackground(ContextCompat.getDrawable(this, R.drawable.list_viewdark));
             additem.setBackgroundColor(Color.BLACK);
@@ -141,6 +195,9 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
             tfb.setTextColor(Color.WHITE);
             tfb.setHintTextColor(Color.rgb(185,185,185));
         }else{
+            totalhour.setTextColor(Color.BLACK);
+            totaltask.setTextColor(Color.BLACK);
+            remain.setTextColor(Color.BLACK);
             mListView.setBackgroundColor(Color.WHITE);
             relativeLayout1.setBackground(ContextCompat.getDrawable(this, R.drawable.listview_border));
             additem.setBackgroundColor(Color.WHITE);
@@ -235,6 +292,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
     @Override
     public void onDragViewStart(int beginPosition) {
         mDraggedEntity = promotododataList.get(beginPosition);
+
         toast("onDragViewStart   beginPosition--->" + beginPosition);
     }
 
@@ -242,7 +300,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
     public void onDragDropViewMoved(int fromPosition, int toPosition) {
 
         promotododata applicationInfo = promotododataList.remove(fromPosition);
-        applicationInfo.ID=toPosition;
+       //f_promotodo(),applicationInfo.getDue_date());
         promotododataList.add(toPosition, applicationInfo);
         toast("onDragDropViewMoved   fromPosition--->" + fromPosition + "  toPosition-->" + toPosition);
     }
@@ -250,7 +308,12 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
     @Override
     public void onDragViewDown(int finalPosition) {
         promotododataList.set(finalPosition, mDraggedEntity);
-        mDraggedEntity.ID = finalPosition;
+
+        mDBHelper.deleteAll();
+        for (int i = 0; i <promotododataList.size() ; i++) {
+            mDBHelper.insertIsreat(promotododataList.get(i).getTitle(),promotododataList.get(i).isIsrepeat(),
+                    promotododataList.get(i).getNum_of_promotodo(),promotododataList.get(i).getDue_date());
+        }
         toast("onDragViewDown   finalPosition--->" + finalPosition);
     }
 
@@ -406,6 +469,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
             return promotododataList.get(position).hashCode();
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.O)
         @Override
         public View getView(int position, View rowView, ViewGroup parent) {
 
@@ -446,7 +510,16 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
             if(isDark){
                 cvh.imgLogo2.setImageDrawable(Utils.getDrawable(rowView.getContext(), R.drawable.ic_keyboard_arrow_left_white_24dp));
                 cvh.txtName.setTextColor(Color.WHITE);
-                cvh.date.setTextColor(Color.WHITE);
+
+                LocalDate parsedDate = LocalDate.now(); //Parse date from String
+                LocalDate parsedDate1 = LocalDate.parse(item.getDue_date()); //Parse date from String
+                if(parsedDate.isAfter(parsedDate1)){
+                    cvh.date.setTextColor(Color.RED);
+                }else {
+
+                    cvh.date.setTextColor(Color.WHITE);
+                }
+
                 //cvh.imgLogo.setB(Color.WHITE);
                 if(item.isIsrepeat()==1){
 
@@ -464,7 +537,17 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
             }else{
                 cvh.imgLogo2.setImageDrawable(Utils.getDrawable(rowView.getContext(), R.drawable.ic_keyboard_arrow_left_black_24dp));
                 cvh.txtName.setTextColor(Color.BLACK);
-                cvh.date.setTextColor(Color.BLACK);
+
+                LocalDate parsedDate = LocalDate.now(); //Parse date from String
+                LocalDate parsedDate1 = LocalDate.parse(item.getDue_date()); //Parse date from String
+                if(parsedDate.isAfter(parsedDate1)){
+                    cvh.date.setTextColor(Color.RED);
+                }else {
+
+                    cvh.date.setTextColor(Color.BLACK);
+                }
+
+
                // cvh.imgLogo.setBackgroundColor(Color.BLACK);
                 if(item.isIsrepeat()==1){
 

@@ -54,15 +54,17 @@ public class Promotodo_service extends Service {
     private final static String TAG = "BroadcastService";
 
     public static final String COUNTDOWN_BR = "com.example.mainuddin.myapplication34.countdown_br";
-    Intent bi = new Intent(COUNTDOWN_BR);
+    public static Intent bi = new Intent(COUNTDOWN_BR);
 
-    CountDownTimer cdt = null;
+    public static CountDownTimer cdt ;
+    public static boolean ispause = true;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
 
+        ispause = false;
 
         Log.i(TAG, "Starting timer...");
 
@@ -103,6 +105,50 @@ public class Promotodo_service extends Service {
         Log.i(TAG, "Timer cancelled");
         super.onDestroy();
     }
+
+    public static void pause(){
+
+        ispause = true;
+        if(cdt!=null){
+
+            cdt.cancel();
+        }
+    }
+
+    public  static void resume(Context context){
+
+        ispause = false;
+        //cdt.cancel();
+        cdt = new CountDownTimer(total, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+
+                total = millisUntilFinished;
+                Log.i(TAG, "Countdown seconds remaining: " + millisUntilFinished / 1000);
+
+                bi.setAction(Promotodo_receiver.GET_TIME);
+                bi.putExtra("countdown", millisUntilFinished);
+
+                context.sendBroadcast(bi);
+            }
+
+            @Override
+            public void onFinish() {
+                Log.i(TAG, "Timer finished");
+                bi.setAction(Promotodo_receiver.SET_TIME);
+                bi.putExtra("countdown", new Long(0));
+                context.sendBroadcast(bi);
+                total = 1800000;
+            }
+        };
+
+        cdt.start();
+    }
+
+
+
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {

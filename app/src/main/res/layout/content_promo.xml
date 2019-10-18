@@ -7,10 +7,63 @@
     tools:showIn="@layout/activity_promotodo_activity"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="18dp"
+        android:layout_marginRight="18dp"
+        android:background="@drawable/backgroundborder"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        >
+        <TextView
+            android:layout_width="110dp"
+            android:id="@+id/totaltask"
+            android:layout_height="wrap_content"
+            android:text="gvhgvh,jh,jhb"
+            android:background="@drawable/backgroundborder"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+        </TextView>
+        <TextView
+            android:layout_width="110dp"
+            android:id="@+id/totalhour"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:text="gvhgvh,jh,jhb"
+            android:background="@drawable/backgroundborder"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+        </TextView>
+        <TextView
+            android:layout_width="100dp"
+            android:id="@+id/taskremain"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:text="gvhgvh,jh,jhb"
+            android:background="@drawable/backgroundborder"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp">
+
+        </TextView>
+    </LinearLayout>
     <RelativeLayout
         android:id="@+id/textlayout"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_marginTop="100dp"
         android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
         android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin">
 
@@ -19,7 +72,7 @@
         <studio.carbonylgroup.textfieldboxes.ExtendedEditText
             android:id="@+id/text_field_boxes2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="60dp"
             android:imeOptions="actionNext"
             android:inputType="text"
             android:maxLines="1"
@@ -28,22 +81,22 @@
             app:prefix="$ " />
 
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/dark_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="5dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_marginTop="60dp"
+            android:text="@string/Ok"
+            android:textColor="@color/white"/>
 
     </RelativeLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/dark_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textlayout"
-        android:layout_marginBottom="-54dp"
-        android:layout_marginTop="30dp"
-        android:paddingLeft="@dimen/alerter_activity_horizontal_margin"
-        android:paddingRight="@dimen/alerter_activity_horizontal_margin"
-        android:paddingBottom="10dp"
-        android:paddingTop="10dp"
-        android:text="@string/Ok"
-        android:layout_marginLeft="30dp"/>
+
 
     <RelativeLayout
         android:id="@+id/borderss"
@@ -53,7 +106,7 @@
         android:layout_marginLeft="@dimen/activity_vertical_margin"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginRight="@dimen/activity_vertical_margin"
-        android:layout_marginTop="110dp"
+        android:layout_marginTop="210dp"
         >
         <com.yydcdut.sdlv.SlideAndDragListView
             android:id="@+id/lv_edit"

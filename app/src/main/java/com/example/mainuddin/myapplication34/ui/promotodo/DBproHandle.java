@@ -148,6 +148,33 @@ public class DBproHandle extends SQLiteOpenHelper {
         Cursor res = db.rawQuery("select * from "+TABLE_NAME,null);
         return res;
     }
+    public boolean updateID(String title,int ids) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db1 = this.getReadableDatabase();
+        String id = new String("1");
+        try{
+            Cursor re  = db1.rawQuery("SELECT * FROM promotodo_table WHERE TITLE = ?; ", new String[] {title});
+            if (re.moveToFirst()) {
+                do {
+                    System.out.println(re.getString(0));
+                    id =  re.getString(0);
+                } while (re.moveToNext());
+            }
+
+            re.close();
+
+            // System.out.println(re.getString(0));
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ID,ids);
+        contentValues.put(TITLE,title);
+        db.update(TABLE_NAME, contentValues, "ID = ?",new String[] {id});
+
+        return true;
+    }
 
     public boolean updateIsrepeat(String title,int isrepeat) {
         SQLiteDatabase db = this.getWritableDatabase();
