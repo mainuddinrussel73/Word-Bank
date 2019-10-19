@@ -422,7 +422,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ShortcutInfo shortcutInfo=new ShortcutInfo.Builder(MainActivity.this,"Shortcut_1")
                 .setLongLabel("Add News!")
                 .setShortLabel("Add News!")
-                .setIcon(Icon.createWithResource(this, R.mipmap.ic_quiz))
+                .setIcon(Icon.createWithResource(this, R.mipmap.ic_news))
                 .setIntent(intent)
                 .build();
         shortcutManager.addDynamicShortcuts(Arrays.asList(shortcutInfo));
@@ -438,6 +438,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .setIntent(intent1)
                 .build();
         shortcutManager.addDynamicShortcuts(Arrays.asList(shortcutInfo1));
+
+
+
+
+        Intent intent4=new Intent(this,Media_list_activity.class);
+
+        intent4.putExtra("size",size);
+        intent4.setAction(Intent.ACTION_VIEW);
+        ShortcutInfo shortcutInfo4=new ShortcutInfo.Builder(MainActivity.this,"Shortcut_4")
+                .setLongLabel("Play Song")
+                .setShortLabel("Play Song")
+                .setIcon(Icon.createWithResource(this, R.mipmap.ic_music))
+                .setIntent(intent4)
+                .build();
+        shortcutManager.addDynamicShortcuts(Arrays.asList(shortcutInfo4));
+
+
+        Intent intent5=new Intent(this,Promotodo_activity.class);
+
+        intent5.putExtra("size",size);
+        intent5.setAction(Intent.ACTION_VIEW);
+        ShortcutInfo shortcutInfo5=new ShortcutInfo.Builder(MainActivity.this,"Shortcut_5")
+                .setLongLabel("Promotodo")
+                .setShortLabel("Promotodo")
+                .setIcon(Icon.createWithResource(this, R.mipmap.ic_time))
+                .setIntent(intent5)
+                .build();
+        shortcutManager.addDynamicShortcuts(Arrays.asList(shortcutInfo5));
 
 
     }

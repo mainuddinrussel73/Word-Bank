@@ -54,6 +54,7 @@ public class quiz_page extends AppCompatActivity {
     public long total = 30000;
     public  long temp = 0;
 
+    int size;
 
 
     @Override
@@ -79,6 +80,7 @@ public class quiz_page extends AppCompatActivity {
 
 
 
+        size = intent.getIntExtra("size",0);
 
 
         double randomDouble = Math.random();
@@ -357,7 +359,14 @@ public class quiz_page extends AppCompatActivity {
     public List<String> randomword(int iii){
         List<String> str = new ArrayList<>();
         Random rnd = new Random();
-        int randomInt = 0 + rnd.nextInt(MainActivity.size + 1 - 0 + 1 - iii);
+        int randomInt;
+        if(MainActivity.size==0){
+            randomInt = size;
+        }
+        else {
+            randomInt = 0 + rnd.nextInt(MainActivity.size + 1 - 0 + 1 - iii);
+        }
+
         // randomDouble = randomDouble * MainActivity.size + 1;
         //int randomInt = (int) randomDouble;
 
@@ -387,13 +396,21 @@ public class quiz_page extends AppCompatActivity {
             str.add(cursor.getString(cursor.getColumnIndex("MEANING")));
             cursor.close();
         }
+        mDb.close();
         return str;
     }
 
     public String randommean(int iii){
         String str = new String();
         Random rnd = new Random();
-        int randomInt = 0 + rnd.nextInt(MainActivity.size + 1 - 0 + 1 - iii);
+        int randomInt;
+        if(MainActivity.size==0){
+            randomInt = size;
+        }
+        else {
+            randomInt = 0 + rnd.nextInt(MainActivity.size + 1 - 0 + 1 - iii);
+        }
+
         // randomDouble = randomDouble * MainActivity.size + 1;
         //int randomInt = (int) randomDouble;
 
@@ -421,6 +438,7 @@ public class quiz_page extends AppCompatActivity {
             str = cursor.getString(cursor.getColumnIndex("MEANING"));
             cursor.close();
         }
+        mDb.close();
         return str;
     }
     @Override
