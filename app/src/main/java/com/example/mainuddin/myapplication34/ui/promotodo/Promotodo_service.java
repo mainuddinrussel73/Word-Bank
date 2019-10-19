@@ -1,5 +1,6 @@
 package com.example.mainuddin.myapplication34.ui.promotodo;
 
+import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -18,6 +19,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -47,7 +49,7 @@ public class Promotodo_service extends Service {
 
     public static NotificationManager manager;
     public  static NotificationCompat.Builder notificationBuilder;
-    public static NotificationCompat.Builder notification;
+    public static Notification notification;
 
     public  static  long total = 1800000;
 
@@ -59,50 +61,14 @@ public class Promotodo_service extends Service {
     public static CountDownTimer cdt ;
     public static boolean ispause = true;
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-
-        ispause = false;
-
-        Log.i(TAG, "Starting timer...");
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startMyOwnForeground();
-        }
-
-        cdt = new CountDownTimer(total, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-
-                total = millisUntilFinished;
-                Log.i(TAG, "Countdown seconds remaining: " + millisUntilFinished / 1000);
-
-                bi.setAction(Promotodo_receiver.GET_TIME);
-                bi.putExtra("countdown", millisUntilFinished);
-
-                sendBroadcast(bi);
-            }
-
-            @Override
-            public void onFinish() {
-                Log.i(TAG, "Timer finished");
-                bi.setAction(Promotodo_receiver.SET_TIME);
-                bi.putExtra("countdown", new Long(0));
-                sendBroadcast(bi);
-                total = 1800000;
-            }
-        };
-
-        cdt.start();
-    }
 
     @Override
     public void onDestroy() {
 
         cdt.cancel();
-        Log.i(TAG, "Timer cancelled");
+
+        startService(new Intent(this, Promotodo_service.class));
+
         super.onDestroy();
     }
 
@@ -152,12 +118,46 @@ public class Promotodo_service extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (null == intent || null == intent.getAction ()) {
-            String source = null == intent ? "intent" : "action";
-            Log.e (LOG_TAG, source + " was null, flags=" + flags + " bits=" + Integer.toBinaryString (flags));
-            return START_STICKY;
+
+        super.onStartCommand(intent, flags, startId);
+        stattimer();
+        return START_STICKY;
+    }
+
+
+    public  void stattimer(){
+        ispause = false;
+
+        Log.i(TAG, "Starting timer...");
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startMyOwnForeground();
         }
-        return super.onStartCommand(intent, flags, startId);
+
+        cdt = new CountDownTimer(total, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+
+                total = millisUntilFinished;
+                Log.i(TAG, "Countdown seconds remaining: " + millisUntilFinished / 1000);
+
+                bi.setAction(Promotodo_receiver.GET_TIME);
+                bi.putExtra("countdown", millisUntilFinished);
+
+                sendBroadcast(bi);
+            }
+
+            @Override
+            public void onFinish() {
+                Log.i(TAG, "Timer finished");
+                bi.setAction(Promotodo_receiver.SET_TIME);
+                bi.putExtra("countdown", new Long(0));
+                sendBroadcast(bi);
+                total = 1800000;
+            }
+        };
+
+        cdt.start();
     }
 
     @Override
@@ -187,9 +187,10 @@ public class Promotodo_service extends Service {
         notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
         notificationBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
 
+
         //notificationBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
 
-        notification = notificationBuilder
+        notificationBuilder
                 .setAutoCancel(false)
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
@@ -199,9 +200,10 @@ public class Promotodo_service extends Service {
                 .setCustomBigContentView(notificationView);
 
 
-        System.out.println("kaboom");
+        notification = notificationBuilder.build();
+        notification.flags = Notification.FLAG_ONGOING_EVENT | Notification.FLAG_NO_CLEAR;
 
-        manager.notify(6, notificationBuilder.build());
+        startForeground(6, notification);
 
 
     }

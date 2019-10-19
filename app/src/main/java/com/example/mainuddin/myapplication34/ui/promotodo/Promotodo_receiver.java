@@ -64,30 +64,49 @@ public class Promotodo_receiver extends BroadcastReceiver {
 
     public static final String GET_TIME = "GET_TIME";
     public static final String SET_TIME = "SET_TIME";
+    public static final String DONE = "DONE";
 
     int tp = 0;
 
     long tike = 18000;
 
-    int ccc = prefs.getInt("CURR",0);
-    promotododata ccco= Promotodo_activity.promotododataList.get(ccc);
+
+    //SharedPreferences  prefs ;
+
+    int ccc = prefs.getInt("CURR",0); ;
+    promotododata ccco= Promotodo_activity.promotododataList.get(ccc);;
+
+
+
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onReceive(Context context, Intent intent) {
-        String action = intent.getAction();
-
-        Log.e("action", action);
 
 
-        if(action.equals(GET_TIME)){
-            updateGUI(context,intent);
-        }
-        if(action.equals(SET_TIME)){
-            Intent service = new Intent(context, Promotodo_service.class);
-            context.stopService(service);
-            updateGUI(context,intent);
-        }
+
+
+            String action = intent.getAction();
+
+
+
+
+
+            Log.e("action", action);
+
+
+            if(action.equals(GET_TIME)){
+                updateGUI(context,intent);
+            }
+            if(action.equals(SET_TIME)){
+                Intent service = new Intent(context, Promotodo_service.class);
+                context.stopService(service);
+                updateGUI(context,intent);
+            }
+
+
 
 
 
@@ -121,6 +140,12 @@ public class Promotodo_receiver extends BroadcastReceiver {
 
 
         if (intent.getExtras() != null) {
+
+          //  prefs = context.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+
+
+
             long millisUntilFinished = intent.getLongExtra("countdown", 0);
 
             int seconds = (int) (millisUntilFinished / 1000);
@@ -385,6 +410,16 @@ public class Promotodo_receiver extends BroadcastReceiver {
         Canvas canvas = new Canvas(image);
         canvas.drawText(text, 0, baseline, paint);
         return image;
+    }
+    private boolean isMyServiceRunning(Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (Promotodo_service.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
