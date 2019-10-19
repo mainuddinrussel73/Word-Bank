@@ -64,6 +64,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
+import com.suke.widget.SwitchButton;
 import com.truizlop.fabreveallayout.FABRevealLayout;
 import com.truizlop.fabreveallayout.OnRevealChangeListener;
 
@@ -93,7 +94,7 @@ public class promodetail extends AppCompatActivity {
     public static  ExtendedEditText text_field_boxes2;
     Intent serviceIntent ;
     public  static  SharedPreferences prefs;
-    EditText edittext;
+    Button edittext;
     Calendar myCalendar;
     MediaPlayer mediaPlayer  ;
     public static Animation shake;
@@ -105,6 +106,7 @@ public class promodetail extends AppCompatActivity {
     public static  boolean toogleview = false;
     public static Dialog dialog ;
 
+    TextView textViewss;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,6 +132,7 @@ public class promodetail extends AppCompatActivity {
 
         fab.setImageBitmap(textAsBitmap(00+":"+00 , 40, Color.WHITE));
 
+        textViewss = findViewById(R.id.viewdate);
 
         shake = AnimationUtils.loadAnimation(this, R.anim.glowing);
         // fab.setImageBitmap(textAsBitmap("OK", 40, Color.WHITE));
@@ -320,26 +323,29 @@ public class promodetail extends AppCompatActivity {
         });
 
 
-        RelativeLayout relativeLayout1 = findViewById(R.id.spinerlayout1);
-        MaterialSpinner spinner1 = (MaterialSpinner) relativeLayout1.findViewById(R.id.spinner1);
+        com.suke.widget.SwitchButton switchButton = (com.suke.widget.SwitchButton)
+                findViewById(R.id.spinner1);
 
         TextView textView = findViewById(R.id.isrepeat);
 
-        TextView textView1 = findViewById(R.id.viewdate);
 
-        spinner1.setItems(new Boolean(false),new Boolean(true));
 
-        spinner1.setSelectedIndex(currenttask.ISREPEAT);
-        if(currenttask.isIsrepeat()==1)textView.setText("Repeat");
-        else textView.setText("No repeat");
-        textView1.setText(currenttask.getDue_date()
-        );
-        spinner1.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<Boolean>() {
+        if(currenttask.isIsrepeat()==1){
+            textView.setText("Repeat");
+            switchButton.setChecked(true);
+        }
+        else{
+            textView.setText("No repeat");
+            switchButton.setChecked(false);
+        }
 
+        switchButton.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
             @Override
-            public void onItemSelected(MaterialSpinner view, int position, long id, Boolean item) {
-                Snackbar.make(view, "Clicked " +currenttask.getTitle()+ item.booleanValue(), Snackbar.LENGTH_LONG).show();
-                if(item.booleanValue()==true){
+            public void onCheckedChanged(SwitchButton view, boolean isChecked) {
+                //TODO do your job
+
+                Snackbar.make(view, "Clicked " +currenttask.getTitle()+ isChecked, Snackbar.LENGTH_LONG).show();
+                if(isChecked==true){
                     Promotodo_activity.mDBHelper.updateIsrepeat(currenttask.getTitle(),1);
                     Promotodo_activity.promotododataList.get(curr).setIsrepeat(1);
                 }
@@ -349,18 +355,19 @@ public class promodetail extends AppCompatActivity {
 
                 // Promotodo_activity.promotododataList.get(curr).setNum_of_promotodo(item.intValue());
 
-                if(item.booleanValue()==true)textView.setText("Repeat");
+                if(isChecked==true)textView.setText("Repeat");
                 else textView.setText("No repeat");
-                // System.out.println("item   "+ Promotodo_activity.promotododataList.get(curr).getTitle()+"<>"+Promotodo_activity.promotododataList.get(curr).getNum_of_promotodo());
-
             }
-
-
         });
+
+
+
+
+        textViewss.setText(currenttask.getDue_date());
 
         myCalendar = Calendar.getInstance();
 
-        edittext= (EditText) findViewById(R.id.datepick);
+        edittext= (Button) findViewById(R.id.datepick);
         DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
             @Override
@@ -390,21 +397,26 @@ public class promodetail extends AppCompatActivity {
         RelativeLayout relativeLayoutr = dialogView.findViewById(R.id.secondary_view);
         //  RelativeLayout relativeLayout1 = relativeLayout.findViewById(R.id.borderss);
 
+        TextView place = findViewById(R.id.place);
+        TextView place1 = findViewById(R.id.place1);
+
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark",false);
         if(isDark){
             // mListView.setBackgroundColor(Color.BLACK);
             //relativeLayout1.setBackground(ContextCompat.getDrawable(this, R.drawable.list_viewdark));
             additem.setBackgroundColor(Color.BLACK);
+            place.setTextColor(Color.WHITE);
+            place1.setTextColor(Color.WHITE);
             //fab1.setBackgroundColor(Color.RED);
             spinner.setBackgroundColor(Color.rgb(64,64,64));
-            spinner1.setBackgroundColor(Color.rgb(64,64,64));
-            edittext.setTextColor(Color.WHITE);
-            edittext.setBackground(ContextCompat.getDrawable(this, R.drawable.backgroundborder));
-            edittext.setHintTextColor(Color.WHITE);
+           // spinner1.setBackgroundColor(Color.rgb(64,64,64));
+           // edittext.setTextColor(Color.WHITE);
+            //edittext.setBackground(ContextCompat.getDrawable(this, R.drawable.backgroundborder));
+            //edittext.setHintTextColor(Color.WHITE);
             relativeLayoutr.setBackgroundColor(Color.rgb(255,69,0));
             textView.setTextColor(Color.WHITE);
-            textView1.setTextColor(Color.WHITE);
+            textViewss.setTextColor(Color.WHITE);
             //titletask.setTextColor(Color.WHITE);
             text_field_boxes2.setPrefixTextColor(Color.WHITE);
             text_field_boxes2.setTextColor(Color.WHITE);
@@ -413,20 +425,22 @@ public class promodetail extends AppCompatActivity {
             // tfb.setTextColor(Color.WHITE);
             // tfb.setHintTextColor(Color.rgb(185,185,185));
         }else{
+            place.setTextColor(Color.BLACK);
+            place1.setTextColor(Color.BLACK);
             // mListView.setBackgroundColor(Color.WHITE);
             // relativeLayout1.setBackground(ContextCompat.getDrawable(this, R.drawable.listview_border));
             additem.setBackgroundColor(Color.WHITE);
             //fab1.setBackgroundColor(Color.RED);
             spinner.setBackgroundColor(Color.rgb(185,185,185));
-            spinner1.setBackgroundColor(Color.rgb(185,185,185));
-            edittext.setHintTextColor(Color.BLACK);
+            //spinner1.setBackgroundColor(Color.rgb(185,185,185));
+           // edittext.setHintTextColor(Color.BLACK);
             text_field_boxes2.setTextColor(Color.BLACK);
             edittext.setBackground(ContextCompat.getDrawable(this, R.drawable.backgroundborder));
             text_field_boxes2.setHintTextColor(Color.rgb(64,64,64));
             text_field_boxes2.setPrefixTextColor(Color.BLACK);
             textView.setTextColor(Color.BLACK);
-            textView1.setTextColor(Color.BLACK);
-            edittext.setTextColor(Color.BLACK);
+            textViewss.setTextColor(Color.BLACK);
+           // edittext.setTextColor(Color.BLACK);
             relativeLayoutr.setBackgroundColor(Color.rgb(255,69,0));
             //titletask.setTextColor(Color.BLACK);
             //  tfb.setBackgroundColor(Color.WHITE);
@@ -440,7 +454,12 @@ public class promodetail extends AppCompatActivity {
         String myFormat = "yyyy-MM-dd"; //In which you need put here
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
-        edittext.setText(sdf.format(myCalendar.getTime()));
+        try {
+            textViewss.setText(sdf.format(myCalendar.getTime()).toString());
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
 
         boolean b = Promotodo_activity.mDBHelper.updateDuedate(currenttask.TITLE,sdf.format(myCalendar.getTime()));
         if(b){
@@ -555,7 +574,7 @@ public class promodetail extends AppCompatActivity {
             //relativeLayout1.setBackground(ContextCompat.getDrawable(this, R.drawable.list_viewdark));
             // additem.setBackgroundColor(Color.BLACK);
             //fab1.setBackgroundColor(Color.RED);
-            relativeLayoutr.setBackgroundColor(Color.rgb(255, 51, 0));
+           // relativeLayoutr.setBackgroundColor(Color.A400red);
             //textView1.setTextColor(Color.WHITE);
             // tfb.setBackgroundColor(Color.BLACK);
             // tfb.setTextColor(Color.WHITE);
@@ -566,7 +585,7 @@ public class promodetail extends AppCompatActivity {
             //additem.setBackgroundColor(Color.WHITE);
             //textView1.setTextColor(Color.BLACK);
             //edittext.setTextColor(Color.BLACK);
-            relativeLayoutr.setBackgroundColor(Color.rgb(255, 51, 0));
+           // relativeLayoutr.setBackgroundColor(Color.rgb(255, 51, 0));
             //titletask.setTextColor(Color.BLACK);
             //  tfb.setBackgroundColor(Color.WHITE);
             ///  tfb.setTextColor(Color.BLACK);
