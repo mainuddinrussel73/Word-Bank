@@ -29,16 +29,19 @@ import com.example.mainuddin.myapplication34.ui.media.NotificationService;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Iterator;
 import java.util.List;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import es.dmoral.toasty.Toasty;
 
+import static android.content.Context.ACTIVITY_SERVICE;
 import static com.android.volley.VolleyLog.TAG;
 import static com.example.mainuddin.myapplication34.ui.media.NotificationService.notificationView;
 import static com.example.mainuddin.myapplication34.ui.media.NotificationService.notificationView1;
 import static com.example.mainuddin.myapplication34.ui.promotodo.Promotodo_service.manager;
+import static com.example.mainuddin.myapplication34.ui.promotodo.Promotodo_service.notification;
 import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.circularProgressBar;
 import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.circularProgressBar1;
 import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.circularProgressBar11;
@@ -114,7 +117,7 @@ public class Promotodo_receiver extends BroadcastReceiver {
     }
 
     private boolean isAppOnForeground(Context context,String appPackageName) {
-        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
         if (appProcesses == null) {
             //App is closed
@@ -205,6 +208,11 @@ public class Promotodo_receiver extends BroadcastReceiver {
             }
             else {
 
+
+                //context.stopService(new Intent(context, Promotodo_service.class));
+                //context.unregisterReceiver(Promotodo_receiver.this);
+                Promotodo_service.cdt.cancel();
+                //context.stopService(intent);
                 fab.setImageBitmap(textAsBitmap(00+":"+00 , 40, Color.WHITE));
 
                 //mediaPlayer.stop();
@@ -241,6 +249,8 @@ public class Promotodo_receiver extends BroadcastReceiver {
                 int n = c+Promotodo_activity.promotododataList.get(ccc).NUM;
 
                 if(p<=0){
+
+
                     fab.setActivated(false);
 
 
@@ -288,6 +298,8 @@ public class Promotodo_receiver extends BroadcastReceiver {
                         context.startActivity(myIntent);}catch (Exception e){
                         System.out.println(e.getMessage());
                     }
+
+
 
 
                 }
@@ -386,8 +398,14 @@ public class Promotodo_receiver extends BroadcastReceiver {
                     Promotodo_service.ispause = true;
                     //promodetail.fab1.setImageResource(R.drawable.ic_play_arrow_black_24dp);
                     //toogle=!toogle;
-                    if(!promodetail.toogleview)
-                    promodetail.revealShow(false);
+                    if(!promodetail.toogleview){
+
+                        promodetail.revealShow(false);
+
+                    }
+
+
+
 
 
                 }
@@ -412,7 +430,7 @@ public class Promotodo_receiver extends BroadcastReceiver {
         return image;
     }
     private boolean isMyServiceRunning(Context context) {
-        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        ActivityManager manager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (Promotodo_service.class.getName().equals(service.service.getClassName())) {
                 return true;
@@ -422,6 +440,21 @@ public class Promotodo_receiver extends BroadcastReceiver {
         return false;
     }
 
+    private boolean isAppRunning(Context context) {
+        ActivityManager m = (ActivityManager) context.getSystemService( ACTIVITY_SERVICE );
+        List<ActivityManager.RunningTaskInfo> runningTaskInfoList =  m.getRunningTasks(10);
+        Iterator<ActivityManager.RunningTaskInfo> itr = runningTaskInfoList.iterator();
+        int n=0;
+        while(itr.hasNext()){
+            n++;
+            itr.next();
+        }
+        if(n==1){ // App is killed
+            return false;
+        }
+
+        return true; // App is in background or foreground
+    }
 
 
 

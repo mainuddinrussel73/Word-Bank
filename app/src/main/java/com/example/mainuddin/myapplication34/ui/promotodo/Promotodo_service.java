@@ -67,7 +67,7 @@ public class Promotodo_service extends Service {
 
         cdt.cancel();
 
-        startService(new Intent(this, Promotodo_service.class));
+      //  startService(new Intent(this, Promotodo_service.class));
 
         super.onDestroy();
     }

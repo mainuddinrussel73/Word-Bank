@@ -812,6 +812,7 @@ public class promodetail extends AppCompatActivity {
             });
             anim.setDuration(700);
             anim.start();
+
         }
 
     }
