@@ -781,7 +781,17 @@ public class promodetail extends AppCompatActivity {
         if(b){
             Animator revealAnimator = ViewAnimationUtils.createCircularReveal(view, cx,cy, 0, endRadius);
 
-            view.setVisibility(View.VISIBLE);
+            revealAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    //dialog.create();
+                    view.setVisibility(View.GONE);
+
+
+                }
+            });
+
             revealAnimator.setDuration(700);
             revealAnimator.start();
 
@@ -796,6 +806,7 @@ public class promodetail extends AppCompatActivity {
                     super.onAnimationEnd(animation);
                     dialog.dismiss();
                     view.setVisibility(View.INVISIBLE);
+
 
                 }
             });

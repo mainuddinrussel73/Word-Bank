@@ -286,7 +286,7 @@
     <RelativeLayout
         android:id="@+id/belowhere"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="200dp"
         android:layout_marginTop="350dp"
         android:background="@drawable/backgroundborder"
         android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
