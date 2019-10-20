@@ -10,10 +10,12 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -32,7 +34,10 @@ import com.example.mainuddin.myapplication34.ui.media.Media_list_activity;
 import com.example.mainuddin.myapplication34.ui.media.MyNotificationReceiver;
 import com.example.mainuddin.myapplication34.ui.media.NotificationService;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
 import androidx.annotation.RequiresApi;
@@ -61,12 +66,15 @@ public class Promotodo_service extends Service {
     public static CountDownTimer cdt ;
     public static boolean ispause = true;
 
+    public static MediaPlayer mp;
+    private final static String fileName = "tick";
 
     @Override
     public void onDestroy() {
 
         cdt.cancel();
 
+        mp.pause();
       //  startService(new Intent(this, Promotodo_service.class));
 
         super.onDestroy();
@@ -77,6 +85,7 @@ public class Promotodo_service extends Service {
         ispause = true;
         if(cdt!=null){
 
+            mp.pause();
             cdt.cancel();
         }
     }
@@ -84,12 +93,14 @@ public class Promotodo_service extends Service {
     public  static void resume(Context context){
 
         ispause = false;
+
         //cdt.cancel();
         cdt = new CountDownTimer(total, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
 
+                mp.start();
                 total = millisUntilFinished;
                 Log.i(TAG, "Countdown seconds remaining: " + millisUntilFinished / 1000);
 
@@ -101,6 +112,7 @@ public class Promotodo_service extends Service {
 
             @Override
             public void onFinish() {
+                mp.stop();
                 Log.i(TAG, "Timer finished");
                 bi.setAction(Promotodo_receiver.SET_TIME);
                 bi.putExtra("countdown", new Long(0));
@@ -120,6 +132,19 @@ public class Promotodo_service extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         super.onStartCommand(intent, flags, startId);
+        mp = new MediaPlayer();
+        mp.setAudioStreamType(AudioManager.STREAM_RING); //set streaming according to ur needs
+        try {
+            mp.setDataSource(Promotodo_service.this, Uri.parse("android.resource://com.example.mainuddin.myapplication34/raw/"+fileName));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //mp.setLooping(true);
+        try {
+            mp.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         stattimer();
         return START_STICKY;
     }
@@ -141,6 +166,21 @@ public class Promotodo_service extends Service {
                 total = millisUntilFinished;
                 Log.i(TAG, "Countdown seconds remaining: " + millisUntilFinished / 1000);
 
+
+
+                try
+                {
+
+                    mp.start();
+
+                } catch (Exception e)
+                {
+                    System.out.println("Unable to TunePlay: startRingtone(): "+e.toString());
+                }
+
+
+
+
                 bi.setAction(Promotodo_receiver.GET_TIME);
                 bi.putExtra("countdown", millisUntilFinished);
 
@@ -149,6 +189,7 @@ public class Promotodo_service extends Service {
 
             @Override
             public void onFinish() {
+                mp.stop();
                 Log.i(TAG, "Timer finished");
                 bi.setAction(Promotodo_receiver.SET_TIME);
                 bi.putExtra("countdown", new Long(0));
@@ -208,6 +249,35 @@ public class Promotodo_service extends Service {
 
     }
 
+    public void playSound(String soundPath){
+        MediaPlayer m = new MediaPlayer();
+
+        m.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mp.release();
+            }
+
+        });
+
+        try {
+
+            AssetFileDescriptor descriptor = Promotodo_service.this.getAssets().openFd(soundPath);
+            m.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(),
+                    descriptor.getLength());
+
+            descriptor.close();
+
+            m.prepare();
+            m.setVolume(100f, 100f);
+            m.setLooping(false);
+            m.start();
+
+        } catch (Exception e) {
+            //Your catch code here.
+        }
+    }
 
 
 
