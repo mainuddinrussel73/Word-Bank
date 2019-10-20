@@ -19,6 +19,8 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.TextAppearanceSpan;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
@@ -161,6 +163,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+
+        SpannableString s = new SpannableString(navigationView.getMenu().findItem(R.id.datas).getTitle());
+        SpannableString s1 = new SpannableString(navigationView.getMenu().findItem(R.id.datas1).getTitle());
+        SpannableString s2 = new SpannableString(navigationView.getMenu().findItem(R.id.datas2).getTitle());
+        SpannableString s3 = new SpannableString(navigationView.getMenu().findItem(R.id.datas3).getTitle());
+
+        if(isDark){
+            s.setSpan(new TextAppearanceSpan(this, R.style.TextAppearance45), 0, s.length(), 0);
+            navigationView.getMenu().findItem(R.id.datas).setTitle(s);
+
+            s1.setSpan(new TextAppearanceSpan(this, R.style.TextAppearance45), 0, s1.length(), 0);
+            navigationView.getMenu().findItem(R.id.datas1).setTitle(s1);
+
+            s2.setSpan(new TextAppearanceSpan(this, R.style.TextAppearance45), 0, s2.length(), 0);
+            navigationView.getMenu().findItem(R.id.datas2).setTitle(s2);
+
+            s3.setSpan(new TextAppearanceSpan(this, R.style.TextAppearance45), 0, s3.length(), 0);
+            navigationView.getMenu().findItem(R.id.datas3).setTitle(s3);
+
+        }else{
+            s.setSpan(new TextAppearanceSpan(this, R.style.TextAppearance44), 0, s.length(), 0);
+            navigationView.getMenu().findItem(R.id.datas).setTitle(s);
+
+            s1.setSpan(new TextAppearanceSpan(this, R.style.TextAppearance44), 0, s1.length(), 0);
+            navigationView.getMenu().findItem(R.id.datas1).setTitle(s1);
+
+            s2.setSpan(new TextAppearanceSpan(this, R.style.TextAppearance44), 0, s2.length(), 0);
+            navigationView.getMenu().findItem(R.id.datas2).setTitle(s2);
+
+            s3.setSpan(new TextAppearanceSpan(this, R.style.TextAppearance44), 0, s3.length(), 0);
+            navigationView.getMenu().findItem(R.id.datas3).setTitle(s3);
+        }
+
+
+
         navigationView.setNavigationItemSelectedListener(this);
 
 
@@ -232,6 +270,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // size = contactList.size();
             adapter = new MyListAdapter(this);
             list=(ListView)findViewById(R.id.list);
+
+            String type = prefs.getString("sort","asc");
+            if(type.equals("asc")){
+                Collections.sort(contactList);
+            }else if(type.equals("des")){
+                Collections.sort(contactList,Collections.reverseOrder());
+            }else if(type.equals("alp")){
+                Collections.sort(contactList,
+                        new Comparator<word>()
+                        {
+                            public int compare(word f1, word f2)
+                            {
+                                return f1.getWORD().compareTo(f2.getWORD());
+                            }
+                        });
+            }
+
             //list.setFastScrollEnabled(true);
             list.setAdapter(adapter);
 
@@ -309,11 +364,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             //  adapter = new MyListAdapter(getParent());
                             list=(ListView)findViewById(R.id.list);
                             list.setAdapter(adapter);
+
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putString("sort", "asc");
+                            editor.commit();
+
                         }else if(item.getTitle().equals("Descending")){
                             Collections.sort(contactList,Collections.reverseOrder());
                             //adapter = new MyListAdapter(getParent());
                             list=(ListView)findViewById(R.id.list);
                             list.setAdapter(adapter);
+
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putString("sort", "des");
+                            editor.commit();
+
                         }else if(item.getTitle().equals("Alphabetically")){
                             Collections.sort(contactList,
                                     new Comparator<word>()
@@ -325,6 +390,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     });
                             list=(ListView)findViewById(R.id.list);
                             list.setAdapter(adapter);
+
+                            SharedPreferences.Editor editor = prefs.edit();
+                            editor.putString("sort", "alp");
+                            editor.commit();
+
                         }else{
 
                         }
@@ -626,6 +696,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.list_viewdark));
                         list.setAdapter(adapter);
 
+                        Intent myIntent = new Intent(MainActivity.this, MainActivity.class);
+                        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivityForResult(myIntent, 0);
 
                         Toasty.success(mContext, "Enabled", Toast.LENGTH_SHORT).show();
                     }
@@ -655,6 +728,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.listview_border));
                         list.setAdapter(adapter);
 
+                        Intent myIntent = new Intent(MainActivity.this, MainActivity.class);
+                        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivityForResult(myIntent, 0);
 
                         Toasty.success(mContext, "Disabled", Toast.LENGTH_SHORT).show();
                     }
@@ -686,6 +762,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.list_viewdark));
 
 
+                        Intent myIntent = new Intent(MainActivity.this, MainActivity.class);
+                        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivityForResult(myIntent, 0);
+
                         Toasty.success(mContext, "Enabled", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -709,11 +789,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         editor.commit();
                         constraintLayout.setBackgroundColor(Color.WHITE);
                         navigationView.setBackgroundColor(Color.WHITE);
+                        //navigationView.setItemTextColor();
                         navigationView.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
                         // linearLayout.setBackgroundColor(Color.WHITE);
                         linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.listview_border));
 
-
+                        Intent myIntent = new Intent(MainActivity.this, MainActivity.class);
+                        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivityForResult(myIntent, 0);
 
                         Toasty.success(mContext, "Disabled", Toast.LENGTH_SHORT).show();
                     }

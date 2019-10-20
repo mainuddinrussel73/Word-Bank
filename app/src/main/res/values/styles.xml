@@ -19,11 +19,22 @@
         <item name="android:textColor">@color/cardview_light_background</item>
         <item name="android:navigationBarColor">@android:color/background_dark</item>
         <item name="android:itemBackground">@android:color/background_dark</item>
+        <item name="android:listDivider">@android:color/background_dark</item>
     </style>
+
     <style name="YOURSTYLE1" parent="Widget.AppCompat.PopupMenu">
         <item name="android:textColor">@android:color/black</item>
         <item name="android:navigationBarColor">@android:color/background_light</item>
         <item name="android:itemBackground">@android:color/background_light</item>
+        <item name="android:listDivider">@android:color/background_light</item>
+    </style>
+
+    <style name="NavigationViewlight"  parent="Base.Theme.AppCompat">
+        <item name="android:listDivider">@android:color/background_light</item>
+    </style>
+
+    <style name="NavigationViewdark"  parent="Base.Theme.AppCompat">
+        <item name="android:listDivider">@android:color/background_dark</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -100,4 +111,17 @@
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowBackground">@color/colorAccent</item>
     </style>
+
+    <style name="TextAppearance44">
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="TextAppearance45">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+
+
 </resources>

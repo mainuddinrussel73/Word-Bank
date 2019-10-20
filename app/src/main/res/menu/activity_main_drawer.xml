@@ -4,11 +4,24 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:showIn="navigation_view">
 
+    <item android:id="@+id/datas" android:title="WORD">
+        <menu>
+        <group android:checkableBehavior="single">
+            <item
+                android:id="@+id/nav_home"
+                android:icon="@drawable/ic_content_paste_black_24dp"
+                android:title="@string/menu_home" />
+
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_settings_backup_restore_black"
+                android:title="@string/menu_share" />
+        </group>
+        </menu>
+    </item>
+    <item android:id="@+id/datas1" android:title="NEWS">
+        <menu>
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_home"
-            android:icon="@drawable/ic_content_paste_black_24dp"
-            android:title="@string/menu_home" />
         <item
             android:id="@+id/nav_tools"
             android:icon="@drawable/ic_settings_black_24dp"
@@ -18,35 +31,45 @@
             android:id="@+id/subscription"
             android:icon="@drawable/ic_notifications_active_black_24dp"
             android:title="@string/subscribe" />
-
-
     </group>
 
-    <item android:title="DATA">
-        <menu>
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_settings_backup_restore_black"
-                android:title="@string/menu_share" />
-            <item
-                android:id="@+id/nav_view"
-                android:icon="@drawable/ic_settings_backup_restore_black"
-                android:title="@string/menu_back" />
-            <item
-                android:id="@+id/news"
-                android:icon="@drawable/ic_notifications_active_black_24dp"
-                android:title="@string/news" />
-
-            <item
-                android:id="@+id/music"
-                android:icon="@drawable/ic_library_music_black_24dp"
-                android:title="@string/music" />
-
-            <item
-                android:id="@+id/promotodo"
-                android:icon="@drawable/ic_timer_black_24dp"
-                android:title="@string/promotodo" />
-        </menu>
+</menu>
     </item>
+    <item android:id="@+id/datas2" android:title="OTHERS">
+        <menu>
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_view"
+            android:icon="@drawable/ic_settings_backup_restore_black"
+            android:title="@string/menu_back" />
+        <item
+            android:id="@+id/news"
+            android:icon="@drawable/ic_notifications_active_black_24dp"
+            android:title="@string/news" />
+    </group>
+
+    </menu>
+    </item>
+    <item android:id="@+id/datas3" android:title="MUSIC AND PROMOTODO">
+        <menu>
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/music"
+            android:icon="@drawable/ic_library_music_black_24dp"
+            android:title="@string/music" />
+
+        <item
+            android:id="@+id/promotodo"
+            android:icon="@drawable/ic_timer_black_24dp"
+            android:title="@string/promotodo" />
+    </group>
+
+    </menu>
+    </item>
+
+
+
+
+
 
 </menu>
