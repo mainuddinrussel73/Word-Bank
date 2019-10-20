@@ -66,8 +66,9 @@ public class Promotodo_service extends Service {
     public static CountDownTimer cdt ;
     public static boolean ispause = true;
 
-    public static MediaPlayer mp;
-    private final static String fileName = "tick";
+    public static MediaPlayer mp,mp1;
+    private final static String fileName = "ticking";
+    private final static String fileNameend = "bell";
 
     @Override
     public void onDestroy() {
@@ -113,6 +114,7 @@ public class Promotodo_service extends Service {
             @Override
             public void onFinish() {
                 mp.stop();
+                mp1.start();
                 Log.i(TAG, "Timer finished");
                 bi.setAction(Promotodo_receiver.SET_TIME);
                 bi.putExtra("countdown", new Long(0));
@@ -132,16 +134,20 @@ public class Promotodo_service extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         super.onStartCommand(intent, flags, startId);
+        mp1 = new MediaPlayer();
         mp = new MediaPlayer();
         mp.setAudioStreamType(AudioManager.STREAM_RING); //set streaming according to ur needs
+        mp1.setAudioStreamType(AudioManager.STREAM_RING); //set streaming according to ur needs
         try {
             mp.setDataSource(Promotodo_service.this, Uri.parse("android.resource://com.example.mainuddin.myapplication34/raw/"+fileName));
+            mp1.setDataSource(Promotodo_service.this, Uri.parse("android.resource://com.example.mainuddin.myapplication34/raw/"+fileNameend));
         } catch (IOException e) {
             e.printStackTrace();
         }
         //mp.setLooping(true);
         try {
             mp.prepare();
+            mp1.prepare();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -190,6 +196,7 @@ public class Promotodo_service extends Service {
             @Override
             public void onFinish() {
                 mp.stop();
+                mp1.start();
                 Log.i(TAG, "Timer finished");
                 bi.setAction(Promotodo_receiver.SET_TIME);
                 bi.putExtra("countdown", new Long(0));
