@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final int PERMISSION_REQUEST_CODE = 1;
     SearchView searchView;
     MyListAdapter adapter;
-    SharedPreferences prefs;
+    public static  SharedPreferences prefs;
     private DrawerLayout mRelativeLayout;
     public  static SharedPreferences sizee;
     private final static String CUSTOM_ACTION = "custom_action";

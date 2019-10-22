@@ -17,11 +17,15 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import es.dmoral.toasty.Toasty;
 
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,15 +52,7 @@ public class news_activity extends AppCompatActivity {
         });
 
 
-        Button backuprestore = findViewById(R.id.backuprestore);
 
-        backuprestore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-            }
-        });
 
 
 
@@ -89,6 +85,7 @@ public class news_activity extends AppCompatActivity {
                 word.setID( Integer.parseInt(cursor.getString(0)));
                 word.setTITLE( cursor.getString(1));
                 word.setBODY(cursor.getString(2));
+                word.setURL(cursor.getString(3));
 
                 newsList.add(word);
 
@@ -111,6 +108,7 @@ public class news_activity extends AppCompatActivity {
                     //String s = (String) parent.getI;
                     myIntent.putExtra("title",newsList.get(position).getTITLE());
                     myIntent.putExtra("body",newsList.get(position).getBODY());
+                    myIntent.putExtra("url",newsList.get(position).getURL());
                     myIntent.putExtra("id",position);
                     myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivityForResult(myIntent, 0);
@@ -159,6 +157,39 @@ public class news_activity extends AppCompatActivity {
 
 
         }
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_news, menu);
+
+
+        SearchView searchView;
+
+        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
+             /*   if(list.contains(query)){
+                    adapter.getFilter().filter(query);
+                }else{
+                    Toast.makeText(MainActivity.this, "No Match found",Toast.LENGTH_LONG).show();
+                }*/
+                return false;
+
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.filter(newText);
+                return false;
+            }
+
+        });
+        return super.onCreateOptionsMenu(menu);
     }
 
 

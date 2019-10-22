@@ -57,6 +57,18 @@
         <item name="android:background">@android:color/background_light</item>
     </style>
 
+    <style name="DialogurDark1" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">#3a9ebe</item>
+        <item name="android:textColorPrimary">@android:color/background_light</item>
+        <item name="android:background">@android:color/black</item>
+    </style>
+
+    <style name="DialogueLight1" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">#3a9ebe</item>
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="android:background">@android:color/background_light</item>
+    </style>
+
     <style name="FullScreenTheme" parent="AppTheme">
         <!--this property will help hide the ActionBar-->
         <item name="windowNoTitle">true</item>

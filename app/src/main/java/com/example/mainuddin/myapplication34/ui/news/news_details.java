@@ -1,9 +1,12 @@
 package com.example.mainuddin.myapplication34.ui.news;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
@@ -11,6 +14,7 @@ import android.print.PrintAttributes;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +22,7 @@ import android.widget.Toast;
 import com.example.mainuddin.myapplication34.ui.words.MainActivity;
 import com.example.mainuddin.myapplication34.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.itextpdf.text.Document;
 import com.uttampanchasara.pdfgenerator.CreatePdf;
@@ -28,6 +33,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import es.dmoral.toasty.Toasty;
@@ -80,15 +86,21 @@ public class news_details extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark",false);
         if (isDark) {
+
+
+
             additem.setBackgroundColor(Color.BLACK);
             news_details.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
             news_details.setTextColor(Color.WHITE);
 
         } else {
+
+
             additem.setBackgroundColor(Color.WHITE);
             news_details.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
             news_details.setTextColor(Color.BLACK);
         }
+
 
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -121,6 +133,7 @@ public class news_details extends AppCompatActivity {
                                     //String s = (String) parent.getI;
                                     myIntent.putExtra("title", intent.getStringExtra("title"));
                                     myIntent.putExtra("body", intent.getStringExtra("body"));
+                                    myIntent.putExtra("url", intent.getStringExtra("url"));
                                     myIntent.putExtra("id", intent.getExtras().getInt("id"));
                                     myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivityForResult(myIntent, 0);
@@ -130,21 +143,76 @@ public class news_details extends AppCompatActivity {
                                 return true;
                             case R.id.open:
 
-                                DBNewsHelper mDBHelper;
+                                SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+                                boolean isDark = prefs.getBoolean("isDark",false);
+                                if (isDark) {
 
-                                mDBHelper = new DBNewsHelper(news_details.this);
-                                int id = intent.getExtras().getInt("id");
-                                id++;
-                                int b = mDBHelper.deleteData(String.valueOf(id), intent.getStringExtra("message"), intent.getStringExtra("title")
-                                        , intent.getStringExtra("body"));
-                                if (b == 1) {
-                                    Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
-                                    Intent myIntent = new Intent(news_details.this, news_activity.class);
-                                    myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    startActivityForResult(myIntent, 0);
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(news_details.this,R.style.DialogurDark);
+                                    builder.setTitle(R.string.nn);
+                                    builder.setMessage(R.string.deletethis);
+                                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            DBNewsHelper mDBHelper;
+
+                                            mDBHelper = new DBNewsHelper(news_details.this);
+                                            int id = intent.getExtras().getInt("id");
+                                            id++;
+                                            int b;
+                                            if(intent.getStringExtra("url").equals("empty")) {
+                                                b = mDBHelper.deleteDatau(String.valueOf(id), intent.getStringExtra("title"), intent.getStringExtra("title")
+                                                        , intent.getStringExtra("body"));
+                                                System.out.println("called");
+                                            }
+                                            else{
+                                                b = mDBHelper.deleteData(String.valueOf(id), intent.getStringExtra("title"), intent.getStringExtra("title")
+                                                        , intent.getStringExtra("body"), intent.getStringExtra("url"));
+                                            }
+
+                                            if (b == 1) {
+                                                Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
+                                                Intent myIntent = new Intent(news_details.this, news_activity.class);
+                                                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                startActivityForResult(myIntent, 0);
+                                            } else {
+                                                Toasty.success(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
+                                            }
+
+                                        }
+                                    });
+                                    builder.setNegativeButton("NO", null);
+                                    builder.show();
+
                                 } else {
-                                    Toasty.success(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
+
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(news_details.this,R.style.DialogurDark);
+                                    builder.setTitle(R.string.nn);
+                                    builder.setMessage(R.string.deletethis);
+                                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            DBNewsHelper mDBHelper;
+
+                                            mDBHelper = new DBNewsHelper(news_details.this);
+                                            int id = intent.getExtras().getInt("id");
+                                            id++;
+                                            int b = mDBHelper.deleteData(String.valueOf(id), intent.getStringExtra("message"), intent.getStringExtra("title")
+                                                    , intent.getStringExtra("body"), intent.getStringExtra("url"));
+                                            if (b == 1) {
+                                                Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
+                                                Intent myIntent = new Intent(news_details.this, news_activity.class);
+                                                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                startActivityForResult(myIntent, 0);
+                                            } else {
+                                                Toasty.success(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
+                                            }
+
+                                        }
+                                    });
+                                    builder.setNegativeButton("NO", null);
+                                    builder.show();
                                 }
+
                                 return true;
 
                             case R.id.pdf:
@@ -184,6 +252,23 @@ public class news_details extends AppCompatActivity {
         });
     }
 
+    public void showMessage(String title ,String Message){
+
+        AlertDialog.Builder builder;
+        SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+        boolean isDark = prefs.getBoolean("isDark",false);
+        if(isDark){
+            builder = new AlertDialog.Builder(this,R.style.DialogurDark);
+        }
+        else{
+            builder = new AlertDialog.Builder(this,R.style.DialogueLight);
+        }
+
+        builder.setCancelable(true);
+        builder.setTitle(title);
+        builder.setMessage(Message);
+        builder.show();
+    }
 
 
 }

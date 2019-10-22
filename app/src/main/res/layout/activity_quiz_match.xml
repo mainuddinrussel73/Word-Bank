@@ -1,0 +1,88 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="wrap_content"
+    android:id="@+id/mmmmm">
+
+
+
+    <LinearLayout
+        android:id="@+id/llll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="150dp"
+        android:gravity="center_horizontal"
+        >
+
+        <ListView
+            android:id="@+id/text_list"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="100dp"
+            android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
+            android:layout_marginTop="100dp"
+            android:background="@drawable/listview_border"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="10.0sp" />
+
+        <LinearLayout
+            android:id="@+id/draw_line"
+            android:layout_width="80dp"
+            android:layout_height="600dp"
+            android:orientation="horizontal" >
+
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/text_list1"
+            android:layout_width="150dp"
+            android:background="@drawable/listview_border"
+            android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
+            android:layout_marginBottom="100dp"
+            android:layout_marginTop="100dp"
+            android:layout_height="wrap_content"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="10.0sp"
+            />
+
+
+    </LinearLayout>
+<RelativeLayout
+    android:id="@+id/buttonss"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/llll"
+    android:layout_marginTop="-150dp"
+   >
+
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/nextpage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="100dp"
+
+        android:paddingBottom="@dimen/alerter_activity_horizontal_margin"
+        android:paddingLeft="@dimen/alerter_activity_horizontal_margin"
+        android:paddingRight="@dimen/alerter_activity_horizontal_margin"
+        android:paddingTop="@dimen/alerter_activity_horizontal_margin"
+        android:text="Next"
+        android:textColor="@color/white">
+
+    </com.google.android.material.button.MaterialButton>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/extpage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="250dp"
+        android:paddingBottom="@dimen/alerter_activity_horizontal_margin"
+        android:paddingLeft="@dimen/alerter_activity_horizontal_margin"
+        android:paddingRight="@dimen/alerter_activity_horizontal_margin"
+        android:paddingTop="@dimen/alerter_activity_horizontal_margin"
+        android:text="Exit"
+        android:textColor="@color/white">
+
+    </com.google.android.material.button.MaterialButton>
+</RelativeLayout>
+</RelativeLayout>

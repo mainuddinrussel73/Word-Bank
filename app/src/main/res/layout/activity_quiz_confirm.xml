@@ -35,4 +35,18 @@
 
     </com.google.android.material.button.MaterialButton>
 
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="500dp"
+        android:text="Matching game !"
+        android:textSize="40dp"
+        android:textColor="@android:color/white"
+        android:id="@+id/strtquizmatch"
+
+        >
+
+    </com.google.android.material.button.MaterialButton>
+
 </RelativeLayout>

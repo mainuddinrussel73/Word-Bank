@@ -25,7 +25,7 @@ public class news_update  extends AppCompatActivity {
 
     private DBNewsHelper mDBHelper;
     private Button update,delete;
-    String titles,bodies;
+    String titles,bodies,urls;
     int id;
 
     @Override
@@ -36,9 +36,11 @@ public class news_update  extends AppCompatActivity {
         final Intent intent = getIntent();
         final EditText title = (EditText) findViewById(R.id.title2);
         final EditText body = (EditText) findViewById(R.id.body2);
+        final EditText url = (EditText) findViewById(R.id.url2);
 
         title.setText(intent.getStringExtra("title"));
         body.setText(intent.getStringExtra("body"));
+        url.setText(intent.getStringExtra("url"));
 
         LinearLayout additem = findViewById(R.id.update_news_item);
         title.requestFocus();
@@ -51,14 +53,18 @@ public class news_update  extends AppCompatActivity {
             additem.setBackgroundColor(Color.BLACK);
             title.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
             body.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
+            url.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
             title.setTextColor(Color.WHITE);
             body.setTextColor(Color.WHITE);
+            url.setTextColor(Color.WHITE);
         }else{
             additem.setBackgroundColor(Color.WHITE);
             title.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
             body.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
+            url.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
             title.setTextColor(Color.BLACK);
             body.setTextColor(Color.BLACK);
+            url.setTextColor(Color.BLACK);
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -85,10 +91,15 @@ public class news_update  extends AppCompatActivity {
                 // TODO Auto-generated method stub
                     titles = title.getText().toString();
                     bodies = body.getText().toString();
+                    urls = url.getText().toString();
 
                     id = intent.getExtras().getInt("id");
                     id++;
-                    boolean b = mDBHelper.updateData(String.valueOf(id),intent.getStringExtra("title"),titles,bodies);
+                boolean b;
+                if(urls.isEmpty()){
+                    b = mDBHelper.updateDatau(String.valueOf(id),intent.getStringExtra("title"),titles,bodies);
+                    }
+                    else  b = mDBHelper.updateData(String.valueOf(id),intent.getStringExtra("title"),titles,bodies,urls);
                     if(b==true){
                         Toasty.success(getApplicationContext(),"Done.", Toast.LENGTH_SHORT).show();
                         Intent myIntent = new Intent(v.getContext(), news_activity.class);

@@ -104,6 +104,25 @@ public class Quiz_confirm extends AppCompatActivity {
                 }
             }
         });
+
+        Button button1 = findViewById(R.id.strtquizmatch);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                button1.startAnimation(mScaleAnimation);
+                if(contactList.size()>=4){
+                    //SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+                    // MainActivity.score = prefs.getInt("highscore", 0);
+                    Intent myIntent = new Intent(Quiz_confirm.this, Quiz_match.class);
+                    myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivityForResult(myIntent, 1);}
+                else{
+                    Toasty.error(Quiz_confirm.this,"Sorry Collect more then 4 words.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+
     }
 
 }

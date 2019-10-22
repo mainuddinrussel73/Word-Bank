@@ -18,6 +18,13 @@
         android:background="@drawable/backgroundborder"
         android:descendantFocusability="afterDescendants"
         >
+        <com.github.siyamed.shapeimageview.BubbleImageView
+            android:id="@+id/topnews"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:src="@mipmap/ic_music">
+
+        </com.github.siyamed.shapeimageview.BubbleImageView>
 
         <TextView
             android:id="@+id/news_title"

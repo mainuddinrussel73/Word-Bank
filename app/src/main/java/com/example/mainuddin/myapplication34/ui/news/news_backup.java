@@ -111,6 +111,7 @@ public class news_backup extends AppCompatActivity {
                             word.put("ID", Integer.parseInt(cursor.getString(0)));
                             word.put("TITLE", cursor.getString(1));
                             word.put("BODY", cursor.getString(2));
+                            word.put("URL", cursor.getString(3));
                         } catch (JSONException e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
@@ -362,7 +363,10 @@ public class news_backup extends AppCompatActivity {
                 mDBHelper.deleteAll();
                 for (int i = 0; i < jsonArray.length(); i++) {
                     jsonObject = new JSONObject(jsonArray.get(i).toString());
-                    mDBHelper.insertData(jsonObject.get("TITLE").toString(), jsonObject.get("BODY").toString());
+                    if(!jsonObject.has("URL")){
+                        mDBHelper.insertData(jsonObject.get("TITLE").toString(), jsonObject.get("BODY").toString(),"empty");
+                    }
+                    else mDBHelper.insertData(jsonObject.get("TITLE").toString(), jsonObject.get("BODY").toString(),jsonObject.get("URL").toString());
                 }
                 // Toast.makeText(getApplicationContext(),"Done.",Toast.LENGTH_SHORT).show();
                 return 1;

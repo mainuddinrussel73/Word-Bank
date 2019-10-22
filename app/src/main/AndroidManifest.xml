@@ -10,6 +10,10 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.Quiz.Quiz_match"
+            android:label="@string/Quizmatch"
+            android:theme="@style/AppTheme.NoActionBar"
+            ></activity>
         <activity android:name=".ui.promotodo.promodetail"
             android:label="@string/Promotodo"
             android:theme="@style/AppTheme.NoActionBar"

@@ -29,6 +29,7 @@ public class DBNewsHelper  extends SQLiteOpenHelper {
     public static final String ID = "ID";
     public static final String TITLE = "TITLE";
     public static final String BODY = "BODY";
+    public static final String URL = "URL";
 
 
     public DBNewsHelper(Context context) {
@@ -101,7 +102,8 @@ public class DBNewsHelper  extends SQLiteOpenHelper {
         String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_NAME + "("
                 + ID + " INTEGER PRIMARY KEY,"
                 + TITLE + " TEXT,"
-                + BODY + " TEXT"  + ")";
+                + BODY + " TEXT,"
+                + URL + " URL" + ")";
         db.execSQL(CREATE_CONTACTS_TABLE);
     }
 
@@ -111,11 +113,12 @@ public class DBNewsHelper  extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertData(String title,String body) {
+    public boolean insertData(String title,String body,String url) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(TITLE,title);
         contentValues.put(BODY,body);
+        contentValues.put(URL,url);
         long result = db.insert(TABLE_NAME,null ,contentValues);
         if(result == -1)
             return false;
@@ -129,11 +132,11 @@ public class DBNewsHelper  extends SQLiteOpenHelper {
         return res;
     }
 
-    public boolean updateData(String id,String old_title,String title,String body) {
+    public boolean updateData(String id,String old_title,String title,String body,String url) {
         SQLiteDatabase db = this.getWritableDatabase();
         SQLiteDatabase db1 = this.getReadableDatabase();
         try{
-            Cursor re  = db1.rawQuery("SELECT * FROM Word_table WHERE WORD = ?; ", new String[] {old_title});
+            Cursor re  = db1.rawQuery("SELECT * FROM news_table WHERE TITLE = ?; ", new String[] {old_title});
             if (re.moveToFirst()) {
                 do {
                     System.out.println(re.getString(0));
@@ -150,15 +153,65 @@ public class DBNewsHelper  extends SQLiteOpenHelper {
         contentValues.put(ID,id);
         contentValues.put(TITLE,title);
         contentValues.put(BODY,body);
+        contentValues.put(URL,url);
+        db.update(TABLE_NAME, contentValues, "ID = ?",new String[] {id});
+        return true;
+    }
+    public boolean updateDatau(String id,String old_title,String title,String body) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db1 = this.getReadableDatabase();
+        try{
+            Cursor re  = db1.rawQuery("SELECT * FROM news_table WHERE TITLE = ?; ", new String[] {old_title});
+            if (re.moveToFirst()) {
+                do {
+                    System.out.println(re.getString(0));
+                    id =  re.getString(0);
+                } while (re.moveToNext());
+            }
+
+            re.close();
+            // System.out.println(re.getString(0));
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ID,id);
+        contentValues.put(TITLE,title);
+        contentValues.put(BODY,body);
+        //contentValues.put(URL,url);
         db.update(TABLE_NAME, contentValues, "ID = ?",new String[] {id});
         return true;
     }
 
-    public Integer deleteData (String id,String old_title,String title,String body) {
+    public Integer deleteData (String id,String old_title,String title,String body,String url) {
         SQLiteDatabase db = this.getWritableDatabase();
         SQLiteDatabase db1 = this.getReadableDatabase();
         try{
-            Cursor re  = db1.rawQuery("SELECT * FROM Word_table WHERE WORD = ?; ", new String[] {old_title});
+            Cursor re  = db1.rawQuery("SELECT * FROM news_table WHERE TITLE = ?; ", new String[] {old_title});
+            if (re.moveToFirst()) {
+                do {
+                    System.out.println(re.getString(0));
+                    id =  re.getString(0);
+                } while (re.moveToNext());
+            }
+
+            re.close();
+            // System.out.println(re.getString(0));
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ID,id);
+        contentValues.put(TITLE,title);
+        contentValues.put(BODY,body);
+        contentValues.put(URL,url);
+        return db.delete(TABLE_NAME, "ID = ?",new String[] {id});
+    }
+    public Integer deleteDatau(String id,String old_title,String title,String body) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db1 = this.getReadableDatabase();
+        try{
+            Cursor re  = db1.rawQuery("SELECT * FROM news_table WHERE TITLE = ?; ", new String[] {old_title});
             if (re.moveToFirst()) {
                 do {
                     System.out.println(re.getString(0));

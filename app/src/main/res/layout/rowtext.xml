@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<TextView android:id="@+id/title"
+    android:background="@drawable/backgroundborder"
+    android:paddingTop="@dimen/alerter_activity_horizontal_margin"
+    android:paddingLeft="@dimen/alerter_activity_horizontal_margin"
+    android:paddingBottom="@dimen/alerter_activity_horizontal_margin"
+    android:paddingRight="@dimen/alerter_activity_horizontal_margin"
+    android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
+    android:layout_width="150dp"
+    android:layout_height="wrap_content"
+    android:text="Medium Text"
+    android:textStyle="bold"
+    android:maxLines="5"
+    android:textSize="14dp"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
+
+    android:textColor="@android:color/background_dark"
+
+    xmlns:android="http://schemas.android.com/apk/res/android" />
+

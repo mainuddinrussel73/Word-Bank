@@ -16,6 +16,7 @@ import com.example.mainuddin.myapplication34.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -125,6 +126,22 @@ public class MyListAdapter extends BaseAdapter implements SectionIndexer {
                 }
             }
         }
+        //SharedPreferences prefs = MyListAdapter.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+        String type = MainActivity.prefs.getString("sort","asc");
+        if(type.equals("asc")){
+            Collections.sort(MainActivity.contactList);
+        }else if(type.equals("des")){
+            Collections.sort(MainActivity.contactList,Collections.reverseOrder());
+        }else if(type.equals("alp")){
+            Collections.sort(MainActivity.contactList,
+                    new Comparator<word>()
+                    {
+                        public int compare(word f1, word f2)
+                        {
+                            return f1.getWORD().compareTo(f2.getWORD());
+                        }
+                    });
+        }
        // System.out.println(MainActivity.contactList.size());
         notifyDataSetChanged();
     }
@@ -141,6 +158,21 @@ public class MyListAdapter extends BaseAdapter implements SectionIndexer {
                     MainActivity.contactList.add(wp);
                 }
             }
+        }
+        String type = MainActivity.prefs.getString("sort","asc");
+        if(type.equals("asc")){
+            Collections.sort(MainActivity.contactList);
+        }else if(type.equals("des")){
+            Collections.sort(MainActivity.contactList,Collections.reverseOrder());
+        }else if(type.equals("alp")){
+            Collections.sort(MainActivity.contactList,
+                    new Comparator<word>()
+                    {
+                        public int compare(word f1, word f2)
+                        {
+                            return f1.getWORD().compareTo(f2.getWORD());
+                        }
+                    });
         }
         // System.out.println(MainActivity.contactList.size());
         notifyDataSetChanged();

@@ -7,6 +7,16 @@ public class News {
     String TITLE;
     String BODY;
 
+    public String getURL() {
+        return URL;
+    }
+
+    public void setURL(String URL) {
+        this.URL = URL;
+    }
+
+    String URL;
+
     public News(int id, String title, String body){
         this.ID = id;
         this.TITLE = title;

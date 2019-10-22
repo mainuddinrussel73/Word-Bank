@@ -35,7 +35,7 @@
     <string name="no">Disable Dark Mode ?</string>
     <string name="greet">Hi. How are you?</string>
     <string name="subscribe">Subscribe</string>
-    <string name="title_activity_news">news</string>
+    <string name="title_activity_news">News Lists</string>
     <string name="news">News</string>
     <string name="title_add_news">Save News</string>
     <string name="title_activity_news_details">news_details</string>
@@ -154,4 +154,8 @@
     <string name="extended_fab_label">Ok</string>
     <string name="Confirm">Quiz Confirm</string>
     <string name="oll">Deadline</string>
+    <string name="Quizmatch">Quiz Match</string>
+    <string name="end">Finish</string>
+    <string name="deletethis">Confirm to delete.</string>
+    <string name="nn">Confirmation.</string>
 </resources>

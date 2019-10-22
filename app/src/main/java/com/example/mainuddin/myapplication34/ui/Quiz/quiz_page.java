@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -60,6 +62,10 @@ public class quiz_page extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+//Remove notification bar
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_quiz_list);
 
 
@@ -74,9 +80,8 @@ public class quiz_page extends AppCompatActivity {
         textView.setMovementMethod(new ScrollingMovementMethod());
 
         scrollView = findViewById(R.id.scrollButtons);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
+
+
 
 
 
@@ -159,8 +164,9 @@ public class quiz_page extends AppCompatActivity {
             relativeLayout.setBackgroundColor(Color.WHITE);
         }
 
+        Button button2 = findViewById(R.id.endquiz);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+        button2.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 

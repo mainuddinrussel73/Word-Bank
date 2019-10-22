@@ -28,6 +28,7 @@ public class add_news extends AppCompatActivity {
     private DBNewsHelper mDBHelper;
     EditText title ;
     EditText body;
+    EditText url;
     Button save;
 
     @Override
@@ -49,6 +50,7 @@ public class add_news extends AppCompatActivity {
 
         title =  (EditText) findViewById(R.id.title1);
         body = (EditText) findViewById(R.id.body1);
+        url = (EditText) findViewById(R.id.url1);
 
         mDBHelper = new DBNewsHelper(this);
         save = (Button) findViewById(R.id.save);
@@ -60,18 +62,24 @@ public class add_news extends AppCompatActivity {
             additem.setBackgroundColor(Color.BLACK);
             title.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
             body.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
+            url.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
             title.setHintTextColor(Color.rgb(185,185,185));
             body.setHintTextColor(Color.rgb(185,185,185));
+            url.setHintTextColor(Color.rgb(185,185,185));
             title.setTextColor(Color.WHITE);
             body.setTextColor(Color.WHITE);
+            url.setTextColor(Color.WHITE);
         }else{
             additem.setBackgroundColor(Color.WHITE);
             title.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
             body.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
+            url.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
             title.setHintTextColor(Color.BLACK);
             body.setHintTextColor(Color.BLACK);
+            url.setHintTextColor(Color.BLACK);
             title.setTextColor(Color.BLACK);
             body.setTextColor(Color.BLACK);
+            url.setTextColor(Color.BLACK);
         }
 
 
@@ -122,7 +130,11 @@ public class add_news extends AppCompatActivity {
                 }
 
                 else{
-                    boolean b = mDBHelper.insertData(title.getText().toString(),body.getText().toString());
+                    boolean b;
+                    if(url.getText().toString().isEmpty()){
+                         b = mDBHelper.insertData(title.getText().toString(),body.getText().toString(),"empty");
+                    }
+                    else  b = mDBHelper.insertData(title.getText().toString(),body.getText().toString(),url.getText().toString());
                     if(b==true){
                         Toasty.success(getApplicationContext(),"Done.",Toast.LENGTH_SHORT).show();
                         Intent myIntent = new Intent(v.getContext(), news_activity.class);

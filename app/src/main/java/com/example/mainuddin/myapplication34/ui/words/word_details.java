@@ -1,7 +1,9 @@
 package com.example.mainuddin.myapplication34.ui.words;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -14,6 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.mainuddin.myapplication34.R;
+import com.example.mainuddin.myapplication34.ui.news.DBNewsHelper;
+import com.example.mainuddin.myapplication34.ui.news.news_activity;
+import com.example.mainuddin.myapplication34.ui.news.news_details;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -122,19 +127,63 @@ public class word_details extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                words = word.getText().toString();
-                meanings = meaning.getText().toString();
-                id = intent.getExtras().getInt("id");
-                id++;
-                int b = mDBHelper.deleteData(String.valueOf(id),intent.getStringExtra("message"),words,meanings,"");
-                if(b==1){
-                    Toasty.success(getApplicationContext(),"Done.",Toast.LENGTH_SHORT).show();
-                    Intent myIntent = new Intent(v.getContext(), MainActivity.class);
-                    myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivityForResult(myIntent, 0);
-                }else {
-                    Toasty.success(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
+                SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+                boolean isDark = prefs.getBoolean("isDark",false);
+                if (isDark) {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(word_details.this,R.style.DialogurDark);
+                    builder.setTitle(R.string.nn);
+                    builder.setMessage(R.string.deletethis);
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            words = word.getText().toString();
+                            meanings = meaning.getText().toString();
+                            id = intent.getExtras().getInt("id");
+                            id++;
+                            int b = mDBHelper.deleteData(String.valueOf(id),intent.getStringExtra("message"),words,meanings,"");
+                            if(b==1){
+                                Toasty.success(getApplicationContext(),"Done.",Toast.LENGTH_SHORT).show();
+                                Intent myIntent = new Intent(v.getContext(), MainActivity.class);
+                                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivityForResult(myIntent, 0);
+                            }else {
+                                Toasty.success(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
+                            }
+
+                        }
+                    });
+                    builder.setNegativeButton("NO", null);
+                    builder.show();
+
+                } else {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(word_details.this,R.style.DialogurDark);
+                    builder.setTitle(R.string.nn);
+                    builder.setMessage(R.string.deletethis);
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            words = word.getText().toString();
+                            meanings = meaning.getText().toString();
+                            id = intent.getExtras().getInt("id");
+                            id++;
+                            int b = mDBHelper.deleteData(String.valueOf(id),intent.getStringExtra("message"),words,meanings,"");
+                            if(b==1){
+                                Toasty.success(getApplicationContext(),"Done.",Toast.LENGTH_SHORT).show();
+                                Intent myIntent = new Intent(v.getContext(), MainActivity.class);
+                                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivityForResult(myIntent, 0);
+                            }else {
+                                Toasty.success(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    builder.setNegativeButton("NO", null);
+                    builder.show();
                 }
+
 
             }
         });
