@@ -41,7 +41,14 @@
         <activity
             android:name=".ui.news.news_details"
             android:label="@string/title_activity_news_details"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.PROCESS_TEXT" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.news.news_activity"
             android:label="@string/title_activity_news"

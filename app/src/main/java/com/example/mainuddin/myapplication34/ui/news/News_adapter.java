@@ -2,12 +2,15 @@ package com.example.mainuddin.myapplication34.ui.news;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +35,7 @@ public class News_adapter extends BaseAdapter {
 
     private final Activity context;
     List<News> newsList;
+    TextView titleText,body;
 
     // private final Integer[] imgid;
 
@@ -64,15 +68,18 @@ public class News_adapter extends BaseAdapter {
         LayoutInflater inflater=context.getLayoutInflater();
         View rowView=inflater.inflate(R.layout.news_list_item, null,true);
 
-        TextView titleText = (TextView) rowView.findViewById(R.id.news_title);
-        TextView body = (TextView) rowView.findViewById(R.id.news_detail);
+        titleText = (TextView) rowView.findViewById(R.id.news_title);
+        body = (TextView) rowView.findViewById(R.id.news_detail);
 
         ImageView imageView = rowView.findViewById(R.id.topnews);
 
         //System.out.println("klkl"+MainActivity.contactList.size());
         titleText.setText(news_activity.newsList.get(position).getTITLE());
-        body.setText(news_activity.newsList.get(position).getBODY());
 
+
+        RetrieveFeedTask asyncTask=new RetrieveFeedTask();
+        String s = news_activity.newsList.get(position).getTITLE();
+        asyncTask.execute(s);
 
 
         if(newsList.get(position).getURL().equals("empty")){
@@ -125,28 +132,21 @@ public class News_adapter extends BaseAdapter {
         // System.out.println(MainActivity.contactList.size());
         notifyDataSetChanged();
     }
+    class RetrieveFeedTask extends AsyncTask<String , Void , Spanned> {
 
-}
+        private Exception exception;
 
-class RetrieveFeedTask extends AsyncTask<String, Void, Bitmap> {
+        protected Spanned doInBackground(String... data) {
 
-    private Exception exception;
+            return Html.fromHtml(data[0].replace("\n", "<br>"));
 
-    protected Bitmap doInBackground(String... urls) {
-        try {
-            URL url = new URL(urls[0]);
-            Bitmap bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+        }
 
-            return bitmap;
-        } catch (Exception e) {
-            this.exception = e;
+        protected void onPostExecute(Spanned text) {
+            body.setText(text);
 
-            return null;
         }
     }
 
-    protected void onPostExecute( ) {
-        // TODO: check this.exception
-        // TODO: do something with the feed
-    }
 }
+

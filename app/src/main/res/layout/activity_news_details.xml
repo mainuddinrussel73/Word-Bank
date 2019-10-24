@@ -30,35 +30,106 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                app:popupTheme="@style/AppTheme.PopupOverlay" >
+                app:popupTheme="@style/AppTheme.PopupOverlay">
 
                 <Button
                     android:id="@+id/opt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@null"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
-                    android:drawableBottom="@drawable/ic_expand_more_black_24dp"
                     android:layout_gravity="right"
-                    />
+                    android:background="@null"
+                    android:drawableBottom="@drawable/ic_expand_more_black_24dp" />
             </androidx.appcompat.widget.Toolbar>
+
+            <TextView
+                android:id="@+id/words"
+                android:layout_height="wrap_content"
+                app:layout_collapseMode="parallax"
+                app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                android:layout_width="wrap_content"
+                app:layout_anchor="@id/app_bar"
+                app:layout_anchorGravity="bottom|end"
+                android:layout_gravity="bottom|left"
+                android:layout_marginTop="150dp"
+                android:layout_marginLeft="60dp"
+                android:text="Total Letters : "
+                android:textColor="@color/white"
+                android:textStyle="italic">
+
+            </TextView>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
 
 
+
+
+    <include layout="@layout/content_news_details" />
+
+    <com.leinardi.android.speeddial.SpeedDialOverlayLayout
+        android:id="@+id/overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:clickable_overlay="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" ></com.leinardi.android.speeddial.SpeedDialOverlayLayout>
+
+    <com.leinardi.android.speeddial.SpeedDialView
+        android:id="@+id/speedDial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="2dp"
+        app:layout_behavior="@string/speeddial_scrolling_view_snackbar_behavior"
+        app:sdExpansionMode="top"
+        app:sdMainFabAnimationRotateAngle="90"
+        app:sdMainFabClosedSrc="@drawable/fab_add"
+        app:sdMainFabOpenedSrc="@drawable/ic_close_black_24dp"
+        app:sdOverlayLayout="@id/overlay" >
+    </com.leinardi.android.speeddial.SpeedDialView>
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
-        app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@android:drawable/ic_dialog_dialer" />
+        android:visibility="invisible"
+        android:src="@drawable/ic_content_copy_black_24dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab21"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_anchorGravity="bottom|end"
+        android:visibility="invisible"
+        android:src="@drawable/ic_format_underlined_black_24dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab32"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_anchorGravity="bottom|end"
+        android:visibility="invisible"
+        android:src="@drawable/ic_format_underlined_black_24dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab34"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_anchorGravity="bottom|end"
+        android:visibility="invisible"
+        android:src="@drawable/ic_format_underlined_black_24dp" />
 
 
-    <include layout="@layout/content_news_details" />
+
+
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

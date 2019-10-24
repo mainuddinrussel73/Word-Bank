@@ -75,5 +75,6 @@ dependencies {
     implementation "com.subsub.libs:buttoncustomshadow:1.1.1"
     implementation 'net.danlew:android.joda:2.10.3'
     compile 'com.github.zeng1990java:WaveProgressView:1.0.5'
+    implementation "com.leinardi.android:speed-dial:3.1.1"
 
 }

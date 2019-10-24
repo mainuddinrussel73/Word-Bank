@@ -2,18 +2,39 @@ package com.example.mainuddin.myapplication34.ui.news;
 
 
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.print.PrintAttributes;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.CharacterStyle;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
+import android.util.Log;
+import android.view.ActionMode;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,10 +46,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.itextpdf.text.Document;
+import com.leinardi.android.speeddial.SpeedDialActionItem;
+import com.leinardi.android.speeddial.SpeedDialView;
 import com.uttampanchasara.pdfgenerator.CreatePdf;
 
 import org.jetbrains.annotations.NotNull;
 
+
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.appcompat.widget.PopupMenu;
@@ -36,7 +61,10 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import es.dmoral.toasty.Toasty;
+
+import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.textAsBitmap;
 
 public class news_details extends AppCompatActivity {
 
@@ -45,8 +73,16 @@ public class news_details extends AppCompatActivity {
     private Toolbar toolbar;
     Document doc = new Document();
     private boolean isCustomOverflowMenu;
+    private static final int TRANSLATE = 1;
+    String selectedText;
+    private DBNewsHelper mDBHelper;
     private static final String EXTRA_IS_CUSTOM = "is_custom_overflow_menu";
 
+    SharedPreferences prefs;
+    boolean isDark;
+
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,25 +102,30 @@ public class news_details extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+        isDark = prefs.getBoolean("isDark",false);
 
+        mDBHelper = new DBNewsHelper(this);
         intent = getIntent();
 
         news_details = findViewById(R.id.news_detail_des);
-        news_details.setText(intent.getStringExtra("body"));
+
+        try{
+        RetrieveFeedTask asyncTask=new RetrieveFeedTask();
+        String s = intent.getStringExtra("body");
+        asyncTask.execute(s);}catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
+        news_details.setTextIsSelectable(true);
 
         getSupportActionBar().setTitle(intent.getStringExtra("title"));
         CoordinatorLayout additem = findViewById(R.id.content_detail);
+        TextView textView = findViewById(R.id.words);
+        textView.setText("Total Letters : "+news_details.getText().toString().length());
 
-        SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
-        boolean isDark = prefs.getBoolean("isDark",false);
+
+
         if (isDark) {
 
 
@@ -101,6 +142,52 @@ public class news_details extends AppCompatActivity {
             news_details.setTextColor(Color.BLACK);
         }
 
+
+        SpeedDialView speedDialView = findViewById(R.id.speedDial);
+        speedDialView.addActionItem(
+                        new SpeedDialActionItem.Builder(R.id.fab, R.drawable.ic_content_copy_black_24dp).setLabel("Copy")
+                                .create()
+        );
+        speedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.fab21, R.drawable.ic_format_underlined_black_24dp).setLabel("Highlight")
+                        .create()
+        );
+        speedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.fab32, R.drawable.ic_format_underlined_black_24dp).setLabel("Highlight All")
+                        .create()
+        );
+        speedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.fab34, R.drawable.ic_unhide).setLabel("Unhighlight All")
+                        .create()
+        );
+
+
+
+        speedDialView.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener() {
+            @Override
+            public boolean onActionSelected(SpeedDialActionItem actionItem) {
+                switch (actionItem.getId()) {
+                    case R.id.fab:
+                        copyText();
+                        speedDialView.close(); // To close the Speed Dial with animation
+                        return true; // false will close it without animation
+                    case R.id.fab21:
+                        setHighLightedText();
+                        speedDialView.close(); // To close the Speed Dial with animation
+                        return true;
+                    case R.id.fab32:
+                        setHighLightedAllText();
+                        speedDialView.close(); // To close the Speed Dial with animation
+                        return true;
+                    case R.id.fab34:
+                        setUnHighLightedText();
+                        speedDialView.close(); // To close the Speed Dial with animation
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
 
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -159,13 +246,25 @@ public class news_details extends AppCompatActivity {
                                             int id = intent.getExtras().getInt("id");
                                             id++;
                                             int b;
+                                            ActivityInfo activityInfo = null;
+                                            try {
+                                                activityInfo = getPackageManager().getActivityInfo(
+                                                        getComponentName(), PackageManager.GET_META_DATA);
+                                            } catch (PackageManager.NameNotFoundException e) {
+                                                e.printStackTrace();
+                                            }
+                                            String title = activityInfo.loadLabel(getPackageManager())
+                                                    .toString();
+
                                             if(intent.getStringExtra("url").equals("empty")) {
-                                                b = mDBHelper.deleteDatau(String.valueOf(id), intent.getStringExtra("title"), intent.getStringExtra("title")
+
+
+                                                b = mDBHelper.deleteDatau(String.valueOf(id), intent.getStringExtra("title"),title
                                                         , intent.getStringExtra("body"));
                                                 System.out.println("called");
                                             }
                                             else{
-                                                b = mDBHelper.deleteData(String.valueOf(id), intent.getStringExtra("title"), intent.getStringExtra("title")
+                                                b = mDBHelper.deleteData(String.valueOf(id), intent.getStringExtra("title"), title
                                                         , intent.getStringExtra("body"), intent.getStringExtra("url"));
                                             }
 
@@ -185,7 +284,7 @@ public class news_details extends AppCompatActivity {
 
                                 } else {
 
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(news_details.this,R.style.DialogurDark);
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(news_details.this,R.style.DialogueLight);
                                     builder.setTitle(R.string.nn);
                                     builder.setMessage(R.string.deletethis);
                                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -196,8 +295,29 @@ public class news_details extends AppCompatActivity {
                                             mDBHelper = new DBNewsHelper(news_details.this);
                                             int id = intent.getExtras().getInt("id");
                                             id++;
-                                            int b = mDBHelper.deleteData(String.valueOf(id), intent.getStringExtra("message"), intent.getStringExtra("title")
-                                                    , intent.getStringExtra("body"), intent.getStringExtra("url"));
+                                            int b;
+                                            ActivityInfo activityInfo = null;
+                                            try {
+                                                activityInfo = getPackageManager().getActivityInfo(
+                                                        getComponentName(), PackageManager.GET_META_DATA);
+                                            } catch (PackageManager.NameNotFoundException e) {
+                                                e.printStackTrace();
+                                            }
+                                            String title = activityInfo.loadLabel(getPackageManager())
+                                                    .toString();
+
+                                            if(intent.getStringExtra("url").equals("empty")) {
+
+
+                                                b = mDBHelper.deleteDatau(String.valueOf(id), intent.getStringExtra("title"),title
+                                                        , intent.getStringExtra("body"));
+                                                System.out.println("called");
+                                            }
+                                            else{
+                                                b = mDBHelper.deleteData(String.valueOf(id), intent.getStringExtra("title"), title
+                                                        , intent.getStringExtra("body"), intent.getStringExtra("url"));
+                                            }
+
                                             if (b == 1) {
                                                 Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
                                                 Intent myIntent = new Intent(news_details.this, news_activity.class);
@@ -252,6 +372,11 @@ public class news_details extends AppCompatActivity {
         });
     }
 
+
+
+
+
+
     public void showMessage(String title ,String Message){
 
         AlertDialog.Builder builder;
@@ -270,5 +395,163 @@ public class news_details extends AppCompatActivity {
         builder.show();
     }
 
+    public void setHighLightedAllText() {
+        copyText();
+        if(!selectedText.isEmpty()){
+        String tvt = news_details.getText().toString();
+        int ofe = tvt.indexOf(selectedText, 0);
+        Spannable wordToSpan = new SpannableStringBuilder(news_details.getText());
+        for (int ofs = 0; ofs < tvt.length() && ofe != -1; ofs = ofe + 1) {
+            ofe = tvt.indexOf(selectedText, ofs);
+            if (ofe == -1)
+                break;
+            else {
+                // set color here
+                if (isDark) {
+                    wordToSpan.setSpan(new BackgroundColorSpan(0xFF4500), ofe, ofe + selectedText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                } else {
+                    wordToSpan.setSpan(new BackgroundColorSpan(0xFFFF00), ofe, ofe + selectedText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+
+                String html = Html.toHtml(wordToSpan);
+                news_details.setText(Html.fromHtml(html));
+                boolean b;
+                int id = intent.getExtras().getInt("id");
+                id++;
+                if(intent.getStringExtra("url").isEmpty()){
+                    b = mDBHelper.updateDatau(String.valueOf(id),intent.getStringExtra("title"),intent.getStringExtra("title"),html);
+                }
+                else  b = mDBHelper.updateData(String.valueOf(id),intent.getStringExtra("title"),intent.getStringExtra("title"),html,intent.getStringExtra("url"));
+                if(b==true){
+                    Toasty.success(getApplicationContext(),"Done.", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toasty.error(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+        }
+       // unregisterForContextMenu(news_details);
+        }
+    }
+    public void setUnHighLightedText() {
+        copyText();
+        if(!selectedText.isEmpty()){
+            Spannable str = (Spannable) news_details.getText();
+            String tvt = news_details.getText().toString();
+            int ofe = tvt.indexOf(selectedText, 0);
+            Object spansToRemove[] = str.getSpans(ofe,ofe+selectedText.length() , Object.class);
+            for(Object span: spansToRemove){
+                if(span instanceof CharacterStyle)
+                    str.removeSpan(span);
+            }
+            String html = Html.toHtml(str);
+            news_details.setText(Html.fromHtml(html));
+            boolean b;
+            int id = intent.getExtras().getInt("id");
+            id++;
+            if(intent.getStringExtra("url").isEmpty()){
+                b = mDBHelper.updateDatau(String.valueOf(id),intent.getStringExtra("title"),intent.getStringExtra("title"),html);
+            }
+            else  b = mDBHelper.updateData(String.valueOf(id),intent.getStringExtra("title"),intent.getStringExtra("title"),html,intent.getStringExtra("url"));
+
+            if(b==true){
+
+                Toasty.success(getApplicationContext(),"Done.", Toast.LENGTH_SHORT).show();
+            }else {
+                Toasty.error(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
+            }
+        }
+        // unregisterForContextMenu(news_details);
+    }
+    public void setHighLightedText() {
+        copyText();
+        if(!selectedText.isEmpty()){
+            String tvt = news_details.getText().toString();
+            int ofe = tvt.indexOf(selectedText, 0);
+            Spannable wordToSpan = new SpannableStringBuilder(news_details.getText());
+            if (isDark) {
+                wordToSpan.setSpan(new BackgroundColorSpan(0xFF4500), ofe, ofe + selectedText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            } else {
+                wordToSpan.setSpan(new BackgroundColorSpan(0xFFFF00), ofe, ofe + selectedText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            String html = Html.toHtml(wordToSpan);
+            news_details.setText(Html.fromHtml(html));
+            boolean b;
+            int id = intent.getExtras().getInt("id");
+            id++;
+            if(intent.getStringExtra("url").isEmpty()){
+                b = mDBHelper.updateDatau(String.valueOf(id),intent.getStringExtra("title"),intent.getStringExtra("title"),html);
+            }
+            else  b = mDBHelper.updateData(String.valueOf(id),intent.getStringExtra("title"),intent.getStringExtra("title"),html,intent.getStringExtra("url"));
+
+            if(b==true){
+                Toasty.success(getApplicationContext(),"Done.", Toast.LENGTH_SHORT).show();
+            }else {
+                Toasty.error(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
+            }
+        }
+       // unregisterForContextMenu(news_details);
+    }
+
+    private void copyText() {
+        selectedText = news_details.getText().toString();
+        int startIndex = news_details.getSelectionStart();
+        int endIndex = news_details.getSelectionEnd();
+        selectedText = selectedText.substring(startIndex, endIndex);
+
+        if(android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.HONEYCOMB) {
+            android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setText(selectedText);
+        } else {
+            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            android.content.ClipData clip = android.content.ClipData.newPlainText("Copied Text", selectedText);
+            clipboard.setPrimaryClip(clip);
+        }
+
+        //cm.setText(news_details.getText());
+       // unregisterForContextMenu(news_details);
+        Toasty.success(news_details.this,selectedText,Toasty.LENGTH_LONG).show();
+    }
+
+
+    class RetrieveFeedTask extends AsyncTask<String , Void , Spanned> {
+
+        private Exception exception;
+
+        protected Spanned doInBackground(String... data) {
+
+            SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+            boolean isDark = prefs.getBoolean("isDark",false);
+            String replacedStr = new String();
+
+            if (isDark) {
+
+                try{replacedStr = data[0].replaceAll("#FFFF00", "#FF4500");}
+                catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
+
+
+
+            } else {
+
+                replacedStr = data[0].replaceAll("#FF4500", "#FFFF00");
+
+            }
+
+
+            return Html.fromHtml(replacedStr.replace("\n", "<br>"));
+
+        }
+
+        protected void onPostExecute(Spanned text) {
+
+
+            news_details.setText(text);
+
+
+        }
+    }
 
 }

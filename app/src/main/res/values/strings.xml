@@ -158,4 +158,7 @@
     <string name="end">Finish</string>
     <string name="deletethis">Confirm to delete.</string>
     <string name="nn">Confirmation.</string>
+    <string name="copy">Copy</string>
+    <string name="Highlight">Highlight</string>
+    <string name="HighlightAll">Highlight All</string>
 </resources>
