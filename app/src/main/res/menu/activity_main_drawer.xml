@@ -47,6 +47,10 @@
             android:id="@+id/promotodo"
             android:icon="@drawable/ic_timer_black_24dp"
             android:title="@string/promotodo" />
+        <item
+            android:id="@+id/pro_back"
+            android:icon="@drawable/ic_settings_backup_restore_black"
+            android:title="@string/menu_pro" />
     </group>
 
     </menu>

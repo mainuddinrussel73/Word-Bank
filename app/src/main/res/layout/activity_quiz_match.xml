@@ -3,12 +3,66 @@
     android:layout_width="wrap_content"
     android:id="@+id/mmmmm">
 
+    <TextView
 
+        android:id="@+id/quiz_question"
+
+        android:layout_width="265dp"
+
+        android:layout_height="70dp"
+
+        android:layout_alignParentLeft="true"
+
+        android:layout_alignParentStart="true"
+
+        android:layout_alignParentTop="true"
+
+        android:layout_marginEnd="10dp"
+
+        android:layout_marginLeft="13dp"
+
+        android:layout_marginRight="10dp"
+
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="85dp"
+
+        android:paddingLeft="@dimen/padd"
+        android:scrollbars="vertical"
+
+        android:text="Matching Games : "
+
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp"
+
+
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:id="@+id/scores"
+        android:layout_width="100dp"
+        android:layout_height="77dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="100dp"
+        android:layout_marginEnd="21dp"
+
+        android:layout_marginLeft="290dp"
+
+        android:layout_marginRight="5dp"
+
+        android:layout_marginTop="79dp"
+        android:background="@drawable/backgroundborder"
+        android:paddingLeft="10dp"
+        android:paddingTop="8dp"
+        android:text="@string/Score"
+        android:textColor="@color/cardview_dark_background"
+        android:textSize="14dp" />
 
     <LinearLayout
         android:id="@+id/llll"
+        android:layout_marginTop="200dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="500dp"
         android:layout_marginBottom="150dp"
         android:gravity="center_horizontal"
         >
@@ -17,9 +71,9 @@
             android:id="@+id/text_list"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="100dp"
+            android:layout_marginBottom="@dimen/alerter_activity_horizontal_margin"
             android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="@dimen/alerter_activity_horizontal_margin"
             android:background="@drawable/listview_border"
             android:divider="@android:color/transparent"
             android:dividerHeight="10.0sp" />
@@ -37,9 +91,9 @@
             android:id="@+id/text_list1"
             android:layout_width="150dp"
             android:background="@drawable/listview_border"
+            android:layout_marginBottom="@dimen/alerter_activity_horizontal_margin"
             android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
-            android:layout_marginBottom="100dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="@dimen/alerter_activity_horizontal_margin"
             android:layout_height="wrap_content"
             android:divider="@android:color/transparent"
             android:dividerHeight="10.0sp"
@@ -61,8 +115,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:layout_marginLeft="100dp"
+        android:layout_alignParentStart="true"
 
+        android:layout_marginLeft="30dp"
+        android:layout_marginStart="19dp"
         android:paddingBottom="@dimen/alerter_activity_horizontal_margin"
         android:paddingLeft="@dimen/alerter_activity_horizontal_margin"
         android:paddingRight="@dimen/alerter_activity_horizontal_margin"
@@ -71,11 +127,14 @@
         android:textColor="@color/white">
 
     </com.google.android.material.button.MaterialButton>
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/extpage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="250dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="23dp"
+        android:layout_marginLeft="310dp"
         android:paddingBottom="@dimen/alerter_activity_horizontal_margin"
         android:paddingLeft="@dimen/alerter_activity_horizontal_margin"
         android:paddingRight="@dimen/alerter_activity_horizontal_margin"
@@ -84,5 +143,7 @@
         android:textColor="@color/white">
 
     </com.google.android.material.button.MaterialButton>
+
+
 </RelativeLayout>
 </RelativeLayout>

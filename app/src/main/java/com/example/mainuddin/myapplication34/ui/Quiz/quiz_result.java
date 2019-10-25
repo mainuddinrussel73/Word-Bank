@@ -13,6 +13,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -40,6 +42,10 @@ public class quiz_result extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+//Remove notification bar
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 
         setContentView(R.layout.activity_quiz_result);
@@ -53,14 +59,26 @@ public class quiz_result extends AppCompatActivity {
         float total = (quiz_page.correct+quiz_page.wrong+quiz_page.ignored);
         System.out.println(quiz_page.correct+","+quiz_page.wrong+","+quiz_page.ignored);
 
-        if(quiz_page.correct!=0){
+        if(quiz_page.correct!=0 && quiz_page.ignored==0 && quiz_page.wrong==0){
             p_correct = (quiz_page.correct/ total)*100;
         }
-        if( quiz_page.ignored!=0){
+        if( quiz_page.ignored!=0 && quiz_page.correct==0 && quiz_page.wrong==0){
             p_ignored = (quiz_page.ignored / total)*100;
         }
-        if(quiz_page.wrong!=0){
+        if(quiz_page.wrong!=0 && quiz_page.ignored==0 && quiz_page.correct==0){
             p_wrong = (quiz_page.wrong/ total)*100;
+        }
+        if(quiz_page.ignored!=0 && quiz_page.correct!=0 && quiz_page.wrong==0){
+            p_correct = (quiz_page.correct/ total)*100;
+            p_ignored = (quiz_page.ignored / total)*100;
+        }
+        if(quiz_page.ignored!=0 && quiz_page.wrong!=0 && quiz_page.correct==0){
+            p_wrong = (quiz_page.wrong/ total)*100;
+            p_ignored = (quiz_page.ignored / total)*100;
+        }
+        if(quiz_page.correct!=0 && quiz_page.wrong!=0 && quiz_page.ignored==0){
+            p_correct = (quiz_page.correct/ total)*100;
+            p_wrong = (quiz_page.wrong / total)*100;
         }
         if(quiz_page.correct!=0 && quiz_page.wrong!=0 && quiz_page.ignored!=0){
             p_correct = (quiz_page.correct/ total)*100;
@@ -85,6 +103,7 @@ public class quiz_result extends AppCompatActivity {
                 View view =super.getView(position, convertView, parent);
 
                 TextView textView=(TextView) view.findViewById(R.id.label);
+                textView.setMaxLines(3);
 
                 /*YOUR CHOICE OF COLOR*/
                 if(MainActivity.isDark)
@@ -129,32 +148,36 @@ public class quiz_result extends AppCompatActivity {
         });
 
 
+        if(quiz_page.correct!=0 && quiz_page.ignored==0 && quiz_page.wrong==0){
+            pieData.add(new SliceValue(p_correct, Color.GREEN).setLabel("Cor"));
+        }
+        if( quiz_page.ignored!=0 && quiz_page.correct==0 && quiz_page.wrong==0){
+            pieData.add(new SliceValue(p_ignored, Color.GRAY).setLabel("Ign"));
+        }
+        if(quiz_page.wrong!=0 && quiz_page.ignored==0 && quiz_page.correct==0){
+            pieData.add(new SliceValue(p_wrong, Color.RED).setLabel("Wro"));
+        }
+        if(quiz_page.ignored!=0 && quiz_page.correct!=0 && quiz_page.wrong==0){
+            pieData.add(new SliceValue(p_ignored, Color.GRAY).setLabel("Ign"));
+            pieData.add(new SliceValue(p_correct, Color.GREEN).setLabel("Cor"));
+        }
+        if(quiz_page.ignored!=0 && quiz_page.wrong!=0 && quiz_page.correct==0){
+            pieData.add(new SliceValue(p_ignored, Color.GRAY).setLabel("Ign"));
+            pieData.add(new SliceValue(p_wrong, Color.RED).setLabel("Cor"));
+        }
+        if(quiz_page.correct!=0 && quiz_page.wrong!=0 && quiz_page.ignored==0){
+            pieData.add(new SliceValue(p_correct, Color.GREEN).setLabel("Cor"));
+            pieData.add(new SliceValue(p_wrong, Color.RED).setLabel("Cor"));
+        }
+        if(quiz_page.correct==0 && quiz_page.ignored==0 && quiz_page.wrong==0){
+            pieData.add(new SliceValue(0, Color.GREEN).setLabel("Cor"));
+            pieData.add(new SliceValue(100, Color.GRAY).setLabel("Ign"));
+            pieData.add(new SliceValue(0, Color.RED).setLabel("Wro"));
+        }
         if(quiz_page.correct!=0 && quiz_page.ignored!=0 && quiz_page.wrong!=0){
             pieData.add(new SliceValue(p_correct, Color.GREEN).setLabel("Cor"));
             pieData.add(new SliceValue(p_ignored, Color.GRAY).setLabel("Ign"));
             pieData.add(new SliceValue(p_wrong, Color.RED).setLabel("Wro"));
-        }
-
-        else if(quiz_page.correct!=0){
-            pieData.add(new SliceValue(p_correct, Color.GREEN).setLabel("Cor"));
-            //pieData.add(new SliceValue(p_ignored, Color.GRAY).setLabel("Ign"));
-            //pieData.add(new SliceValue(p_wrong, Color.RED).setLabel("Wro"));
-        }
-        else if(quiz_page.ignored!=0){
-            //pieData.add(new SliceValue(p_correct, Color.GREEN).setLabel("Cor"));
-            pieData.add(new SliceValue(p_ignored, Color.GRAY).setLabel("Ign"));
-            //pieData.add(new SliceValue(p_wrong, Color.RED).setLabel("Wro"));
-        }
-        else if(quiz_page.wrong!=0){
-            //pieData.add(new SliceValue(p_correct, Color.GREEN).setLabel("Cor"));
-            //pieData.add(new SliceValue(p_ignored, Color.GRAY).setLabel("Ign"));
-             pieData.add(new SliceValue(p_wrong, Color.RED).setLabel("Wro"));
-        }
-
-        else if(quiz_page.correct==0 && quiz_page.ignored==0 && quiz_page.wrong==0){
-            pieData.add(new SliceValue(0, Color.GREEN).setLabel("Cor"));
-            pieData.add(new SliceValue(100, Color.GRAY).setLabel("Ign"));
-            pieData.add(new SliceValue(0, Color.RED).setLabel("Wro"));
         }
 
 
@@ -230,6 +253,7 @@ public class quiz_result extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                wordBuck = new ArrayList<>();
                 quiz_page.ignored = 0;
                 quiz_page.correct = 0;
                 quiz_page.wrong = 0;

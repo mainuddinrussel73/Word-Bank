@@ -28,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -69,7 +70,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
     private promotododata mDraggedEntity;
     ExtendedEditText tfb;
     TextView totaltask,totalhour,remain;
-    Button button;
+    ImageButton button;
     public static DBproHandle mDBHelper;
     promotododata currenttask;
 

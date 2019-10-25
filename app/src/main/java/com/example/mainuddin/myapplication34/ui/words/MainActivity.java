@@ -46,6 +46,7 @@ import com.example.mainuddin.myapplication34.ui.media.Media_list_activity;
 import com.example.mainuddin.myapplication34.ui.news.news_activity;
 import com.example.mainuddin.myapplication34.ui.news.news_backup;
 import com.example.mainuddin.myapplication34.ui.promotodo.Promotodo_activity;
+import com.example.mainuddin.myapplication34.ui.promotodo.pro_backup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
@@ -581,7 +582,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent myIntent = new Intent(MainActivity.this, news_backup.class);
             myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivityForResult(myIntent, 0);
-        } else if(id == R.id.subscription){
+        } else if(id == R.id.pro_back){
+            Intent myIntent = new Intent(MainActivity.this, pro_backup.class);
+            myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivityForResult(myIntent, 0);
+        }else if(id == R.id.subscription){
 
 
 

@@ -449,7 +449,7 @@ public class quiz_page extends AppCompatActivity {
     }
     @Override
     public void onBackPressed(){
-        cancelTimer();
+
     }
     @Override
     public void onPause() {

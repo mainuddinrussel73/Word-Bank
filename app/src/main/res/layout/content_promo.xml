@@ -59,42 +59,50 @@
 
         </TextView>
     </LinearLayout>
-    <RelativeLayout
+
+    <LinearLayout
         android:id="@+id/textlayout"
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:layout_marginTop="100dp"
-        android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
-        android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin">
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="23dp"
+        android:layout_marginRight="23dp"
+        android:layout_marginTop="90dp"
+        android:orientation="horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:background="@drawable/backgroundborder">
+
 
 
 
         <studio.carbonylgroup.textfieldboxes.ExtendedEditText
             android:id="@+id/text_field_boxes2"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
+            android:layout_width="260dp"
+            android:layout_gravity="left|center"
+            android:layout_height="50dp"
+            android:hint="Task"
             android:imeOptions="actionNext"
             android:inputType="text"
             android:maxLines="1"
+
             android:text=""
-            android:hint="Task"
             app:prefix="$ " />
 
-
-        <com.google.android.material.button.MaterialButton
+        <ImageButton
             android:id="@+id/dark_button"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="10dp"
-            android:paddingLeft="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:paddingBottom="5dp"
+            android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:layout_marginTop="60dp"
-            android:text="@string/Ok"
-            android:textColor="@color/white"/>
+            android:src="@drawable/fab_add"
+            android:backgroundTint="@color/colorPrimary"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 
 
@@ -106,7 +114,7 @@
         android:layout_marginLeft="@dimen/activity_vertical_margin"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginRight="@dimen/activity_vertical_margin"
-        android:layout_marginTop="210dp"
+        android:layout_marginTop="160dp"
         >
         <com.yydcdut.sdlv.SlideAndDragListView
             android:id="@+id/lv_edit"

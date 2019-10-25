@@ -80,6 +80,7 @@ public class news_details extends AppCompatActivity {
 
     SharedPreferences prefs;
     boolean isDark;
+    TextView textView;
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -121,8 +122,8 @@ public class news_details extends AppCompatActivity {
 
         getSupportActionBar().setTitle(intent.getStringExtra("title"));
         CoordinatorLayout additem = findViewById(R.id.content_detail);
-        TextView textView = findViewById(R.id.words);
-        textView.setText("Total Letters : "+news_details.getText().toString().length());
+        textView = findViewById(R.id.words);
+
 
 
 
@@ -549,6 +550,7 @@ public class news_details extends AppCompatActivity {
 
 
             news_details.setText(text);
+            textView.setText("Total Letters : "+news_details.getText().toString().length());
 
 
         }

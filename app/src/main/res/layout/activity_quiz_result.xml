@@ -9,27 +9,27 @@
     android:theme="@style/AppTheme.NoActionBar">
 
 
-
-
     <com.google.android.material.button.MaterialButton
         android:id="@+id/goback"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/learnlist"
         android:layout_marginLeft="150dp"
-        android:layout_marginTop="398dp"
-        android:textColor="@android:color/white"
+        android:layout_marginTop="310dp"
         android:paddingBottom="@dimen/alerter_activity_horizontal_margin"
         android:paddingLeft="@dimen/alerter_activity_horizontal_margin"
         android:paddingRight="@dimen/alerter_activity_horizontal_margin"
         android:paddingTop="@dimen/alerter_activity_horizontal_margin"
-        android:text="GO HOME" />
+        android:text="GO HOME"
+        android:textColor="@android:color/white" />
 
     <TextView
         android:id="@+id/result"
         android:layout_width="197dp"
-        android:layout_height="317dp"
+        android:layout_height="290dp"
+        android:layout_alignParentTop="true"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="63dp"
+        android:layout_marginTop="32dp"
         android:background="@drawable/backgroundborder"
         android:paddingBottom="@dimen/alerter_activity_horizontal_margin"
         android:paddingLeft="@dimen/alerter_activity_horizontal_margin"
@@ -44,7 +44,7 @@
 
     <RelativeLayout
         android:layout_width="190dp"
-        android:layout_height="190dp"
+        android:layout_height="200dp"
 
         android:layout_marginTop="63dp"
         android:layout_marginLeft="220dp"
@@ -53,21 +53,24 @@
         <lecho.lib.hellocharts.view.PieChartView
             android:id="@+id/chart"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="-22dp" />
 
 
     </RelativeLayout>
 
 
     <ListView
-        android:background="@drawable/listview_border"
         android:id="@+id/learnlist"
         android:layout_width="match_parent"
-        android:layout_height="330dp"
-        android:layout_marginTop="490dp"
+        android:layout_height="300dp"
+        android:layout_alignBottom="@+id/result"
+        android:layout_marginBottom="-308dp"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="20dp">
+        android:layout_marginTop="-60dp"
+        android:background="@drawable/listview_border">
 
     </ListView>
 
