@@ -4,21 +4,47 @@ package com.example.mainuddin.myapplication34.ui.media;
 import android.app.ActivityManager;
 import android.app.Service;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.database.Cursor;
+import android.database.MergeCursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Message;
+import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import com.example.mainuddin.myapplication34.R;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 
+import androidx.appcompat.widget.Toolbar;
+import androidx.palette.graphics.Palette;
 import es.dmoral.toasty.Toasty;
 
 import static android.content.Context.ACTIVITY_SERVICE;
+import static com.example.mainuddin.myapplication34.ui.media.Media_list_activity.mp;
+import static com.example.mainuddin.myapplication34.ui.media.NotificationService.getDominantColor;
 import static com.example.mainuddin.myapplication34.ui.media.NotificationService.notificationView;
 import static com.example.mainuddin.myapplication34.ui.media.NotificationService.notificationView1;
+import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.textView1;
 
 public class MyNotificationReceiver extends BroadcastReceiver {
     public static int REQUEST_CODE_NOTIFICATION = 1212;
@@ -50,8 +76,8 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
 
 
-                    if(!mediaListActivity.mp.isPlaying()){
-                        mediaListActivity.mp.start();
+                    if(!mp.isPlaying()){
+                        mp.start();
                         mediaListActivity.playBtn.setBackgroundResource(R.drawable.ic_pause_black_24dp);
 
                         NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
@@ -63,7 +89,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                         NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
 
                     }else {
-                        mediaListActivity.mp.pause();
+                        mp.pause();
                         mediaListActivity.playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
 
                         NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
@@ -83,21 +109,21 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
                     if (isAppOnForeground(context,"com.example.mainuddin.myapplication34")) {
                         // App is in Foreground
-                        if(!mediaListActivity.mp.isPlaying()){
+                        if(!mp.isPlaying()){
                            // mediaListActivity.mp.stop();
 
                         }else {
-                            mediaListActivity.mp.pause();
+                            mp.pause();
 
                         }
 
                     } else {
                         // App is in Background
-                        if(!mediaListActivity.mp.isPlaying()){
-                            mediaListActivity.mp.stop();
+                        if(!mp.isPlaying()){
+                            mp.stop();
 
                         }else {
-                            mediaListActivity.mp.pause();
+                            mp.pause();
 
                         }
 
@@ -168,6 +194,43 @@ public class MyNotificationReceiver extends BroadcastReceiver {
         }
         return false;
     }
+
+    private String[] getAudioPath(Context context,String songTitle) {
+
+        final Cursor mInternalCursor = context.getContentResolver().query(
+                MediaStore.Audio.Media.INTERNAL_CONTENT_URI,
+                new String[]{MediaStore.Audio.Media.DISPLAY_NAME, MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DATA},
+                MediaStore.Audio.Media.TITLE + "=?",
+                new String[]{songTitle},
+                "LOWER(" + MediaStore.Audio.Media.TITLE + ") ASC");
+
+        final Cursor mExternalCursor = context.getContentResolver().query(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                new String[]{MediaStore.Audio.Media.DISPLAY_NAME, MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DATA},
+                MediaStore.Audio.Media.TITLE + "=?",
+                new String[]{songTitle},
+                "LOWER(" + MediaStore.Audio.Media.TITLE + ") ASC");
+
+        Cursor[] cursors = {mInternalCursor, mExternalCursor};
+        final MergeCursor mMergeCursor = new MergeCursor(cursors);
+
+        int count = mMergeCursor.getCount();
+
+        String[] songs = new String[count];
+        String[] mAudioPath = new String[count];
+        int i = 0;
+        if (mMergeCursor.moveToFirst()) {
+            do {
+                songs[i] = mMergeCursor.getString(mMergeCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
+                mAudioPath[i] = mMergeCursor.getString(mMergeCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
+                i++;
+            } while (mMergeCursor.moveToNext());
+        }
+
+        mMergeCursor.close();
+        return mAudioPath;
+    }
+
 
 
 

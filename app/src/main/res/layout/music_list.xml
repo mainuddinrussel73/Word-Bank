@@ -28,6 +28,8 @@
         android:background="@drawable/backgroundborder"
         android:divider="@null"
         android:dividerHeight="19.0dp"
+        android:scrollbars="vertical"
+        android:listSelector="@drawable/list_selector"
 
 
         >

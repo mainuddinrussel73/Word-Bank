@@ -11,6 +11,7 @@ public class Audio implements Serializable, Comparable< Audio > {
     private String title;
     private String album;
     private String artist;
+    private String Duration;
 
     private String imagepath;
 
@@ -73,4 +74,11 @@ public class Audio implements Serializable, Comparable< Audio > {
     }
 
 
+    public String getDuration() {
+        return Duration;
+    }
+
+    public void setDuration(String duration) {
+        Duration = duration;
+    }
 }

@@ -1,79 +1,74 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="350dp"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
-    android:background="@drawable/backgroundborder"
-    android:layout_marginTop="16dp"
-    android:layout_marginBottom="16dp"
-    >
-
-
-
-
-<LinearLayout android:layout_width="match_parent"
+<RelativeLayout android:id="@+id/list_item"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/list_selector"
     android:orientation="horizontal"
-    android:id="@+id/list_item"
-    android:background="@drawable/backgroundborder"
-    android:descendantFocusability="afterDescendants"
 
-    >
+    android:padding="5dip"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
+<!--  ListRow Left sied Thumbnail image -->
+<LinearLayout android:id="@+id/thumbnail"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="3dip"
+    android:layout_alignParentLeft="true"
+    android:background="@drawable/image_bg"
+    android:layout_marginRight="5dip">
 
-
-
-        <com.github.siyamed.shapeimageview.mask.PorterShapeImageView
-            android:id="@+id/play_pause"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:src="@drawable/image"
-            app:siShape="@drawable/shaper"
-            app:siSquare="true"
-
-            />
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
-        >
-
-        <TextView
-            android:id="@+id/title5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Title"
-            android:textSize="@dimen/activity_horizontal_margin"
-            android:textColor="@color/primary_text"
-            android:layout_gravity="center_vertical"
-            android:foregroundGravity="center_horizontal"
-            android:textStyle="bold|italic"
-            android:maxLines="1"
-            android:ellipsize="end"
-            />
-
-
-        <TextView
-            android:id="@+id/title6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="kjhkj"
-            android:textSize="10dp"
-            android:textColor="@color/primary_text"
-            android:layout_gravity="bottom"
-            android:layout_marginTop="18dp"
-            android:foregroundGravity="center_horizontal"
-            android:textStyle="italic"
-            android:maxLines="1"
-            android:ellipsize="end"
-            />
-    </RelativeLayout>
-
-
-    </LinearLayout>
-
+    <ImageView
+        android:id="@+id/play_pause"
+        android:layout_width="50dip"
+        android:layout_height="50dip"
+        android:src="@drawable/image"/>
 
 </LinearLayout>
+
+<!-- Title Of Song-->
+<TextView
+    android:id="@+id/title5"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignTop="@+id/thumbnail"
+    android:layout_toRightOf="@+id/thumbnail"
+    android:text="Rihanna Love the way lie"
+    android:textColor="#040404"
+    android:typeface="sans"
+    android:maxLines="1"
+    android:maxLength="20"
+    android:ellipsize="end"
+    android:textSize="15dip"
+    android:textStyle="bold"/>
+
+<!-- Artist Name -->
+<TextView
+    android:id="@+id/title6"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/title5"
+    android:textColor="#343434"
+    android:textSize="10dip"
+    android:layout_marginTop="1dip"
+    android:layout_toRightOf="@+id/thumbnail"
+    android:maxLines="1"
+    android:maxLength="15"
+    android:ellipsize="end"
+    android:text="Just gona stand there and ..." />
+
+<!-- Rightend Duration -->
+<TextView
+    android:id="@+id/duration"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentRight="true"
+    android:layout_alignTop="@id/title6"
+    android:gravity="right"
+    android:text="5:45"
+    android:layout_marginRight="5dip"
+    android:textSize="10dip"
+    android:textColor="#10bcc9"
+    android:textStyle="bold"/>
+
+<!-- Rightend Arrow -->
+
+</RelativeLayout>

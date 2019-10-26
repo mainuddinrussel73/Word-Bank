@@ -4,17 +4,22 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.mainuddin.myapplication34.ui.words.MainActivity;
@@ -22,8 +27,10 @@ import com.example.mainuddin.myapplication34.R;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import androidx.palette.graphics.Palette;
 
@@ -31,6 +38,8 @@ public class Audiolist_adapter extends BaseAdapter {
 
     private final Activity context;
     List<Audio> contactList;
+    ImageView titleText;
+    TextView tt,tt1, duration;
 
     // private final Integer[] imgid;
 
@@ -63,61 +72,28 @@ public class Audiolist_adapter extends BaseAdapter {
         LayoutInflater inflater=context.getLayoutInflater();
         View rowView=inflater.inflate(R.layout.media_item_layout, null,true);
 
-        ImageView titleText = (ImageView) rowView.findViewById(R.id.play_pause);
-        TextView tt = (TextView) rowView.findViewById(R.id.title5);
-        TextView tt1 = (TextView) rowView.findViewById(R.id.title6);
-
-
-        //System.out.println("klkl"+MainActivity.contactList.size());
-       /* File imgFile = new File(Media_list_activity.ListElementsArrayList.get(position).getImagepath());
-
-        if(imgFile.exists()){
-
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-
-
-            titleText.setImageBitmap(myBitmap);
-
-        }*/
-
-        Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
-
-        Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(Media_list_activity.ListElementsArrayList.get(position).getImagepath()));
-        ContentResolver res = context.getContentResolver();
-        InputStream in;
-        Bitmap bm = null;
-        try {
-            in = res.openInputStream(uri);
-
-            bm = BitmapFactory.decodeStream(in);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            InputStream is = context.getResources().openRawResource(R.raw.image);
-            bm = BitmapFactory.decodeStream(is);
-        }
-
-        Palette palette = Palette.from(bm).generate();
-
-
-        int defaultValue = 0x0000FF;
-        int vibrant = getDominantColor(bm);
-        int vibrantLight = palette.getLightVibrantColor(defaultValue);
-        int vibrantDark = palette.getDarkVibrantColor(vibrant);
-        int muted = palette.getMutedColor(defaultValue);
-        int mutedLight = getComplimentColor(muted);
-        int mutedDark = getComplimentColor(vibrant);
-
-
+        titleText = (ImageView) rowView.findViewById(R.id.play_pause);
+        tt = (TextView) rowView.findViewById(R.id.title5);
+        tt1 = (TextView) rowView.findViewById(R.id.title6);
+        long num = Long.parseLong(Media_list_activity.ListElementsArrayList.get(position).getDuration());
+        duration = (TextView)rowView.findViewById(R.id.duration); // duration
 
         tt.setText((Media_list_activity.ListElementsArrayList.get(position).getTitle()));
-        tt.setTextColor(mutedDark);
         tt1.setText((Media_list_activity.ListElementsArrayList.get(position).getArtist()));
-        tt1.setTextColor(mutedLight);
+        String s = String.format("%02d:%02d",
+                TimeUnit.MILLISECONDS.toMinutes(num),
+                TimeUnit.MILLISECONDS.toSeconds(num) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(num))
+        );
+        duration.setText(s);
 
 
-        LinearLayout listitem = rowView.findViewById(R.id.list_item);
-        titleText.setImageBitmap(bm);
+        RetrieveFeedTask asyncTask=new RetrieveFeedTask();
+        asyncTask.execute(position);
+
+
+        RelativeLayout listitem = rowView.findViewById(R.id.list_item);
+
         SharedPreferences prefs = context.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark",false);
 
@@ -168,6 +144,61 @@ public class Audiolist_adapter extends BaseAdapter {
             return color;
         }
 
+
+    class RetrieveFeedTask extends AsyncTask<Integer , Bitmap , Bitmap> {
+
+        private Exception exception;
+        int defaultValue = 0x0000FF;
+        Palette palette;
+        int mutedDark;
+        int mutedLight;
+        Uri sArtworkUri;
+        ContentResolver res;
+        InputStream in;
+        Bitmap bm;
+        @Override
+        protected void onPreExecute() {
+
+            sArtworkUri  = Uri.parse("content://media/external/audio/albumart");
+            res = context.getContentResolver();
+        }
+
+        protected Bitmap doInBackground(Integer... data) {
+
+
+
+            Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(Media_list_activity.ListElementsArrayList.get(data[0]).getImagepath()));
+
+            try {
+                in = res.openInputStream(uri);
+
+                bm = BitmapFactory.decodeStream(in);
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                InputStream is = context.getResources().openRawResource(R.raw.image);
+                bm = BitmapFactory.decodeStream(is);
+            }
+
+            palette = Palette.from(bm).generate();
+            int vibrant = getDominantColor(bm);
+            int muted = palette.getMutedColor(defaultValue);
+            mutedLight = getComplimentColor(palette.getDominantColor(palette.getDominantColor(defaultValue)));
+            mutedDark = getComplimentColor(vibrant);
+
+            return bm;
+
+        }
+
+        protected void onPostExecute(Bitmap bm) {
+
+
+            duration.setTextColor(mutedDark);
+            titleText.setImageBitmap(bm);
+            tt.setTextColor(mutedDark);
+            tt1.setTextColor(mutedLight);
+        }
+    }
 
 
 

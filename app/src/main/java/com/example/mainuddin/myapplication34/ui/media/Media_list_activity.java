@@ -16,6 +16,7 @@ import android.database.MergeCursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
@@ -92,7 +93,7 @@ public class Media_list_activity extends AppCompatActivity {
     TextView remainingTimeLabel;
     public static MediaPlayer mp = new MediaPlayer();
     public static ImageView image;
-    int totalTime;
+    public  static int totalTime;
 
     int pro = 0;
     int pro1 = 0;
@@ -111,6 +112,7 @@ public class Media_list_activity extends AppCompatActivity {
     Drawable myIcon1;
     Drawable myIcon2;
     Drawable myIcon3;
+    int mutedColor;
 
     Toolbar toolbar;
     public static  Button pauseBtn, nxtBtn;
@@ -139,6 +141,24 @@ public class Media_list_activity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    Window window = getWindow();
+                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                    window.setStatusBarColor(Color.parseColor("#3a9ebe"));
+                    setTitleColor(Color.WHITE);
+                    getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#3a9ebe")));
+                    Toolbar actionBarToolbar = (Toolbar) findViewById(R.id.toolbar);
+                    if (actionBarToolbar != null)
+                        actionBarToolbar.setTitleTextColor(Color.WHITE);
+                }
+
+
+               // fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
+                toolbar.getNavigationIcon().setTint(Color.WHITE);
+
+                Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
+                icon.setTint(Color.WHITE);
+                button.setBackground(icon);
                 finish();
             }
         });
@@ -161,6 +181,7 @@ public class Media_list_activity extends AppCompatActivity {
 
         pauseBtn = myView.findViewById(R.id.prevBtn);
         nxtBtn = myView.findViewById(R.id.nxtBtn);
+
 
         volumeBar = (SeekBar) myView.findViewById(R.id.volumeBar);
 
@@ -363,8 +384,15 @@ public class Media_list_activity extends AppCompatActivity {
                             // Position Bar
                             totalTime = mp.getDuration();
                             positionBar = (SeekBar) myView.findViewById(R.id.positionBar);
+                            int vibrant = getDominantColor(bm);
+                            int mutedDark = getComplimentColor(vibrant);
+                            positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
                             positionBar.setMax(totalTime);
                             positionBar.setProgress(mp.getCurrentPosition());
+
+                            remainingTimeLabel.setTextColor(mutedColor);
+                            elapsedTimeLabel.setTextColor(mutedColor);
+
                             positionBar.setOnSeekBarChangeListener(
                                     new SeekBar.OnSeekBarChangeListener() {
                                         @Override
@@ -565,8 +593,13 @@ public class Media_list_activity extends AppCompatActivity {
                             // Position Bar
                             totalTime = mp.getDuration();
                             positionBar = (SeekBar) myView.findViewById(R.id.positionBar);
+                            int vibrant = getDominantColor(bm);
+                            int mutedDark = getComplimentColor(vibrant);
+                            positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
                             positionBar.setMax(totalTime);
                             positionBar.setProgress(mp.getCurrentPosition());
+                            remainingTimeLabel.setTextColor(mutedColor);
+                            elapsedTimeLabel.setTextColor(mutedColor);
                             positionBar.setOnSeekBarChangeListener(
                                     new SeekBar.OnSeekBarChangeListener() {
                                         @Override
@@ -771,8 +804,13 @@ public class Media_list_activity extends AppCompatActivity {
                             // Position Bar
                             totalTime = mp.getDuration();
                             positionBar = (SeekBar) myView.findViewById(R.id.positionBar);
+                            int vibrant = getDominantColor(bm);
+                            int mutedDark = getComplimentColor(vibrant);
+                            positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
                             positionBar.setMax(totalTime);
                             positionBar.setProgress(mp.getCurrentPosition());
+                            remainingTimeLabel.setTextColor(mutedColor);
+                            elapsedTimeLabel.setTextColor(mutedColor);
                             positionBar.setOnSeekBarChangeListener(
                                     new SeekBar.OnSeekBarChangeListener() {
                                         @Override
@@ -972,8 +1010,13 @@ public class Media_list_activity extends AppCompatActivity {
                             // Position Bar
                             totalTime = mp.getDuration();
                             positionBar = (SeekBar) myView.findViewById(R.id.positionBar);
+                            int vibrant = getDominantColor(bm);
+                            int mutedDark = getComplimentColor(vibrant);
+                            positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
                             positionBar.setMax(totalTime);
                             positionBar.setProgress(mp.getCurrentPosition());
+                            remainingTimeLabel.setTextColor(mutedColor);
+                            elapsedTimeLabel.setTextColor(mutedColor);
                             positionBar.setOnSeekBarChangeListener(
                                     new SeekBar.OnSeekBarChangeListener() {
                                         @Override
@@ -1179,8 +1222,13 @@ public class Media_list_activity extends AppCompatActivity {
                             // Position Bar
                             totalTime = mp.getDuration();
                             positionBar = (SeekBar) myView.findViewById(R.id.positionBar);
+                            int vibrant = getDominantColor(bm);
+                            int mutedDark = getComplimentColor(vibrant);
+                            positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
                             positionBar.setMax(totalTime);
                             positionBar.setProgress(mp.getCurrentPosition());
+                            remainingTimeLabel.setTextColor(mutedColor);
+                            elapsedTimeLabel.setTextColor(mutedColor);
                             positionBar.setOnSeekBarChangeListener(
                                     new SeekBar.OnSeekBarChangeListener() {
                                         @Override
@@ -1380,8 +1428,16 @@ public class Media_list_activity extends AppCompatActivity {
                             // Position Bar
                             totalTime = mp.getDuration();
                             positionBar = (SeekBar) myView.findViewById(R.id.positionBar);
+
+                            int vibrant = getDominantColor(bm);
+                            int mutedDark = getComplimentColor(vibrant);
+                            positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+
+                          //  positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
                             positionBar.setMax(totalTime);
                             positionBar.setProgress(mp.getCurrentPosition());
+                            remainingTimeLabel.setTextColor(mutedColor);
+                            elapsedTimeLabel.setTextColor(mutedColor);
                             positionBar.setOnSeekBarChangeListener(
                                     new SeekBar.OnSeekBarChangeListener() {
                                         @Override
@@ -1587,8 +1643,13 @@ public class Media_list_activity extends AppCompatActivity {
                             // Position Bar
                             totalTime = mp.getDuration();
                             positionBar = (SeekBar) myView.findViewById(R.id.positionBar);
+                            int vibrant = getDominantColor(bm);
+                            int mutedDark = getComplimentColor(vibrant);
+                            positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
                             positionBar.setMax(totalTime);
                             positionBar.setProgress(mp.getCurrentPosition());
+                            remainingTimeLabel.setTextColor(mutedColor);
+                            elapsedTimeLabel.setTextColor(mutedColor);
                             positionBar.setOnSeekBarChangeListener(
                                     new SeekBar.OnSeekBarChangeListener() {
                                         @Override
@@ -1788,8 +1849,13 @@ public class Media_list_activity extends AppCompatActivity {
                             // Position Bar
                             totalTime = mp.getDuration();
                             positionBar = (SeekBar) myView.findViewById(R.id.positionBar);
+                            int vibrant = getDominantColor(bm);
+                            int mutedDark = getComplimentColor(vibrant);
+                            positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
                             positionBar.setMax(totalTime);
                             positionBar.setProgress(mp.getCurrentPosition());
+                            remainingTimeLabel.setTextColor(mutedColor);
+                            elapsedTimeLabel.setTextColor(mutedColor);
                             positionBar.setOnSeekBarChangeListener(
                                     new SeekBar.OnSeekBarChangeListener() {
                                         @Override
@@ -1970,6 +2036,7 @@ public class Media_list_activity extends AppCompatActivity {
                             int mutedLight = palette.getLightMutedColor(defaultValue);
                             int mutedDark = getComplimentColor(vibrant);
 
+                            mutedColor = mutedDark;
 
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                 Window window = getWindow();
@@ -2061,7 +2128,7 @@ public class Media_list_activity extends AppCompatActivity {
 
 
                     //   if(! other.equals("yes") ) {
-                    mp.setLooping(true);
+                   mp.setLooping(false);
                     mp.seekTo(0);
 
                     mp.start();
@@ -2077,6 +2144,11 @@ public class Media_list_activity extends AppCompatActivity {
 
                     // Position Bar
                     positionBar = (SeekBar) myView.findViewById(R.id.positionBar);
+                    int vibrant = getDominantColor(bm);
+                    int mutedDark = getComplimentColor(vibrant);
+                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                    remainingTimeLabel.setTextColor(mutedColor);
+                    elapsedTimeLabel.setTextColor(mutedColor);
                     positionBar.setMax(totalTime);
                     positionBar.setOnSeekBarChangeListener(
                             new SeekBar.OnSeekBarChangeListener() {
@@ -2324,7 +2396,7 @@ public class Media_list_activity extends AppCompatActivity {
 
 
                     //   if(! other.equals("yes") ) {
-                    mp.setLooping(true);
+                   mp.setLooping(false);
                     mp.seekTo(0);
 
                     mp.start();
@@ -2337,6 +2409,11 @@ public class Media_list_activity extends AppCompatActivity {
 
                     // Position Bar
                     positionBar = (SeekBar) myView.findViewById(R.id.positionBar);
+                    int vibrant = getDominantColor(bm);
+                    int mutedDark = getComplimentColor(vibrant);
+                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                    remainingTimeLabel.setTextColor(mutedColor);
+                    elapsedTimeLabel.setTextColor(mutedColor);
                     positionBar.setMax(totalTime);
                     positionBar.setOnSeekBarChangeListener(
                             new SeekBar.OnSeekBarChangeListener() {
@@ -2576,7 +2653,7 @@ public class Media_list_activity extends AppCompatActivity {
 
 
                     //   if(! other.equals("yes") ) {
-                    mp.setLooping(true);
+                   mp.setLooping(false);
                     mp.seekTo(0);
 
                     mp.start();
@@ -2589,6 +2666,11 @@ public class Media_list_activity extends AppCompatActivity {
 
                     // Position Bar
                     positionBar = (SeekBar) myView.findViewById(R.id.positionBar);
+                    int vibrant = getDominantColor(bm);
+                    int mutedDark = getComplimentColor(vibrant);
+                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                    remainingTimeLabel.setTextColor(mutedColor);
+                    elapsedTimeLabel.setTextColor(mutedColor);
                     positionBar.setMax(totalTime);
                     positionBar.setOnSeekBarChangeListener(
                             new SeekBar.OnSeekBarChangeListener() {
@@ -2914,7 +2996,7 @@ public class Media_list_activity extends AppCompatActivity {
 
 
             //   if(! other.equals("yes") ) {
-            mp.setLooping(true);
+            mp.setLooping(false);
             mp.seekTo(0);
 
             mp.start();
@@ -2927,6 +3009,11 @@ public class Media_list_activity extends AppCompatActivity {
 
             // Position Bar
             positionBar = (SeekBar) myView.findViewById(R.id.positionBar);
+            int vibrant = getDominantColor(bm);
+            int mutedDark = getComplimentColor(vibrant);
+            positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+            remainingTimeLabel.setTextColor(mutedColor);
+            elapsedTimeLabel.setTextColor(mutedColor);
             positionBar.setMax(totalTime);
             positionBar.setOnSeekBarChangeListener(
                     new SeekBar.OnSeekBarChangeListener() {
@@ -3157,7 +3244,7 @@ public class Media_list_activity extends AppCompatActivity {
 
 
                     //   if(! other.equals("yes") ) {
-                    mp.setLooping(true);
+                   mp.setLooping(false);
                     mp.seekTo(0);
 
                     mp.start();
@@ -3170,6 +3257,11 @@ public class Media_list_activity extends AppCompatActivity {
 
                     // Position Bar
                     positionBar = (SeekBar) myView.findViewById(R.id.positionBar);
+                    int vibrant = getDominantColor(bm);
+                    int mutedDark = getComplimentColor(vibrant);
+                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                    remainingTimeLabel.setTextColor(mutedColor);
+                    elapsedTimeLabel.setTextColor(mutedColor);
                     positionBar.setMax(totalTime);
                     positionBar.setOnSeekBarChangeListener(
                             new SeekBar.OnSeekBarChangeListener() {
@@ -3276,7 +3368,7 @@ public class Media_list_activity extends AppCompatActivity {
             int albumId = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID);
             int artist = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
             int date = cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED);
-
+            int duration = cursor.getColumnIndex(MediaStore.Audio.Media.DURATION);
 
             do {
 
@@ -3288,6 +3380,7 @@ public class Media_list_activity extends AppCompatActivity {
                 String SongAlbum = cursor.getString(album);
                 String SongArtist = cursor.getString(artist);
                 String SongDate = cursor.getString(date);
+                String SongDuration = cursor.getString(duration);
 
                 String albumid = cursor.getString(albumId);
 
@@ -3297,6 +3390,7 @@ public class Media_list_activity extends AppCompatActivity {
                 audio.setArtist(SongArtist);
                 audio.setData(SongDate);
                 audio.setImagepath(albumid);
+                audio.setDuration(SongDuration);
 
 
                 // Adding Media File Names to ListElementsArrayList.
@@ -3385,6 +3479,7 @@ public class Media_list_activity extends AppCompatActivity {
         listView.setEnabled(false);
         myView.setEnabled(true);
         volumeBar.setEnabled(true);
+        positionBar.setEnabled(true);
         playBtn.setEnabled(true);
         pauseBtn.setEnabled(true);
         nxtBtn.setEnabled(true);
@@ -3405,6 +3500,7 @@ public class Media_list_activity extends AppCompatActivity {
         listView.setEnabled(true);
         myView.setEnabled(false);
         volumeBar.setEnabled(false);
+        positionBar.setEnabled(false);
         playBtn.setEnabled(false);
         pauseBtn.setEnabled(false);
         nxtBtn.setEnabled(false);
@@ -3420,10 +3516,15 @@ public class Media_list_activity extends AppCompatActivity {
 
             // Update Labels.
             String elapsedTime = createTimeLabel(currentPosition);
+           //
             elapsedTimeLabel.setText(elapsedTime);
 
             String remainingTime = createTimeLabel(totalTime - currentPosition);
+
             remainingTimeLabel.setText("- " + remainingTime);
+            if((remainingTime.equals("0:00"))){
+                nxtsong();
+            }
         }
     };
 
