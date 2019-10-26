@@ -113,13 +113,14 @@ public class Media_list_activity extends AppCompatActivity {
     Drawable myIcon2;
     Drawable myIcon3;
     int mutedColor;
+    boolean toogle1 = true;
 
     Toolbar toolbar;
     public static  Button pauseBtn, nxtBtn;
     FloatingActionButton fab;
 
     Intent serviceIntent ;
-    Button button;
+    Button button,loop;
 
 
 
@@ -223,6 +224,58 @@ public class Media_list_activity extends AppCompatActivity {
         adapter = new Audiolist_adapter(this);
         listView = (ListView) findViewById(R.id.listviews);
         listView.setAdapter(adapter);
+
+
+        loop = findViewById(R.id.loops);
+        loop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Uri sArtworkUri;
+                ContentResolver res;
+                InputStream in;
+                Bitmap bm;
+                sArtworkUri  = Uri.parse("content://media/external/audio/albumart");
+                res = context.getContentResolver();
+                Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(Media_list_activity.ListElementsArrayList.get(position).getImagepath()));
+
+                try {
+                    in = res.openInputStream(uri);
+
+                    bm = BitmapFactory.decodeStream(in);
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    InputStream is = context.getResources().openRawResource(R.raw.image);
+                    bm = BitmapFactory.decodeStream(is);
+                }
+
+                Palette palette = Palette.from(bm).generate();
+                int defaultValue = 0x0000FF;
+                int vibrant = getDominantColor(bm);
+                int muted = palette.getMutedColor(defaultValue);
+                int mutedLight = getComplimentColor(palette.getDominantColor(palette.getDominantColor(defaultValue)));
+                int mutedDark = getComplimentColor(vibrant);
+                toogle1=!toogle1;
+                if(toogle1==true){
+                    if(mp.isPlaying()){
+                        mp.setLooping(true);
+                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                        myIcon3.setTint(mutedDark);
+                        loop.setBackground(myIcon3);
+
+                    }
+                }else {
+                    if(mp.isPlaying()){
+                      mp.setLooping(false);
+                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                        myIcon3.setTint(mutedDark);
+                        loop.setBackground(myIcon3);
+
+                }
+            }
+            }
+        });
+
 
 
 
@@ -2304,6 +2357,7 @@ public class Media_list_activity extends AppCompatActivity {
                             int muted = palette.getMutedColor(defaultValue);
                             int mutedLight = palette.getLightMutedColor(defaultValue);
                             int mutedDark = getComplimentColor(vibrant);
+                            mutedColor = mutedDark;
 
 
                             if (vibrant == 0) {
@@ -2556,6 +2610,7 @@ public class Media_list_activity extends AppCompatActivity {
                             int muted = palette.getMutedColor(defaultValue);
                             int mutedLight = palette.getLightMutedColor(defaultValue);
                             int mutedDark = getComplimentColor(vibrant);
+                            mutedColor = mutedDark;
 
 
                             if (vibrant == 0) {
@@ -2904,6 +2959,7 @@ public class Media_list_activity extends AppCompatActivity {
                     int muted = palette.getMutedColor(defaultValue);
                     int mutedLight = palette.getLightMutedColor(defaultValue);
                     int mutedDark = getComplimentColor(vibrant);
+                    mutedColor = mutedDark;
 
 
                     if (vibrant == 0) {
@@ -3148,6 +3204,7 @@ public class Media_list_activity extends AppCompatActivity {
                             int mutedLight = palette.getLightMutedColor(defaultValue);
                             int mutedDark = getComplimentColor(vibrant);
 
+                            mutedColor = mutedDark;
 
                             if (vibrant == 0) {
                                 mutedDark = palette.getDarkVibrantColor(vibrant);
@@ -3479,7 +3536,12 @@ public class Media_list_activity extends AppCompatActivity {
         listView.setEnabled(false);
         myView.setEnabled(true);
         volumeBar.setEnabled(true);
-        positionBar.setEnabled(true);
+        try{
+            positionBar.setEnabled(true);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
         playBtn.setEnabled(true);
         pauseBtn.setEnabled(true);
         nxtBtn.setEnabled(true);
@@ -3500,7 +3562,11 @@ public class Media_list_activity extends AppCompatActivity {
         listView.setEnabled(true);
         myView.setEnabled(false);
         volumeBar.setEnabled(false);
+        try{
         positionBar.setEnabled(false);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
         playBtn.setEnabled(false);
         pauseBtn.setEnabled(false);
         nxtBtn.setEnabled(false);
@@ -3522,7 +3588,7 @@ public class Media_list_activity extends AppCompatActivity {
             String remainingTime = createTimeLabel(totalTime - currentPosition);
 
             remainingTimeLabel.setText("- " + remainingTime);
-            if((remainingTime.equals("0:00"))){
+            if(toogle1==false && (remainingTime.equals("0:00"))){
                 nxtsong();
             }
         }
@@ -3611,10 +3677,15 @@ public class Media_list_activity extends AppCompatActivity {
 
 
     public static int getDominantColor(Bitmap bitmap) {
-        Bitmap newBitmap = Bitmap.createScaledBitmap(bitmap, 1, 1, true);
-        final int color = newBitmap.getPixel(0, 0);
-        newBitmap.recycle();
-        return color;
+        List<Palette.Swatch> swatchesTemp = Palette.from(bitmap).generate().getSwatches();
+        List<Palette.Swatch> swatches = new ArrayList<Palette.Swatch>(swatchesTemp);
+        Collections.sort(swatches, new Comparator<Palette.Swatch>() {
+            @Override
+            public int compare(Palette.Swatch swatch1, Palette.Swatch swatch2) {
+                return swatch2.getPopulation() - swatch1.getPopulation();
+            }
+        });
+        return swatches.size() > 0 ? swatches.get(0).getRgb() : Color.WHITE;
     }
 
 

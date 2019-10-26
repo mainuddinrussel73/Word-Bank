@@ -54,6 +54,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.curr;
+import static com.example.mainuddin.myapplication34.ui.promotodo.promodetail.prefs;
 import static com.yydcdut.sdlv.Menu.ITEM_DELETE_FROM_BOTTOM_TO_TOP;
 
 public class Promotodo_activity extends AppCompatActivity implements AdapterView.OnItemClickListener,
@@ -313,6 +315,17 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
             mDBHelper.insertIsreat(promotododataList.get(i).getTitle(),promotododataList.get(i).isIsrepeat(),
                     promotododataList.get(i).getNum_of_promotodo(),promotododataList.get(i).getDue_date());
         }
+
+        int ccc = prefs.getInt("CURR",0);
+       // promotododata ccco= Promotodo_activity.promotododataList.get(ccc);;
+
+        if(ccc==curr){
+            SharedPreferences.Editor editor;
+            editor = prefs.edit();
+            editor.putInt("CURR", finalPosition);
+            editor.commit();
+        }
+
         toast("onDragViewDown   finalPosition--->" + finalPosition);
     }
 

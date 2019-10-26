@@ -21,7 +21,6 @@
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:paddingLeft="@dimen/alerter_activity_horizontal_margin"
         android:paddingRight="@dimen/alerter_activity_horizontal_margin"
-        android:fastScrollEnabled="false"
         android:fastScrollAlwaysVisible="false"
         android:paddingTop="5dp"
         android:paddingBottom="5dp"
@@ -29,6 +28,7 @@
         android:divider="@null"
         android:dividerHeight="19.0dp"
         android:scrollbars="vertical"
+        android:fastScrollEnabled="true"
         android:listSelector="@drawable/list_selector"
 
 

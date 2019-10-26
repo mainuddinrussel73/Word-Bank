@@ -16,6 +16,7 @@
         android:layout_height="fill_parent"
         android:orientation="vertical"
         android:gravity="center_horizontal"
+        android:background="@color/darkgray"
         android:id="@+id/medic_base">
 
         <androidx.cardview.widget.CardView
@@ -47,18 +48,24 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/loops"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/ic_loop"
+                android:layout_marginLeft="10dp"/>
             <TextView
                 android:id="@+id/elapsedTimeLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0:11"
-                android:layout_marginLeft="40dp"/>
+                android:layout_marginLeft="15dp"/>
             <TextView
                 android:id="@+id/remainingTimeLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="-1:49"
-                android:layout_marginLeft="240dp"/>
+                android:layout_marginLeft="200dp"/>
         </LinearLayout>
 
         <LinearLayout
