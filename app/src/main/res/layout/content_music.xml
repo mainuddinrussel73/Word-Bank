@@ -5,9 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".ui.media.Media_list_activity"
+    tools:context="com.example.czgame.wordbank.ui.media.Media_list_activity"
     android:id="@+id/content_music"
     tools:showIn="@layout/activity_music">
+
 
     <include layout="@layout/music_list" />
 
@@ -20,12 +21,12 @@
         android:id="@+id/medic_base">
 
         <androidx.cardview.widget.CardView
-            android:layout_marginTop="75dp"
+            android:layout_marginTop="45dp"
             android:id="@+id/quizcard"
             android:elevation="15dp"
             app:cardPreventCornerOverlap="false"
             android:layout_width="match_parent"
-            app:cardCornerRadius="50dp"
+            app:cardCornerRadius="20dp"
             android:layout_marginHorizontal="50dp"
             android:layout_height="250dp">
             <ImageView

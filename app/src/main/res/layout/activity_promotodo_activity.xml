@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.promotodo.Promotodo_activity"
+    tools:context="com.example.czgame.wordbank.ui.promotodo.Promotodo_activity"
     android:id="@+id/promotodo_activity"
     android:background="@android:color/white"
     android:orientation="vertical">

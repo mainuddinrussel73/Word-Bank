@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="#ffffff"
+android:orientation="vertical"
+android:paddingBottom="5dp"
+android:id="@+id/grid_item"
+android:paddingLeft="10dp"
+android:paddingRight="10dp"
+android:paddingTop="5dp">
+
+
+    <androidx.cardview.widget.CardView android:id="@+id/thumbnail"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center"
+        android:padding="3dip"
+        android:layout_alignParentLeft="true"
+        app:cardCornerRadius="5dp">
+
+        <com.github.siyamed.shapeimageview.RoundedImageView
+            android:id="@+id/play_pause"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/image"/>
+
+    </androidx.cardview.widget.CardView>
+
+
+
+<TextView
+    android:id="@+id/title5"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginTop="15dp"
+    android:text="Title"
+    android:textAppearance="?android:attr/textAppearanceMedium"
+    android:textColor="#040404"
+    android:typeface="sans"
+    android:maxLines="1"
+    android:maxLength="20"
+    android:ellipsize="end"
+    android:textSize="15dip"
+    android:textStyle="bold" />
+
+<TextView
+    android:id="@+id/title6"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginTop="10dp"
+    android:text="Description"
+    android:textColor="#343434"
+    android:textSize="10dip"
+    android:maxLines="1"
+    android:maxLength="15"
+    android:ellipsize="end"
+    android:textAppearance="?android:attr/textAppearanceSmall" />
+<TextView
+    android:id="@+id/duration"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginTop="10dp"
+    android:text="Description"
+    android:textSize="10dip"
+    android:textColor="#10bcc9"
+    android:textStyle="bold"
+    android:textAppearance="?android:attr/textAppearanceSmall" />
+</LinearLayout>

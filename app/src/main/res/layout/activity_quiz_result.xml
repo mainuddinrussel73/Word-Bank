@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.Quiz.quiz_result"
+    tools:context="com.example.czgame.wordbank.ui.Quiz.quiz_result"
     android:id="@+id/quiz_res"
     android:theme="@style/AppTheme.NoActionBar">
 

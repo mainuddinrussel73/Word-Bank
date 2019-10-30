@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/defaultTextColor"
-    tools:context=".root.SplashActivity"
+    tools:context="com.example.czgame.wordbank.root.SplashActivity"
     android:id="@+id/splash">
 
 

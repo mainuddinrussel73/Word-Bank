@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.Quiz.Quiz_confirm"
+    tools:context="com.example.czgame.wordbank.ui.Quiz.Quiz_confirm"
     android:id="@+id/confirm">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -22,7 +22,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
@@ -30,7 +30,19 @@
         android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
         android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
         android:layout_marginStart="18dp"
-        android:layout_marginTop="100dp">
+        android:layout_marginTop="100dp"
+        android:background="@drawable/backgroundborder">
+
+        <TextView
+            android:id="@+id/option1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="15dp"
+            android:textSize="15sp"
+            android:text="Multiple Choice Questions : ">
+
+        </TextView>
 
         <RelativeLayout
             android:id="@+id/spinerlayout"
@@ -47,6 +59,7 @@
             android:layout_weight=".28"
             android:background="@drawable/spiner_border"
             android:orientation="horizontal">
+
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -79,28 +92,53 @@
             android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
             android:layout_marginTop="50dp"
             android:text="Start !"
+            android:padding="5dp"
             android:textColor="@android:color/white"
 
-            android:textSize="40sp">
+            android:textSize="30sp">
 
         </com.google.android.material.button.MaterialButton>
 
     </RelativeLayout>
 
-
-
-    <com.google.android.material.button.MaterialButton
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="500dp"
-        android:text="Matching game !"
-        android:textSize="40dp"
-        android:textColor="@android:color/white"
-        android:id="@+id/strtquizmatch"
+        android:layout_height="159dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="18dp"
+        android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
+        android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="300dp"
+        android:background="@drawable/backgroundborder">
 
-        >
+        <TextView
+            android:id="@+id/option2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="15dp"
+            android:text="Matching Words And Meanings : "
+            android:textSize="15sp">
 
-    </com.google.android.material.button.MaterialButton>
+        </TextView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/strtquizmatch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="50dp"
+            android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
+            android:layout_marginTop="50dp"
+            android:text="Start !"
+            android:padding="5dp"
+            android:textColor="@android:color/white"
+
+            android:textSize="30sp">
+
+        </com.google.android.material.button.MaterialButton>
+    </RelativeLayout>
 
 </RelativeLayout>

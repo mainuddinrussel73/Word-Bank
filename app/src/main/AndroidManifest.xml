@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dist="http://schemas.android.com/apk/distribution"
-    package="com.example.mainuddin.myapplication34">
+    package="com.example.czgame.wordbank">
     <!-- danger permissions -->
     <application
         android:allowBackup="true"
@@ -10,43 +10,43 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.Quiz.Quiz_match"
+        <activity android:name="com.example.czgame.wordbank.ui.Quiz.Quiz_match"
             android:label="@string/Quizmatch"
             android:theme="@style/AppTheme.NoActionBar"
             ></activity>
-        <activity android:name=".ui.promotodo.pro_backup"
+        <activity android:name="com.example.czgame.wordbank.ui.promotodo.pro_backup"
 
             android:label="@string/title_activity_backup_pro"
             android:theme="@style/AppTheme.NoActionBar"
             >
 
         </activity>
-        <activity android:name=".ui.promotodo.promodetail"
+        <activity android:name="com.example.czgame.wordbank.ui.promotodo.promodetail"
             android:label="@string/Promotodo"
             android:theme="@style/AppTheme.NoActionBar"
             ></activity>
         <activity
-            android:name=".ui.promotodo.Promotodo_activity"
+            android:name="com.example.czgame.wordbank.ui.promotodo.Promotodo_activity"
             android:label="@string/Promotodo"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.Quiz.quiz_result"
+            android:name="com.example.czgame.wordbank.ui.Quiz.quiz_result"
             android:label="@string/result"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.news.news_backup"
+            android:name="com.example.czgame.wordbank.ui.news.news_backup"
             android:label="@string/title_activity_news_backup"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.Quiz.Quiz_confirm"
+        <activity android:name="com.example.czgame.wordbank.ui.Quiz.Quiz_confirm"
             android:label="@string/Confirm"
             android:theme="@style/AppTheme.NoActionBar"
             />
         <activity
-            android:name=".ui.news.news_update"
+            android:name="com.example.czgame.wordbank.ui.news.news_update"
             android:label="@string/update_news"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.news.news_details"
+            android:name="com.example.czgame.wordbank.ui.news.news_details"
             android:label="@string/title_activity_news_details"
             android:theme="@style/AppTheme.NoActionBar" >
 
@@ -57,24 +57,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.news.news_activity"
+            android:name="com.example.czgame.wordbank.ui.news.news_activity"
             android:label="@string/title_activity_news"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.news.add_news"
+            android:name="com.example.czgame.wordbank.ui.news.add_news"
             android:label="@string/title_add_news"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.words.backup_restore"
+            android:name="com.example.czgame.wordbank.ui.words.backup_restore"
             android:label="@string/title_activity_backup_restore"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.words.MainActivity"
+            android:name="com.example.czgame.wordbank.ui.words.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
-        <activity android:name=".root.SplashActivity"
+        <activity android:name="com.example.czgame.wordbank.root.SplashActivity"
             android:allowBackup="true"
             android:theme="@style/AppTheme.NoActionBar"
             >
@@ -86,27 +86,27 @@
 
         </activity>
         <activity
-            android:name=".ui.words.add_page"
+            android:name="com.example.czgame.wordbank.ui.words.add_page"
             android:label="@string/title_activity_addpage"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.words.word_details"
+            android:name="com.example.czgame.wordbank.ui.words.word_details"
             android:label="@string/title_activity_word_details"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.Quiz.quiz_page"
+            android:name="com.example.czgame.wordbank.ui.Quiz.quiz_page"
             android:label="@string/title_quiz"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.media.MediaActivity"
+            android:name="com.example.czgame.wordbank.ui.media.MediaActivity"
             android:label="@string/music_play"
             android:theme="@style/FullScreenTheme" />
         <activity
-            android:name=".ui.media.Media_list_activity"
+            android:name="com.example.czgame.wordbank.ui.media.Media_list_activity"
             android:label="@string/music_play"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <receiver android:name=".ui.media.MyNotificationReceiver">
+        <receiver android:name="com.example.czgame.wordbank.ui.media.MyNotificationReceiver">
             <intent-filter>
                 <action android:name="RESUME_ACTION" />
                 <action android:name="STOP_ACTION" />
@@ -114,21 +114,21 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".ui.media.NotificationIntentService">
+        <service android:name="com.example.czgame.wordbank.ui.media.NotificationIntentService">
             <intent-filter android:priority="10000">
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
         <service
-            android:name=".ui.words.Mainservice"
+            android:name="com.example.czgame.wordbank.ui.words.Mainservice"
             android:enabled="true" />
-        <service android:name=".ui.media.NotificationService" />
-        <service android:name=".ui.promotodo.CountService" />
-        <service android:name=".ui.promotodo.Promotodo_service"
+        <service android:name="com.example.czgame.wordbank.ui.media.NotificationService" />
+        <service android:name="com.example.czgame.wordbank.ui.promotodo.CountService" />
+        <service android:name="com.example.czgame.wordbank.ui.promotodo.Promotodo_service"
             android:enabled="true"
             >
         </service>
-        <receiver android:name=".ui.promotodo.Promotodo_receiver"
+        <receiver android:name="com.example.czgame.wordbank.ui.promotodo.Promotodo_receiver"
             android:enabled="true"
             android:exported="true"
             >

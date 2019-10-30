@@ -9,4 +9,9 @@
     <item
         android:id="@+id/three"
         android:title="Time Added"/>
+
+    <item
+        android:id="@+id/four"
+        android:title="View Switch"/>
+
 </menu>

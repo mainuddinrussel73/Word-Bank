@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.example.mainuddin.myapplication34"
+        applicationId "com.example.czgame.wordbank"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
@@ -77,5 +77,8 @@ dependencies {
     compile 'com.github.zeng1990java:WaveProgressView:1.0.5'
     implementation "com.leinardi.android:speed-dial:3.1.1"
     implementation 'com.github.hamzaahmedkhan:SpinnerDialog:v1.0'
+    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    implementation 'com.github.bumptech.glide:glide:4.10.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
 
 }
