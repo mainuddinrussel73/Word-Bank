@@ -90,7 +90,7 @@
             android:paddingTop="10dp"
             android:textColor="@color/cardview_light_background"
             android:paddingBottom="10dp"
-            android:layout_marginLeft="170dp"
+            android:layout_marginLeft="160dp"
 
             android:text="Delete" />
     </LinearLayout>

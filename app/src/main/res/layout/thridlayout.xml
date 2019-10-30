@@ -288,12 +288,12 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_marginTop="350dp"
-        android:background="@drawable/backgroundborder"
         android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
         android:layout_marginRight="@dimen/alerter_activity_horizontal_margin">
 
 
         <EditText
+            android:id="@+id/texts"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:paddingTop="5dp"

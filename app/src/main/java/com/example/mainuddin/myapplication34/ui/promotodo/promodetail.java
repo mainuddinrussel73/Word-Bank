@@ -1,6 +1,7 @@
 package com.example.mainuddin.myapplication34.ui.promotodo;
 
 import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.NotificationCompat;
@@ -32,6 +33,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -52,14 +54,20 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mainuddin.myapplication34.R;
 import com.example.mainuddin.myapplication34.ui.media.Constants;
+import com.example.mainuddin.myapplication34.ui.media.Media_list_activity;
 import com.example.mainuddin.myapplication34.ui.media.MyNotificationReceiver;
 import com.example.mainuddin.myapplication34.ui.media.NotificationService;
 import com.example.mainuddin.myapplication34.ui.promotodo.DBproHandle;
 import com.example.mainuddin.myapplication34.ui.promotodo.Promotodo_activity;
 import com.example.mainuddin.myapplication34.ui.promotodo.promotododata;
+import com.example.mainuddin.myapplication34.ui.words.MainActivity;
+import com.github.hamzaahmedkhan.spinnerdialog.OnSpinnerOKPressedListener;
+import com.github.hamzaahmedkhan.spinnerdialog.SpinnerDialogFragment;
+import com.github.hamzaahmedkhan.spinnerdialog.SpinnerModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.jaredrummler.materialspinner.MaterialSpinner;
@@ -68,10 +76,15 @@ import com.suke.widget.SwitchButton;
 import com.truizlop.fabreveallayout.FABRevealLayout;
 import com.truizlop.fabreveallayout.OnRevealChangeListener;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+
+import static java.security.AccessController.getContext;
 
 public class promodetail extends AppCompatActivity {
 
@@ -151,8 +164,40 @@ public class promodetail extends AppCompatActivity {
 
 
 
+        SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+        boolean isDark = prefs.getBoolean("isDark",false);
+        AlertDialog.Builder b = new AlertDialog.Builder(this,R.style.DialogueLight);
+        if(isDark){
 
+            if(isDark){
+                b = new AlertDialog.Builder(this,R.style.DialogurDark);
+            }
+            else{
+                b = new AlertDialog.Builder(this,R.style.DialogueLight);
+            }
+        }
 
+        b.setTitle("White Noise.");
+        String[] types = {"Rain", "Ticking","Ocean Shore"};
+        b.setItems(types, (DialogInterface.OnClickListener) (dialog, which) -> {
+
+        dialog.dismiss();
+            switch(which){
+                    case 0:
+                        Promotodo_service.fileName = "rain";
+
+                        break;
+                    case 1:
+
+                        Promotodo_service.fileName = "ticking";
+
+                        break;
+                case 2:
+                    Promotodo_service.fileName = "oceanshore";
+                    break;
+                }
+        });
+        b.show();
 
 
         text_field_boxes2 = findViewById(R.id.text_field_boxes2);
@@ -395,19 +440,26 @@ public class promodetail extends AppCompatActivity {
 
         RelativeLayout additem = findViewById(R.id.pro_detail);
         RelativeLayout relativeLayoutr = dialogView.findViewById(R.id.secondary_view);
-        //  RelativeLayout relativeLayout1 = relativeLayout.findViewById(R.id.borderss);
+        RelativeLayout relativeLayout1 = findViewById(R.id.belowhere);
 
         TextView place = findViewById(R.id.place);
         TextView place1 = findViewById(R.id.place1);
+        TextView texts = findViewById(R.id.texts);
 
-        SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
-        boolean isDark = prefs.getBoolean("isDark",false);
+        //SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+        isDark = prefs.getBoolean("isDark",false);
         if(isDark){
             // mListView.setBackgroundColor(Color.BLACK);
             //relativeLayout1.setBackground(ContextCompat.getDrawable(this, R.drawable.list_viewdark));
             additem.setBackgroundColor(Color.BLACK);
             place.setTextColor(Color.WHITE);
             place1.setTextColor(Color.WHITE);
+
+            texts.setTextColor(Color.WHITE);
+            texts.setHintTextColor(Color.rgb(185,185,185));;
+            texts.setBackgroundDrawable(ContextCompat.getDrawable(promodetail.this, R.drawable.list_viewdark));
+
+
             //fab1.setBackgroundColor(Color.RED);
             spinner.setBackgroundColor(Color.rgb(64,64,64));
            // spinner1.setBackgroundColor(Color.rgb(64,64,64));
@@ -427,6 +479,12 @@ public class promodetail extends AppCompatActivity {
         }else{
             place.setTextColor(Color.BLACK);
             place1.setTextColor(Color.BLACK);
+
+            texts.setTextColor(Color.BLACK);
+            texts.setHintTextColor(Color.BLACK);
+            texts.setBackgroundDrawable(ContextCompat.getDrawable(promodetail.this, R.drawable.listview_border));
+
+
             // mListView.setBackgroundColor(Color.WHITE);
             // relativeLayout1.setBackground(ContextCompat.getDrawable(this, R.drawable.listview_border));
             additem.setBackgroundColor(Color.WHITE);
@@ -530,8 +588,8 @@ public class promodetail extends AppCompatActivity {
             }
         });
 
-        fab1 = dialogView.findViewById(R.id.fab1);
-        fab2 = dialogView.findViewById(R.id.fab2);
+        fab1 = dialogView.findViewById(R.id.fab16);
+        fab2 = dialogView.findViewById(R.id.fab24);
         fab3 = dialogView.findViewById(R.id.fab3);
 
 

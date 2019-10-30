@@ -67,7 +67,7 @@ public class Promotodo_service extends Service {
     public static boolean ispause = true;
 
     public static MediaPlayer mp,mp1;
-    private final static String fileName = "ticking";
+    public   static String fileName;
     private final static String fileNameend = "bell";
 
     @Override
@@ -94,14 +94,16 @@ public class Promotodo_service extends Service {
     public  static void resume(Context context){
 
         ispause = false;
+        if(mp.isPlaying()==false){
+            mp.start();
+            mp.setLooping(true);
+        }
 
         //cdt.cancel();
         cdt = new CountDownTimer(total, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
-
-                mp.start();
                 total = millisUntilFinished;
                 Log.i(TAG, "Countdown seconds remaining: " + millisUntilFinished / 1000);
 
@@ -151,6 +153,16 @@ public class Promotodo_service extends Service {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        try
+        {
+
+            mp.start();
+            mp.setLooping(true);
+
+        } catch (Exception e)
+        {
+            System.out.println("Unable to TunePlay: startRingtone(): "+e.toString());
+        }
         stattimer();
         return START_STICKY;
     }
@@ -172,17 +184,6 @@ public class Promotodo_service extends Service {
                 total = millisUntilFinished;
                 Log.i(TAG, "Countdown seconds remaining: " + millisUntilFinished / 1000);
 
-
-
-                try
-                {
-
-                    mp.start();
-
-                } catch (Exception e)
-                {
-                    System.out.println("Unable to TunePlay: startRingtone(): "+e.toString());
-                }
 
 
 

@@ -55,9 +55,10 @@ public class quiz_page extends AppCompatActivity {
     public boolean isPause = false;
     public long total = 30000;
     public  long temp = 0;
-
     int size;
 
+    int currnum = Quiz_confirm.questioncount;
+    int max  = Quiz_confirm.questioncount;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,8 @@ public class quiz_page extends AppCompatActivity {
 //Remove notification bar
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_quiz_list);
+
+
 
 
 
@@ -95,7 +98,7 @@ public class quiz_page extends AppCompatActivity {
         while (word.isEmpty()){
             word = randomword(randomInt);
         }
-        textView.setText("What is the meaning of the word : "+word.get(0)+"?");
+        textView.setText("Question : "+ (currnum) +"\n What is the meaning of the word : "+word.get(0)+"?");
 
         RadioGroup radioGroup = (RadioGroup)scrollView.findViewById(R.id.radioGroup);
 
@@ -123,12 +126,17 @@ public class quiz_page extends AppCompatActivity {
                 ignored++;
                 score--;
                 if(score<0)score = 0;
+
+
+
                 Intent myIntent = new Intent(view.getContext(), quiz_page.class);
                 //String s = view.findViewById(R.id.subtitle).toString();
                 //String s = (String) parent.getI;
                 myIntent.putExtra("s",score);
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(myIntent, 0);
+                check(view.getContext());
+
 
             }
         });
@@ -222,6 +230,8 @@ public class quiz_page extends AppCompatActivity {
                 if(score<0)score = 0;
                 wordBuck.add(word.get(0));
 
+
+
                 Intent myIntent = new Intent(quiz_page.this, quiz_page.class);
                 //String s = view.findViewById(R.id.subtitle).toString();
                 //String s = (String) parent.getI;
@@ -229,6 +239,9 @@ public class quiz_page extends AppCompatActivity {
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(myIntent, 0);
                 cancelTimer();
+
+
+                check(quiz_page.this);
             }
         };
         cTimer.start();
@@ -302,6 +315,8 @@ public class quiz_page extends AppCompatActivity {
 
                         correct++;
                         scoress.setText("Current score : "+String.valueOf(score));
+
+
                         Intent myIntent = new Intent(quiz_page.this, quiz_page.class);
                         //String s = view.findViewById(R.id.subtitle).toString();
                         //String s = (String) parent.getI;
@@ -309,6 +324,8 @@ public class quiz_page extends AppCompatActivity {
                         myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivityForResult(myIntent, 0);
                         cancelTimer();
+
+                        check(v.getContext());
                     }else {
                         Toasty.error(quiz_page.this,
                                 "Alas!", Toast.LENGTH_SHORT).show();
@@ -340,6 +357,8 @@ public class quiz_page extends AppCompatActivity {
 
                         scoress.setText("Current score : "+String.valueOf(score));
                         btnDisplay.setEnabled(false);
+
+
                         Intent myIntent = new Intent(quiz_page.this, quiz_page.class);
                         //String s = view.findViewById(R.id.subtitle).toString();
                         //String s = (String) parent.getI;
@@ -347,6 +366,8 @@ public class quiz_page extends AppCompatActivity {
                         myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivityForResult(myIntent, 0);
                         cancelTimer();
+                        check(v.getContext());
+
                     }
                 }else {
                     Toasty.warning(quiz_page.this,
@@ -466,5 +487,31 @@ public class quiz_page extends AppCompatActivity {
         super.onResume();
         isPause = false;
         temp = 0;
+    }
+    public void check(Context context){
+        Quiz_confirm.questioncount--;
+        currnum = Quiz_confirm.questioncount;
+        if( Quiz_confirm.questioncount<=0){
+            SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+            if(score>prefs.getInt("highscore", 0)){
+
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putInt("highscore", score);
+                editor.commit();
+
+            }
+
+            cancelTimer();
+
+
+            Intent myIntent1 = new Intent(context , quiz_result.class);
+
+            myIntent1.putExtra("score",score);
+
+            myIntent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivityForResult(myIntent1, 0);
+            finish();
+        }
     }
 }

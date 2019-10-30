@@ -28,7 +28,7 @@ public class SplashActivity extends AppCompatActivity {
 
         WaveProgressView waveProgressView = (WaveProgressView) findViewById(R.id.wave_progress_view);
         waveProgressView.setMax(100);
-        animWave(waveProgressView, 10 * 1000);
+        animWave(waveProgressView, 5 * 1000);
 
 
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
@@ -55,7 +55,7 @@ public class SplashActivity extends AppCompatActivity {
                 startActivity(i);
                 finish();
             }
-        }, 4000);
+        }, 2000);
 
     }
     private void animWave(WaveProgressView waveProgressView, long duration){

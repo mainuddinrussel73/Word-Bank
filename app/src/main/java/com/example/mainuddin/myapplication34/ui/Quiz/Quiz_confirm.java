@@ -21,6 +21,8 @@ import com.example.mainuddin.myapplication34.ui.words.MainActivity;
 import com.example.mainuddin.myapplication34.R;
 import com.example.mainuddin.myapplication34.ui.words.DatabaseHelper;
 import com.example.mainuddin.myapplication34.ui.words.word;
+import com.google.android.material.snackbar.Snackbar;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +33,7 @@ public class Quiz_confirm extends AppCompatActivity {
     private Animation mScaleAnimation;
 
     public static SharedPreferences prefs;
+    public static int questioncount=10;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +76,49 @@ public class Quiz_confirm extends AppCompatActivity {
 
             Toasty.error(Quiz_confirm.this,"Error Nothing found", Toast.LENGTH_LONG).show();
         }
+
+        RelativeLayout relativeLayout1 = findViewById(R.id.spinerlayout);
+        MaterialSpinner spinner = (MaterialSpinner) relativeLayout1.findViewById(R.id.questions);
+        spinner.setItems(new Integer(10), new Integer(25), new Integer(50), new Integer(100));
+        switch (questioncount){
+            case 10:
+                spinner.setSelectedIndex(0);
+                break;
+            case 25:
+                spinner.setSelectedIndex(1);
+                break;
+            case 50:
+                spinner.setSelectedIndex(2);
+                break;
+            case 100:
+                spinner.setSelectedIndex(3);
+                break;
+
+        }
+
+        spinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<Integer>() {
+
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, Integer item) {
+                Snackbar.make(view, "Clicked " + item.intValue(), Snackbar.LENGTH_LONG).show();
+
+
+                if(item.intValue()==10){
+                    questioncount=10;
+
+                }else if(item.intValue()==25){
+                    questioncount=25;
+                }else if(item.intValue()==50){
+                    questioncount=50;
+                }else if(item.intValue()==100){
+                    questioncount=100;
+                }else {
+                    questioncount=contactList.size()-1;
+                }
+            }
+
+
+        });
 
         RelativeLayout relativeLayout = findViewById(R.id.confirm);
 

@@ -220,41 +220,40 @@ public class Media_list_activity extends AppCompatActivity {
         }
 
 
+        Palette palette = Palette.from(bitmap).generate();
+        int defaultValue = 0x0000FF;
+        int vibrant = getDominantColor(bitmap);
+        int muted = palette.getMutedColor(defaultValue);
+        int mutedLight = getComplimentColor(palette.getDominantColor(palette.getDominantColor(defaultValue)));
+        int mutedDark = getComplimentColor(vibrant);
+
+        loop = findViewById(R.id.loops);
+        SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+        int type = prefs1.getInt("cond",0);
+        if(type==0){
+
+        }else if(type==1){
+            Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+            myIcon3.setTint(mutedDark);
+            loop.setBackground(myIcon3);
+        }else if(type==2){
+            Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+            myIcon3.setTint(mutedDark);
+            loop.setBackground(myIcon3);
+        }
+
+
 
         adapter = new Audiolist_adapter(this);
         listView = (ListView) findViewById(R.id.listviews);
         listView.setAdapter(adapter);
 
 
-        loop = findViewById(R.id.loops);
+
         loop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Uri sArtworkUri;
-                ContentResolver res;
-                InputStream in;
-                Bitmap bm;
-                sArtworkUri  = Uri.parse("content://media/external/audio/albumart");
-                res = context.getContentResolver();
-                Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(Media_list_activity.ListElementsArrayList.get(position).getImagepath()));
-
-                try {
-                    in = res.openInputStream(uri);
-
-                    bm = BitmapFactory.decodeStream(in);
-
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                    InputStream is = context.getResources().openRawResource(R.raw.image);
-                    bm = BitmapFactory.decodeStream(is);
-                }
-
-                Palette palette = Palette.from(bm).generate();
-                int defaultValue = 0x0000FF;
-                int vibrant = getDominantColor(bm);
-                int muted = palette.getMutedColor(defaultValue);
-                int mutedLight = getComplimentColor(palette.getDominantColor(palette.getDominantColor(defaultValue)));
-                int mutedDark = getComplimentColor(vibrant);
                 toogle1=!toogle1;
                 if(toogle1==true){
                     if(mp.isPlaying()){
@@ -263,6 +262,10 @@ public class Media_list_activity extends AppCompatActivity {
                         myIcon3.setTint(mutedDark);
                         loop.setBackground(myIcon3);
 
+                        SharedPreferences.Editor editor = prefs1.edit();
+                        editor.putInt("cond", 2);
+                        editor.commit();
+
                     }
                 }else {
                     if(mp.isPlaying()){
@@ -270,6 +273,10 @@ public class Media_list_activity extends AppCompatActivity {
                         Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
                         myIcon3.setTint(mutedDark);
                         loop.setBackground(myIcon3);
+
+                        SharedPreferences.Editor editor = prefs1.edit();
+                        editor.putInt("cond", 1);
+                        editor.commit();
 
                 }
             }
@@ -366,6 +373,10 @@ public class Media_list_activity extends AppCompatActivity {
                                             actionBarToolbar.setTitleTextColor(mutedDark);
                                     }
 
+                                    volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                    remainingTimeLabel.setTextColor(mutedDark);
+                                    elapsedTimeLabel.setTextColor(mutedDark);
 
                                     fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
                                     toolbar.getNavigationIcon().setTint(mutedDark);
@@ -373,6 +384,21 @@ public class Media_list_activity extends AppCompatActivity {
                                     Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
                                     icon.setTint(mutedDark);
                                     button.setBackground(icon);
+
+                                    SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+                                    int type = prefs1.getInt("cond",0);
+                                    if(type==0){
+
+                                    }else if(type==1){
+                                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                                        myIcon3.setTint(mutedDark);
+                                        loop.setBackground(myIcon3);
+                                    }else if(type==2){
+                                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                                        myIcon3.setTint(mutedDark);
+                                        loop.setBackground(myIcon3);
+                                    }
 
                                     if(isClicked){
 
@@ -577,6 +603,10 @@ public class Media_list_activity extends AppCompatActivity {
                                             actionBarToolbar.setTitleTextColor(Color.WHITE);
                                     }
 
+                                    volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                    remainingTimeLabel.setTextColor(mutedDark);
+                                    elapsedTimeLabel.setTextColor(mutedDark);
 
                                     fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
                                     toolbar.getNavigationIcon().setTint(Color.WHITE);
@@ -584,6 +614,21 @@ public class Media_list_activity extends AppCompatActivity {
                                     Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
                                     icon.setTint(Color.WHITE);
                                     button.setBackground(icon);
+
+                                    SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+                                    int type = prefs1.getInt("cond",0);
+                                    if(type==0){
+
+                                    }else if(type==1){
+                                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                                        myIcon3.setTint(mutedDark);
+                                        loop.setBackground(myIcon3);
+                                    }else if(type==2){
+                                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                                        myIcon3.setTint(mutedDark);
+                                        loop.setBackground(myIcon3);
+                                    }
 
                                     if(isClicked){
 
@@ -788,12 +833,31 @@ public class Media_list_activity extends AppCompatActivity {
                                             actionBarToolbar.setTitleTextColor(mutedDark);
                                     }
 
+                                    volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                    remainingTimeLabel.setTextColor(mutedDark);
+                                    elapsedTimeLabel.setTextColor(mutedDark);
 
                                     fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
 
-                            Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
-                            icon.setTint(mutedDark);
-                            button.setBackground(icon);
+                                    Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
+                                    icon.setTint(mutedDark);
+                                    button.setBackground(icon);
+
+                                    SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+                                    int type = prefs1.getInt("cond",0);
+                                    if(type==0){
+
+                                    }else if(type==1){
+                                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                                        myIcon3.setTint(mutedDark);
+                                        loop.setBackground(myIcon3);
+                                    }else if(type==2){
+                                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                                        myIcon3.setTint(mutedDark);
+                                        loop.setBackground(myIcon3);
+                                    }
                                     if(isClicked){
 
                                         Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
@@ -995,6 +1059,10 @@ public class Media_list_activity extends AppCompatActivity {
                                             actionBarToolbar.setTitleTextColor(Color.WHITE);
                                     }
 
+                                    volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                    remainingTimeLabel.setTextColor(mutedDark);
+                                    elapsedTimeLabel.setTextColor(mutedDark);
 
                                     fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
                                     toolbar.getNavigationIcon().setTint(Color.WHITE);
@@ -1002,6 +1070,22 @@ public class Media_list_activity extends AppCompatActivity {
                                     Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
                                     icon.setTint(Color.WHITE);
                                     button.setBackground(icon);
+
+                                    SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+                                    int type = prefs1.getInt("cond",0);
+                                    if(type==0){
+
+                                    }else if(type==1){
+                                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                                        myIcon3.setTint(mutedDark);
+                                        loop.setBackground(myIcon3);
+                                    }else if(type==2){
+                                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                                        myIcon3.setTint(mutedDark);
+                                        loop.setBackground(myIcon3);
+                                    }
+
                                     if(isClicked){
 
                                         Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
@@ -1204,7 +1288,10 @@ public class Media_list_activity extends AppCompatActivity {
                                         if (actionBarToolbar != null)
                                             actionBarToolbar.setTitleTextColor(mutedDark);
                                     }
-
+                                    volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                    remainingTimeLabel.setTextColor(mutedDark);
+                                    elapsedTimeLabel.setTextColor(mutedDark);
 
                                     fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
                                     toolbar.getNavigationIcon().setTint(mutedDark);
@@ -1212,6 +1299,22 @@ public class Media_list_activity extends AppCompatActivity {
                                     Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
                                     icon.setTint(mutedDark);
                                     button.setBackground(icon);
+
+                                    SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+                                    int type = prefs1.getInt("cond",0);
+                                    if(type==0){
+
+                                    }else if(type==1){
+                                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                                        myIcon3.setTint(mutedDark);
+                                        loop.setBackground(myIcon3);
+                                    }else if(type==2){
+                                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                                        myIcon3.setTint(mutedDark);
+                                        loop.setBackground(myIcon3);
+                                    }
+
                                     if(isClicked){
 
                                         Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
@@ -1412,7 +1515,10 @@ public class Media_list_activity extends AppCompatActivity {
                                         if (actionBarToolbar != null)
                                             actionBarToolbar.setTitleTextColor(mutedDark);
                                     }
-
+                                    volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                    remainingTimeLabel.setTextColor(mutedDark);
+                                    elapsedTimeLabel.setTextColor(mutedDark);
 
                                     fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
                                     toolbar.getNavigationIcon().setTint(mutedDark);
@@ -1420,6 +1526,22 @@ public class Media_list_activity extends AppCompatActivity {
                                     Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
                                     icon.setTint(mutedDark);
                                     button.setBackground(icon);
+
+                                    SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+                                    int type = prefs1.getInt("cond",0);
+                                    if(type==0){
+
+                                    }else if(type==1){
+                                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                                        myIcon3.setTint(mutedDark);
+                                        loop.setBackground(myIcon3);
+                                    }else if(type==2){
+                                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                                        myIcon3.setTint(mutedDark);
+                                        loop.setBackground(myIcon3);
+                                    }
+
                                     if(isClicked){
 
                                         Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
@@ -1625,7 +1747,10 @@ public class Media_list_activity extends AppCompatActivity {
                                         if (actionBarToolbar != null)
                                             actionBarToolbar.setTitleTextColor(mutedDark);
                                     }
-
+                                    volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                    remainingTimeLabel.setTextColor(mutedDark);
+                                    elapsedTimeLabel.setTextColor(mutedDark);
 
                                     fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
                                     toolbar.getNavigationIcon().setTint(mutedDark);
@@ -1633,6 +1758,22 @@ public class Media_list_activity extends AppCompatActivity {
                                     Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
                                     icon.setTint(mutedDark);
                                     button.setBackground(icon);
+
+                                    SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+                                    int type = prefs1.getInt("cond",0);
+                                    if(type==0){
+
+                                    }else if(type==1){
+                                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                                        myIcon3.setTint(mutedDark);
+                                        loop.setBackground(myIcon3);
+                                    }else if(type==2){
+                                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                                        myIcon3.setTint(mutedDark);
+                                        loop.setBackground(myIcon3);
+                                    }
+
                                     if(isClicked){
 
                                         Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
@@ -1833,7 +1974,10 @@ public class Media_list_activity extends AppCompatActivity {
                                         if (actionBarToolbar != null)
                                             actionBarToolbar.setTitleTextColor(mutedDark);
                                     }
-
+                                    volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                    remainingTimeLabel.setTextColor(mutedDark);
+                                    elapsedTimeLabel.setTextColor(mutedDark);
 
                                     fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
                                     toolbar.getNavigationIcon().setTint(mutedDark);
@@ -1841,6 +1985,22 @@ public class Media_list_activity extends AppCompatActivity {
                                     Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
                                     icon.setTint(mutedDark);
                                     button.setBackground(icon);
+
+                                    SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+                                    int type = prefs1.getInt("cond",0);
+                                    if(type==0){
+
+                                    }else if(type==1){
+                                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                                        myIcon3.setTint(mutedDark);
+                                        loop.setBackground(myIcon3);
+                                    }else if(type==2){
+                                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                                        myIcon3.setTint(mutedDark);
+                                        loop.setBackground(myIcon3);
+                                    }
+
                                     if(isClicked){
 
                                         Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
@@ -2101,13 +2261,32 @@ public class Media_list_activity extends AppCompatActivity {
                                 if (actionBarToolbar != null)
                                     actionBarToolbar.setTitleTextColor(mutedDark);
                             }
-
+                            volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                            positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                            remainingTimeLabel.setTextColor(mutedDark);
+                            elapsedTimeLabel.setTextColor(mutedDark);
 
                             fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
                             toolbar.getNavigationIcon().setTint(mutedDark);
                             Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
                             icon.setTint(mutedDark);
                             button.setBackground(icon);
+
+                            SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+                            int type = prefs1.getInt("cond",0);
+                            if(type==0){
+
+                            }else if(type==1){
+                                Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                                myIcon3.setTint(mutedDark);
+                                loop.setBackground(myIcon3);
+                            }else if(type==2){
+                                Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                                myIcon3.setTint(mutedDark);
+                                loop.setBackground(myIcon3);
+                            }
+
                             if(isClicked){
 
                                 Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
@@ -2197,11 +2376,6 @@ public class Media_list_activity extends AppCompatActivity {
 
                     // Position Bar
                     positionBar = (SeekBar) myView.findViewById(R.id.positionBar);
-                    int vibrant = getDominantColor(bm);
-                    int mutedDark = getComplimentColor(vibrant);
-                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
-                    remainingTimeLabel.setTextColor(mutedColor);
-                    elapsedTimeLabel.setTextColor(mutedColor);
                     positionBar.setMax(totalTime);
                     positionBar.setOnSeekBarChangeListener(
                             new SeekBar.OnSeekBarChangeListener() {
@@ -2380,12 +2554,32 @@ public class Media_list_activity extends AppCompatActivity {
                             // fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Media_list_activity.this,mutedDark)));
 
 
+                            positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                            volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                            remainingTimeLabel.setTextColor(mutedColor);
+                            elapsedTimeLabel.setTextColor(mutedColor);
+
                             fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
                             toolbar.getNavigationIcon().setTint(mutedDark);
 
                             Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
                             icon.setTint(mutedDark);
                             button.setBackground(icon);
+
+                            SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+                            int type = prefs1.getInt("cond",0);
+                            if(type==0){
+
+                            }else if(type==1){
+                                Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                                myIcon3.setTint(mutedDark);
+                                loop.setBackground(myIcon3);
+                            }else if(type==2){
+                                Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                                myIcon3.setTint(mutedDark);
+                                loop.setBackground(myIcon3);
+                            }
 
                             if(isClicked){
 
@@ -2463,11 +2657,7 @@ public class Media_list_activity extends AppCompatActivity {
 
                     // Position Bar
                     positionBar = (SeekBar) myView.findViewById(R.id.positionBar);
-                    int vibrant = getDominantColor(bm);
-                    int mutedDark = getComplimentColor(vibrant);
-                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
-                    remainingTimeLabel.setTextColor(mutedColor);
-                    elapsedTimeLabel.setTextColor(mutedColor);
+
                     positionBar.setMax(totalTime);
                     positionBar.setOnSeekBarChangeListener(
                             new SeekBar.OnSeekBarChangeListener() {
@@ -2638,6 +2828,11 @@ public class Media_list_activity extends AppCompatActivity {
                             //fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Media_list_activity.this,mutedDark)));
 
 
+                            positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                            volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                            remainingTimeLabel.setTextColor(mutedColor);
+                            elapsedTimeLabel.setTextColor(mutedColor);
+
                             fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
                             toolbar.getNavigationIcon().setTint(mutedDark);
 
@@ -2645,6 +2840,21 @@ public class Media_list_activity extends AppCompatActivity {
                             Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
                             icon.setTint(mutedDark);
                             button.setBackground(icon);
+
+                            SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+                            int type = prefs1.getInt("cond",0);
+                            if(type==0){
+
+                            }else if(type==1){
+                                Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                                myIcon3.setTint(mutedDark);
+                                loop.setBackground(myIcon3);
+                            }else if(type==2){
+                                Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                                myIcon3.setTint(mutedDark);
+                                loop.setBackground(myIcon3);
+                            }
 
                             if(isClicked){
 
@@ -2721,11 +2931,7 @@ public class Media_list_activity extends AppCompatActivity {
 
                     // Position Bar
                     positionBar = (SeekBar) myView.findViewById(R.id.positionBar);
-                    int vibrant = getDominantColor(bm);
-                    int mutedDark = getComplimentColor(vibrant);
-                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
-                    remainingTimeLabel.setTextColor(mutedColor);
-                    elapsedTimeLabel.setTextColor(mutedColor);
+
                     positionBar.setMax(totalTime);
                     positionBar.setOnSeekBarChangeListener(
                             new SeekBar.OnSeekBarChangeListener() {
@@ -2981,6 +3187,10 @@ public class Media_list_activity extends AppCompatActivity {
                     pause = (mutedDark);
                     // fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Media_list_activity.this,mutedDark)));
 
+                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                    volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                    remainingTimeLabel.setTextColor(mutedColor);
+                    elapsedTimeLabel.setTextColor(mutedColor);
 
                     fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
                     toolbar.getNavigationIcon().setTint(mutedDark);
@@ -2988,6 +3198,22 @@ public class Media_list_activity extends AppCompatActivity {
                     Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
                     icon.setTint(mutedDark);
                     button.setBackground(icon);
+
+
+                    SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+                    int type = prefs1.getInt("cond",0);
+                    if(type==0){
+
+                    }else if(type==1){
+                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                        myIcon3.setTint(mutedDark);
+                        loop.setBackground(myIcon3);
+                    }else if(type==2){
+                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                        myIcon3.setTint(mutedDark);
+                        loop.setBackground(myIcon3);
+                    }
 
                     if(isClicked){
 
@@ -3065,11 +3291,7 @@ public class Media_list_activity extends AppCompatActivity {
 
             // Position Bar
             positionBar = (SeekBar) myView.findViewById(R.id.positionBar);
-            int vibrant = getDominantColor(bm);
-            int mutedDark = getComplimentColor(vibrant);
-            positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
-            remainingTimeLabel.setTextColor(mutedColor);
-            elapsedTimeLabel.setTextColor(mutedColor);
+
             positionBar.setMax(totalTime);
             positionBar.setOnSeekBarChangeListener(
                     new SeekBar.OnSeekBarChangeListener() {
@@ -3230,6 +3452,10 @@ public class Media_list_activity extends AppCompatActivity {
 
                             //fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Media_list_activity.this,mutedDark)));
 
+                            positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                            volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                            remainingTimeLabel.setTextColor(mutedColor);
+                            elapsedTimeLabel.setTextColor(mutedColor);
 
                             fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
                             toolbar.getNavigationIcon().setTint(mutedDark);
@@ -3238,6 +3464,21 @@ public class Media_list_activity extends AppCompatActivity {
                             Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
                             icon.setTint(mutedDark);
                             button.setBackground(icon);
+
+                            SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+                            int type = prefs1.getInt("cond",0);
+                            if(type==0){
+
+                            }else if(type==1){
+                                Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                                myIcon3.setTint(mutedDark);
+                                loop.setBackground(myIcon3);
+                            }else if(type==2){
+                                Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                                myIcon3.setTint(mutedDark);
+                                loop.setBackground(myIcon3);
+                            }
 
                             if(isClicked){
 
@@ -3314,11 +3555,7 @@ public class Media_list_activity extends AppCompatActivity {
 
                     // Position Bar
                     positionBar = (SeekBar) myView.findViewById(R.id.positionBar);
-                    int vibrant = getDominantColor(bm);
-                    int mutedDark = getComplimentColor(vibrant);
-                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
-                    remainingTimeLabel.setTextColor(mutedColor);
-                    elapsedTimeLabel.setTextColor(mutedColor);
+
                     positionBar.setMax(totalTime);
                     positionBar.setOnSeekBarChangeListener(
                             new SeekBar.OnSeekBarChangeListener() {

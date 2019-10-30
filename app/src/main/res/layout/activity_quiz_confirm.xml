@@ -21,19 +21,73 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="110dp"
-        android:layout_marginTop="300dp"
-        android:text="Start !"
-        android:textSize="70dp"
-        android:textColor="@android:color/white"
-        android:id="@+id/strtquiz"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="18dp"
+        android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
+        android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="100dp">
 
-        >
+        <RelativeLayout
+            android:id="@+id/spinerlayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="18dp"
+            android:layout_marginLeft="200dp"
+            android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
+            android:layout_marginStart="74dp"
+            android:layout_marginTop="50dp"
+            android:layout_toEndOf="@+id/strtquiz"
+            android:layout_weight=".28"
+            android:background="@drawable/spiner_border"
+            android:orientation="horizontal">
 
-    </com.google.android.material.button.MaterialButton>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_spiner" />
+
+            <com.jaredrummler.materialspinner.MaterialSpinner
+                android:id="@+id/questions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:spinnerMode="dropdown" />
+
+        </RelativeLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/strtquiz"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="50dp"
+            android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
+            android:layout_marginTop="50dp"
+            android:text="Start !"
+            android:textColor="@android:color/white"
+
+            android:textSize="40sp">
+
+        </com.google.android.material.button.MaterialButton>
+
+    </RelativeLayout>
+
+
 
     <com.google.android.material.button.MaterialButton
         android:layout_width="wrap_content"
