@@ -7,10 +7,15 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.czgame.wordbank.R;
@@ -27,6 +32,7 @@ public class add_news extends AppCompatActivity {
     EditText body;
     EditText url;
     Button save;
+    ScrollView scrollview;
     private DBNewsHelper mDBHelper;
 
     @Override
@@ -46,9 +52,25 @@ public class add_news extends AppCompatActivity {
             }
         });
 
+
         title = findViewById(R.id.title1);
         body = findViewById(R.id.body1);
         url = findViewById(R.id.url1);
+
+        body.setOnTouchListener(new View.OnTouchListener() {
+
+            public boolean onTouch(View v, MotionEvent event) {
+                if (body.hasFocus()) {
+                    v.getParent().requestDisallowInterceptTouchEvent(true);
+                    switch (event.getAction() & MotionEvent.ACTION_MASK){
+                        case MotionEvent.ACTION_SCROLL:
+                            v.getParent().requestDisallowInterceptTouchEvent(false);
+                            return true;
+                    }
+                }
+                return false;
+            }
+        });
 
         mDBHelper = new DBNewsHelper(this);
         save = findViewById(R.id.save);

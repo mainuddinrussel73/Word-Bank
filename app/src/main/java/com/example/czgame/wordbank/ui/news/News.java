@@ -1,6 +1,8 @@
 package com.example.czgame.wordbank.ui.news;
 
-public class News {
+import com.example.czgame.wordbank.ui.words.word;
+
+public class News implements Comparable<News> {
     int ID;
 
 
@@ -49,6 +51,11 @@ public class News {
 
     public void setBODY(String BODY) {
         this.BODY = BODY;
+    }
+
+    @Override
+    public int compareTo(News o) {
+        return this.getID() - (o.getID());
     }
 
 }

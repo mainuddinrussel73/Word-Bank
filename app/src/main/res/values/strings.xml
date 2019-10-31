@@ -161,7 +161,11 @@
     <string name="copy">Copy</string>
     <string name="Highlight">Highlight</string>
     <string name="HighlightAll">Highlight All</string>
+    <string name="SelectionMode">Selection Mode</string>
+    <string name="UnSelectionMode">Close Selection Mode</string>
     <string name="menu_pro">Promotodo Backup/Restore</string>
     <string name="title_activity_backup_pro">promotodo Backup Restore</string>
     <string name="menu_daily">Daily Backup</string>
+    <string name="done">Save</string>
+    <string name="image">Add Image</string>
 </resources>

@@ -62,13 +62,19 @@
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:hint="News Body"
-            android:inputType="textMultiLine"
+            android:inputType="textMultiLine|textCapSentences"
             android:layout_marginTop="20dp"
-            android:scrollHorizontally="true"
-            android:scrollbars = "vertical"
             android:textColorHint="@color/cardview_shadow_start_color"
             android:textColor="@android:color/background_dark"
             android:paddingLeft="5dp"
+            android:overScrollMode="always"
+            android:scrollbarStyle="insideInset"
+            android:scrollbars="vertical"
+            android:imeOptions="flagNoExtractUi"
+            android:fastScrollEnabled="true"
+            android:minLines="10"
+            android:scrollHorizontally="false"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
             android:background="@drawable/editextstyle"/>
     </LinearLayout>
 

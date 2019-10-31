@@ -16,12 +16,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.czgame.wordbank.R;
+import com.example.czgame.wordbank.ui.words.MainActivity;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class News_adapter extends BaseAdapter {
@@ -147,8 +150,23 @@ public class News_adapter extends BaseAdapter {
                 }
             }
         }
+
+            String type = MainActivity.prefs.getString("sort", "asc");
+            if (type.equals("asc")) {
+                Collections.sort(news_activity.newsList);
+            } else if (type.equals("des")) {
+                Collections.sort(news_activity.newsList, Collections.reverseOrder());
+            } else if (type.equals("alp")) {
+                Collections.sort(news_activity.newsList,
+                        new Comparator<News>() {
+                            public int compare(News f1, News f2) {
+                                return f1.getTITLE().compareTo(f2.getTITLE());
+                            }
+                        });
+            }
         // System.out.println(MainActivity.contactList.size());
         notifyDataSetChanged();
+
     }
 
     class RetrieveFeedTask extends AsyncTask<String, Void, Spanned> {

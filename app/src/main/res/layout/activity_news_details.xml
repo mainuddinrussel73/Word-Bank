@@ -84,7 +84,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:clickable_overlay="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" ></com.leinardi.android.speeddial.SpeedDialOverlayLayout>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" >
+
+
+    </com.leinardi.android.speeddial.SpeedDialOverlayLayout>
 
     <com.leinardi.android.speeddial.SpeedDialView
         android:id="@+id/speedDial"
@@ -135,6 +138,44 @@
         app:layout_anchorGravity="bottom|end"
         android:visibility="invisible"
         android:src="@drawable/ic_format_underlined_black_24dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab35"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_anchorGravity="bottom|end"
+        android:visibility="invisible"
+        android:src="@drawable/ic_mode_edit_black_24dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab36"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_anchorGravity="bottom|end"
+        android:visibility="invisible"
+        android:src="@drawable/ic_done_black_24dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab37"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_anchorGravity="bottom|end"
+        android:visibility="invisible"
+        android:src="@drawable/ic_save_black_24dp" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab38"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        app:layout_anchorGravity="bottom|end"
+        android:visibility="invisible"
+        android:src="@drawable/ic_image_black_24dp" />
+
+
 
 
 

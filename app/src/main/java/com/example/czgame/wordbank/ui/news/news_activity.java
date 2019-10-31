@@ -20,12 +20,15 @@ import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
 import es.dmoral.toasty.Toasty;
 
 public class news_activity extends AppCompatActivity {
@@ -99,7 +102,24 @@ public class news_activity extends AppCompatActivity {
             }
 
             // size = contactList.size();
+
+            SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+            String type = prefs.getString("sort", "asc");
+            if (type.equals("asc")) {
+                Collections.sort(newsList);
+            } else if (type.equals("des")) {
+                Collections.sort(newsList, Collections.reverseOrder());
+            } else if (type.equals("alp")) {
+                Collections.sort(newsList,
+                        new Comparator<News>() {
+                            public int compare(News f1, News f2) {
+                                return f1.getTITLE().compareTo(f2.getTITLE());
+                            }
+                        });
+            }
+
             adapter = new News_adapter(this);
+
             list = findViewById(R.id.news_list);
             list.setAdapter(adapter);
 
