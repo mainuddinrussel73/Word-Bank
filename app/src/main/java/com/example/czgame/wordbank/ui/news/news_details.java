@@ -8,32 +8,58 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BlurMaskFilter;
 import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.print.PrintAttributes;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.CharacterStyle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.czgame.wordbank.ui.words.MainActivity;
 import com.example.czgame.wordbank.R;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.itextpdf.text.Document;
+import com.jakewharton.picasso.OkHttp3Downloader;
+import com.jgabrielfreitas.core.BlurImageView;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
+import com.rhexgomez.typer.roboto.TyperRoboto;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import com.uttampanchasara.pdfgenerator.CreatePdf;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,6 +68,8 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.palette.graphics.Palette;
 import es.dmoral.toasty.Toasty;
 
 public class news_details extends AppCompatActivity {
@@ -63,21 +91,28 @@ public class news_details extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_news_details);
+
+        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        ImageView imageView = collapsingToolbarLayout.findViewById(R.id.image);
+
+
         toolbar = findViewById(R.id.toolbar1);
+
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+
+
+
+       // collapsingToolbarLayout.setTitle(itemTitle);
 
         final Button button = findViewById(R.id.opt);
         registerForContextMenu(button);
 
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
 
         prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         isDark = prefs.getBoolean("isDark", false);
@@ -85,7 +120,14 @@ public class news_details extends AppCompatActivity {
         mDBHelper = new DBNewsHelper(this);
         intent = getIntent();
 
+
+        final boolean[] okkk = {false};
         news_details = findViewById(R.id.news_detail_des);
+
+
+
+
+
 
         try {
             RetrieveFeedTask asyncTask = new RetrieveFeedTask();
@@ -97,9 +139,153 @@ public class news_details extends AppCompatActivity {
 
         news_details.setTextIsSelectable(true);
 
-        getSupportActionBar().setTitle(intent.getStringExtra("title"));
-        CoordinatorLayout additem = findViewById(R.id.content_detail);
+
+        final Bitmap[] bitmap = {null};
         textView = findViewById(R.id.words);
+
+
+
+        Picasso.with(this)
+                .load(intent.getStringExtra("url"))
+                .networkPolicy(NetworkPolicy.OFFLINE)
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        // imageView.setBlur(20);
+                        okkk[0] = true;
+
+                        imageView.invalidate();
+                        BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
+                        bitmap[0] = drawable.getBitmap();
+                        Bitmap blurredBitmap = BlurBuilder.blur( news_details.this, bitmap[0]);
+                        imageView.setImageBitmap(blurredBitmap);
+                        if(bitmap[0]==null){
+                            System.out.println("null");
+                        }
+                        collapsingToolbarLayout.setExpandedTitleColor((getDominantColor(bitmap[0])));
+                                    // Typeface typeface = ResourcesCompat.getFont(this, R.font.lobs_star);
+                        collapsingToolbarLayout.setExpandedTitleTypeface(TyperRoboto.ROBOTO_BOLD_ITALIC());
+
+
+                        System.out.println("herere");
+                        textView.setTextColor(getComplimentColor((getDominantColor(bitmap[0]))));
+
+
+                        Drawable icon = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
+                        icon.setTint(getComplimentColor(getDominantColor(bitmap[0])));
+                        button.setBackground(icon);
+
+                        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
+                        toolbar.getNavigationIcon().setTint(getComplimentColor(getDominantColor(bitmap[0])));
+                        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            System.out.println("go back");
+                                            toolbar.getNavigationIcon().setTint(Color.WHITE);
+                                            Drawable icon = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
+                                            icon.setTint(Color.WHITE);
+                                            button.setBackground(icon);
+                                            finish();
+                                        }
+                                    });
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        okkk[0] =false;
+                        System.out.println("failedddd");
+                        //Try again online if cache failed
+                        Picasso.with(news_details.this)
+                                .load(intent.getStringExtra("url"))
+                                .error(R.drawable.news)
+                                .into(imageView, new Callback() {
+                                    @Override
+                                    public void onSuccess() {
+                                        // imageView.setBlur(20);
+                                        try {
+
+                                            imageView.invalidate();
+                                            BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
+                                            bitmap[0] = drawable.getBitmap();
+                                        }catch (Exception e){
+                                            System.out.println(e.getMessage());
+                                        }
+
+                                        Bitmap blurredBitmap = BlurBuilder.blur( news_details.this, bitmap[0]);
+                                        imageView.setImageBitmap(blurredBitmap);
+                                        Palette.from(bitmap[0]).generate(new Palette.PaletteAsyncListener() {
+                                            public void onGenerated(Palette palette) {
+                                                Palette.Swatch vibrantSwatch = palette.getDarkVibrantSwatch();
+                                                if (vibrantSwatch != null) {
+                                                    collapsingToolbarLayout.setExpandedTitleColor(((getComplimentColor(vibrantSwatch.getTitleTextColor()))));
+                                                    // Typeface typeface = ResourcesCompat.getFont(this, R.font.lobs_star);
+                                                    collapsingToolbarLayout.setExpandedTitleTypeface(TyperRoboto.ROBOTO_BOLD_ITALIC());
+
+
+                                                    textView.setTextColor(getComplimentColor(vibrantSwatch.getBodyTextColor()));
+
+
+                                                    Drawable icon = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
+                                                    icon.setTint(vibrantSwatch.getRgb());
+                                                    button.setBackground(icon);
+
+                                                    toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
+                                                    toolbar.getNavigationIcon().setTint(vibrantSwatch.getRgb());
+                                                    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                            System.out.println("go back");
+                                                            toolbar.getNavigationIcon().setTint(Color.WHITE);
+                                                            Drawable icon = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
+                                                            icon.setTint(Color.WHITE);
+                                                            button.setBackground(icon);
+                                                            finish();
+                                                        }
+                                                    });
+
+                                                }
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onError() {
+                                        collapsingToolbarLayout.setExpandedTitleTypeface(TyperRoboto.ROBOTO_BOLD_ITALIC());
+                                        Drawable icon = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
+                                        icon.setTint(Color.WHITE);
+                                        button.setBackground(icon);
+                                        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
+                                        toolbar.getNavigationIcon().setTint(Color.WHITE);
+                                        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                System.out.println("go back");
+                                                toolbar.getNavigationIcon().setTint(Color.WHITE);
+                                                Drawable icon = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
+                                                icon.setTint(Color.WHITE);
+                                                button.setBackground(icon);
+                                                finish();
+                                            }
+                                        });
+                                        Log.v("Picasso","Could not fetch image");
+                                    }
+                                });
+                    }
+                });
+
+
+
+        //Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar1);
+        getSupportActionBar().setTitle(intent.getStringExtra("title"));
+
+
+
+
+
+
+        CoordinatorLayout additem = findViewById(R.id.content_detail);
+
 
 
         if (isDark) {
@@ -523,5 +709,55 @@ public class news_details extends AppCompatActivity {
 
         }
     }
+    public static int getDominantColor(Bitmap bitmap) {
+        List<Palette.Swatch> swatchesTemp = Palette.from(bitmap).generate().getSwatches();
+        List<Palette.Swatch> swatches = new ArrayList<Palette.Swatch>(swatchesTemp);
+        Collections.sort(swatches, new Comparator<Palette.Swatch>() {
+            @Override
+            public int compare(Palette.Swatch swatch1, Palette.Swatch swatch2) {
+                return swatch2.getPopulation() - swatch1.getPopulation();
+            }
 
+        });
+        return swatches.size() > 0 ? swatches.get(0).getRgb() : Color.WHITE;
+    }
+    public int getComplimentColor(int color) {
+        // get existing colors
+        int alpha = Color.alpha(color);
+        int red = Color.red(color);
+        int blue = Color.blue(color);
+        int green = Color.green(color);
+
+        // find compliments
+        red = (~red) & 0xff;
+        blue = (~blue) & 0xff;
+        green = (~green) & 0xff;
+
+        return Color.argb(alpha, red, green, blue);
+    }
+
+}
+
+class BlurBuilder {
+    private static final float BITMAP_SCALE = 0.4f;
+    private static final float BLUR_RADIUS = 7.5f;
+
+    public static Bitmap blur(Context context, Bitmap image) {
+        int width = Math.round(image.getWidth() * BITMAP_SCALE);
+        int height = Math.round(image.getHeight() * BITMAP_SCALE);
+
+        Bitmap inputBitmap = Bitmap.createScaledBitmap(image, width, height, false);
+        Bitmap outputBitmap = Bitmap.createBitmap(inputBitmap);
+
+        RenderScript rs = RenderScript.create(context);
+        ScriptIntrinsicBlur theIntrinsic = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+        Allocation tmpIn = Allocation.createFromBitmap(rs, inputBitmap);
+        Allocation tmpOut = Allocation.createFromBitmap(rs, outputBitmap);
+        theIntrinsic.setRadius(BLUR_RADIUS);
+        theIntrinsic.setInput(tmpIn);
+        theIntrinsic.forEach(tmpOut);
+        tmpOut.copyTo(outputBitmap);
+
+        return outputBitmap;
+    }
 }

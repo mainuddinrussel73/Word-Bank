@@ -40,6 +40,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.czgame.wordbank.ui.Quiz.Quiz_confirm;
+import com.example.czgame.wordbank.ui.backup_scheudle.receive_back;
 import com.example.czgame.wordbank.ui.news.news_activity;
 import com.example.czgame.wordbank.ui.promotodo.Promotodo_activity;
 import com.example.czgame.wordbank.ui.promotodo.pro_backup;
@@ -608,6 +609,49 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 e.getMessage();
             }
 
+        }else if(id == R.id.nav_back){
+
+            Calendar mcurrentTime = Calendar.getInstance();
+            final int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
+            final int minute = mcurrentTime.get(Calendar.MINUTE);
+            TimePickerDialog mTimePicker;
+            mTimePicker = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+
+                    Calendar calendar = Calendar.getInstance();
+                    // set the triggered time to currentHour:08:00 for testing
+                    calendar.set(Calendar.HOUR_OF_DAY, selectedHour);
+                    calendar.set(Calendar.MINUTE, selectedMinute);
+                    calendar.set(Calendar.SECOND, 0);
+
+                    if (android.os.Build.VERSION.SDK_INT >= 23) {
+                        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
+                                selectedHour, selectedMinute, 0);
+                    } else {
+                        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
+                                selectedHour, selectedMinute, 0);
+                    }
+
+                    AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+                    //creating a new intent specifying the broadcast receiver
+                    Intent i = new Intent(MainActivity.this, receive_back.class);
+
+                    //creating a pending intent using the intent
+                    PendingIntent pi = PendingIntent.getBroadcast(MainActivity.this, 0, i, 0);
+
+                    //setting the repeating alarm that will be fired every day
+                    am.setRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
+                    Toasty.success(MainActivity.this, "schedule is set", Toast.LENGTH_SHORT).show();
+                    //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), , pendingIntent);
+
+
+                    //Toasty.success(MainActivity.this, "Success! " + selectedHour + ":" + selectedMinute, Toast.LENGTH_SHORT, true).show();
+                }
+            }, hour, minute, true);//Yes 24 hour time
+            mTimePicker.setTitle("Select Time To Auto Backup.");
+            mTimePicker.show();
         } else if (id == R.id.music) {
             try {
                 Intent myIntent = new Intent(MainActivity.this, Media_list_activity.class);

@@ -163,4 +163,5 @@
     <string name="HighlightAll">Highlight All</string>
     <string name="menu_pro">Promotodo Backup/Restore</string>
     <string name="title_activity_backup_pro">promotodo Backup Restore</string>
+    <string name="menu_daily">Daily Backup</string>
 </resources>

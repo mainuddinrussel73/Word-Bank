@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.czgame.wordbank.R;
+import com.jakewharton.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -71,10 +75,38 @@ public class News_adapter extends BaseAdapter {
         asyncTask.execute(s);
 
 
-        if (newsList.get(position).getURL().equals("empty")) {
-            Picasso.with(context).load("https://www.albertadoctors.org/images/ama-master/feature/Stock%20photos/News.jpg").into(imageView);
-        } else Picasso.with(context).load(newsList.get(position).getURL()).into(imageView);
-        //imageView.setImageDrawable(LoadImageFromWebOperations(newsList.get(position).getURL()));
+
+
+
+
+        Picasso.with(context)
+                .load(newsList.get(position).getURL())
+                .networkPolicy(NetworkPolicy.OFFLINE)
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        //Try again online if cache failed
+                        Picasso.with(context)
+                                .load(newsList.get(position).getURL())
+                                .error(R.drawable.news)
+                                .into(imageView, new Callback() {
+                                    @Override
+                                    public void onSuccess() {
+
+                                    }
+
+                                    @Override
+                                    public void onError() {
+                                        Log.v("Picasso","Could not fetch image");
+                                    }
+                                });
+                    }
+                });
 
         //LinearLayout listitem = rowView.findViewById(R.id.list_item);
 

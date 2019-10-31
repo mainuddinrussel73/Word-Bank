@@ -16,6 +16,8 @@ import android.widget.SearchView;
 
 import com.example.czgame.wordbank.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.jakewharton.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +40,19 @@ public class news_activity extends AppCompatActivity {
         setContentView(R.layout.activity_news);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        try {
+            Picasso.Builder builder = new Picasso.Builder(this);
+            builder.downloader(new OkHttp3Downloader(this,Integer.MAX_VALUE));
+            Picasso built = builder.build();
+            built.setIndicatorsEnabled(true);
+            built.setLoggingEnabled(true);
+            Picasso.setSingletonInstance(built);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
 
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
 

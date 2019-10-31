@@ -4110,6 +4110,7 @@ public class Media_list_activity extends AppCompatActivity {
         view.startAnimation(animate);
 
         listView.setEnabled(false);
+        gridView.setEnabled(false);
         myView.setEnabled(true);
         volumeBar.setEnabled(true);
         try {
@@ -4136,6 +4137,7 @@ public class Media_list_activity extends AppCompatActivity {
         animate.setFillAfter(true);
         view.startAnimation(animate);
         listView.setEnabled(true);
+        gridView.setEnabled(true);
         myView.setEnabled(false);
         volumeBar.setEnabled(false);
         try {

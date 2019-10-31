@@ -27,7 +27,7 @@ import androidx.core.app.NotificationCompat;
 public class Promotodo_service extends Service {
 
 
-    public static final String COUNTDOWN_BR = "com.example.mainuddin.myapplication34.countdown_br";
+    public static final String COUNTDOWN_BR = "com.example.czgame.wordgame.countdown_br";
     private final static String TAG = "BroadcastService";
     private final static String fileNameend = "bell";
     public static RemoteViews notificationView;
@@ -108,8 +108,8 @@ public class Promotodo_service extends Service {
         mp.setAudioStreamType(AudioManager.STREAM_RING); //set streaming according to ur needs
         mp1.setAudioStreamType(AudioManager.STREAM_RING); //set streaming according to ur needs
         try {
-            mp.setDataSource(Promotodo_service.this, Uri.parse("android.resource://com.example.mainuddin.myapplication34/raw/" + fileName));
-            mp1.setDataSource(Promotodo_service.this, Uri.parse("android.resource://com.example.mainuddin.myapplication34/raw/" + fileNameend));
+            mp.setDataSource(Promotodo_service.this, Uri.parse("android.resource://com.example.czgame.wordbank/raw/" + fileName));
+            mp1.setDataSource(Promotodo_service.this, Uri.parse("android.resource://com.example.czgame.wordbank/raw/" + fileNameend));
         } catch (IOException e) {
             e.printStackTrace();
         }
