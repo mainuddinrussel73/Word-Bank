@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -144,16 +145,46 @@ public class add_news extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
+
+
+
                 if (title.getText().toString().isEmpty() || title.getText().toString().trim().length() <= 0) {
                     Toasty.error(getApplicationContext(), "No input.", Toast.LENGTH_SHORT).show();
                 } else if (body.getText().toString().isEmpty() || body.getText().toString().trim().length() <= 0) {
                     Toasty.error(getApplicationContext(), "No input.", Toast.LENGTH_SHORT).show();
                 } else {
+
+                    Display display = getWindowManager().getDefaultDisplay();
+                    int width = display.getWidth();
+
+                    String dataq = "<html><head><meta name=\"viewport\"\"content=\"width="+width+" height="+width+ ", initial-scale=1 \" /></head>";
+                    dataq = dataq + "<body>"+ body.getText().toString() +"</body></html>";
+
+                    String stringToAdd = "width=\"100%\" ";
+
+                    // Create a StringBuilder to insert string in the middle of content.
+                    StringBuilder sb = new StringBuilder(dataq);
+
+                    int i = 0;
+                    int cont = 0;
+
+                    // Check for the "src" substring, if it exists, take the index where
+                    // it appears and insert the stringToAdd there, then increment a counter
+                    // because the string gets altered and you should sum the length of the inserted substring
+                    while(i != -1){
+                        i = dataq.indexOf("src", i + 1);
+                        if(i != -1) sb.insert(i + (cont * stringToAdd.length()), stringToAdd );
+                        ++cont;
+                    }
+
+
+
+
                     boolean b;
                     if (url.getText().toString().isEmpty()) {
-                        b = mDBHelper.insertData(title.getText().toString(), body.getText().toString(), "empty");
+                        b = mDBHelper.insertData(title.getText().toString(), dataq, "empty");
                     } else
-                        b = mDBHelper.insertData(title.getText().toString(), body.getText().toString(), url.getText().toString());
+                        b = mDBHelper.insertData(title.getText().toString(), dataq, url.getText().toString());
                     if (b == true) {
                         Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
                         Intent myIntent = new Intent(v.getContext(), news_activity.class);

@@ -77,7 +77,10 @@
 
 
 
-    <include layout="@layout/content_news_details" />
+
+
+    <include layout="@layout/viewflip" />
+
 
     <com.leinardi.android.speeddial.SpeedDialOverlayLayout
         android:id="@+id/overlay"
