@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.example.czgame.wordbank.ui.words.MainActivity;
 import com.example.czgame.wordbank.R;
+import com.example.czgame.wordbank.ui.words.WordDetail;
 import com.example.czgame.wordbank.ui.words.word_details;
 import com.tapadoo.alerter.Alerter;
 
@@ -136,7 +137,7 @@ public class quiz_result extends AppCompatActivity {
                     }
                 }
                 System.out.println(i);
-                Intent myIntent = new Intent(view.getContext(), word_details.class);
+                Intent myIntent = new Intent(view.getContext(), WordDetail.class);
                 myIntent.putExtra("message", MainActivity.contactList.get(i).getWORD());
                 myIntent.putExtra("meaning", MainActivity.contactList.get(i).getMEANING());
                 myIntent.putExtra("id", i);
