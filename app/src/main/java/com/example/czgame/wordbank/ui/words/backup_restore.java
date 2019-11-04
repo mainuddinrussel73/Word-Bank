@@ -54,6 +54,7 @@ public class backup_restore extends AppCompatActivity {
 
     public static final int PICKFILE_RESULT_CODE = 1;
     public static AtomicInteger number = new AtomicInteger(0);
+    public static AtomicInteger number1 = new AtomicInteger(0);
     public boolean flag;
     public View v;
     RelativeLayout coordinatorLayout, mainlayout;
@@ -105,6 +106,7 @@ public class backup_restore extends AppCompatActivity {
             public void onClick(View v) {
                 JSONArray jsonArray = new JSONArray();
                 final Cursor cursor = mDBHelper.getAllData();
+                final Cursor cursor1 = mDBHelper.getAllData2();
 
                 // looping through all rows and adding to list
                 if (cursor.getCount() != 0) {
@@ -150,6 +152,50 @@ public class backup_restore extends AppCompatActivity {
                     showMessage("Error", "Nothing found");
                 }
 
+                jsonArray = new JSONArray();
+                if (cursor1.getCount() != 0) {
+                    // show message
+                    while (cursor1.moveToNext()) {
+
+                        JSONObject word = new JSONObject();
+                        try {
+                            word.put("ID", Integer.parseInt(cursor1.getString(0)));
+                            word.put("WORD", cursor1.getString(1));
+                            word.put("SENTENCE", cursor1.getString(2));
+                        } catch (JSONException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                        jsonArray.put(word);
+                    }
+
+                    File root = android.os.Environment.getExternalStorageDirectory();
+                    // http://stackoverflow.com/questions/3551821/android-write-to-sd-card-folder
+                    File dir = new File(root.getAbsolutePath() + "/wordstore");
+                    dir.mkdirs();
+                    File file = new File(dir, "backup_sentences.json");
+                    try {
+                        FileOutputStream f = new FileOutputStream(file);
+                        PrintWriter pw = new PrintWriter(f);
+                        pw.write(jsonArray.toString());
+                        pw.flush();
+                        pw.close();
+                        f.close();
+                        Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                        Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
+                    }
+
+                } else {
+
+
+                    showMessage("Error", "Nothing found");
+                }
+
 
             }
 
@@ -190,12 +236,13 @@ public class backup_restore extends AppCompatActivity {
 
 
                 number.set(dothings());
+                number1.set(dothings1());
 
                 ProgressDialog dialog = ProgressDialog.show(backup_restore.this, "",
                         "Loading. Please wait...", true);
 
 
-                if (number.get() == 1) {
+                if (number.get() == 1  && number1.get() == 1) {
                     System.out.println("then");
                     Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
                     Intent myIntent = new Intent(v.getContext(), MainActivity.class);
@@ -318,9 +365,10 @@ public class backup_restore extends AppCompatActivity {
             File root = android.os.Environment.getExternalStorageDirectory();
             // http://stackoverflow.com/questions/3551821/android-write-to-sd-card-folder
             File dir = new File(root.getAbsolutePath() + "/wordstore");
-            File file;
+            File file,file1;
             dir.mkdirs();
             file = new File(dir, "backup.json");
+            file1 = new File(dir, "backup_sentences.json");
             //file = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/Users/macbookair/IdeaProjects/data/backup.html"), "UTF-8"));
 
             Document document = null;
@@ -458,6 +506,176 @@ public class backup_restore extends AppCompatActivity {
                 for (int i = 0; i < jsonArray.length(); i++) {
                     jsonObject = new JSONObject(jsonArray.get(i).toString());
                     mDBHelper.insertData(jsonObject.get("WORD").toString(), jsonObject.get("MEANING").toString(), jsonObject.get("SENTENCE").toString());
+                }
+                // Toast.makeText(getApplicationContext(),"Done.",Toast.LENGTH_SHORT).show();
+                return 1;
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                //Toast.makeText(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
+                return 0;
+            }
+        }
+    }
+
+    private int dothings1() {
+        FileChannel source = null;
+        FileChannel destination = null;
+        String currentDB = getDatabasePath(DatabaseHelper.DATABASE_NAME).getPath();
+        String[] parts = fileUri.getLastPathSegment().split(":");
+        String part2 = parts[1]; // 0
+
+
+        if (!part2.contains(".json")) {
+            List<String> total = new ArrayList<>();
+            String retreivedDBPAth = Environment.getExternalStorageDirectory() + "/" + "backup_sentences.json";
+            File input = new File(retreivedDBPAth);
+            //BufferedWriter file = null;
+            File root = android.os.Environment.getExternalStorageDirectory();
+            // http://stackoverflow.com/questions/3551821/android-write-to-sd-card-folder
+            File dir = new File(root.getAbsolutePath() + "/wordstore");
+            File file,file1;
+            dir.mkdirs();
+            //file = new File(dir, "backup.json");
+            file1 = new File(dir, "backup_sentences.json");
+            //file = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/Users/macbookair/IdeaProjects/data/backup.html"), "UTF-8"));
+
+            Document document = null;
+            try {
+                document = Jsoup.parse(input, null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            Elements paragraphs = document.getElementsByTag("entry");
+            int count = 0;
+            for (Element paragraph : paragraphs) {
+                Elements w = paragraph.getElementsByTag("w");
+                Elements m = paragraph.getElementsByTag("m");
+                Elements ex = paragraph.getElementsByTag("ex");
+                total.add("{ \"ID\" : " + count + " , \"WORD\" : \"" + w.text() + "\" , \"MEANING\" : \"" + m.text() + "\" ,  \"SENTENCE\" : \"" + ex.text() + "\" }");
+                count++;
+            }
+            int i = 0;
+            FileOutputStream f = null;
+            PrintWriter pw = null;
+            try {
+                f = new FileOutputStream(file1);
+                pw = new PrintWriter(f);
+                pw.write("[");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            do {
+                String resultData = total.get(i);
+                if (i == count - 1) {
+
+
+                    pw.write(resultData + "\n");
+                    pw.flush();
+
+                } else {
+
+                    pw.write(resultData + ", \n");
+                    pw.flush();
+                }
+                i++;
+            } while (i < count);
+            try {
+                pw.write("]");
+                pw.close();
+                f.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            InputStream is = null;
+
+
+            try {
+                is = new FileInputStream(file1);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+
+                //Toast.makeText(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
+                return 0;
+            }
+            InputStreamReader isr = new InputStreamReader(is);
+
+            JSONArray jsonArray = new JSONArray();
+            JSONObject jsonObject = new JSONObject();
+            StringBuilder stringBuilder = new StringBuilder();
+            JSONObject reader = new JSONObject();
+            String json = null;
+            try {
+                //is = getActivity().getAssets().open("yourfilename.json");
+                int size = is.available();
+                byte[] buffer = new byte[size];
+                is.read(buffer);
+                is.close();
+                json = new String(buffer, StandardCharsets.UTF_8);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                //   Toast.makeText(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
+                return 0;
+            }
+            try {
+                jsonArray = new JSONArray(json);
+                mDBHelper.deleteAll1();
+                for (i = 0; i < jsonArray.length(); i++) {
+                    jsonObject = new JSONObject(jsonArray.get(i).toString());
+                    mDBHelper.insertData1(jsonObject.get("WORD").toString(), jsonObject.get("SENTENCE").toString());
+                }
+                //Toast.makeText(getApplicationContext(),"Done.",Toast.LENGTH_SHORT).show();
+                return 1;
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                //Toast.makeText(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
+            }
+            //Toast.makeText(getApplicationContext(),"Done.",Toast.LENGTH_SHORT).show();
+            return 1;
+
+        } else {
+            String retreivedDBPAth = Environment.getExternalStorageDirectory() + "/" +part2.replace("backup","backup_sentences");
+            File retrievedDB = new File(retreivedDBPAth);
+            InputStream is = null;
+
+
+            try {
+                is = new FileInputStream(retrievedDB);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+
+                //Toast.makeText(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
+                return 0;
+            }
+            InputStreamReader isr = new InputStreamReader(is);
+
+            JSONArray jsonArray = new JSONArray();
+            JSONObject jsonObject = new JSONObject();
+            StringBuilder stringBuilder = new StringBuilder();
+            JSONObject reader = new JSONObject();
+            String json = null;
+            try {
+                //is = getActivity().getAssets().open("yourfilename.json");
+                int size = is.available();
+                byte[] buffer = new byte[size];
+                is.read(buffer);
+                is.close();
+                json = new String(buffer, StandardCharsets.UTF_8);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                //Toast.makeText(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
+                return 0;
+            }
+            try {
+                jsonArray = new JSONArray(json);
+                mDBHelper.deleteAll1();
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    jsonObject = new JSONObject(jsonArray.get(i).toString());
+                    mDBHelper.insertData1(jsonObject.get("WORD").toString(), jsonObject.get("SENTENCE").toString());
                 }
                 // Toast.makeText(getApplicationContext(),"Done.",Toast.LENGTH_SHORT).show();
                 return 1;

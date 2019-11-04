@@ -223,6 +223,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         contactList.clear();
 
+        int i =1;
 
         final Cursor cursor = mDBHelper.getAllData();
 
@@ -232,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             while (cursor.moveToNext()) {
 
                 word word = new word();
-                word.setID(Integer.parseInt(cursor.getString(0)));
+                word.setID(i);
                 word.setWORD(cursor.getString(1));
                 word.setMEANING(cursor.getString(2));
 
@@ -241,6 +242,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 // maintitle.add(word.WORD);
                 // subtitle.add(word.MEANING);
 
+                i++;
             }
 
 
@@ -277,7 +279,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     // TODO Auto-generated method stub
                     // System.out.println(position);
-                    Intent myIntent = new Intent(view.getContext(), word_details.class);
+                    Intent myIntent = new Intent(view.getContext(), WordDetail.class);
                     //String s = view.findViewById(R.id.subtitle).toString();
                     //String s = (String) parent.getI;
                     myIntent.putExtra("message", contactList.get(position).getWORD());

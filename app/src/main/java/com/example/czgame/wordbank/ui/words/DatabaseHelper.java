@@ -26,6 +26,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String WORD = "WORD";
     public static final String MEANING = "MEANING";
     public static final String SENTENCE = "SENTENCE";
+
+    public static final String TABLE_NAME2 = "Sentence_table";
+    public static final String ID1 = "ID1";
+    public static final String WORD1 = "WORD1";
+    public static final String SENTENCE1 = "SENTENCE1";
+
     static String DB_PATH = "";
     private SQLiteDatabase mDataBase;
     private Context mContext;
@@ -106,11 +112,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + MEANING + " TEXT,"
                 + SENTENCE + " TEXT" + ")";
         db.execSQL(CREATE_CONTACTS_TABLE);
+
+        String TASK_TABLE_CREATE = "CREATE TABLE "
+                + TABLE_NAME2 + " ("
+                + ID1 + " integer primary key, "
+                + WORD1 + " text, "
+                + SENTENCE1 + " TEXT" + ")";
+
+        db.execSQL(TASK_TABLE_CREATE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME2);
         onCreate(db);
     }
 
@@ -121,12 +136,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(MEANING, meaning);
         contentValues.put(SENTENCE, sentence);
         long result = db.insert(TABLE_NAME, null, contentValues);
+
         return result != -1;
     }
 
+    public boolean insertData1(String word, String sentence){
+        SQLiteDatabase db1 = this.getWritableDatabase();
+        ContentValues contentValues1 = new ContentValues();
+        contentValues1.put(WORD1, word);
+        contentValues1.put(SENTENCE1, sentence);
+        long result1 = db1.insert(TABLE_NAME2, null, contentValues1);
+        return result1!=-1;
+    }
     public Cursor getAllData() {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor res = db.rawQuery("select * from " + TABLE_NAME, null);
+        return res;
+    }
+
+    public Cursor getAllData1(String old_word) {
+        SQLiteDatabase db1 = this.getWritableDatabase();
+        Cursor res = db1.rawQuery("SELECT * FROM Sentence_table WHERE WORD1 = ?; ", new String[]{old_word});
+        return res;
+    }
+
+    public Cursor getAllData2() {
+        SQLiteDatabase db1 = this.getWritableDatabase();
+        Cursor res = db1.rawQuery("SELECT * FROM Sentence_table ",null);
         return res;
     }
 
@@ -181,9 +217,65 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.delete(TABLE_NAME, "ID = ?", new String[]{id});
     }
 
+
+    public Integer deleteData2(String id,String word, String sentence) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db1 = this.getReadableDatabase();
+        try {
+            Cursor re = db1.rawQuery("SELECT * FROM Sentence_table WHERE SENTENCE1 = ?; ", new String[]{sentence});
+            if (re.moveToFirst()) {
+                do {
+                    System.out.println(re.getString(0));
+                    id = re.getString(0);
+                } while (re.moveToNext());
+            }
+
+            re.close();
+            // System.out.println(re.getString(0));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ID1, id);
+        contentValues.put(WORD1, word);
+        contentValues.put(SENTENCE1, sentence);
+        return db.delete(TABLE_NAME2, "ID1 = ?", new String[]{id});
+    }
+
+    public Integer deleteData1(String id, String old_word, String word, String sentence) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db1 = this.getReadableDatabase();
+        try {
+            Cursor re = db1.rawQuery("SELECT * FROM Sentence_table WHERE WORD1 = ?; ", new String[]{old_word});
+            if (re.moveToFirst()) {
+                do {
+                    System.out.println(re.getString(0));
+                    id = re.getString(0);
+                    ContentValues contentValues = new ContentValues();
+                    contentValues.put(ID1, id);
+                    contentValues.put(WORD1, word);
+                    contentValues.put(SENTENCE1, sentence);
+                    db.delete(TABLE_NAME2, "ID1 = ?", new String[]{id});
+                } while (re.moveToNext());
+            }
+
+            re.close();
+            return 1;
+            // System.out.println(re.getString(0));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return 0;
+
+    }
+
     public void deleteAll() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + TABLE_NAME);
+    }
+    public void deleteAll1() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from " + TABLE_NAME2);
     }
 
     public List<word> getSelectedDatas(String setId) {

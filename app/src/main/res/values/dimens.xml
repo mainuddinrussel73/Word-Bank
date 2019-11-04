@@ -52,5 +52,7 @@
     <dimen name="slv_item_bg_btn2_width">60dip</dimen>
     <dimen name="slv_item_bg_btn_width_img">100dip</dimen>
     <dimen name="action_button_margin">696dp</dimen>
+    <dimen name="appbar_padding">16dp</dimen>
+    <dimen name="appbar_padding_top">8dp</dimen>
 
 </resources>

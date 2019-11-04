@@ -1,25 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/white"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:id="@+id/item_detail">
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    </com.google.android.material.appbar.AppBarLayout>
+    android:id="@+id/item_detail"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -46,7 +30,7 @@
         <EditText
             android:id="@+id/meaning"
             android:layout_width="match_parent"
-            android:layout_height="199dp"
+            android:layout_height="399dp"
             android:hint="TextView"
 
             android:textColorHint="@color/cardview_shadow_start_color"
@@ -95,5 +79,4 @@
 
             android:text="Delete" />
     </LinearLayout>
-
 </LinearLayout>

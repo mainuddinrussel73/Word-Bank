@@ -168,4 +168,7 @@
     <string name="menu_daily">Daily Backup</string>
     <string name="done">Save</string>
     <string name="image">Add Image</string>
+    <string name="title_activity_word_detail">WordDetail</string>
+    <string name="tab_text_1">Meaning</string>
+    <string name="tab_text_2">Sentences</string>
 </resources>

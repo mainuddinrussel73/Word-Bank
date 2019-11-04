@@ -731,9 +731,9 @@ public class news_details extends AppCompatActivity {
                 Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
             }
 
-            
+
            //this is to get the the cursor position
-            
+
 
 
 
@@ -771,7 +771,7 @@ public class news_details extends AppCompatActivity {
                 news_details.setText(Html.fromHtml(html[0].replace("\n", "<br>"), imageGetter, null));
             }
 
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
+       new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
 

@@ -29,11 +29,11 @@
         <item name="android:listDivider">@android:color/background_light</item>
     </style>
 
-    <style name="NavigationViewlight"  parent="Base.Theme.AppCompat">
+    <style name="NavigationViewlight" parent="Base.Theme.AppCompat">
         <item name="android:listDivider">@android:color/background_light</item>
     </style>
 
-    <style name="NavigationViewdark"  parent="Base.Theme.AppCompat">
+    <style name="NavigationViewdark" parent="Base.Theme.AppCompat">
         <item name="android:listDivider">@android:color/background_dark</item>
     </style>
 
@@ -92,14 +92,17 @@
         <item name="stStrokeColor">#fff</item>
         <item name="stIconStart">@drawable/ic_launcher_background</item>
         <item name="stIconEnd">@drawable/ic_launcher_background</item>
-        <item name="stLength">LONG</item> LONG or SHORT
-        <item name="stGravity">top</item> top or center
+        <item name="stLength">LONG</item>
+        LONG or SHORT
+        <item name="stGravity">top</item>
+        top or center
         <item name="stRadius">5dp</item>
     </style>
 
     <style name="fastscroll">
         <item name="android:fastScrollThumbDrawable">@drawable/fast_scroll_thumb</item>
-        <item name="android:fastScrollPreviewBackgroundRight">@drawable/fast_scrollbar_preview </item>
+        <item name="android:fastScrollPreviewBackgroundRight">@drawable/fast_scrollbar_preview
+        </item>
         <item name="android:fastScrollOverlayPosition">aboveThumb</item>
         <item name="android:fastScrollTextColor">@color/cardview_light_background</item>
     </style>
@@ -110,6 +113,7 @@
         <item name="searchHintIcon">@null</item>
 
     </style>
+
     <style name="TextFieldBoxes">
         <item name="android:colorControlHighlight" tools:targetApi="lollipop">#2a4b5c</item>
     </style>

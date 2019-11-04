@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+
+
+
+
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="15dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:paddingRight="15dp"
+        android:id="@+id/list_item"
+        android:background="@drawable/backgroundborder"
+        android:descendantFocusability="afterDescendants"
+        >
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="Medium Texhkybljhbj,b,jhb,jhb,jhbjbjhbjbjbh"
+            android:textStyle="bold"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:layout_marginLeft="1dp"
+            android:textSize="15dp"
+            android:textColor="@android:color/background_dark"
+
+            />
+
+        <TextView
+            android:id="@+id/num"
+            android:layout_width="80dp"
+            android:layout_height="20dp"
+
+            android:layout_marginLeft="300dp"
+            android:text="Medium Text"
+            android:textSize="12dp"
+            android:textAppearance="?android:attr/textAppearanceListItemSmall"
+            android:textColor="@android:color/background_dark"
+            android:textStyle="bold"
+
+            />
+    </LinearLayout>
+</RelativeLayout>
