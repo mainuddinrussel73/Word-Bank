@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.util.Log;
 import android.widget.Toast;
@@ -21,10 +22,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import es.dmoral.toasty.Toasty;
 
 public class receive_back  extends BroadcastReceiver {
+
 
     //the method will be fired when the alarm is triggerred
     @Override
@@ -86,6 +91,33 @@ public class receive_back  extends BroadcastReceiver {
         }
         pro_back(context);
         news_back(context);
+
+        SharedPreferences prefs1 = context.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+        DBDaily dbDaily = new DBDaily(context);
+        String []months = {"JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"};
+        String []days = {"SUN", "MON", "TUR", "WED", "THU", "FRI","SAT"};
+
+        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT"),
+                Locale.getDefault());
+
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH) + 1;
+        int currentWEEK = calendar.get(Calendar.WEEK_OF_YEAR);
+        int currentDay = calendar.get(Calendar.DAY_OF_WEEK);
+
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.setTimeInMillis(System.currentTimeMillis());
+        calendar1.set(Calendar.HOUR_OF_DAY, 00);
+        calendar1.set(Calendar.MINUTE, 00);
+
+        if(Calendar.getInstance().after(calendar1)){
+            // Move to tomorrow
+            calendar1.add(Calendar.DATE, 1);
+            dbDaily.insertAll(days[currentDay-1],String.valueOf(currentWEEK),months[currentMonth-1],String.valueOf(currentYear),prefs1.getInt("t", 0));
+            SharedPreferences.Editor editor = prefs1.edit();
+            editor.putInt("t", 0);
+            editor.commit();
+        }
 
     }
 

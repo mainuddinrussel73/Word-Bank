@@ -70,7 +70,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private void copyDataBase() {
         if (!checkDataBase()) {
             this.getReadableDatabase();
-            this.close();
+            if (this != null) {
+                this.close();
+                super.close();
+            }
             try {
                 copyDBFile();
             } catch (IOException mIOException) {
@@ -304,4 +307,5 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         // return contact list
         return cardList;
     }
+
 }

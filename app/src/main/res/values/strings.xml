@@ -171,4 +171,6 @@
     <string name="title_activity_word_detail">WordDetail</string>
     <string name="tab_text_1">Meaning</string>
     <string name="tab_text_2">Sentences</string>
+    <string name="title_activity_daily">Daily Details</string>
+    <string name="action_daily">Daily Report</string>
 </resources>

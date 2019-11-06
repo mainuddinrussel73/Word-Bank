@@ -29,10 +29,14 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.promotodo.daily_details"
+            android:label="@string/title_activity_daily"
+            android:theme="@style/AppTheme.NoActionBar"
+            ></activity>
         <activity
             android:name=".ui.words.WordDetail"
             android:label="@string/title_activity_word_detail"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.Quiz.Quiz_match"
             android:label="@string/Quizmatch"
@@ -40,7 +44,7 @@
         <activity
             android:name=".ui.promotodo.pro_backup"
             android:label="@string/title_activity_backup_pro"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.promotodo.promodetail"
             android:label="@string/Promotodo"
@@ -92,7 +96,7 @@
         <activity
             android:name=".ui.words.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".root.SplashActivity"
             android:allowBackup="true"
@@ -145,7 +149,7 @@
         <service android:name=".ui.promotodo.CountService" />
         <service
             android:name=".ui.promotodo.Promotodo_service"
-            android:enabled="true"></service>
+            android:enabled="true" />
 
         <receiver
             android:name=".ui.promotodo.Promotodo_receiver"

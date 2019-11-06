@@ -382,7 +382,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
                         Cursor re = db1.rawQuery("SELECT * FROM promotodo_table WHERE TITLE = ?; ", new String[]{tfb.getText().toString()});
                         if (re.moveToFirst()) {
                             do {
-                                System.out.println(re.getString(0));
+                                //System.out.println(re.getString(0));
                                 id = re.getString(0);
                             } while (re.moveToNext());
                         }
@@ -468,7 +468,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
                 word.setDue_date(cursor.getString(5));
 
                 promotododataList.add(word);
-                System.out.println(word.NUM);
+            //    System.out.println(word.NUM);
 
 
             }
@@ -564,7 +564,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
         // promotododata ccco= Promotodo_activity.promotododataList.get(ccc);;
 
         for (int i = 0; i < promotododataList.size(); i++) {
-            System.out.println(titles);
+           // System.out.println(titles);
             if (titles.equals(promotododataList.get(i).TITLE)) {
 
 
@@ -708,6 +708,24 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
     private void toast(String toast) {
         mToast.setText(toast);
         mToast.show();
+    }
+    @Override
+    public boolean onCreateOptionsMenu(android.view.Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(android.view.MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+
+            Intent myIntent = new Intent(this, daily_details.class);
+            myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivityForResult(myIntent, 0);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 
