@@ -130,15 +130,33 @@ public class DBDaily extends SQLiteOpenHelper {
     }
 
     public boolean insertAll(String day, String  week,String  month, String year, int time) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(DAY, day);
-        contentValues.put(WEEK, week);
-        contentValues.put(MONTH, month);
-        contentValues.put(YEAR, year);
-        contentValues.put(TIME, time);
-        long result = db.insert(TABLE_NAME, null, contentValues);
-        return result != -1;
+        SQLiteDatabase db1 = this.getReadableDatabase();
+        String id = "";
+        try {
+            Cursor re = db1.rawQuery("SELECT * FROM daily_table WHERE DAY = ? AND WEEK = ? AND YEAR = ? ", new String[]{day,week,year});
+            if (re.moveToFirst()) {
+                do {
+                    System.out.println(re.getString(0));
+                    id = re.getString(0);
+                } while (re.moveToNext());
+            }
+
+            re.close();
+            // System.out.println(re.getString(0));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        if(id.equals("")) {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(DAY, day);
+            contentValues.put(WEEK, week);
+            contentValues.put(MONTH, month);
+            contentValues.put(YEAR, year);
+            contentValues.put(TIME, time);
+            long result = db.insert(TABLE_NAME, null, contentValues);
+            return result != -1;
+        }else return false;
     }
 
     public Cursor getAll() {

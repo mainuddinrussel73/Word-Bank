@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.czgame.wordbank.R;
+import com.example.czgame.wordbank.ui.backup_scheudle.DBDaily;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.yydcdut.sdlv.Menu;
@@ -34,6 +35,7 @@ import com.yydcdut.sdlv.SlideAndDragListView;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import androidx.annotation.RequiresApi;
@@ -363,6 +365,37 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
         SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         remain.setText("Completed Hours : " + (prefs1.getInt("t", 0) * 0.5));
 
+        DBDaily dbDaily = new DBDaily(this);
+        //dbDaily.deleteAll();
+        String []months = {"JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"};
+        String []days = {"MON", "TUR", "WED", "THU", "FRI","SAT","SUN"};
+
+        Calendar calendar = Calendar.getInstance();
+
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH) + 1;
+        int currentWEEK = calendar.get(Calendar.WEEK_OF_YEAR);
+        int currentDay = calendar.get(Calendar.DAY_OF_WEEK);
+       // currentDay-=1;
+
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.setTimeInMillis(System.currentTimeMillis());
+        //calendar1.set(Calendar.DAY_OF_WEEK,currentDay+1);
+        calendar1.set(Calendar.HOUR_OF_DAY, 00);
+        calendar1.set(Calendar.MINUTE, 00);
+
+        System.out.println(days[currentDay-2]);
+        if(Calendar.getInstance().after(calendar1)){
+            // Move to tomorrow
+            System.out.println("ok");
+            calendar1.add(Calendar.DATE, 1);
+            dbDaily.insertAll(days[currentDay-2],String.valueOf(currentWEEK),months[currentMonth-1],String.valueOf(currentYear),prefs1.getInt("t", 0));
+            SharedPreferences.Editor editor1 = prefs1.edit();
+            editor1.putInt("t", 0);
+            editor1.commit();
+        }
+
+
         mToast = Toast.makeText(Promotodo_activity.this, "", Toast.LENGTH_SHORT);
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -444,6 +477,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
             tfb.setTextColor(Color.BLACK);
             tfb.setHintTextColor(Color.BLACK);
         }
+
 
 
     }

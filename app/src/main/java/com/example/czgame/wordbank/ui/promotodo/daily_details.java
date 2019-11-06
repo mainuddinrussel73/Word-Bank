@@ -8,6 +8,7 @@ import android.graphics.DashPathEffect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import com.example.czgame.wordbank.R;
 import com.example.czgame.wordbank.ui.backup_scheudle.DBDaily;
@@ -188,14 +189,15 @@ public class daily_details extends AppCompatActivity {
             BarData barData = new BarData(barDataSet);
             XAxis xAxis = barChart.getXAxis();
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-            final String[] months = new String[]{"m", "SUN", "MON", "TUR", "WED", "THU", "FRI", "SAT"};
+            final String[] months = new String[]{"SUN", "MON", "TUR", "WED", "THU", "FRI", "SAT"};
             IndexAxisValueFormatter formatter = new IndexAxisValueFormatter(months);
             xAxis.setGranularity(1f);
             xAxis.setValueFormatter(formatter);
+            xAxis.setLabelCount(7,true);
             barChart.setDescription(new Description());
             barChart.setMinimumHeight(24);
             barChart.setData(barData);
-            barChart.setFitBars(false);
+            barChart.setFitBars(true);
             barChart.animateXY(5000, 5000);
             barChart.invalidate();
         }
@@ -210,15 +212,76 @@ public class daily_details extends AppCompatActivity {
             mChart.animateXY(5000,5000);
             renderData();
         }
+        SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+        boolean isDark = prefs.getBoolean("isDark", false);
+
+        RelativeLayout relativeLayout = findViewById(R.id.dailylayout);
+        if (isDark) {
+            mChart.setBackgroundColor(Color.BLACK);
+            mChart.getXAxis().setTextColor(Color.WHITE);
+            mChart.getAxisLeft().setTextColor(Color.WHITE);
+            mChart.getLegend().setTextColor(Color.WHITE);
+            barChart.getXAxis().setTextColor(Color.WHITE);
+            barChart.getAxisLeft().setTextColor(Color.WHITE);
+            barChart.getLegend().setTextColor(Color.WHITE);
+            barChart.setBackgroundColor(Color.BLACK);
+            relativeLayout.setBackgroundColor(Color.BLACK);
+        } else {
+            mChart.setBackgroundColor(Color.WHITE);
+            mChart.getXAxis().setTextColor(Color.BLACK);
+            mChart.getAxisLeft().setTextColor(Color.BLACK);
+            mChart.getLegend().setTextColor(Color.BLACK);
+            barChart.getXAxis().setTextColor(Color.BLACK);
+            barChart.getAxisLeft().setTextColor(Color.BLACK);
+            barChart.getLegend().setTextColor(Color.BLACK);
+            barChart.setBackgroundColor(Color.WHITE);
+            relativeLayout.setBackgroundColor(Color.WHITE);
+        }
 
     }
 
     private ArrayList getData(){
         ArrayList<BarEntry> entries = new ArrayList<>();
-        float f = 1;
+        float f = 0;
+
+
         for(Task t:taskList){
-            entries.add(new BarEntry(f,t.getTIME()));
+
+            entries.add(new BarEntry(f,t.getTIME()/2));
             f++;
+        }
+        if(taskList.size()<7){
+            if(taskList.size()==1){
+                for (int i = 1; i <7 ; i++) {
+                    entries.add(new BarEntry(i,0));
+                }
+            }
+            if(taskList.size()==2){
+                for (int i = 2; i <7 ; i++) {
+                    entries.add(new BarEntry(i,0));
+                }
+            }
+            if(taskList.size()==3){
+                for (int i = 3; i <7 ; i++) {
+                    entries.add(new BarEntry(i,0));
+                }
+            }
+            if(taskList.size()==4){
+                for (int i = 4; i <7 ; i++) {
+                    entries.add(new BarEntry(i,0));
+                }
+            }
+            if(taskList.size()==5){
+                for (int i = 5; i <=1 ; i++) {
+                    entries.add(new BarEntry(i,0));
+                }
+            }
+            if(taskList.size()==6){
+                for (int i = 6; i <7 ; i++) {
+                    entries.add(new BarEntry(i,0));
+                }
+            }
+
         }
         return entries;
     }
@@ -273,8 +336,67 @@ public class daily_details extends AppCompatActivity {
         ArrayList<Entry> values = new ArrayList<>();
         float f = 0;
         for(float t:taskList2){
-            values.add(new BarEntry(f,t));
+            values.add(new BarEntry(f,t/2));
             f++;
+        }
+        if(taskList2.size()<12){
+            if(taskList2.size()==1){
+                for (int i = 1; i <12 ; i++) {
+                    values.add(new BarEntry(i,0));
+                }
+            }
+            if(taskList2.size()==2){
+                for (int i = 2; i <12 ; i++) {
+                    values.add(new BarEntry(i,0));
+                }
+            }
+            if(taskList2.size()==3){
+                for (int i = 3; i <12 ; i++) {
+                    values.add(new BarEntry(i,0));
+                }
+            }
+            if(taskList2.size()==4){
+                for (int i = 4; i <12 ; i++) {
+                    values.add(new BarEntry(i,0));
+                }
+            }
+            if(taskList2.size()==5){
+                for (int i = 5; i <=12 ; i++) {
+                    values.add(new BarEntry(i,0));
+                }
+            }
+            if(taskList2.size()==6){
+                for (int i = 6; i <12 ; i++) {
+                    values.add(new BarEntry(i,0));
+                }
+            }
+            if(taskList2.size()==7){
+                for (int i = 7; i <12 ; i++) {
+                    values.add(new BarEntry(i,0));
+                }
+            }
+            if(taskList2.size()==8){
+                for (int i = 8; i <12 ; i++) {
+                    values.add(new BarEntry(i,0));
+                }
+            }
+            if(taskList2.size()==9){
+                for (int i = 9; i <12 ; i++) {
+                    values.add(new BarEntry(i,0));
+                }
+            }
+            if(taskList2.size()==10){
+                for (int i = 10; i <12 ; i++) {
+                    values.add(new BarEntry(i,0));
+                }
+            }
+            if(taskList2.size()==11){
+                for (int i = 11; i <12 ; i++) {
+                    values.add(new BarEntry(i,0));
+                }
+            }
+
+
         }
         System.out.println(taskList2.size());
 
@@ -290,8 +412,20 @@ public class daily_details extends AppCompatActivity {
             set1.setDrawIcons(false);
             set1.enableDashedLine(12f, 3f, 0f);
             set1.enableDashedHighlightLine(12f, 3f, 0f);
-            set1.setColor(Color.DKGRAY);
-            set1.setCircleColor(Color.DKGRAY);
+
+
+        SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+        boolean isDark = prefs.getBoolean("isDark", false);
+
+        RelativeLayout relativeLayout = findViewById(R.id.dailylayout);
+        if (isDark) {
+            set1.setColor(Color.BLUE);
+            set1.setCircleColor(Color.BLUE);
+        } else {
+            set1.setColor(Color.RED);
+            set1.setCircleColor(Color.RED);
+        }
+
             set1.setLineWidth(1f);
             set1.setCircleRadius(3f);
             set1.setDrawCircleHole(false);
@@ -310,6 +444,9 @@ public class daily_details extends AppCompatActivity {
             LineData data = new LineData(dataSets);
             mChart.setData(data);
         }
+
+
+
     }
 
     public void  gen(String currentYear){
