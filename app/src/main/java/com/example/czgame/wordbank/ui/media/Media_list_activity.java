@@ -28,7 +28,6 @@ import android.provider.MediaStore;
 import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewStub;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
@@ -137,7 +136,7 @@ public class Media_list_activity extends AppCompatActivity {
         }
     };
 
-    public static int getDominantColor(Bitmap bitmap) {
+    public int getDominantColor(Bitmap bitmap) {
         List<Palette.Swatch> swatchesTemp = Palette.from(bitmap).generate().getSwatches();
         List<Palette.Swatch> swatches = new ArrayList<Palette.Swatch>(swatchesTemp);
         Collections.sort(swatches, new Comparator<Palette.Swatch>() {
@@ -191,8 +190,8 @@ public class Media_list_activity extends AppCompatActivity {
         RelativeLayout relativeLayout = findViewById(R.id.content_music);
         LinearLayout linearLayout = relativeLayout.findViewById(R.id.listview);
 
-        listView = (ListView) relativeLayout.findViewById(R.id.listviews);
-        gridView = (GridView) relativeLayout.findViewById(R.id.gridviews);
+        listView = relativeLayout.findViewById(R.id.listviews);
+        gridView = relativeLayout.findViewById(R.id.gridviews);
 
 
         SharedPreferences sharedPreferences = getSharedPreferences("ViewMode", MODE_PRIVATE);
@@ -3402,11 +3401,15 @@ public class Media_list_activity extends AppCompatActivity {
                             //  adapter = new MyListAdapter(getParent());
                             listView = findViewById(R.id.listviews);
                             listView.setAdapter(adapter);
+                            gridView = findViewById(R.id.gridviews);
+                            gridView.setAdapter(adapterG);
                         } else if (item.getTitle().equals("Descending")) {
                             Collections.sort(ListElementsArrayList, Collections.reverseOrder());
                             //adapter = new MyListAdapter(getParent());
                             listView = findViewById(R.id.listviews);
                             listView.setAdapter(adapter);
+                            gridView = findViewById(R.id.gridviews);
+                            gridView.setAdapter(adapterG);
                         } else if (item.getTitle().equals("Time Added")) {
                             Collections.sort(ListElementsArrayList,
                                     new Comparator<Audio>() {
@@ -3416,6 +3419,8 @@ public class Media_list_activity extends AppCompatActivity {
                                     });
                             listView = findViewById(R.id.listviews);
                             listView.setAdapter(adapter);
+                            gridView = findViewById(R.id.gridviews);
+                            gridView.setAdapter(adapterG);
                         } else  if(item.getTitle().equals("View Switch")){
                             if(VIEW_MODE_LISTVIEW == currentViewMode) {
                                 currentViewMode = VIEW_MODE_GRIDVIEW;

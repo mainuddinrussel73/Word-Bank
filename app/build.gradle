@@ -84,5 +84,6 @@ dependencies {
     implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
     implementation 'com.rhexgomez.typer:typer-roboto:2.0.0'
     implementation 'com.github.jgabrielfreitas:BlurImageView:1.0.1'
+    compile 'org.sufficientlysecure:html-textview:3.8'
 
 }

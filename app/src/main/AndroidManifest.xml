@@ -129,6 +129,7 @@
                 <action android:name="RESUME_ACTION" />
                 <action android:name="STOP_ACTION" />
                 <action android:name="CANCEL_ACTION" />
+                <action android:name="NEXT_ACTION" />
             </intent-filter>
         </receiver>
 

@@ -117,7 +117,7 @@ public class Promotodo_receiver extends BroadcastReceiver {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void updateGUI(Context context, Intent intent) {
 
-        System.out.println("finishd       jjj");
+        //System.out.println("finishd       jjj");
 
 
         if (intent.getExtras() != null) {

@@ -44,7 +44,6 @@ import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 import es.dmoral.toasty.Toasty;
 import studio.carbonylgroup.textfieldboxes.ExtendedEditText;
 
-import static com.example.czgame.wordbank.ui.promotodo.promodetail.curr;
 import static com.example.czgame.wordbank.ui.promotodo.promodetail.prefs;
 import static com.yydcdut.sdlv.Menu.ITEM_DELETE_FROM_BOTTOM_TO_TOP;
 
@@ -53,11 +52,6 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
         SlideAndDragListView.OnDragDropListener, SlideAndDragListView.OnSlideListener,
         SlideAndDragListView.OnMenuItemClickListener, SlideAndDragListView.OnItemDeleteListener {
 
-
-    public static List<promotododata> promotododataList = new ArrayList<>();
-    public static SlideAndDragListView mListView;
-    public static DBproHandle mDBHelper;
-    long tike = 18000;
     public BaseAdapter mAdapter = new BaseAdapter() {
 
 
@@ -215,7 +209,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
 
                     d = VectorDrawableCompat.create(getResources(), R.drawable.ic_loop_white_24dp, null);
                     //d = DrawableCompat.wrap(d);
-                    System.out.println("jkjkjkk");
+                    // System.out.println("jkjkjkk");
                     //DrawableCompat.setTint(d, Color.BLACK);
                     //cvh.imgLogo3.setImageDrawable(d);
                 } else {
@@ -243,7 +237,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
 
                     d = VectorDrawableCompat.create(getResources(), R.drawable.ic_loop_black_24dp, null);
                     //d = DrawableCompat.wrap(d);
-                    System.out.println("jkjkjkk");
+                    // System.out.println("jkjkjkk");
                     //DrawableCompat.setTint(d, Color.BLACK);
                     //cvh.imgLogo3.setImageDrawable(d);
                 } else {
@@ -307,6 +301,12 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
         }
 
     };
+    int start = 0;
+    public static List<promotododata> promotododataList = new ArrayList<>();
+    public static SlideAndDragListView mListView;
+    public static DBproHandle mDBHelper;
+    long tike = 18000;
+    String titles = "  ";
     ExtendedEditText tfb;
     TextView totaltask, totalhour, remain;
     ImageButton button;
@@ -527,6 +527,13 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
     @Override
     public void onDragViewStart(int beginPosition) {
         mDraggedEntity = promotododataList.get(beginPosition);
+        start = beginPosition;
+        try {
+            int ccc = prefs.getInt("CURR", 0);
+            titles = promotododataList.get(ccc).TITLE;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
 
         toast("onDragViewStart   beginPosition--->" + beginPosition);
     }
@@ -542,7 +549,10 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
 
     @Override
     public void onDragViewDown(int finalPosition) {
+
+
         promotododataList.set(finalPosition, mDraggedEntity);
+
 
         mDBHelper.deleteAll();
         for (int i = 0; i < promotododataList.size(); i++) {
@@ -550,14 +560,21 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
                     promotododataList.get(i).getNum_of_promotodo(), promotododataList.get(i).getDue_date());
         }
 
-        int ccc = prefs.getInt("CURR", 0);
+
         // promotododata ccco= Promotodo_activity.promotododataList.get(ccc);;
 
-        if (ccc == curr) {
-            SharedPreferences.Editor editor;
-            editor = prefs.edit();
-            editor.putInt("CURR", finalPosition);
-            editor.commit();
+        for (int i = 0; i < promotododataList.size(); i++) {
+            System.out.println(titles);
+            if (titles.equals(promotododataList.get(i).TITLE)) {
+
+
+                SharedPreferences.Editor editor;
+                editor = prefs.edit();
+                editor.putInt("CURR", i);
+                editor.commit();
+                break;
+
+            }
         }
 
         toast("onDragViewDown   finalPosition--->" + finalPosition);

@@ -82,6 +82,7 @@ public class NotificationService extends Service {
         return null;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (null == intent || null == intent.getAction()) {
@@ -112,14 +113,25 @@ public class NotificationService extends Service {
             album = intent.getStringExtra("alb");
 
         } else if (intent.getAction().equals(Constants.ACTION.PREV_ACTION)) {
-            Toast.makeText(this, "Clicked Previous", Toast.LENGTH_SHORT).show();
+            p = intent.getIntExtra("p", 0);
+
+            // implementation reference
+
+            startMyOwnForeground();
+
+            Toasty.success(this, "Clicked Previous", Toast.LENGTH_SHORT).show();
             Log.i("ok", "Clicked Previous");
         } else if (intent.getAction().equals(Constants.ACTION.PLAY_ACTION)) {
             Toast.makeText(this, "Clicked Play", Toast.LENGTH_SHORT).show();
             Log.i("ok", "Clicked Play");
         } else if (intent.getAction().equals(Constants.ACTION.NEXT_ACTION)) {
 
-            Toast.makeText(this, "Clicked Next", Toast.LENGTH_SHORT).show();
+            p = intent.getIntExtra("p", 0);
+
+            // implementation reference
+
+            startMyOwnForeground();
+            Toasty.success(this, "Clicked Next", Toast.LENGTH_SHORT).show();
             Log.i("ok", "Clicked Next");
         } else if (intent.getAction().equals(
                 Constants.ACTION.STOPFOREGROUND_ACTION)) {
@@ -225,7 +237,7 @@ public class NotificationService extends Service {
         notificationView1 = new RemoteViews(getPackageName(), R.layout.status_bar);
         notificationView1.setTextViewText(R.id.status_bar_track_name, Media_list_activity.ListElementsArrayList.get((p)).getTitle());
         notificationView1.setTextViewText(R.id.status_bar_artist_name, Media_list_activity.ListElementsArrayList.get((p)).getArtist());
-
+        notificationView1.setImageViewBitmap(R.id.status_bar_album_art, bm);
 
         notificationView = new RemoteViews(getPackageName(), R.layout.status_bar_expanded);
         notificationView.setTextViewText(R.id.status_bar_track_name, Media_list_activity.ListElementsArrayList.get((p)).getTitle());
@@ -258,8 +270,7 @@ public class NotificationService extends Service {
         noReceive.setAction(MyNotificationReceiver.CANCEL_ACTION);
         pendingIntentNo = PendingIntent.getBroadcast(this, MyNotificationReceiver.REQUEST_CODE_NOTIFICATION, noReceive, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        notificationView.setOnClickPendingIntent(R.id.status_bar_prev, pendingIntentNo);
-        notificationView1.setOnClickPendingIntent(R.id.status_bar_prev, pendingIntentNo);
+
 
 
         nxReceive = new Intent();
@@ -267,6 +278,10 @@ public class NotificationService extends Service {
         pendingIntentNx = PendingIntent.getBroadcast(this, MyNotificationReceiver.REQUEST_CODE_NOTIFICATION, nxReceive, PendingIntent.FLAG_UPDATE_CURRENT);
 
         notificationView.setOnClickPendingIntent(R.id.status_bar_next, pendingIntentNx);
+        notificationView1.setOnClickPendingIntent(R.id.status_bar_next, pendingIntentNx);
+
+        notificationView.setOnClickPendingIntent(R.id.status_bar_prev, pendingIntentNo);
+        notificationView1.setOnClickPendingIntent(R.id.status_bar_prev, pendingIntentNo);
 
         notificationView.setInt(R.id.notificationbg, "setBackgroundColor", getDominantColor(bm));
         notificationView.setInt(R.id.textarea, "setBackgroundColor", getDominantColor(bm));

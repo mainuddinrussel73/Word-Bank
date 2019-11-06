@@ -12,9 +12,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BlurMaskFilter;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -30,7 +28,6 @@ import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 import android.text.Html;
-import android.text.InputType;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -54,21 +51,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
+import com.example.czgame.wordbank.R;
 import com.example.czgame.wordbank.ui.backup_scheudle.NestedWebView;
 import com.example.czgame.wordbank.ui.backup_scheudle.PicassoImageGetter;
 import com.example.czgame.wordbank.ui.words.MainActivity;
-import com.example.czgame.wordbank.R;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.itextpdf.text.Document;
-import com.jakewharton.picasso.OkHttp3Downloader;
-import com.jgabrielfreitas.core.BlurImageView;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 import com.rhexgomez.typer.roboto.TyperRoboto;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 import com.uttampanchasara.pdfgenerator.CreatePdf;
 
 import org.jetbrains.annotations.NotNull;
@@ -77,8 +71,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -87,7 +79,6 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.palette.graphics.Palette;
 import es.dmoral.toasty.Toasty;
 
@@ -111,12 +102,12 @@ public class news_details extends AppCompatActivity {
     private DBNewsHelper mDBHelper;
     private void makeEditable(boolean isEditable,EditText et){
         if(isEditable){
-           // et.setBackgroundDrawable("Give the textbox background here");//You can store it in some variable and use it over here while making non editable.
+            // et.setBackgroundDrawable("Give the textbox background here");//You can store it in some variable and use it over here while making non editable.
             et.setFocusable(true);
             et.setEnabled(true);
             et.setClickable(true);
             et.setFocusableInTouchMode(true);
- //           et.setKeyListener("Set edit text key listener here"); //You can store it in some variable and use it over here while making non editable.
+            //           et.setKeyListener("Set edit text key listener here"); //You can store it in some variable and use it over here while making non editable.
         }else{
             et.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
             et.setFocusable(false);
@@ -134,7 +125,7 @@ public class news_details extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_news_details);
 
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.toolbar_layout);
         ImageView imageView = collapsingToolbarLayout.findViewById(R.id.image);
 
 
@@ -144,10 +135,7 @@ public class news_details extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-
-
-
-       // collapsingToolbarLayout.setTitle(itemTitle);
+        // collapsingToolbarLayout.setTitle(itemTitle);
 
         final Button button = findViewById(R.id.opt);
         registerForContextMenu(button);
@@ -163,11 +151,11 @@ public class news_details extends AppCompatActivity {
 
         final boolean[] okkk = {false};
 
-        vf = (ViewFlipper) findViewById( R.id.viewFlipper );
+        vf = findViewById(R.id.viewFlipper);
 
         news_details = vf.findViewById(R.id.news_detail_des);
         RelativeLayout relativeLayout = vf.findViewById(R.id.some);
-        webView = (NestedWebView) vf.findViewById(R.id.nestedView1);
+        webView = vf.findViewById(R.id.nestedView1);
         webView.setHorizontalScrollBarEnabled(false);
         //news_details.setTextIsSelectable(false);
 
@@ -214,7 +202,7 @@ public class news_details extends AppCompatActivity {
                             System.out.println("null");
                         }
                         collapsingToolbarLayout.setExpandedTitleColor((getDominantColor(bitmap[0])));
-                                    // Typeface typeface = ResourcesCompat.getFont(this, R.font.lobs_star);
+                        // Typeface typeface = ResourcesCompat.getFont(this, R.font.lobs_star);
                         collapsingToolbarLayout.setExpandedTitleTypeface(TyperRoboto.ROBOTO_BOLD_ITALIC());
 
 
@@ -229,16 +217,16 @@ public class news_details extends AppCompatActivity {
                         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
                         toolbar.getNavigationIcon().setTint(getComplimentColor(getDominantColor(bitmap[0])));
                         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            System.out.println("go back");
-                                            toolbar.getNavigationIcon().setTint(Color.WHITE);
-                                            Drawable icon = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
-                                            icon.setTint(Color.WHITE);
-                                            button.setBackground(icon);
-                                            finish();
-                                        }
-                                    });
+                            @Override
+                            public void onClick(View view) {
+                                System.out.println("go back");
+                                toolbar.getNavigationIcon().setTint(Color.WHITE);
+                                Drawable icon = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
+                                icon.setTint(Color.WHITE);
+                                button.setBackground(icon);
+                                finish();
+                            }
+                        });
 
                     }
 
@@ -467,7 +455,7 @@ public class news_details extends AppCompatActivity {
                         // To close the Speed Dial with animation
                         return true;
                     case R.id.fab37:
-                       // vf.showNext();
+                        // vf.showNext();
                         updatetext();
                         news_details.setFocusable(false);
                         news_details.setClickable(true);
@@ -477,7 +465,7 @@ public class news_details extends AppCompatActivity {
                         // To close the Speed Dial with animation
                         return true;
                     case R.id.fab38:
-                       // vf.showNext();
+                        // vf.showNext();
                         updatetextimage();
 
                         news_details.setFocusable(false);
@@ -707,71 +695,66 @@ public class news_details extends AppCompatActivity {
         ClipData.Item item = abc.getItemAt(0);
         selectedText = "<img src = \""+item.getText()+"\" alt=\"Smiley face\" height=\"72\" width=\"100%\">";
 
-                    // Access your context here using YourActivityName.this
+        // Access your context here using YourActivityName.this
 
-            //selectedText = "<img src=\"https://i1.wp.com/jmustafa.com/wp-content/uploads/2018/02/Digital-in-Bangladesh-2018-0000-TINY.png?resize=640%2C360&ssl=1\" alt=\"Smiley face\" height=\"42\" width=\"42\">";
+        //selectedText = "<img src=\"https://i1.wp.com/jmustafa.com/wp-content/uploads/2018/02/Digital-in-Bangladesh-2018-0000-TINY.png?resize=640%2C360&ssl=1\" alt=\"Smiley face\" height=\"42\" width=\"42\">";
 
         System.out.println(selectedText);
 
-            Spannable wordToSpan1 = new SpannableStringBuilder(news_details.getText());
+        Spannable wordToSpan1 = new SpannableStringBuilder(news_details.getText());
         final String[] html = {Html.toHtml(wordToSpan1)};
 
 
-
-            boolean b;
-            int id = intent.getExtras().getInt("id");
-            id++;
-            if (intent.getStringExtra("url").isEmpty()) {
-                b = mDBHelper.updateDatau(String.valueOf(id), intent.getStringExtra("title"), intent.getStringExtra("title"), html[0]);
-            } else
-                b = mDBHelper.updateData(String.valueOf(id), intent.getStringExtra("title"), intent.getStringExtra("title"), html[0], intent.getStringExtra("url"));
-            if (b == true) {
-                Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
-            } else {
-                Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
-            }
-
-
-           //this is to get the the cursor position
+        boolean b;
+        int id = intent.getExtras().getInt("id");
+        id++;
+        if (intent.getStringExtra("url").isEmpty()) {
+            b = mDBHelper.updateDatau(String.valueOf(id), intent.getStringExtra("title"), intent.getStringExtra("title"), html[0]);
+        } else
+            b = mDBHelper.updateData(String.valueOf(id), intent.getStringExtra("title"), intent.getStringExtra("title"), html[0], intent.getStringExtra("url"));
+        if (b == true) {
+            Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
+        }
 
 
+        //this is to get the the cursor position
 
 
-
-            int start = 0;
+        int start = 0;
 
         System.out.println(news_details.getSelectionStart());
 
-            for (int i = news_details.getSelectionStart(); (i = html[0].indexOf("@i#", i + 1)) != -1; i++) {
-                System.out.println("iddd"+i);
-                start = i+2;
+        for (int i = news_details.getSelectionStart(); (i = html[0].indexOf("@i#", i + 1)) != -1; i++) {
+            System.out.println("iddd" + i);
+            start = i + 2;
 
-                break;
-            }
+            break;
+        }
 
-            System.out.println(html[0].contains("img"));
+        System.out.println(html[0].contains("img"));
 
-            html[0] = insertString(html[0],selectedText,start);
-            html[0] = html[0].replace("@i#"," ");
-
-
-            //Spannable wordToSpan2 = new SpannableStringBuilder(news_details.getText());
-            //html = Html.toHtml(wordToSpan2);
-            System.out.println(html[0].contains("img"));
+        html[0] = insertString(html[0], selectedText, start);
+        html[0] = html[0].replace("@i#", " ");
 
 
+        //Spannable wordToSpan2 = new SpannableStringBuilder(news_details.getText());
+        //html = Html.toHtml(wordToSpan2);
+        System.out.println(html[0].contains("img"));
 
-            PicassoImageGetter imageGetter = new PicassoImageGetter(news_details);
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
 
-                news_details.setText(Html.fromHtml(html[0].replace("\n", "<br>"),
-                        Html.FROM_HTML_MODE_LEGACY, imageGetter, null));
-            } else {
+        PicassoImageGetter imageGetter = new PicassoImageGetter(news_details);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
 
-                news_details.setText(Html.fromHtml(html[0].replace("\n", "<br>"), imageGetter, null));
-            }
+            news_details.setText(Html.fromHtml(html[0].replace("\n", "<br>"),
+                    Html.FROM_HTML_MODE_LEGACY, imageGetter, null));
+        } else {
 
-       new Handler(Looper.getMainLooper()).post(new Runnable() {
+            news_details.setText(Html.fromHtml(html[0].replace("\n", "<br>"), imageGetter, null));
+        }
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
 
@@ -836,7 +819,7 @@ public class news_details extends AppCompatActivity {
     {
 
         // Create a new string
-        String newString = new String();
+        String newString = "";
 
         for (int i = 0; i < originalString.length(); i++) {
 
@@ -857,53 +840,52 @@ public class news_details extends AppCompatActivity {
     }
     public void updatetext() {
 
-           // String tvt = news_details.getText().toString();
-            Spannable wordToSpan = new SpannableStringBuilder(news_details.getText());
-            String html = Html.toHtml(wordToSpan);
+        // String tvt = news_details.getText().toString();
+        Spannable wordToSpan = new SpannableStringBuilder(news_details.getText());
+        String html = Html.toHtml(wordToSpan);
 
 
+        Display display = getWindowManager().getDefaultDisplay();
+        int width = display.getWidth();
 
-            Display display = getWindowManager().getDefaultDisplay();
-            int width = display.getWidth();
+        String dataq = "<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" /></head>";
+        dataq = dataq + "<body>" + html + "</body></html>";
 
-                               String dataq = "<html><head><meta name=\"viewport\"\"content=\"width="+width+" height="+width+ ", initial-scale=1 \" /></head>";
-            dataq = dataq + "<body>"+html+"</body></html>";
+        String stringToAdd = "width=\"100%\" ";
 
-            String stringToAdd = "width=\"100%\" ";
+        // Create a StringBuilder to insert string in the middle of content.
+        StringBuilder sb = new StringBuilder(dataq);
 
-            // Create a StringBuilder to insert string in the middle of content.
-            StringBuilder sb = new StringBuilder(dataq);
+        int i = 0;
+        int cont = 0;
 
-            int i = 0;
-            int cont = 0;
+        // Check for the "src" substring, if it exists, take the index where
+        // it appears and insert the stringToAdd there, then increment a counter
+        // because the string gets altered and you should sum the length of the inserted substring
+        while (i != -1) {
+            i = dataq.indexOf("src", i + 1);
+            if (i != -1) sb.insert(i + (cont * stringToAdd.length()), stringToAdd);
+            ++cont;
+        }
 
-            // Check for the "src" substring, if it exists, take the index where
-            // it appears and insert the stringToAdd there, then increment a counter
-            // because the string gets altered and you should sum the length of the inserted substring
-            while(i != -1){
-                i = dataq.indexOf("src", i + 1);
-                if(i != -1) sb.insert(i + (cont * stringToAdd.length()), stringToAdd );
-                ++cont;
-            }
-
-            html = sb.toString();
+        html = sb.toString();
 
 
-            webView.getSettings().setJavaScriptEnabled(true);
-            webView.loadData(html, "text/html; charset=utf-8", "UTF-8");
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.loadData(html, "text/html; charset=utf-8", "UTF-8");
 
-            boolean b;
-            int id = intent.getExtras().getInt("id");
-            id++;
-            if (intent.getStringExtra("url").isEmpty()) {
-                b = mDBHelper.updateDatau(String.valueOf(id), intent.getStringExtra("title"), intent.getStringExtra("title"), html);
-            } else
-                b = mDBHelper.updateData(String.valueOf(id), intent.getStringExtra("title"), intent.getStringExtra("title"), html, intent.getStringExtra("url"));
-            if (b == true) {
-                Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
-            } else {
-                Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
-            }
+        boolean b;
+        int id = intent.getExtras().getInt("id");
+        id++;
+        if (intent.getStringExtra("url").isEmpty()) {
+            b = mDBHelper.updateDatau(String.valueOf(id), intent.getStringExtra("title"), intent.getStringExtra("title"), html);
+        } else
+            b = mDBHelper.updateData(String.valueOf(id), intent.getStringExtra("title"), intent.getStringExtra("title"), html, intent.getStringExtra("url"));
+        if (b == true) {
+            Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
+        }
 
 
 
@@ -941,7 +923,7 @@ public class news_details extends AppCompatActivity {
                     Display display = getWindowManager().getDefaultDisplay();
                     int width = display.getWidth();
 
-                                       String dataq = "<html><head><meta name=\"viewport\"\"content=\"width="+width+" height="+width+ ", initial-scale=1 \" /></head>";
+                    String dataq = "<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" /></head>";
                     dataq = dataq + "<body>"+html+"</body></html>";
 
                     String stringToAdd = "width=\"100%\" ";
@@ -992,7 +974,7 @@ public class news_details extends AppCompatActivity {
     public void setUnHighLightedText() {
         copyText();
         if (!selectedText.isEmpty()) {
-            Spannable str = (Spannable) news_details.getText();
+            Spannable str = news_details.getText();
             String tvt = news_details.getText().toString();
             int ofe = tvt.indexOf(selectedText);
             Object[] spansToRemove = str.getSpans(ofe, ofe + selectedText.length(), Object.class);
@@ -1014,7 +996,7 @@ public class news_details extends AppCompatActivity {
             Display display = getWindowManager().getDefaultDisplay();
             int width = display.getWidth();
 
-                               String dataq = "<html><head><meta name=\"viewport\"\"content=\"width="+width+" height="+width+ ", initial-scale=1 \" /></head>";
+            String dataq = "<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" /></head>";
             dataq = dataq + "<body>"+html+"</body></html>";
 
             String stringToAdd = "width=\"100%\" ";
@@ -1088,7 +1070,7 @@ public class news_details extends AppCompatActivity {
             Display display = getWindowManager().getDefaultDisplay();
             int width = display.getWidth();
 
-                               String dataq = "<html><head><meta name=\"viewport\"\"content=\"width="+width+" height="+width+ ", initial-scale=1 \" /></head>";
+            String dataq = "<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" /></head>";
             dataq = dataq + "<body>"+html+"</body></html>";
 
             String stringToAdd = "width=\"100%\" ";
@@ -1229,7 +1211,7 @@ public class news_details extends AppCompatActivity {
             Display display = getWindowManager().getDefaultDisplay();
             int width = display.getWidth();
 
-                               String dataq = "<html><head><meta name=\"viewport\"\"content=\"width="+width+" height="+width+ ", initial-scale=1 \" /></head>";
+            String dataq = "<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" /></head>";
             dataq = dataq + "<body>"+html+"</body></html>";
 
             String stringToAdd = "width=\"100%\" ";
@@ -1261,10 +1243,9 @@ public class news_details extends AppCompatActivity {
             webView.loadData(html, "text/html; charset=utf-8", "UTF-8");
 
 
-
-           // webView.loadData(html, "text/html; charset=utf-8", "UTF-8");
+            // webView.loadData(html, "text/html; charset=utf-8", "UTF-8");
             news_details.setMovementMethod(LinkMovementMethod.getInstance());
-           // webView.setMovementMethod(LinkMovementMethod.getInstance());
+            // webView.setMovementMethod(LinkMovementMethod.getInstance());
             textView.setText("Total Letters : " + news_details.getText().toString().length());
 
             vf.showNext();
