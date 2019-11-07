@@ -389,10 +389,13 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
             // Move to tomorrow
             System.out.println("ok");
             calendar1.add(Calendar.DATE, 1);
-            dbDaily.insertAll(days[currentDay-2],String.valueOf(currentWEEK),months[currentMonth-1],String.valueOf(currentYear),prefs1.getInt("t", 0));
-            SharedPreferences.Editor editor1 = prefs1.edit();
-            editor1.putInt("t", 0);
-            editor1.commit();
+            boolean b = dbDaily.insertAll(days[currentDay-2],String.valueOf(currentWEEK),months[currentMonth-1],String.valueOf(currentYear),prefs1.getInt("t", 0));
+
+           if(b) {
+                SharedPreferences.Editor editor1 = prefs1.edit();
+                editor1.putInt("t", 0);
+                editor1.commit();
+           }
         }
 
 

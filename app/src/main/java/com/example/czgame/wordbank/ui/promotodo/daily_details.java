@@ -7,8 +7,10 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.example.czgame.wordbank.R;
 import com.example.czgame.wordbank.ui.backup_scheudle.DBDaily;
@@ -36,7 +38,6 @@ import java.util.List;
 import java.util.Random;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 public class daily_details extends AppCompatActivity {
@@ -58,20 +59,13 @@ public class daily_details extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+//Remove notification bar
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_daily_details);
 
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
 
         SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
 
@@ -422,11 +416,17 @@ public class daily_details extends AppCompatActivity {
         boolean isDark = prefs.getBoolean("isDark", false);
 
         RelativeLayout relativeLayout = findViewById(R.id.dailylayout);
+        TextView week = findViewById(R.id.weekly);
+        TextView month = findViewById(R.id.monthly);
         if (isDark) {
             set1.setColor(Color.BLUE);
+            month.setTextColor(Color.WHITE);
+            week.setTextColor(Color.WHITE);
             set1.setCircleColor(Color.BLUE);
         } else {
             set1.setColor(Color.RED);
+            month.setTextColor(Color.BLACK);
+            week.setTextColor(Color.BLACK);
             set1.setCircleColor(Color.RED);
         }
 
