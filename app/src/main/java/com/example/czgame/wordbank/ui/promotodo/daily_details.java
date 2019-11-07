@@ -26,7 +26,6 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
@@ -102,6 +101,9 @@ public class daily_details extends AppCompatActivity {
         System.out.println(currentWeek +",,,,,"+monthss[currentMonth-1]+",,,,"+ currentYear);
         final Cursor cursor = dbDaily.getAllWeek(String.valueOf(currentWeek),monthss[currentMonth-1],String.valueOf(currentYear));
 
+        for (int j = 0; j <7 ; j++) {
+            taskList.add(j,new Task());
+        }
         // looping through all rows and adding to list
         if (cursor.getCount() != 0) {
             // show message
@@ -116,7 +118,37 @@ public class daily_details extends AppCompatActivity {
                 word.setTIME(cursor.getInt(5));
                 System.out.println(word.toString());
 
-                taskList.add(word);
+
+                if(word.getDAY().equals("MON")){
+                    taskList.add(0,word);
+
+                }
+                if(word.getDAY().equals("TUE")){
+                    taskList.add(1,word);
+
+                }
+                if(word.getDAY().equals("WED")){
+                    taskList.add(2,word);
+
+                }
+                if(word.getDAY().equals("THU")){
+                    taskList.add(3,word);
+
+                }
+                if(word.getDAY().equals("FRI")){
+                    taskList.add(4,word);
+
+                }
+                if(word.getDAY().equals("SAT")){
+                    taskList.add(5,word);
+
+                }
+                if(word.getDAY().equals("SUN")){
+                    taskList.add(6,word);
+
+                }
+
+
 
                 // maintitle.add(word.WORD);
                 // subtitle.add(word.MEANING);
@@ -132,6 +164,9 @@ public class daily_details extends AppCompatActivity {
         }
 
         i = 1;
+        for (int j = 0; j <12 ; j++) {
+            taskList2.add(j,new Float(0));
+        }
         for (String month:
              monthss) {
             System.out.println(month);
@@ -173,27 +208,88 @@ public class daily_details extends AppCompatActivity {
                 //System.out.println((float) (totaltime/12.0));
 
             }
+
             if(taskList1.size()!=0) {
-                taskList2.add((float) (totaltime / taskList1.size()));
+                if(month.equals("JAN")){
+                    taskList2.add(0,(float) ((totaltime / taskList1.size())));
+                }
+                if(month.equals("FEB")){
+                    taskList2.add(1,(float) ((totaltime / taskList1.size())));
+                }
+                if(month.equals("MAR")){
+                    taskList2.add(2,(float) ((totaltime / taskList1.size())));
+                }
+                if(month.equals("APR")){
+                    taskList2.add(3,(float) ((totaltime / taskList1.size())));
+                }
+                if(month.equals("MAY")){
+                    taskList2.add(4,(float) ((totaltime / taskList1.size())));
+                }
+                if(month.equals("JUN")){
+                    taskList2.add(5,(float) ((totaltime / taskList1.size())));
+                }
+                if(month.equals("JUL")){
+                    taskList2.add(6,(float) ((totaltime / taskList1.size())));
+                }
+                if(month.equals("AUG")){
+                    taskList2.add(7,(float) ((totaltime / taskList1.size())));
+                }
+                if(month.equals("SEP")){
+                    taskList2.add(8,(float) ((totaltime / taskList1.size())));
+                }
+                if(month.equals("OCT")){
+                    taskList2.add(9,(float) ((totaltime / taskList1.size())));
+                }
+                if(month.equals("NOV")){
+                    taskList2.add(10,(float) ((totaltime / taskList1.size())));
+                }
+                if(month.equals("DEC")){
+                    taskList2.add(11,(float) ((totaltime / taskList1.size())));
+                }
+
             }
+
+
+
             taskList1.clear();
         }
         System.out.println(taskList2.size());
         if(taskList.size()!=0) {
-
-
             barChart = findViewById(R.id.barchart);
+            XAxis xAxis = barChart.getXAxis();
+            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            xAxis.setGranularity(0f);
+            final ArrayList<String> xAxisLabeln = new ArrayList<>();
+            xAxisLabeln.add("MON");
+            xAxisLabeln.add("TUE");
+            xAxisLabeln.add("WEB");
+            xAxisLabeln.add("THU");
+            xAxisLabeln.add("FRI");
+            xAxisLabeln.add("SAT");
+            xAxisLabeln.add("SUN");
+
+            xAxis.setGranularity(0f);
+            try{
+                xAxis.setValueFormatter(new IAxisValueFormatter(){
+                    @Override
+                    public String getFormattedValue(float value, AxisBase axis) {
+                        return xAxisLabeln.get((int) value);
+                    }
+                });
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
+            xAxis.setAxisMaximum(6f);
+            xAxis.setAxisMinimum(0f);
+
+            xAxis.setLabelCount(7,true);
+
+
             BarDataSet barDataSet = new BarDataSet(getData(), "Day Activity");
             barDataSet.setBarBorderWidth(0.9f);
             barDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
             BarData barData = new BarData(barDataSet);
-            XAxis xAxis = barChart.getXAxis();
-            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-            final String[] months = new String[]{"SUN", "MON", "TUR", "WED", "THU", "FRI", "SAT"};
-            IndexAxisValueFormatter formatter = new IndexAxisValueFormatter(months);
-            xAxis.setGranularity(1f);
-            xAxis.setValueFormatter(formatter);
-            xAxis.setLabelCount(7,true);
+
             barChart.setDescription(new Description());
             barChart.setMinimumHeight(24);
             barChart.setData(barData);
@@ -250,39 +346,6 @@ public class daily_details extends AppCompatActivity {
             entries.add(new BarEntry(f,t.getTIME()/2));
             f++;
         }
-        if(taskList.size()<7){
-            if(taskList.size()==1){
-                for (int i = 1; i <7 ; i++) {
-                    entries.add(new BarEntry(i,0));
-                }
-            }
-            if(taskList.size()==2){
-                for (int i = 2; i <7 ; i++) {
-                    entries.add(new BarEntry(i,0));
-                }
-            }
-            if(taskList.size()==3){
-                for (int i = 3; i <7 ; i++) {
-                    entries.add(new BarEntry(i,0));
-                }
-            }
-            if(taskList.size()==4){
-                for (int i = 4; i <7 ; i++) {
-                    entries.add(new BarEntry(i,0));
-                }
-            }
-            if(taskList.size()==5){
-                for (int i = 5; i <=1 ; i++) {
-                    entries.add(new BarEntry(i,0));
-                }
-            }
-            if(taskList.size()==6){
-                for (int i = 6; i <7 ; i++) {
-                    entries.add(new BarEntry(i,0));
-                }
-            }
-
-        }
         return entries;
     }
     public void renderData() {
@@ -317,7 +380,7 @@ public class daily_details extends AppCompatActivity {
         xAxis.setAxisMaximum(11f);
         xAxis.setAxisMinimum(0f);
         xAxis.setDrawLimitLinesBehindData(true);
-        xAxis.setLabelCount(13,true);
+        xAxis.setLabelCount(12,true);
 
         YAxis leftAxis = mChart.getAxisLeft();
         leftAxis.removeAllLimitLines();
@@ -338,65 +401,6 @@ public class daily_details extends AppCompatActivity {
         for(float t:taskList2){
             values.add(new BarEntry(f,t/2));
             f++;
-        }
-        if(taskList2.size()<12){
-            if(taskList2.size()==1){
-                for (int i = 1; i <12 ; i++) {
-                    values.add(new BarEntry(i,0));
-                }
-            }
-            if(taskList2.size()==2){
-                for (int i = 2; i <12 ; i++) {
-                    values.add(new BarEntry(i,0));
-                }
-            }
-            if(taskList2.size()==3){
-                for (int i = 3; i <12 ; i++) {
-                    values.add(new BarEntry(i,0));
-                }
-            }
-            if(taskList2.size()==4){
-                for (int i = 4; i <12 ; i++) {
-                    values.add(new BarEntry(i,0));
-                }
-            }
-            if(taskList2.size()==5){
-                for (int i = 5; i <=12 ; i++) {
-                    values.add(new BarEntry(i,0));
-                }
-            }
-            if(taskList2.size()==6){
-                for (int i = 6; i <12 ; i++) {
-                    values.add(new BarEntry(i,0));
-                }
-            }
-            if(taskList2.size()==7){
-                for (int i = 7; i <12 ; i++) {
-                    values.add(new BarEntry(i,0));
-                }
-            }
-            if(taskList2.size()==8){
-                for (int i = 8; i <12 ; i++) {
-                    values.add(new BarEntry(i,0));
-                }
-            }
-            if(taskList2.size()==9){
-                for (int i = 9; i <12 ; i++) {
-                    values.add(new BarEntry(i,0));
-                }
-            }
-            if(taskList2.size()==10){
-                for (int i = 10; i <12 ; i++) {
-                    values.add(new BarEntry(i,0));
-                }
-            }
-            if(taskList2.size()==11){
-                for (int i = 11; i <12 ; i++) {
-                    values.add(new BarEntry(i,0));
-                }
-            }
-
-
         }
         System.out.println(taskList2.size());
 
