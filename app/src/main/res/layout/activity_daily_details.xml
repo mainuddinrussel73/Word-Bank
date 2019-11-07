@@ -75,7 +75,7 @@
             android:layout_height="364dp"
             android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="35dp"
             android:layout_marginEnd="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginBottom="15dp" />
