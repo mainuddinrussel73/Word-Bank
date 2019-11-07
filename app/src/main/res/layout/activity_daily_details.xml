@@ -33,8 +33,8 @@
 
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/barchart"
-            android:layout_width="383dp"
-            android:layout_height="287dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="35dp"
@@ -70,12 +70,11 @@
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/chart"
-            android:layout_width="389dp"
-            android:layout_height="364dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="35dp"
-            android:layout_marginEnd="15dp"
             android:layout_marginRight="15dp"
             android:layout_marginBottom="15dp" />
     </RelativeLayout>
