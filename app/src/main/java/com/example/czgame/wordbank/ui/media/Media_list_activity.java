@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
@@ -54,7 +55,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -64,10 +64,7 @@ import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
 import es.dmoral.toasty.Toasty;
 
-import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT;
-import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK;
-
-public class Media_list_activity extends AppCompatActivity implements AudioManager.OnAudioFocusChangeListener {
+public class Media_list_activity extends AppCompatActivity  {
 
     public static final int RUNTIME_PERMISSION_CODE = 7;
     private static final String TAG = "Audio";
@@ -119,11 +116,24 @@ public class Media_list_activity extends AppCompatActivity implements AudioManag
     Button button, loop;
     private int currentViewMode = 0;
     private AudioManager mAudioManager;
+    public boolean mFocusGranted;
+    public boolean mFocusChanged;
+    private AudioFocusChangeListenerImpl mAudioFocusChangeListener;
 
     static final int VIEW_MODE_LISTVIEW = 0;
     static final int VIEW_MODE_GRIDVIEW = 1;
     private Toast mToastToShow;
     private Runnable mDelayedStopRunnable = new Runnable() {
+        @Override
+        public void run() {
+            mp.stop();
+
+            playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
+            Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
+            myIcon2.setTint(play);
+        }
+    };
+    private Runnable mDelayedPauseRunnable = new Runnable() {
         @Override
         public void run() {
             mp.pause();
@@ -209,7 +219,45 @@ public class Media_list_activity extends AppCompatActivity implements AudioManag
         }
     }
 
+    @Override
+    public  void onPause(){
+        int result = mAudioManager.requestAudioFocus(mAudioFocusChangeListener,
+                AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 
+        switch (result) {
+            case AudioManager.AUDIOFOCUS_REQUEST_GRANTED:
+                mFocusGranted = true;
+                break;
+            case AudioManager.AUDIOFOCUS_REQUEST_FAILED:
+                mFocusGranted = false;
+                break;
+        }
+
+        String message = "Focus request " + (mFocusGranted ? "granted" : "failed");
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        Log.i(TAG, message);
+        super.onPause();
+    }
+
+    @Override
+    public  void onResume(){
+        int result = mAudioManager.requestAudioFocus(mAudioFocusChangeListener,
+                AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+
+        switch (result) {
+            case AudioManager.AUDIOFOCUS_REQUEST_GRANTED:
+                mFocusGranted = true;
+                break;
+            case AudioManager.AUDIOFOCUS_REQUEST_FAILED:
+                mFocusGranted = false;
+                break;
+        }
+
+        String message = "Focus request " + (mFocusGranted ? "granted" : "failed");
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        Log.i(TAG, message);
+        super.onResume();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -242,7 +290,9 @@ public class Media_list_activity extends AppCompatActivity implements AudioManag
         }
 
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+        mAudioFocusChangeListener = new AudioFocusChangeListenerImpl();
+
+
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -4319,38 +4369,40 @@ public class Media_list_activity extends AppCompatActivity implements AudioManag
     public void onDestroy(){
         super.onDestroy();
 
-        mAudioManager.abandonAudioFocus(this);
+        mAudioManager.abandonAudioFocus(mAudioFocusChangeListener);
 
     }
-    @Override
-    public void onAudioFocusChange(int focusChange) {
 
-            if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                // Permanent loss of audio focus
-                // Pause playback immediately
-                pause();
-                // Wait 30 seconds before stopping playback
-                handler.postDelayed(mDelayedStopRunnable,
-                        TimeUnit.SECONDS.toMillis(30));
+    class AudioFocusChangeListenerImpl implements AudioManager.OnAudioFocusChangeListener {
+
+        @Override
+        public void onAudioFocusChange(int focusChange) {
+            mFocusChanged = true;
+            Log.i(TAG, "Focus changed");
+
+            switch (focusChange) {
+                case AudioManager.AUDIOFOCUS_GAIN:
+                    Log.i(TAG, "AUDIOFOCUS_GAIN");
+                    play();
+                    Toast.makeText(Media_list_activity.this, "Focus GAINED", Toast.LENGTH_LONG).show();
+                    break;
+                case AudioManager.AUDIOFOCUS_LOSS:
+                    Log.i(TAG, "AUDIOFOCUS_LOSS");
+                    pause();
+                    Toast.makeText(Media_list_activity.this, "Focus LOST", Toast.LENGTH_LONG).show();
+                    break;
+                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                    Log.i(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
+                    pause();
+                    Toast.makeText(Media_list_activity.this, "Focus LOST TRANSIENT", Toast.LENGTH_LONG).show();
+                    break;
+                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                    Log.i(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
+                    Toast.makeText(Media_list_activity.this, "Focus LOST TRANSIENT CAN DUCK", Toast.LENGTH_LONG).show();
+                    break;
             }
-            else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT) {
-                // Pause playback
-                pause();
-                // Wait 30 seconds before stopping playback
-                handler.postDelayed(mDelayedStopRunnable,
-                        TimeUnit.SECONDS.toMillis(30));
-            } else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
-                // Lower the volume, keep playing
-            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-                // Your app has been granted audio focus again
-                // Raise volume to normal, restart playback if necessary
-                play();
-                // Wait 30 seconds before stopping playback
-                handler.postDelayed(mDelayedPlayRunnable,
-                        TimeUnit.SECONDS.toMillis(30));
-            }
-
-
+        }
     }
 
 }
+
