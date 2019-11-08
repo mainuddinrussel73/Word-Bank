@@ -3,17 +3,22 @@ package com.example.czgame.wordbank.ui.words;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.czgame.wordbank.R;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -23,8 +28,10 @@ import es.dmoral.toasty.Toasty;
 public class add_page extends AppCompatActivity {
 
 
-    EditText word;
-    EditText meaning;
+    TextInputEditText word;
+    TextInputLayout w;
+    TextInputEditText meaning;
+    TextInputLayout m;
     Button done;
     private DatabaseHelper mDBHelper;
 
@@ -46,11 +53,13 @@ public class add_page extends AppCompatActivity {
         });
 
         word = findViewById(R.id.word1);
+        w = findViewById(R.id.wordlay);
         meaning = findViewById(R.id.meaning1);
+        m = findViewById(R.id.meaninglay);
 
         mDBHelper = new DatabaseHelper(this);
         done = findViewById(R.id.done);
-        final LinearLayout additem = findViewById(R.id.add_item);
+        final RelativeLayout additem = findViewById(R.id.add_item);
 
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
@@ -63,12 +72,18 @@ public class add_page extends AppCompatActivity {
             meaning.setHintTextColor(Color.rgb(185, 185, 185));
             word.setTextColor(Color.WHITE);
             meaning.setTextColor(Color.WHITE);
+            w.setDefaultHintTextColor( ColorStateList.valueOf(ContextCompat.getColor(add_page.this, R.color.divider)));
+            m.setDefaultHintTextColor( ColorStateList.valueOf(ContextCompat.getColor(add_page.this, R.color.divider)));
         } else {
             additem.setBackgroundColor(Color.WHITE);
             word.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
             meaning.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
             word.setHintTextColor(Color.BLACK);
             meaning.setHintTextColor(Color.BLACK);
+            setUpperHintColor(Color.BLACK);
+            setUpperHintColor1(Color.BLACK);
+            w.setDefaultHintTextColor( ColorStateList.valueOf(ContextCompat.getColor(add_page.this, R.color.darkgray)));
+            m.setDefaultHintTextColor( ColorStateList.valueOf(ContextCompat.getColor(add_page.this, R.color.darkgray)));
             word.setTextColor(Color.BLACK);
             meaning.setTextColor(Color.BLACK);
         }
@@ -134,6 +149,58 @@ public class add_page extends AppCompatActivity {
 
             }
         });
+    }
+    private void setUpperHintColor(int color) {
+        try {
+            Field field = w.getClass().getDeclaredField("mFocusedTextColor");
+            field.setAccessible(true);
+            int[][] states = new int[][]{
+                    new int[]{}
+            };
+            int[] colors = new int[]{
+                    color
+            };
+            ColorStateList myList = new ColorStateList(states, colors);
+            field.set(w, myList);
+
+            Field fDefaultTextColor = TextInputLayout.class.getDeclaredField("mDefaultTextColor");
+            fDefaultTextColor.setAccessible(true);
+            fDefaultTextColor.set(w, myList);
+
+            Method method = w.getClass().getDeclaredMethod("updateLabelState", boolean.class);
+            method.setAccessible(true);
+            method.invoke(w, true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+    private void setUpperHintColor1(int color) {
+        try {
+            Field field = m.getClass().getDeclaredField("mFocusedTextColor");
+            field.setAccessible(true);
+            int[][] states = new int[][]{
+                    new int[]{}
+            };
+            int[] colors = new int[]{
+                    color
+            };
+            ColorStateList myList = new ColorStateList(states, colors);
+            field.set(m, myList);
+
+            Field fDefaultTextColor = TextInputLayout.class.getDeclaredField("mDefaultTextColor");
+            fDefaultTextColor.setAccessible(true);
+            fDefaultTextColor.set(m, myList);
+
+            Method method = m.getClass().getDeclaredMethod("updateLabelState", boolean.class);
+            method.setAccessible(true);
+            method.invoke(m, true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //m.setDefaultHintTextColor( ColorStateList.valueOf(ContextCompat.getColor(this, color)));
     }
 }
 

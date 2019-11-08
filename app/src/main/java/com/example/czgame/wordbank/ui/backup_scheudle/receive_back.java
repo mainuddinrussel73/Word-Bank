@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.util.Log;
 import android.widget.Toast;
@@ -21,6 +22,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Calendar;
+import java.util.Locale;
 
 import es.dmoral.toasty.Toasty;
 
@@ -87,6 +90,46 @@ public class receive_back  extends BroadcastReceiver {
         }
         pro_back(context);
         news_back(context);
+        SharedPreferences prefs1 = context.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+        DBDaily dbDaily = new DBDaily(context);
+        //dbDaily.deleteAll();
+        String []months = {"JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"};
+        String []days = {"MON", "TUR", "WED", "THU", "FRI","SAT","SUN"};
+
+        Calendar calendar = Calendar.getInstance();
+
+
+
+
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH)+1;
+        int currentWEEK = calendar.get(Calendar.WEEK_OF_YEAR);
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+        String dayLongName = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
+        // currentDay-=1;
+
+        //  dbDaily.insertAll1("WED",String.valueOf(currentWEEK),months[currentMonth-1],String.valueOf(currentYear),11);
+        // dbDaily.insertAll1("THU",String.valueOf(currentWEEK),months[currentMonth-1],String.valueOf(currentYear),3);
+
+        Calendar calendar1 = Calendar.getInstance();
+        calendar1.setTimeInMillis(System.currentTimeMillis());
+        //calendar1.set(Calendar.DAY_OF_WEEK,currentDay+1);
+        calendar1.set(Calendar.HOUR_OF_DAY, 00);
+        calendar1.set(Calendar.MINUTE, 00);
+
+        System.out.println(dayLongName.toUpperCase().substring(0,2)+","+months[currentMonth-1]);
+        if(Calendar.getInstance().after(calendar1)){
+            // Move to tomorrow
+            System.out.println("ok");
+            calendar1.add(Calendar.DATE, 1);
+            boolean b = dbDaily.insertAll(dayLongName.toUpperCase().substring(0,2),String.valueOf(currentWEEK),months[currentMonth-1],String.valueOf(currentYear),prefs1.getInt("t", 0));
+
+            if(b) {
+                SharedPreferences.Editor editor1 = prefs1.edit();
+                editor1.putInt("t", 0);
+                editor1.commit();
+            }
+        }
 
 
 

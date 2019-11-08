@@ -13,6 +13,12 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
+    </style>
+
+    <style name="LoginTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxStrokeColor">#3a9dbe</item>
+        <item name="boxStrokeWidth">2dp</item>
     </style>
 
     <style name="YOURSTYLE" parent="Widget.AppCompat.PopupMenu">

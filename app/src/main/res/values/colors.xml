@@ -15,4 +15,5 @@
     <color name="secondary_text">#727272</color>
     <color name="icons">#ffffff</color>
     <color name="divider">#b6b6b6</color>
+    <color name="mtrl_textinput_default_box_stroke_color">#3a9dbe</color>
 </resources>

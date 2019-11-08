@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -78,6 +79,7 @@ public class daily_details extends AppCompatActivity {
         int currentMonth = calendar.get(Calendar.MONTH) + 1;
         int currentWeek = calendar.get(Calendar.WEEK_OF_YEAR);
         int currentDay = calendar.get(Calendar.DAY_OF_WEEK);
+        String dayLongName = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
         dbDaily = new DBDaily(this);
         //dbDaily.deleteAll();
 
@@ -196,52 +198,54 @@ public class daily_details extends AppCompatActivity {
 
             }
             System.out.println(taskList1.size());
-            int totaltime = 0;
+            float totaltime = 0;
             for (int j = 0; j < taskList1.size(); j++) {
                 totaltime+=taskList1.get(j).getTIME();
                 //System.out.println((float) (totaltime/12.0));
 
             }
+            System.out.println(totaltime);
 
             if(taskList1.size()!=0) {
                 if(month.equals("JAN")){
-                    taskList2.add(0,(float) ((totaltime / taskList1.size())));
+                    taskList2.add(0, (totaltime / taskList1.size()));
                 }
                 if(month.equals("FEB")){
-                    taskList2.add(1,(float) ((totaltime / taskList1.size())));
+                    taskList2.add(1, (totaltime / taskList1.size()));
                 }
                 if(month.equals("MAR")){
-                    taskList2.add(2,(float) ((totaltime / taskList1.size())));
+                    taskList2.add(2, (totaltime / taskList1.size()));
                 }
                 if(month.equals("APR")){
-                    taskList2.add(3,(float) ((totaltime / taskList1.size())));
+                    taskList2.add(3, (totaltime / taskList1.size()));
                 }
                 if(month.equals("MAY")){
-                    taskList2.add(4,(float) ((totaltime / taskList1.size())));
+                    taskList2.add(4, (totaltime / taskList1.size()));
                 }
                 if(month.equals("JUN")){
-                    taskList2.add(5,(float) ((totaltime / taskList1.size())));
+                    taskList2.add(5, (totaltime / taskList1.size()));
                 }
                 if(month.equals("JUL")){
-                    taskList2.add(6,(float) ((totaltime / taskList1.size())));
+                    taskList2.add(6, (totaltime / taskList1.size()));
                 }
                 if(month.equals("AUG")){
-                    taskList2.add(7,(float) ((totaltime / taskList1.size())));
+                    taskList2.add(7, (totaltime / taskList1.size()));
                 }
                 if(month.equals("SEP")){
-                    taskList2.add(8,(float) ((totaltime / taskList1.size())));
+                    taskList2.add(8, (totaltime / taskList1.size()));
                 }
                 if(month.equals("OCT")){
-                    taskList2.add(9,(float) ((totaltime / taskList1.size())));
+                    taskList2.add(9, (totaltime / taskList1.size()));
                 }
                 if(month.equals("NOV")){
-                    taskList2.add(10,(float) ((totaltime / taskList1.size())));
+                    taskList2.add(10, (totaltime / taskList1.size()));
                 }
                 if(month.equals("DEC")){
-                    taskList2.add(11,(float) ((totaltime / taskList1.size())));
+                    taskList2.add(11, (totaltime / taskList1.size()));
                 }
 
             }
+            System.out.println(taskList2.get(10));
 
 
 
@@ -254,6 +258,7 @@ public class daily_details extends AppCompatActivity {
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
             xAxis.setGranularity(0f);
             final ArrayList<String> xAxisLabeln = new ArrayList<>();
+            xAxisLabeln.add(" ");
             xAxisLabeln.add("MON");
             xAxisLabeln.add("TUE");
             xAxisLabeln.add("WEB");
@@ -261,6 +266,7 @@ public class daily_details extends AppCompatActivity {
             xAxisLabeln.add("FRI");
             xAxisLabeln.add("SAT");
             xAxisLabeln.add("SUN");
+            xAxisLabeln.add(" ");
 
             xAxis.setGranularity(0f);
             try{
@@ -273,10 +279,10 @@ public class daily_details extends AppCompatActivity {
             }catch (Exception e){
                 System.out.println(e.getMessage());
             }
-            xAxis.setAxisMaximum(6f);
+            xAxis.setAxisMaximum(8f);
             xAxis.setAxisMinimum(0f);
 
-            xAxis.setLabelCount(7,true);
+            xAxis.setLabelCount(9,true);
 
 
             BarDataSet barDataSet = new BarDataSet(getData(), "Day Activity");
@@ -334,12 +340,17 @@ public class daily_details extends AppCompatActivity {
         ArrayList<BarEntry> entries = new ArrayList<>();
         float f = 0;
 
+        entries.add(new BarEntry(f , 0));
+        f++;
 
         for(Task t:taskList){
 
-            entries.add(new BarEntry(f,t.getTIME()/2));
+            entries.add(new BarEntry(f,(float)t.getTIME()/2));
             f++;
         }
+
+        entries.add(new BarEntry(f , 0));
+        f++;
         return entries;
     }
     public void renderData() {
@@ -393,7 +404,7 @@ public class daily_details extends AppCompatActivity {
         ArrayList<Entry> values = new ArrayList<>();
         float f = 0;
         for(float t:taskList2){
-            values.add(new BarEntry(f,t/2));
+            values.add(new BarEntry(f, t));
             f++;
         }
         System.out.println(taskList2.size());
@@ -419,10 +430,10 @@ public class daily_details extends AppCompatActivity {
         TextView week = findViewById(R.id.weekly);
         TextView month = findViewById(R.id.monthly);
         if (isDark) {
-            set1.setColor(Color.BLUE);
+            set1.setColor(Color.RED);
             month.setTextColor(Color.WHITE);
             week.setTextColor(Color.WHITE);
-            set1.setCircleColor(Color.BLUE);
+            set1.setCircleColor(Color.RED);
         } else {
             set1.setColor(Color.RED);
             month.setTextColor(Color.BLACK);

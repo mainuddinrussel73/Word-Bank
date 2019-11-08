@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.example.czgame.wordbank.R;
 import com.example.czgame.wordbank.ui.words.MainActivity;
-import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -74,7 +73,7 @@ public class News_adapter extends BaseAdapter {
 
 
         RetrieveFeedTask asyncTask = new RetrieveFeedTask();
-        String s = news_activity.newsList.get(position).getTITLE();
+        String s = news_activity.newsList.get(position).getBODY();
         asyncTask.execute(s);
 
 

@@ -7,7 +7,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
-        versionName "2.2"
+        versionName "1.2.2"
+        useLibrary 'org.apache.http.legacy'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     compileOptions {
@@ -85,5 +86,10 @@ dependencies {
     implementation 'com.github.jgabrielfreitas:BlurImageView:1.0.1'
     implementation 'org.sufficientlysecure:html-textview:3.8'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    implementation 'com.android.support:design:28.0.0-alpha1'
+    implementation 'uk.co.samuelwall:material-tap-target-prompt:3.0.0'
+    implementation 'com.github.Shashank02051997:FancyWalkthrough-Android:2.1'
+    implementation 'com.github.rhlff:NestedScrollWebView:v1.0.2'
+    compile 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
 
 }

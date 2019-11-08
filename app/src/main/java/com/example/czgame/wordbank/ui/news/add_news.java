@@ -3,23 +3,22 @@ package com.example.czgame.wordbank.ui.news;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Display;
-import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.czgame.wordbank.R;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -29,9 +28,12 @@ import es.dmoral.toasty.Toasty;
 public class add_news extends AppCompatActivity {
 
 
-    EditText title;
-    EditText body;
-    EditText url;
+    TextInputEditText title;
+    TextInputLayout t;
+    TextInputEditText body;
+    TextInputLayout b;
+    TextInputEditText url;
+    TextInputLayout u;
     Button save;
     ScrollView scrollview;
     private DBNewsHelper mDBHelper;
@@ -55,8 +57,11 @@ public class add_news extends AppCompatActivity {
 
 
         title = findViewById(R.id.title1);
+        t = findViewById(R.id.titlelay);
         body = findViewById(R.id.body1);
+        b = findViewById(R.id.bodylay);
         url = findViewById(R.id.url1);
+        u = findViewById(R.id.urllay);
 
         body.setOnTouchListener(new View.OnTouchListener() {
 
@@ -75,7 +80,7 @@ public class add_news extends AppCompatActivity {
 
         mDBHelper = new DBNewsHelper(this);
         save = findViewById(R.id.save);
-        final LinearLayout additem = findViewById(R.id.add_news_item);
+        final RelativeLayout additem = findViewById(R.id.add_news_item);
 
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
@@ -90,6 +95,9 @@ public class add_news extends AppCompatActivity {
             title.setTextColor(Color.WHITE);
             body.setTextColor(Color.WHITE);
             url.setTextColor(Color.WHITE);
+            t.setDefaultHintTextColor( ColorStateList.valueOf(ContextCompat.getColor(add_news.this, R.color.divider)));
+            b.setDefaultHintTextColor( ColorStateList.valueOf(ContextCompat.getColor(add_news.this, R.color.divider)));
+            u.setDefaultHintTextColor( ColorStateList.valueOf(ContextCompat.getColor(add_news.this, R.color.divider)));
         } else {
             additem.setBackgroundColor(Color.WHITE);
             title.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
@@ -101,6 +109,9 @@ public class add_news extends AppCompatActivity {
             title.setTextColor(Color.BLACK);
             body.setTextColor(Color.BLACK);
             url.setTextColor(Color.BLACK);
+            t.setDefaultHintTextColor( ColorStateList.valueOf(ContextCompat.getColor(add_news.this, R.color.darkgray)));
+            b.setDefaultHintTextColor( ColorStateList.valueOf(ContextCompat.getColor(add_news.this, R.color.darkgray)));
+            u.setDefaultHintTextColor( ColorStateList.valueOf(ContextCompat.getColor(add_news.this, R.color.darkgray)));
         }
 
 

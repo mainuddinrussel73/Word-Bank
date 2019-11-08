@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="350dp"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal">
 
 
 
@@ -21,6 +22,7 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="200dp"
+            app:cardCornerRadius="10dp"
             android:elevation="15dp">
             <com.github.siyamed.shapeimageview.RoundedImageView
                 android:id="@+id/topnews"
@@ -34,34 +36,34 @@
 
         <TextView
             android:id="@+id/news_title"
-            android:layout_width="250dp"
+            android:layout_width="318dp"
             android:layout_height="wrap_content"
-            android:text="Medium Text"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-medium"
-            android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_marginLeft="1dp"
-
-            android:maxLines="1"
             android:ellipsize="end"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="1"
+            android:text="Medium Text"
+
+            android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/background_dark"
+            android:textStyle="bold"
 
             />
 
         <TextView
             android:id="@+id/news_detail"
-            android:layout_width="250dp"
-            android:layout_height="60dp"
+            android:layout_width="312dp"
+            android:layout_height="99dp"
 
-            android:fontFamily="sans-serif-condensed"
             android:layout_marginLeft="5dp"
+            android:ellipsize="end"
+            android:fontFamily="sans-serif-condensed"
+            android:maxLines="4"
             android:paddingTop="5dp"
             android:text="Medium Text"
-            android:maxLines="2"
-            android:ellipsize="end"
-            android:textSize="12dp"
             android:textAppearance="?android:attr/textAppearanceListItemSmall"
             android:textColor="@android:color/background_dark"
+            android:textSize="12dp"
             android:textStyle="bold"
 
             />

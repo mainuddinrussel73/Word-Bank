@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -9,6 +9,7 @@
     android:id="@+id/add_news_item">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbarlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -21,68 +22,103 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/newslay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_below="@+id/appbarlayout"
+        android:layout_marginTop="20dp">
 
-        <EditText
-            android:id="@+id/title1"
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/titlelay"
+                style="@style/LoginTextInputLayoutStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
+                android:layout_marginRight="@dimen/alerter_activity_horizontal_margin">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/title1"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="20dp"
+                    android:hint="Title"
+                    android:paddingLeft="5dp"
+                    android:textColor="@android:color/background_dark"
+                    android:textColorHint="@color/cardview_shadow_start_color"
+                    />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/urllay"
+            style="@style/LoginTextInputLayoutStyle"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="Title"
-            android:textColorHint="@color/cardview_shadow_start_color"
-            android:textColor="@android:color/background_dark"
-            android:layout_marginTop="20dp"
-            android:paddingLeft="5dp"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:background="@drawable/editextstyle"/>
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/titlelay"
+            android:layout_margin="10dp"
+            android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
+            android:layout_marginRight="@dimen/alerter_activity_horizontal_margin">
 
-        <EditText
-            android:id="@+id/url1"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/url1"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:hint="Url"
+                android:paddingLeft="5dp"
+                android:textColor="@android:color/background_dark"
+                android:textColorHint="@color/cardview_shadow_start_color"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/bodylay"
+            style="@style/LoginTextInputLayoutStyle"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="Url"
-            android:textColorHint="@color/cardview_shadow_start_color"
-            android:textColor="@android:color/background_dark"
-            android:layout_marginTop="20dp"
-            android:paddingLeft="5dp"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:background="@drawable/editextstyle"/>
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/urllay"
+            android:layout_margin="10dp"
+            android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
 
+            android:layout_marginRight="@dimen/alerter_activity_horizontal_margin">
 
-        <EditText
-            android:id="@+id/body1"
-            android:layout_width="match_parent"
-            android:layout_height="409dp"
-            android:paddingTop="10dp"
-            android:gravity="top"
-            android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginRight="@dimen/activity_horizontal_margin"
-            android:hint="News Body"
-            android:inputType="textMultiLine|textCapSentences"
-            android:layout_marginTop="20dp"
-            android:textColorHint="@color/cardview_shadow_start_color"
-            android:textColor="@android:color/background_dark"
-            android:paddingLeft="5dp"
-            android:overScrollMode="always"
-            android:scrollbarStyle="insideInset"
-            android:scrollbars="vertical"
-            android:imeOptions="flagNoExtractUi"
-            android:fastScrollEnabled="true"
-            android:minLines="10"
-            android:scrollHorizontally="false"
-            android:scrollbarAlwaysDrawVerticalTrack="true"
-            android:background="@drawable/editextstyle"/>
-    </LinearLayout>
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/body1"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/editheight"
+                android:layout_marginTop="20dp"
+                android:fastScrollEnabled="true"
+                android:gravity="top|left"
+                android:hint="News Body"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="textMultiLine|textCapSentences"
+                android:minLines="10"
+                android:overScrollMode="always"
+                android:paddingLeft="5dp"
+                android:paddingTop="10dp"
+                android:scrollbarAlwaysDrawVerticalTrack="true"
+                android:scrollbarStyle="insideInset"
+                android:scrollbars="vertical"
+                android:scrollHorizontally="false"
+                android:textColor="@android:color/background_dark"
+                android:textColorHint="@color/cardview_shadow_start_color"
+                />
 
-    <LinearLayout
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_below="@+id/newslay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="10dp">
 
 
         <com.google.android.material.button.MaterialButton
@@ -99,6 +135,6 @@
             android:textColor="@color/cardview_light_background" />
 
 
-    </LinearLayout>
+    </RelativeLayout>
 
-</LinearLayout>
+</RelativeLayout>

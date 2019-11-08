@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
-import com.example.czgame.wordbank.ui.words.MainActivity;
 import com.example.czgame.wordbank.R;
 import com.github.zeng1990java.widget.WaveProgressView;
 
@@ -48,7 +47,7 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             public void run() {
                 // This method will be executed once the timer is over
-                Intent i = new Intent(SplashActivity.this, MainActivity.class);
+                Intent i = new Intent(SplashActivity.this, WalkThrough.class);
                 startActivity(i);
                 finish();
             }

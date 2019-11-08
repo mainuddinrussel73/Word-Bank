@@ -1,90 +1,95 @@
 package com.example.czgame.wordbank.ui.backup_scheudle;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
-import android.os.Looper;
+import android.os.AsyncTask;
 import android.text.Html;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.view.View;
 
-import com.example.czgame.wordbank.R;
-import com.example.czgame.wordbank.ui.news.news_details;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
 
-public class PicassoImageGetter implements Html.ImageGetter {
+import java.io.IOException;
+import java.io.InputStream;
 
-    private EditText textView = null;
+public class PicassoImageGetter  implements Html.ImageGetter {
+    Context c;
+    View container;
 
-    public PicassoImageGetter() {
-
+    /***
+     * Construct the URLImageParser which will execute AsyncTask and refresh the container
+     * @param t
+     * @param c
+     */
+    public PicassoImageGetter(View t, Context c) {
+        this.c = c;
+        this.container = t;
     }
 
-    public PicassoImageGetter(EditText target) {
-        textView = target;
-    }
-
-    @Override
     public Drawable getDrawable(String source) {
-        BitmapDrawablePlaceHolder drawable = new BitmapDrawablePlaceHolder();
-        try {
-            Handler uiHandler = new Handler(Looper.getMainLooper());
-            uiHandler.post(new Runnable(){
-                @Override
-                public void run() {
-                    Picasso.with(news_details.news_activityD)
-                            .load(source)
-                            .placeholder(R.drawable.image)
-                            .into(drawable);
-                }
-            });
+        URLDrawable urlDrawable = new URLDrawable();
 
+        // get the actual source
+        ImageGetterAsyncTask asyncTask =
+                new ImageGetterAsyncTask( urlDrawable);
 
+        asyncTask.execute(source);
 
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-        }
-        return drawable;
+        // return reference to URLDrawable where I will change with actual image from
+        // the src tag
+        return urlDrawable;
     }
 
-    private class BitmapDrawablePlaceHolder extends BitmapDrawable implements Target {
+    public class ImageGetterAsyncTask extends AsyncTask<String, Void, Drawable> {
+        URLDrawable urlDrawable;
 
-        protected Drawable drawable;
+        public ImageGetterAsyncTask(URLDrawable d) {
+            this.urlDrawable = d;
+        }
 
         @Override
-        public void draw(final Canvas canvas) {
-            if (drawable != null) {
-                drawable.draw(canvas);
+        protected Drawable doInBackground(String... params) {
+            String source = params[0];
+            return fetchDrawable(source);
+        }
+
+        @Override
+        protected void onPostExecute(Drawable result) {
+            // set the correct bound according to the result from HTTP call
+            urlDrawable.setBounds(0, 0, 0 + result.getIntrinsicWidth(), 0
+                    + result.getIntrinsicHeight());
+
+            // change the reference of the current drawable to the result
+            // from the HTTP call
+            urlDrawable.drawable = result;
+
+            // redraw the image by invalidating the container
+            PicassoImageGetter.this.container.invalidate();
+        }
+
+        /***
+         * Get the Drawable from URL
+         * @param urlString
+         * @return
+         */
+        public Drawable fetchDrawable(String urlString) {
+            try {
+                InputStream is = fetch(urlString);
+                Drawable drawable = Drawable.createFromStream(is, "src");
+                drawable.setBounds(0, 0, 0 + drawable.getIntrinsicWidth(), 0
+                        + drawable.getIntrinsicHeight());
+                return drawable;
+            } catch (Exception e) {
+                return null;
             }
         }
 
-        public void setDrawable(Drawable drawable) {
-            this.drawable = drawable;
-            int width = drawable.getIntrinsicWidth();
-            int height = drawable.getIntrinsicHeight();
-            drawable.setBounds(0, 0, width, height);
-            setBounds(0, 0, width, height);
-            if (textView != null) {
-                textView.setText(textView.getText());
-            }
+        private InputStream fetch(String urlString) throws IOException {
+            DefaultHttpClient httpClient = new DefaultHttpClient();
+            HttpGet request = new HttpGet(urlString);
+            HttpResponse response = httpClient.execute(request);
+            return response.getEntity().getContent();
         }
-
-        @Override
-        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-            setDrawable(new BitmapDrawable(news_details.news_activityD.getResources(), bitmap));
-        }
-
-        @Override
-        public void onBitmapFailed(Drawable errorDrawable) {
-        }
-
-        @Override
-        public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-        }
-
     }
 }

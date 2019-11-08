@@ -39,15 +39,15 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.czgame.wordbank.R;
 import com.example.czgame.wordbank.ui.Quiz.Quiz_confirm;
 import com.example.czgame.wordbank.ui.backup_scheudle.receive_back;
-import com.example.czgame.wordbank.ui.news.news_activity;
-import com.example.czgame.wordbank.ui.promotodo.Promotodo_activity;
-import com.example.czgame.wordbank.ui.promotodo.pro_backup;
-import com.example.czgame.wordbank.R;
 import com.example.czgame.wordbank.ui.media.Media_list_activity;
 import com.example.czgame.wordbank.ui.news.add_news;
+import com.example.czgame.wordbank.ui.news.news_activity;
 import com.example.czgame.wordbank.ui.news.news_backup;
+import com.example.czgame.wordbank.ui.promotodo.Promotodo_activity;
+import com.example.czgame.wordbank.ui.promotodo.pro_backup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
@@ -67,13 +67,17 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
+import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
 import es.dmoral.toasty.Toasty;
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetSequence;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    public  static boolean isfirst = false;
     public static final int PICKFILE_RESULT_CODE = 1;
     private static final int PERMISSION_REQUEST_CODE = 1;
-    private final static String CUSTOM_ACTION = "custom_action";
     public static boolean isDark;
     public static Activity mActivity;
     public static int score = 1111111;
@@ -84,12 +88,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static SharedPreferences sizee;
     ActionBarDrawerToggle toggle;
     com.suke.widget.SwitchButton switchButton;
+    SearchView searchView;
+    SearchView searchView1;
     Button sort;
     ListView list;
     DrawerLayout drawer;
-    SearchView searchView;
     MyListAdapter adapter;
+    Menu menu ;
     private Context mContext;
+    NavigationView navigationView1;
+    NavigationView navigationView;
     private PopupWindow mPopupWindow;
     private DrawerLayout mRelativeLayout;
 
@@ -103,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -112,20 +121,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mActivity = this;
 
 
+
+
+
         prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+
         isDark = prefs.getBoolean("isDark", false);
+
 
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkPermission()) {
+
                 // Code for above or equal 23 API Oriented Device
                 // Your Permission granted already .Do next code
             } else {
-                requestPermission(); // Code for permission
+                requestPermission();
             }
         } else {
 
-            // Code for Below 23 API Oriented Device
-            // Do next code
         }
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -152,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toggle.syncState();
 
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
 
 
         SpannableString s = new SpannableString(navigationView.getMenu().findItem(R.id.datas).getTitle());
@@ -302,6 +316,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         editor.putInt("size", size);
         editor.commit();
 
+
+
         System.out.println(MainActivity.sizee.getInt("size", 0));
 
 
@@ -382,7 +398,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ConstraintLayout constraintLayout1 = findViewById(R.id.content_main);
         LinearLayout linearLayout1 = findViewById(R.id.listview);
 
-        NavigationView navigationView1 = findViewById(R.id.nav_view);
+        navigationView1 = findViewById(R.id.nav_view);
 
         int flag = 0;
         int flag1 = 1;
@@ -505,6 +521,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    public void showSequence(View view) {
+
+
+
+
+        new MaterialTapTargetPrompt.Builder(this)
+                .setTarget(searchView)
+                .setPrimaryText("Primary text")
+                .setIcon(R.drawable.ic_searchw)
+                .show();
+
+
+
+    }
 
     public void showMessage(String title, String Message) {
 
@@ -819,42 +849,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             super.onBackPressed();
         }
     }
-
-    private boolean checkPermission() {
-        int result = ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        return result == PackageManager.PERMISSION_GRANTED;
-    }
-
-    private void requestPermission() {
-
-        if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toasty.info(MainActivity.this, "Write External Storage permission allows us to do store images. Please allow this permission in App Settings.", Toast.LENGTH_LONG).show();
-        } else {
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
-        }
-    }
-
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case PERMISSION_REQUEST_CODE:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.e("value", "Permission Granted, Now you can use local drive .");
-                } else {
-                    Log.e("value", "Permission Denied, You cannot use local drive .");
-                }
-                break;
-        }
+    protected void onResume() {
+        super.onResume();
+
+
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
 
-
-        final SearchView searchView;
-        final SearchView searchView1;
 
         searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
         int searchImgId = getResources().getIdentifier("android:id/search_button", null, null);
@@ -906,8 +914,89 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
         });
+
+
+        if (isfirst) {
+            isfirst = false;
+            new MaterialTapTargetSequence()
+                    .addPrompt(new MaterialTapTargetPrompt.Builder(MainActivity.this)
+                            .setTarget(findViewById(R.id.fab))
+                            .setPrimaryText("Step 1")
+                            .setSecondaryText("Add Word")
+                            .setSecondaryTextSize(R.dimen.helper_text_size)
+                            .setFocalPadding(R.dimen.dp40)
+                            .create(), 4000)
+                    .addPrompt(new MaterialTapTargetPrompt.Builder(this)
+                            .setPrimaryText("Step 2")
+                            .setSecondaryText("Sort Words")
+                            .setSecondaryTextSize(R.dimen.helper_text_size)
+                            .setAnimationInterpolator(new FastOutSlowInInterpolator())
+                            .setMaxTextWidth(R.dimen.dp40)
+                            .setIcon(R.drawable.ic_sort_black_24dp)
+                            .setTarget(R.id.sort)
+                            .create(), 4000)
+                    .addPrompt(new MaterialTapTargetPrompt.Builder(this)
+                            .setPrimaryText("Step 3")
+                            .setSecondaryText("Search by word")
+                            .setSecondaryTextSize(R.dimen.helper_text_size)
+                            .setAnimationInterpolator(new FastOutSlowInInterpolator())
+                            .setMaxTextWidth(R.dimen.dp40)
+                            .setIcon(R.drawable.ic_searchw)
+                            .setTarget(searchView)
+                            .create(), 4000)
+                    .addPrompt(new MaterialTapTargetPrompt.Builder(MainActivity.this)
+                            .setTarget(findViewById(R.id.app_bar_search1))
+                            .setPrimaryText("Step 4")
+                            .setSecondaryText("Search by meaning")
+                            .setSecondaryTextSize(R.dimen.helper_text_size)
+                            .setAnimationInterpolator(new LinearOutSlowInInterpolator())
+                            .setFocalPadding(R.dimen.dp40)
+                            .setTarget(searchView1)
+                            .setIcon(R.drawable.ic_searchm)
+                            .create(), 4000)
+                    .addPrompt(new MaterialTapTargetPrompt.Builder(this)
+                            .setPrimaryText("Step 5")
+                            .setSecondaryText("Other Options : \n 1) Quiz \n 2) News \n 3) Music \n 4) Promotodo")
+                            .setSecondaryTextSize(R.dimen.helper_text_size)
+                            .setAnimationInterpolator(new FastOutSlowInInterpolator())
+                            .setMaxTextWidth(R.dimen.dp40)
+                            .setIcon(R.drawable.ic_menu_black_24dp)
+                            .setTarget(navigationView)
+                            )
+                    .show();
+            // Do first run stuff here then set 'firstrun' as false
+            // using the following line to edit/commit prefs
+        }
         return super.onCreateOptionsMenu(menu);
     }
+    private boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        return result == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermission() {
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(MainActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+            Toasty.info(MainActivity.this, "Write External Storage permission allows us to do store images. Please allow this permission in App Settings.", Toast.LENGTH_LONG).show();
+        } else {
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.e("value", "Permission Granted, Now you can use local drive .");
+                } else {
+                    Log.e("value", "Permission Denied, You cannot use local drive .");
+                }
+                break;
+        }
+    }
+
 
 
 }

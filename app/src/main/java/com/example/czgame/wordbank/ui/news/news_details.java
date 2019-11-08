@@ -20,8 +20,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.Looper;
 import android.print.PrintAttributes;
 import android.renderscript.Allocation;
 import android.renderscript.Element;
@@ -687,130 +685,17 @@ public class news_details extends AppCompatActivity {
     }
 
 
-    public void updatetextimage() {
-        ClipboardManager myClipboard;
-        ClipData myClip;
-        myClipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        ClipData abc = myClipboard.getPrimaryClip();
-        ClipData.Item item = abc.getItemAt(0);
-        selectedText = "<img src = \""+item.getText()+"\" alt=\"Smiley face\" height=\"72\" width=\"100%\">";
-
-        // Access your context here using YourActivityName.this
-
-        //selectedText = "<img src=\"https://i1.wp.com/jmustafa.com/wp-content/uploads/2018/02/Digital-in-Bangladesh-2018-0000-TINY.png?resize=640%2C360&ssl=1\" alt=\"Smiley face\" height=\"42\" width=\"42\">";
-
-        System.out.println(selectedText);
-
-        Spannable wordToSpan1 = new SpannableStringBuilder(news_details.getText());
-        final String[] html = {Html.toHtml(wordToSpan1)};
-
-
-        boolean b;
-        int id = intent.getExtras().getInt("id");
-        id++;
-        if (intent.getStringExtra("url").isEmpty()) {
-            b = mDBHelper.updateDatau(String.valueOf(id), intent.getStringExtra("title"), intent.getStringExtra("title"), html[0]);
-        } else
-            b = mDBHelper.updateData(String.valueOf(id), intent.getStringExtra("title"), intent.getStringExtra("title"), html[0], intent.getStringExtra("url"));
-        if (b == true) {
-            Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
-        } else {
-            Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
-        }
-
-
-        //this is to get the the cursor position
-
-
-        int start = 0;
-
-        System.out.println(news_details.getSelectionStart());
-
-        for (int i = news_details.getSelectionStart(); (i = html[0].indexOf("@i#", i + 1)) != -1; i++) {
-            System.out.println("iddd" + i);
-            start = i + 2;
-
-            break;
-        }
-
-        System.out.println(html[0].contains("img"));
-
-        html[0] = insertString(html[0], selectedText, start);
-        html[0] = html[0].replace("@i#", " ");
-
-
-        //Spannable wordToSpan2 = new SpannableStringBuilder(news_details.getText());
-        //html = Html.toHtml(wordToSpan2);
-        System.out.println(html[0].contains("img"));
-
-
-        PicassoImageGetter imageGetter = new PicassoImageGetter(news_details);
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-
-            news_details.setText(Html.fromHtml(html[0].replace("\n", "<br>"),
-                    Html.FROM_HTML_MODE_LEGACY, imageGetter, null));
-        } else {
-
-            news_details.setText(Html.fromHtml(html[0].replace("\n", "<br>"), imageGetter, null));
-        }
-
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
+    public static int getDominantColor(Bitmap bitmap) {
+        List<Palette.Swatch> swatchesTemp = Palette.from(bitmap).generate().getSwatches();
+        List<Palette.Swatch> swatches = new ArrayList<Palette.Swatch>(swatchesTemp);
+        Collections.sort(swatches, new Comparator<Palette.Swatch>() {
             @Override
-            public void run() {
-
-                Display display = getWindowManager().getDefaultDisplay();
-                int width = display.getWidth();
-
-                String dataq = "<html><head><meta name=\"viewport\"\"content=\"width="+width+" height="+width+ ", initial-scale=1 \" /></head>";
-                dataq = dataq + "<body>"+ html[0] +"</body></html>";
-
-                String stringToAdd = "width=\"100%\" ";
-
-                // Create a StringBuilder to insert string in the middle of content.
-                StringBuilder sb = new StringBuilder(dataq);
-
-                int i = 0;
-                int cont = 0;
-
-                // Check for the "src" substring, if it exists, take the index where
-                // it appears and insert the stringToAdd there, then increment a counter
-                // because the string gets altered and you should sum the length of the inserted substring
-                while(i != -1){
-                    i = dataq.indexOf("src", i + 1);
-                    if(i != -1) sb.insert(i + (cont * stringToAdd.length()), stringToAdd );
-                    ++cont;
-                }
-
-                html[0] = sb.toString();
-
-
-                webView.getSettings().setJavaScriptEnabled(true);
-                webView.loadData(html[0], "text/html; charset=utf-8", "UTF-8");
-
-                // Spannable wordToSpan = new SpannableStringBuilder(news_details.getText());
-                // html = Html.toHtml(wordToSpan);
-
-                System.out.println(html[0].contains("img"));
-
-                boolean b1;
-                int id1 = intent.getExtras().getInt("id");
-                id1++;
-                if (intent.getStringExtra("url").isEmpty()) {
-                    b1 = mDBHelper.updateDatau(String.valueOf(id1), intent.getStringExtra("title"), intent.getStringExtra("title"), html[0]);
-                } else
-                    b1 = mDBHelper.updateData(String.valueOf(id1), intent.getStringExtra("title"), intent.getStringExtra("title"), html[0], intent.getStringExtra("url"));
-                if (b1 == true) {
-                    Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
-                }
-                Toast toast = Toast.makeText(news_details.getContext(), "Something", Toast.LENGTH_SHORT);
+            public int compare(Palette.Swatch swatch1, Palette.Swatch swatch2) {
+                return swatch2.getPopulation() - swatch1.getPopulation();
             }
+
         });
-
-
-
-
+        return swatches.size() > 0 ? swatches.get(0).getRgb() : Color.WHITE;
     }
     public  String insertString(
             String originalString,
@@ -891,6 +776,130 @@ public class news_details extends AppCompatActivity {
 
 
     }
+
+    public void updatetextimage() {
+        ClipboardManager myClipboard;
+        ClipData myClip;
+        myClipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        ClipData abc = myClipboard.getPrimaryClip();
+        ClipData.Item item = abc.getItemAt(0);
+        selectedText = "<img src = \""+item.getText()+"\" alt=\"Smiley face\" height=\"72\" width=\"100%\">";
+
+        // Access your context here using YourActivityName.this
+
+        //selectedText = "<img src=\"https://i1.wp.com/jmustafa.com/wp-content/uploads/2018/02/Digital-in-Bangladesh-2018-0000-TINY.png?resize=640%2C360&ssl=1\" alt=\"Smiley face\" height=\"42\" width=\"42\">";
+
+        System.out.println(selectedText);
+
+        Spannable wordToSpan1 = new SpannableStringBuilder(news_details.getText());
+        String html = Html.toHtml(wordToSpan1);
+
+
+        boolean b;
+        int id = intent.getExtras().getInt("id");
+        id++;
+        if (intent.getStringExtra("url").isEmpty()) {
+            b = mDBHelper.updateDatau(String.valueOf(id), intent.getStringExtra("title"), intent.getStringExtra("title"), html);
+        } else
+            b = mDBHelper.updateData(String.valueOf(id), intent.getStringExtra("title"), intent.getStringExtra("title"), html, intent.getStringExtra("url"));
+        if (b == true) {
+            Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
+        }
+
+
+        //this is to get the the cursor position
+
+
+        int start = 0;
+
+        System.out.println(news_details.getSelectionStart());
+
+        for (int i = news_details.getSelectionStart(); (i = html.indexOf("@i#", i + 1)) != -1; i++) {
+            System.out.println("iddd" + i);
+            start = i + 2;
+
+            break;
+        }
+
+        System.out.println(html.contains("img"));
+
+        html = insertString(html, selectedText, start);
+        html = html.replace("@i#", " ");
+
+
+        //Spannable wordToSpan2 = new SpannableStringBuilder(news_details.getText());
+        //html = Html.toHtml(wordToSpan2);
+        System.out.println(html.contains("img"));
+
+
+        PicassoImageGetter imageGetter = new PicassoImageGetter(webView,news_details.this);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+
+            news_details.setText(Html.fromHtml(html.replace("\n", "<br>"),
+                    Html.FROM_HTML_MODE_LEGACY, imageGetter, null));
+        } else {
+
+            news_details.setText(Html.fromHtml(html.replace("\n", "<br>"), imageGetter, null));
+        }
+
+
+
+                Display display = getWindowManager().getDefaultDisplay();
+                int width = display.getWidth();
+
+                String dataq = "<html><head><meta name=\"viewport\"\"content=\"width="+width+" height="+width+ ", initial-scale=1 \" /></head>";
+                dataq = dataq + "<body>"+ html +"</body></html>";
+
+                String stringToAdd = "width=\"100%\" ";
+
+                // Create a StringBuilder to insert string in the middle of content.
+                StringBuilder sb = new StringBuilder(dataq);
+
+                int i = 0;
+                int cont = 0;
+
+                // Check for the "src" substring, if it exists, take the index where
+                // it appears and insert the stringToAdd there, then increment a counter
+                // because the string gets altered and you should sum the length of the inserted substring
+                while(i != -1){
+                    i = dataq.indexOf("src", i + 1);
+                    if(i != -1) sb.insert(i + (cont * stringToAdd.length()), stringToAdd );
+                    ++cont;
+                }
+
+                html = sb.toString();
+
+
+                webView.getSettings().setJavaScriptEnabled(true);
+                webView.loadData(html, "text/html; charset=utf-8", "UTF-8");
+
+                // Spannable wordToSpan = new SpannableStringBuilder(news_details.getText());
+                // html = Html.toHtml(wordToSpan);
+
+                System.out.println(html.contains("img"));
+
+                boolean b1;
+                int id1 = intent.getExtras().getInt("id");
+                id1++;
+                if (intent.getStringExtra("url").isEmpty()) {
+                    b1 = mDBHelper.updateDatau(String.valueOf(id1), intent.getStringExtra("title"), intent.getStringExtra("title"), html);
+                } else
+                    b1 = mDBHelper.updateData(String.valueOf(id1), intent.getStringExtra("title"), intent.getStringExtra("title"), html, intent.getStringExtra("url"));
+                if (b1 == true) {
+                    Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
+                }
+                Toast toast = Toast.makeText(news_details.getContext(), "Something", Toast.LENGTH_SHORT);
+
+
+
+
+
+    }
+
     public void setHighLightedAllText() {
         copyText();
         if (!selectedText.isEmpty()) {
@@ -912,7 +921,7 @@ public class news_details extends AppCompatActivity {
                     String html = Html.toHtml(wordToSpan);
 
 
-                    PicassoImageGetter imageGetter = new PicassoImageGetter(news_details);
+                    PicassoImageGetter imageGetter = new PicassoImageGetter(webView,news_details.this);
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                         news_details.setText(Html.fromHtml(html.replace("\n", "<br>"),Html.FROM_HTML_MODE_LEGACY, imageGetter, null));
                     } else {
@@ -986,7 +995,7 @@ public class news_details extends AppCompatActivity {
 
 
 
-            PicassoImageGetter imageGetter = new PicassoImageGetter(news_details);
+            PicassoImageGetter imageGetter = new PicassoImageGetter(webView,news_details.this);
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 news_details.setText(Html.fromHtml(html.replace("\n", "<br>"),Html.FROM_HTML_MODE_LEGACY, imageGetter, null));
             } else {
@@ -1040,79 +1049,6 @@ public class news_details extends AppCompatActivity {
 
         }
 
-
-
-        // unregisterForContextMenu(news_details);
-    }
-
-    public void setHighLightedText() {
-        copyText();
-        if (!selectedText.isEmpty()) {
-            String tvt = news_details.getText().toString();
-            int ofe = tvt.indexOf(selectedText);
-            Spannable wordToSpan = new SpannableStringBuilder(news_details.getText());
-            if (isDark) {
-                wordToSpan.setSpan(new BackgroundColorSpan(0xFF4500), ofe, ofe + selectedText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            } else {
-                wordToSpan.setSpan(new BackgroundColorSpan(0xFFFF00), ofe, ofe + selectedText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-            String html = Html.toHtml(wordToSpan);
-
-
-
-            PicassoImageGetter imageGetter = new PicassoImageGetter(news_details);
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                news_details.setText(Html.fromHtml(html.replace("\n", "<br>"),Html.FROM_HTML_MODE_LEGACY, imageGetter, null));
-            } else {
-                news_details.setText(Html.fromHtml(html.replace("\n", "<br>"), imageGetter, null));
-            }
-
-            Display display = getWindowManager().getDefaultDisplay();
-            int width = display.getWidth();
-
-            String dataq = "<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" /></head>";
-            dataq = dataq + "<body>"+html+"</body></html>";
-
-            String stringToAdd = "width=\"100%\" ";
-
-            // Create a StringBuilder to insert string in the middle of content.
-            StringBuilder sb = new StringBuilder(dataq);
-
-            int i = 0;
-            int cont = 0;
-
-            // Check for the "src" substring, if it exists, take the index where
-            // it appears and insert the stringToAdd there, then increment a counter
-            // because the string gets altered and you should sum the length of the inserted substring
-            while(i != -1){
-                i = dataq.indexOf("src", i + 1);
-                if(i != -1) sb.insert(i + (cont * stringToAdd.length()), stringToAdd );
-                ++cont;
-            }
-
-            html = sb.toString();
-
-
-            webView.getSettings().setJavaScriptEnabled(true);
-            webView.loadData(html, "text/html; charset=utf-8", "UTF-8");
-
-
-            boolean b;
-            int id = intent.getExtras().getInt("id");
-            id++;
-            if (intent.getStringExtra("url").isEmpty()) {
-                b = mDBHelper.updateDatau(String.valueOf(id), intent.getStringExtra("title"), intent.getStringExtra("title"), html);
-            } else
-                b = mDBHelper.updateData(String.valueOf(id), intent.getStringExtra("title"), intent.getStringExtra("title"), html, intent.getStringExtra("url"));
-
-            if (b == true) {
-                Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
-            } else {
-                Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
-            }
-
-
-        }
 
 
         // unregisterForContextMenu(news_details);
@@ -1138,6 +1074,117 @@ public class news_details extends AppCompatActivity {
         Toasty.success(news_details.this, selectedText, Toasty.LENGTH_LONG).show();
     }
 
+    public void setHighLightedText() {
+        copyText();
+        if (!selectedText.isEmpty()) {
+            String tvt = news_details.getText().toString();
+            int ofe = tvt.indexOf(selectedText);
+            Spannable wordToSpan = new SpannableStringBuilder(news_details.getText());
+            if (isDark) {
+                wordToSpan.setSpan(new BackgroundColorSpan(0xFF4500), ofe, ofe + selectedText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            } else {
+                wordToSpan.setSpan(new BackgroundColorSpan(0xFFFF00), ofe, ofe + selectedText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            String html = Html.toHtml(wordToSpan);
+
+
+
+            PicassoImageGetter imageGetter = new PicassoImageGetter(webView,news_details.this);
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                news_details.setText(Html.fromHtml(html.replace("\n", "<br>"),Html.FROM_HTML_MODE_LEGACY, imageGetter, null));
+            } else {
+                news_details.setText(Html.fromHtml(html.replace("\n", "<br>"), imageGetter, null));
+            }
+
+            Display display = getWindowManager().getDefaultDisplay();
+            int width = display.getWidth();
+
+            String dataq = "<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" /></head>";
+            dataq = dataq + "<body>"+html+"</body></html>";
+
+            String stringToAdd = "width=\"100%\" ";
+
+            // Create a StringBuilder to insert string in the middle of content.
+            StringBuilder sb = new StringBuilder(dataq);
+
+            int i = 0;
+            int cont = 0;
+
+            // Check for the "src" substring, if it exists, take the index where
+            // it appears and insert the stringToAdd there, then increment a counter
+            // because the string gets altered and you should sum the length of the inserted substring
+            while(i != -1){
+                i = dataq.indexOf("src", i + 1);
+                if(i != -1) sb.insert(i + (cont * stringToAdd.length()), stringToAdd );
+                ++cont;
+            }
+
+            html = sb.toString();
+
+
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.loadData(html, "text/html; charset=utf-8", "UTF-8");
+
+
+            boolean b;
+            int id = intent.getExtras().getInt("id");
+            id++;
+            if (intent.getStringExtra("url").isEmpty()) {
+                b = mDBHelper.updateDatau(String.valueOf(id), intent.getStringExtra("title"), intent.getStringExtra("title"), html);
+            } else
+                b = mDBHelper.updateData(String.valueOf(id), intent.getStringExtra("title"), intent.getStringExtra("title"), html, intent.getStringExtra("url"));
+
+            if (b == true) {
+                Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
+            }
+
+
+        }
+
+
+        // unregisterForContextMenu(news_details);
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+    }
+
+    public int getComplimentColor(int color) {
+        // get existing colors
+        int alpha = Color.alpha(color);
+        int red = Color.red(color);
+        int blue = Color.blue(color);
+        int green = Color.green(color);
+
+        // find compliments
+        red = (~red) & 0xff;
+        blue = (~blue) & 0xff;
+        green = (~green) & 0xff;
+
+        return Color.argb(alpha, red, green, blue);
+    }
+
+    class RetrieveSaveTask extends AsyncTask<Void, Void, Void> {
+
+        private Exception exception;
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            updatetextimage();
+            return null;
+        }
+
+        protected void onPostExecute() {
+
+
+
+        }
+
+
+    }
 
     class RetrieveFeedTask extends AsyncTask<String, Void, Spanned> {
 
@@ -1184,9 +1231,7 @@ public class news_details extends AppCompatActivity {
                 ++cont;
             }
 
-
-
-            PicassoImageGetter imageGetter = new PicassoImageGetter(news_details);
+            PicassoImageGetter imageGetter = new PicassoImageGetter(webView,news_details.this);
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 return Html.fromHtml(replacedStr.replace("\n", "<br>"),Html.FROM_HTML_MODE_LEGACY, imageGetter, null);
             } else {
@@ -1251,54 +1296,6 @@ public class news_details extends AppCompatActivity {
             vf.showNext();
 
         }
-    }
-
-
-
-
-    class RetrieveSaveTask extends AsyncTask<Void, Void, Void> {
-
-        private Exception exception;
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            updatetextimage();
-            return null;
-        }
-
-        protected void onPostExecute() {
-
-
-
-        }
-
-
-    }
-    public static int getDominantColor(Bitmap bitmap) {
-        List<Palette.Swatch> swatchesTemp = Palette.from(bitmap).generate().getSwatches();
-        List<Palette.Swatch> swatches = new ArrayList<Palette.Swatch>(swatchesTemp);
-        Collections.sort(swatches, new Comparator<Palette.Swatch>() {
-            @Override
-            public int compare(Palette.Swatch swatch1, Palette.Swatch swatch2) {
-                return swatch2.getPopulation() - swatch1.getPopulation();
-            }
-
-        });
-        return swatches.size() > 0 ? swatches.get(0).getRgb() : Color.WHITE;
-    }
-    public int getComplimentColor(int color) {
-        // get existing colors
-        int alpha = Color.alpha(color);
-        int red = Color.red(color);
-        int blue = Color.blue(color);
-        int green = Color.green(color);
-
-        // find compliments
-        red = (~red) & 0xff;
-        blue = (~blue) & 0xff;
-        green = (~green) & 0xff;
-
-        return Color.argb(alpha, red, green, blue);
     }
 
 }
