@@ -18,6 +18,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -37,6 +38,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.MediaController;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -52,6 +54,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -61,9 +64,13 @@ import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
 import es.dmoral.toasty.Toasty;
 
-public class Media_list_activity extends AppCompatActivity {
+import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT;
+import static android.media.AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK;
+
+public class Media_list_activity extends AppCompatActivity implements AudioManager.OnAudioFocusChangeListener {
 
     public static final int RUNTIME_PERMISSION_CODE = 7;
+    private static final String TAG = "Audio";
     public static List<Audio> ListElementsArrayList = new ArrayList<Audio>();
     public static int position;
     public static Button playBtn;
@@ -105,19 +112,48 @@ public class Media_list_activity extends AppCompatActivity {
     Drawable myIcon3;
     int mutedColor;
     boolean toogle1 = true;
-
+    MediaController mediaController;
     Toolbar toolbar;
     FloatingActionButton fab;
     Intent serviceIntent;
     Button button, loop;
     private int currentViewMode = 0;
+    private AudioManager mAudioManager;
 
     static final int VIEW_MODE_LISTVIEW = 0;
     static final int VIEW_MODE_GRIDVIEW = 1;
     private Toast mToastToShow;
+    private Runnable mDelayedStopRunnable = new Runnable() {
+        @Override
+        public void run() {
+            mp.pause();
+
+            playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
+            Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
+            myIcon2.setTint(play);
+        }
+    };
+    private Runnable mDelayedPlayRunnable = new Runnable() {
+        @Override
+        public void run() {
+            if (!mp.isPlaying()) {
+                // Stopping
+                mp.start();
+                playBtn.setBackgroundResource(R.drawable.ic_pause_black_24dp);
+                Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+                myIcon3.setTint(play);
+
+
+            }
+        }
+    };
+
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
+
+
+
             int currentPosition = msg.what;
             // Update positionBar.
             positionBar.setProgress(currentPosition);
@@ -204,6 +240,9 @@ public class Media_list_activity extends AppCompatActivity {
           //  stubGrid.setVisibility(View.VISIBLE);
             switchView();
         }
+
+        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        mAudioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -3449,6 +3488,46 @@ public class Media_list_activity extends AppCompatActivity {
     }
     //
 
+    public void play(){
+
+            if (!mp.isPlaying()) {
+                // Stopping
+                mp.start();
+                playBtn.setBackgroundResource(R.drawable.ic_pause_black_24dp);
+                Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+                myIcon3.setTint(play);
+
+
+            } else{
+                // Playing
+                mp.pause();
+
+                playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
+                Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
+                myIcon2.setTint(play);
+
+            }
+
+    }
+    public void pause(){
+
+        if (mp.isPlaying()) {
+            // Stopping
+            mp.pause();
+            playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
+            Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
+            myIcon2.setTint(play);
+
+
+        } else{
+            // Playing
+           // mp.pause();
+
+
+
+        }
+
+    }
     public void nxtsong() {
 
         // startService(view);
@@ -4234,5 +4313,44 @@ public class Media_list_activity extends AppCompatActivity {
         return Color.argb(alpha, red, green, blue);
     }
 
+
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+
+        mAudioManager.abandonAudioFocus(this);
+
+    }
+    @Override
+    public void onAudioFocusChange(int focusChange) {
+
+            if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                // Permanent loss of audio focus
+                // Pause playback immediately
+                pause();
+                // Wait 30 seconds before stopping playback
+                handler.postDelayed(mDelayedStopRunnable,
+                        TimeUnit.SECONDS.toMillis(30));
+            }
+            else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT) {
+                // Pause playback
+                pause();
+                // Wait 30 seconds before stopping playback
+                handler.postDelayed(mDelayedStopRunnable,
+                        TimeUnit.SECONDS.toMillis(30));
+            } else if (focusChange == AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK) {
+                // Lower the volume, keep playing
+            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                // Your app has been granted audio focus again
+                // Raise volume to normal, restart playback if necessary
+                play();
+                // Wait 30 seconds before stopping playback
+                handler.postDelayed(mDelayedPlayRunnable,
+                        TimeUnit.SECONDS.toMillis(30));
+            }
+
+
+    }
 
 }
