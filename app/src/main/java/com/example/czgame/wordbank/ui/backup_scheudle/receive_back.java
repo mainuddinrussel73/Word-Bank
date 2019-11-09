@@ -111,25 +111,18 @@ public class receive_back  extends BroadcastReceiver {
         //  dbDaily.insertAll1("WED",String.valueOf(currentWEEK),months[currentMonth-1],String.valueOf(currentYear),11);
         // dbDaily.insertAll1("THU",String.valueOf(currentWEEK),months[currentMonth-1],String.valueOf(currentYear),3);
 
-        Calendar calendar1 = Calendar.getInstance();
-        calendar1.setTimeInMillis(System.currentTimeMillis());
-        //calendar1.set(Calendar.DAY_OF_WEEK,currentDay+1);
-        calendar1.set(Calendar.HOUR_OF_DAY, 00);
-        calendar1.set(Calendar.MINUTE, 00);
 
-        System.out.println(dayLongName.toUpperCase().substring(0,2)+","+months[currentMonth-1]);
-        if(Calendar.getInstance().after(calendar1)){
-            // Move to tomorrow
-            System.out.println("ok");
-            calendar1.add(Calendar.DATE, 1);
-            boolean b = dbDaily.insertAll(dayLongName.toUpperCase().substring(0,2),String.valueOf(currentWEEK),months[currentMonth-1],String.valueOf(currentYear),prefs1.getInt("t", 0));
+
+        System.out.println(dayLongName.toUpperCase().substring(0,3)+","+months[currentMonth-1]);
+
+            boolean b = dbDaily.insertAll(dayLongName.toUpperCase().substring(0,3),String.valueOf(currentWEEK),months[currentMonth-1],String.valueOf(currentYear),prefs1.getInt("t", 0));
 
             if(b) {
                 SharedPreferences.Editor editor1 = prefs1.edit();
                 editor1.putInt("t", 0);
                 editor1.commit();
             }
-        }
+
 
 
 

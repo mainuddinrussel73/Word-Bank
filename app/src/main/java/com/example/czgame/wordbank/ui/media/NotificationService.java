@@ -1,6 +1,7 @@
 package com.example.czgame.wordbank.ui.media;
 
 
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -17,6 +18,7 @@ import android.media.AudioManager;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
@@ -30,12 +32,17 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import androidx.palette.graphics.Palette;
 import es.dmoral.toasty.Toasty;
+
+import static com.tobiasrohloff.view.NestedScrollWebView.TAG;
 
 public class NotificationService extends Service {
 
@@ -53,10 +60,15 @@ public class NotificationService extends Service {
     public static Intent noReceive = new Intent();
     public static Intent nxReceive = new Intent();
     private final String LOG_TAG = "NotificationService";
+    public static final String COUNTDOWN_BR = "com.example.czgame.wordgame.music_br";
     AudioManager am = null;
     String title;
     String artist;
     String album;
+    public static AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener;
+    public static Intent bi = new Intent(COUNTDOWN_BR);
+    public static AudioManager mAudioManager;
+    public static Timer mTimer = null;    //timer handling
     int p;
     Notification status;
 
@@ -72,10 +84,6 @@ public class NotificationService extends Service {
         return swatches.size() > 0 ? swatches.get(0).getRgb() : Color.WHITE;
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -100,6 +108,34 @@ public class NotificationService extends Service {
                     startMyOwnForeground();
 
                 }
+                mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+                    @Override
+                    public void onAudioFocusChange(int focusChange) {
+                        switch (focusChange) {
+                            case AudioManager.AUDIOFOCUS_GAIN:
+                                Log.i(TAG, "AUDIOFOCUS_GAIN");
+                                bi.setAction(MyNotificationReceiver.AUDIOFOCUS_GAIN);
+                                sendBroadcast(bi);
+                                break;
+                            case AudioManager.AUDIOFOCUS_LOSS:
+                                Log.i(TAG, "AUDIOFOCUS_LOSS");
+                                bi.setAction(MyNotificationReceiver.AUDIOFOCUS_LOSS);
+                                sendBroadcast(bi);
+                                break;
+                            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                                Log.i(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
+                                bi.setAction(MyNotificationReceiver.AUDIOFOCUS_LOSS_TRANSIENT);
+                                sendBroadcast(bi);
+                                break;
+                            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                                Log.i(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
+                                break;
+                        }
+                    }
+                };
+
+                AsynchTaskTimer();
 
             } catch (Exception e) {
                 System.out.println(e.getMessage());
@@ -118,10 +154,12 @@ public class NotificationService extends Service {
             // implementation reference
 
             startMyOwnForeground();
+            AsynchTaskTimer();
 
             Toasty.success(this, "Clicked Previous", Toast.LENGTH_SHORT).show();
             Log.i("ok", "Clicked Previous");
         } else if (intent.getAction().equals(Constants.ACTION.PLAY_ACTION)) {
+            AsynchTaskTimer();
             Toast.makeText(this, "Clicked Play", Toast.LENGTH_SHORT).show();
             Log.i("ok", "Clicked Play");
         } else if (intent.getAction().equals(Constants.ACTION.NEXT_ACTION)) {
@@ -131,8 +169,13 @@ public class NotificationService extends Service {
             // implementation reference
 
             startMyOwnForeground();
+            AsynchTaskTimer();
             Toasty.success(this, "Clicked Next", Toast.LENGTH_SHORT).show();
             Log.i("ok", "Clicked Next");
+        }else if (intent.getAction().equals(Constants.ACTION.AUDIOFOCUS_LOSS)) {
+
+            AsynchTaskTimer();
+            Log.i("ok", "Clicked Gain");
         } else if (intent.getAction().equals(
                 Constants.ACTION.STOPFOREGROUND_ACTION)) {
 
@@ -153,6 +196,7 @@ public class NotificationService extends Service {
         }
         return START_STICKY;
     }
+
 
     private void showActionButtonsNotification() {
 
@@ -433,4 +477,75 @@ public class NotificationService extends Service {
         return Color.argb(alpha, red, green, blue);
     }
 
+    public  void AsynchTaskTimer() {
+        final Handler handler = new Handler();
+
+        TimerTask timertask = new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    public void run() {
+                        try {
+
+
+                           if(!isAppRunning()) {
+
+                               int result = mAudioManager.requestAudioFocus(mOnAudioFocusChangeListener,
+                                       AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+
+                                   mTimer.cancel();
+
+
+                           }
+
+
+                            Log.d("service is ","running");
+                        } catch (Exception e) {
+                            // TODO Auto-generated catch block
+                        }
+                    }
+                });
+            }
+        };
+        mTimer = new Timer(); //This is new
+        mTimer.schedule(timertask, 0, 1000); // execute in every 15sec
+    }
+
+    public  boolean isAppRunning() {
+        ActivityManager m = (ActivityManager) this.getSystemService( ACTIVITY_SERVICE );
+        List<ActivityManager.RunningTaskInfo> runningTaskInfoList =  m.getRunningTasks(10);
+        Iterator<ActivityManager.RunningTaskInfo> itr = runningTaskInfoList.iterator();
+        int n=0;
+        while(itr.hasNext()){
+            n++;
+            itr.next();
+        }
+        // App is killed
+        return n != 1;// App is in background or foreground
+    }
+    private boolean isAppOnForeground(Context context, String appPackageName) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+        if (appProcesses == null) {
+            //App is closed
+            return false;
+        }
+        final String packageName = appPackageName;
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appProcess.processName.equals(packageName)) {
+                //                Log.e("app",appPackageName);
+                return true;
+            } else {
+                //App is closed
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        mTimer.cancel();
+
+    }
 }

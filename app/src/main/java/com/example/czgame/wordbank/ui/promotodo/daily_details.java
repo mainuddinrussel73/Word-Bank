@@ -97,6 +97,7 @@ public class daily_details extends AppCompatActivity {
         System.out.println(currentWeek +",,,,,"+monthss[currentMonth-1]+",,,,"+ currentYear);
         final Cursor cursor = dbDaily.getAllWeek(String.valueOf(currentWeek),monthss[currentMonth-1],String.valueOf(currentYear));
 
+        System.out.println();
         for (int j = 0; j <7 ; j++) {
             taskList.add(j,new Task());
         }
@@ -105,6 +106,7 @@ public class daily_details extends AppCompatActivity {
             // show message
             while (cursor.moveToNext()) {
 
+               // System.out.println();
                 Task word = new Task();
                 word.setID(i);
                 word.setDAY(cursor.getString(1));
@@ -158,6 +160,7 @@ public class daily_details extends AppCompatActivity {
 
 
         }
+        System.out.println(taskList.size());
 
         i = 1;
         for (int j = 0; j <12 ; j++) {
@@ -165,7 +168,7 @@ public class daily_details extends AppCompatActivity {
         }
         for (String month:
              monthss) {
-            System.out.println(month);
+            //System.out.println(month);
             final Cursor cursor1 = dbDaily.getAllMonth(month,String.valueOf(currentYear));
 
             // looping through all rows and adding to list
@@ -197,14 +200,14 @@ public class daily_details extends AppCompatActivity {
 
 
             }
-            System.out.println(taskList1.size());
+           // System.out.println(taskList1.size());
             float totaltime = 0;
             for (int j = 0; j < taskList1.size(); j++) {
                 totaltime+=taskList1.get(j).getTIME();
                 //System.out.println((float) (totaltime/12.0));
 
             }
-            System.out.println(totaltime);
+            //System.out.println(totaltime);
 
             if(taskList1.size()!=0) {
                 if(month.equals("JAN")){
@@ -245,13 +248,13 @@ public class daily_details extends AppCompatActivity {
                 }
 
             }
-            System.out.println(taskList2.get(10));
+           // System.out.println(taskList2.get(10));
 
 
 
             taskList1.clear();
         }
-        System.out.println(taskList2.size());
+        //System.out.println(taskList2.size());
         if(taskList.size()!=0) {
             barChart = findViewById(R.id.barchart);
             XAxis xAxis = barChart.getXAxis();
@@ -345,6 +348,7 @@ public class daily_details extends AppCompatActivity {
 
         for(Task t:taskList){
 
+            System.out.println(t.toString());
             entries.add(new BarEntry(f,(float)t.getTIME()/2));
             f++;
         }

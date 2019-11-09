@@ -132,18 +132,24 @@
             android:label="@string/music_play"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <receiver android:name=".ui.media.MyNotificationReceiver">
+        <receiver android:name=".ui.media.MyNotificationReceiver"
+            android:enabled="true"
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="RESUME_ACTION" />
                 <action android:name="STOP_ACTION" />
                 <action android:name="CANCEL_ACTION" />
                 <action android:name="NEXT_ACTION" />
+                <action android:name="AUDIOFOCUS_GAIN" />
+                <action android:name="AUDIOFOCUS_LOSS" />
+                <action android:name="AUDIOFOCUS_LOSS_TRANSIENT" />
             </intent-filter>
         </receiver>
 
         <service android:name=".ui.media.NotificationIntentService"
-            android:exported="false"
-            android:process=":myBackgroundServiceProcess"
+            android:enabled="true"
+            android:process=":NotificationService"
             >
             <intent-filter android:priority="10000">
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />

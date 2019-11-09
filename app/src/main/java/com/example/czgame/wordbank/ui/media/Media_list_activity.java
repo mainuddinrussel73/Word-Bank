@@ -2,12 +2,12 @@ package com.example.czgame.wordbank.ui.media;
 
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -112,7 +112,7 @@ public class Media_list_activity extends AppCompatActivity  {
     MediaController mediaController;
     Toolbar toolbar;
     FloatingActionButton fab;
-    Intent serviceIntent;
+    public static  Intent serviceIntent;
     Button button, loop;
     private int currentViewMode = 0;
     private AudioManager mAudioManager;
@@ -158,6 +158,24 @@ public class Media_list_activity extends AppCompatActivity  {
         }
     };
 
+    private boolean isAppOnForeground(Context context, String appPackageName) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
+        if (appProcesses == null) {
+            //App is closed
+            return false;
+        }
+        final String packageName = appPackageName;
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appProcess.processName.equals(packageName)) {
+                //                Log.e("app",appPackageName);
+                return true;
+            } else {
+                //App is closed
+            }
+        }
+        return false;
+    }
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -234,8 +252,6 @@ public class Media_list_activity extends AppCompatActivity  {
         }
 
         String message = "Focus request " + (mFocusGranted ? "granted" : "failed");
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-        Log.i(TAG, message);
         super.onPause();
     }
 
@@ -254,8 +270,6 @@ public class Media_list_activity extends AppCompatActivity  {
         }
 
         String message = "Focus request " + (mFocusGranted ? "granted" : "failed");
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-        Log.i(TAG, message);
         super.onResume();
     }
     @Override
@@ -289,8 +303,7 @@ public class Media_list_activity extends AppCompatActivity  {
             switchView();
         }
 
-        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        mAudioFocusChangeListener = new AudioFocusChangeListenerImpl();
+
 
 
 
@@ -404,6 +417,8 @@ public class Media_list_activity extends AppCompatActivity  {
 
 
 
+        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        mAudioFocusChangeListener = new AudioFocusChangeListenerImpl();
 
 
 
@@ -440,15 +455,6 @@ public class Media_list_activity extends AppCompatActivity  {
         });
 
 
-        MyNotificationReceiver yourBR = null;
-        yourBR = new MyNotificationReceiver();
-        yourBR.setMainActivityHandler(this);
-        IntentFilter callInterceptorIntentFilter = new IntentFilter("CANCEL_ACTION");
-        registerReceiver(yourBR, callInterceptorIntentFilter);
-
-
-        IntentFilter callInterceptorIntentFilter1 = new IntentFilter("NEXT_ACTION");
-        registerReceiver(yourBR, callInterceptorIntentFilter1);
 
 
         button = toolbar.findViewById(R.id.sortsong);
@@ -4384,21 +4390,17 @@ public class Media_list_activity extends AppCompatActivity  {
                 case AudioManager.AUDIOFOCUS_GAIN:
                     Log.i(TAG, "AUDIOFOCUS_GAIN");
                     play();
-                    Toast.makeText(Media_list_activity.this, "Focus GAINED", Toast.LENGTH_LONG).show();
                     break;
                 case AudioManager.AUDIOFOCUS_LOSS:
                     Log.i(TAG, "AUDIOFOCUS_LOSS");
                     pause();
-                    Toast.makeText(Media_list_activity.this, "Focus LOST", Toast.LENGTH_LONG).show();
                     break;
                 case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
                     Log.i(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
                     pause();
-                    Toast.makeText(Media_list_activity.this, "Focus LOST TRANSIENT", Toast.LENGTH_LONG).show();
                     break;
                 case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
                     Log.i(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
-                    Toast.makeText(Media_list_activity.this, "Focus LOST TRANSIENT CAN DUCK", Toast.LENGTH_LONG).show();
                     break;
             }
         }

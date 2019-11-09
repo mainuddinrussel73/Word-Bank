@@ -171,6 +171,28 @@ public class DBDaily extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("delete from " + TABLE_NAME);
     }
+    public int deleteDay(String day, String  week,String  month, String year) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db1 = this.getReadableDatabase();
+        String id = "m";
+        try {
+            Cursor re = db1.rawQuery("SELECT * FROM  daily_table  WHERE DAY = ? AND WEEK = ? AND MONTH = ? AND YEAR = ? ", new String[]{day,week,month,year});
+            if (re.moveToFirst()) {
+                do {
+                    System.out.println(re.getString(0));
+                    id = re.getString(0);
+                } while (re.moveToNext());
+            }
+
+            re.close();
+            System.out.println(re.getString(0));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        return db.delete(TABLE_NAME, "ID = ?", new String[]{id});
+       // db.execSQL("delete from " + TABLE_NAME);
+    }
 
 
 

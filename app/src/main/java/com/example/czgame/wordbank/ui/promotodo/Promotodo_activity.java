@@ -364,12 +364,6 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
         SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         remain.setText("Completed Hours : " + (prefs1.getInt("t", 0) * 0.5));
 
-
-        SharedPreferences.Editor editor12 = prefs1.edit();
-        editor12.putInt("t", 1);
-        editor12.commit();
-
-
         mToast = Toast.makeText(Promotodo_activity.this, "", Toast.LENGTH_SHORT);
 
         button.setOnClickListener(new View.OnClickListener() {

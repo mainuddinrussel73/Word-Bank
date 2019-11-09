@@ -25,19 +25,25 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import androidx.palette.graphics.Palette;
 import es.dmoral.toasty.Toasty;
 
+import static android.content.Context.ACTIVITY_SERVICE;
 import static com.example.czgame.wordbank.ui.media.Media_list_activity.mp;
 import static com.example.czgame.wordbank.ui.media.Media_list_activity.position;
+import static com.example.czgame.wordbank.ui.media.Media_list_activity.serviceIntent;
 
 public class MyNotificationReceiver extends BroadcastReceiver {
     public static final String RESUME_ACTION = "RESUME_ACTION";
     public static final String STOP_ACTION = "STOP_ACTION";
     public static final String CANCEL_ACTION = "CANCEL_ACTION";
     public static final String NEXT_ACTION = "NEXT_ACTION";
+    public static final String AUDIOFOCUS_GAIN = "AUDIOFOCUS_GAIN";
+    public static final String AUDIOFOCUS_LOSS = "AUDIOFOCUS_LOSS";
+    public static final String AUDIOFOCUS_LOSS_TRANSIENT = "AUDIOFOCUS_LOSS_TRANSIENT";
     public static int REQUEST_CODE_NOTIFICATION = 1212;
     public static int REQUEST_CODE = 10;
     Media_list_activity mediaListActivity;
@@ -51,6 +57,8 @@ public class MyNotificationReceiver extends BroadcastReceiver {
         String action = intent.getAction();
 
         Log.e("action", action);
+        Log.e("action", action);
+
 
 
         if (intent.getAction() != null) {
@@ -60,6 +68,12 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
                     if (!mp.isPlaying()) {
                         mp.start();
+
+                        serviceIntent.setAction(Constants.ACTION.AUDIOFOCUS_LOSS);
+                        context.startService(serviceIntent);
+
+
+
                         Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_pause_black_24dp);
 
                         NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
@@ -69,6 +83,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                         NotificationService.notification.setCustomContentView(NotificationService.notificationView1);
                         // NotificationService.notificationView.setTextViewText(R.id.status_bar_track_name, "pllll");
                         NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
+                        Toasty.success(context, "Resume", Toast.LENGTH_SHORT).show();
 
                     } else {
                         mp.pause();
@@ -82,8 +97,9 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
                         // NotificationService.notificationView.setTextViewText(R.id.status_bar_track_name, "pllll");
                         NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
+                        Toasty.success(context, "Pause", Toast.LENGTH_SHORT).show();
                     }
-                    Toasty.success(context, "Resume", Toast.LENGTH_SHORT).show();
+
 // you resume action
                     break;
                 case STOP_ACTION:
@@ -169,6 +185,72 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
                     //}
                     Toasty.success(context, "Next.", Toast.LENGTH_SHORT).show();
+                    break;
+                case AUDIOFOCUS_GAIN:
+
+                    if (!mp.isPlaying()) {
+                        // Stopping
+                        mp.start();
+
+                    } else{
+                        // Playing
+                        serviceIntent.setAction(Constants.ACTION.AUDIOFOCUS_LOSS);
+                        context.startService(serviceIntent);
+
+
+                    }
+                    Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_pause_black_24dp);
+
+                    NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
+                    NotificationService.notification.setCustomContentView(NotificationService.notificationView);
+
+                    NotificationService.notificationView1.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
+                    NotificationService.notification.setCustomContentView(NotificationService.notificationView1);
+                    // NotificationService.notificationView.setTextViewText(R.id.status_bar_track_name, "pllll");
+                    NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
+                    Log.d("receiver is ","GAIN");
+                    break;
+                case AUDIOFOCUS_LOSS:
+                    //play();
+                    if (!mp.isPlaying()) {
+                        // Stopping();
+                        serviceIntent.setAction(Constants.ACTION.AUDIOFOCUS_LOSS);
+                        context.startService(serviceIntent);
+
+                    } else{
+                        // Playing
+
+                        mp.pause();
+
+
+                    }
+
+
+
+                    Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
+
+                    NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
+                    NotificationService.notification.setCustomContentView(NotificationService.notificationView);
+
+                    NotificationService.notificationView1.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
+                    NotificationService.notification.setCustomContentView(NotificationService.notificationView1);
+
+                    // NotificationService.notificationView.setTextViewText(R.id.status_bar_track_name, "pllll");
+                    NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
+                    Log.d("receiver is ","LOSS");
+                    break;
+                case AUDIOFOCUS_LOSS_TRANSIENT:
+                    mp.pause();
+                    Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
+
+                    NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
+                    NotificationService.notification.setCustomContentView(NotificationService.notificationView);
+
+                    NotificationService.notificationView1.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
+                    NotificationService.notification.setCustomContentView(NotificationService.notificationView1);
+
+                    // NotificationService.notificationView.setTextViewText(R.id.status_bar_track_name, "pllll");
+                    NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
                     break;
             }
         }
@@ -390,7 +472,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
     }
 
     private boolean isAppOnForeground(Context context, String appPackageName) {
-        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
         if (appProcesses == null) {
             //App is closed
@@ -470,6 +552,18 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
         });
         return swatches.size() > 0 ? swatches.get(0).getRgb() : Color.WHITE;
+    }
+    public  boolean isAppRunning(Context context) {
+        ActivityManager m = (ActivityManager) context.getSystemService( ACTIVITY_SERVICE );
+        List<ActivityManager.RunningTaskInfo> runningTaskInfoList =  m.getRunningTasks(10);
+        Iterator<ActivityManager.RunningTaskInfo> itr = runningTaskInfoList.iterator();
+        int n=0;
+        while(itr.hasNext()){
+            n++;
+            itr.next();
+        }
+        // App is killed
+        return n != 1;// App is in background or foreground
     }
 
 

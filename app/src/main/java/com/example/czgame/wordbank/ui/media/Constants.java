@@ -29,6 +29,9 @@ public class Constants {
         String STARTFOREGROUND_ACTION = "com.example.mainuddin.myapplication34.action.startforeground";
         String STOPFOREGROUND_ACTION = "com.example.mainuddin.myapplication34.action.stopforeground";
 
+        String AUDIOFOCUS_GAIN = "com.example.mainuddin.myapplication34.action.AUDIOFOCUS_GAIN.";
+        String AUDIOFOCUS_LOSS = "com.example.mainuddin.myapplication34.action.AUDIOFOCUS_LOSS";
+        String AUDIOFOCUS_LOSS_TRANSIENT = "com.example.mainuddin.myapplication34.action.AUDIOFOCUS_LOSS_TRANSIENT";
     }
 
     public interface NOTIFICATION_ID {
