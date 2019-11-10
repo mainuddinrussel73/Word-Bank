@@ -47,6 +47,7 @@ import com.example.czgame.wordbank.ui.news.add_news;
 import com.example.czgame.wordbank.ui.news.news_activity;
 import com.example.czgame.wordbank.ui.news.news_backup;
 import com.example.czgame.wordbank.ui.promotodo.Promotodo_activity;
+import com.example.czgame.wordbank.ui.promotodo.daily_details;
 import com.example.czgame.wordbank.ui.promotodo.pro_backup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -173,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SpannableString s1 = new SpannableString(navigationView.getMenu().findItem(R.id.datas1).getTitle());
         SpannableString s2 = new SpannableString(navigationView.getMenu().findItem(R.id.datas2).getTitle());
         SpannableString s3 = new SpannableString(navigationView.getMenu().findItem(R.id.datas3).getTitle());
+        SpannableString s4 = new SpannableString(navigationView.getMenu().findItem(R.id.datas4).getTitle());
 
         if (isDark) {
             s.setSpan(new TextAppearanceSpan(this, R.style.TextAppearance45), 0, s.length(), 0);
@@ -187,6 +189,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             s3.setSpan(new TextAppearanceSpan(this, R.style.TextAppearance45), 0, s3.length(), 0);
             navigationView.getMenu().findItem(R.id.datas3).setTitle(s3);
 
+            s4.setSpan(new TextAppearanceSpan(this, R.style.TextAppearance45), 0, s4.length(), 0);
+            navigationView.getMenu().findItem(R.id.datas4).setTitle(s4);
+
         } else {
             s.setSpan(new TextAppearanceSpan(this, R.style.TextAppearance44), 0, s.length(), 0);
             navigationView.getMenu().findItem(R.id.datas).setTitle(s);
@@ -199,6 +204,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             s3.setSpan(new TextAppearanceSpan(this, R.style.TextAppearance44), 0, s3.length(), 0);
             navigationView.getMenu().findItem(R.id.datas3).setTitle(s3);
+
+            s4.setSpan(new TextAppearanceSpan(this, R.style.TextAppearance44), 0, s4.length(), 0);
+            navigationView.getMenu().findItem(R.id.datas4).setTitle(s4);
         }
 
 
@@ -565,7 +573,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivityForResult(myIntent, 0);
 
-        } else if (id == R.id.nav_view) {
+        }else if(id == R.id.nav_daily){
+            Intent myIntent = new Intent(this, daily_details.class);
+            myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivityForResult(myIntent, 0);
+            return true;
+        }
+        else if (id == R.id.nav_view) {
             Intent myIntent = new Intent(MainActivity.this, news_backup.class);
             myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivityForResult(myIntent, 0);

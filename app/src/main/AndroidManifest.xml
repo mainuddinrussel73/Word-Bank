@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-
+    <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
     <dist:module
         dist:instant="true"
         dist:onDemand="false"
@@ -147,15 +147,6 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".ui.media.NotificationIntentService"
-            android:enabled="true"
-            android:process=":NotificationService"
-            >
-            <intent-filter android:priority="10000">
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-            </intent-filter>
-
-        </service>
         <service
             android:name=".ui.words.Mainservice"
             android:enabled="true" />

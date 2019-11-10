@@ -144,6 +144,12 @@ public class Promotodo_receiver extends BroadcastReceiver {
                 Promotodo_service.notificationView.setTextViewText(R.id.timerview, Integer.toString(hours));
                 Promotodo_service.notificationView.setTextViewText(R.id.timerview1, Integer.toString(minutes));
                 Promotodo_service.notificationView.setTextViewText(R.id.timerview2, Integer.toString(seconds));
+
+                Promotodo_service.notificationView1.setTextViewText(R.id.timerview, Integer.toString(hours));
+                Promotodo_service.notificationView1.setTextViewText(R.id.timerview1, Integer.toString(minutes));
+                Promotodo_service.notificationView1.setTextViewText(R.id.timerview2, Integer.toString(seconds));
+
+
                 Promotodo_service.manager.notify(6, Promotodo_service.notificationBuilder.build());
 
                 textView1.setText(String.format("%02d", hours));

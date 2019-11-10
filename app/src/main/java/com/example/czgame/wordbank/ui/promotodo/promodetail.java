@@ -70,10 +70,10 @@ public class promodetail extends AppCompatActivity {
     promotododata currenttask;
     boolean isfinish = false;
     Intent serviceIntent;
-    Button edittext;
+    Button edittext,whitenoise;
     Calendar myCalendar;
     MediaPlayer mediaPlayer;
-    TextView textViewss;
+    TextView textViewss,shownoise;
     private CountDownTimer cdTimer;
     private long total = 1800000;
 
@@ -183,40 +183,10 @@ public class promodetail extends AppCompatActivity {
 
         prefs = this.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
 
-
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
-        AlertDialog.Builder b = new AlertDialog.Builder(this, R.style.DialogueLight);
-        if (isDark) {
 
-            if (isDark) {
-                b = new AlertDialog.Builder(this, R.style.DialogurDark);
-            } else {
-                b = new AlertDialog.Builder(this, R.style.DialogueLight);
-            }
-        }
 
-        b.setTitle("White Noise.");
-        String[] types = {"Rain", "Ticking", "Ocean Shore"};
-        b.setItems(types, (dialog, which) -> {
-
-            dialog.dismiss();
-            switch (which) {
-                case 0:
-                    Promotodo_service.fileName = "rain";
-
-                    break;
-                case 1:
-
-                    Promotodo_service.fileName = "ticking";
-
-                    break;
-                case 2:
-                    Promotodo_service.fileName = "oceanshore";
-                    break;
-            }
-        });
-        b.show();
 
 
         text_field_boxes2 = findViewById(R.id.text_field_boxes2);
@@ -451,6 +421,56 @@ public class promodetail extends AppCompatActivity {
             }
         });
 
+        whitenoise = findViewById(R.id.soundpick);
+        shownoise = findViewById(R.id.viewsound);
+        shownoise.setText(Promotodo_service.fileName);
+        boolean finalIsDark = isDark;
+        whitenoise.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                AlertDialog.Builder b = new AlertDialog.Builder(view.getContext(), R.style.DialogueLight);
+                if (finalIsDark) {
+
+                    if (finalIsDark) {
+                        b = new AlertDialog.Builder(view.getContext(), R.style.DialogurDark);
+                    } else {
+                        b = new AlertDialog.Builder(view.getContext(), R.style.DialogueLight);
+                    }
+                }
+
+                b.setTitle("White Noise.");
+                String[] types = {"Rain", "Ticking", "Ocean Shore","None"};
+                b.setItems(types, (dialog, which) -> {
+
+                    dialog.dismiss();
+                    switch (which) {
+                        case 0:
+                            Promotodo_service.fileName = "rain";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 1:
+
+                            Promotodo_service.fileName = "ticking";
+                            shownoise.setText(Promotodo_service.fileName);
+
+                            break;
+                        case 2:
+                            Promotodo_service.fileName = "oceanshore";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 3:
+                            Promotodo_service.fileName = "none";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                    }
+                });
+                b.show();
+
+
+            }
+        });
+
         RelativeLayout additem = findViewById(R.id.pro_detail);
         RelativeLayout relativeLayoutr = dialogView.findViewById(R.id.secondary_view);
         RelativeLayout relativeLayout1 = findViewById(R.id.belowhere);
@@ -470,8 +490,9 @@ public class promodetail extends AppCompatActivity {
 
             texts.setTextColor(Color.WHITE);
             texts.setHintTextColor(Color.rgb(185, 185, 185));
-            texts.setBackgroundDrawable(ContextCompat.getDrawable(promodetail.this, R.drawable.list_viewdark));
+            texts.setBackgroundDrawable(ContextCompat.getDrawable(promodetail.this, R.drawable.backgroundborder));
 
+            shownoise.setTextColor(Color.WHITE);
 
             //fab1.setBackgroundColor(Color.RED);
             spinner.setBackgroundColor(Color.rgb(64, 64, 64));
@@ -495,9 +516,9 @@ public class promodetail extends AppCompatActivity {
 
             texts.setTextColor(Color.BLACK);
             texts.setHintTextColor(Color.BLACK);
-            texts.setBackgroundDrawable(ContextCompat.getDrawable(promodetail.this, R.drawable.listview_border));
+            texts.setBackgroundDrawable(ContextCompat.getDrawable(promodetail.this, R.drawable.backgroundborder));
 
-
+            shownoise.setTextColor(Color.BLACK);
             // mListView.setBackgroundColor(Color.WHITE);
             // relativeLayout1.setBackground(ContextCompat.getDrawable(this, R.drawable.listview_border));
             additem.setBackgroundColor(Color.WHITE);

@@ -36,8 +36,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/cardview_dark_background"
-            android:textSize="@dimen/text_size_medium"
-            android:textStyle="bold" />
+            android:maxLines="1"
+            android:text="snfsndkasdf"
+            android:textSize="10sp"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/status_bar_artist_name"

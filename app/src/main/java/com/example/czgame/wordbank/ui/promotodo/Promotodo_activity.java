@@ -364,6 +364,32 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
         SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         remain.setText("Completed Hours : " + (prefs1.getInt("t", 0) * 0.5));
 
+
+ /*       DBDaily dbDaily = new DBDaily(this);
+        //dbDaily.deleteAll();
+        String []months = {"JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"};
+        String []days = {"MON", "TUR", "WED", "THU", "FRI","SAT","SUN"};
+
+        Calendar calendar = Calendar.getInstance();
+
+
+
+
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH)+1;
+        int currentWEEK = calendar.get(Calendar.WEEK_OF_YEAR);
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+        String dayLongName = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
+        // currentDay-=1;
+
+        dbDaily.insertAll1("WED",String.valueOf(currentWEEK),months[currentMonth-1],String.valueOf(currentYear),11);
+         dbDaily.insertAll1("THU",String.valueOf(currentWEEK),months[currentMonth-1],String.valueOf(currentYear),3);
+        dbDaily.insertAll1("FRI",String.valueOf(currentWEEK),months[currentMonth-1],String.valueOf(currentYear),1);
+        dbDaily.insertAll1("SAT",String.valueOf(currentWEEK),months[currentMonth-1],String.valueOf(currentYear),1);
+
+*/
+
+
         mToast = Toast.makeText(Promotodo_activity.this, "", Toast.LENGTH_SHORT);
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -710,24 +736,6 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
     private void toast(String toast) {
         mToast.setText(toast);
         mToast.show();
-    }
-    @Override
-    public boolean onCreateOptionsMenu(android.view.Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(android.view.MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-
-            Intent myIntent = new Intent(this, daily_details.class);
-            myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivityForResult(myIntent, 0);
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
 

@@ -57,8 +57,12 @@ public class PicassoImageGetter  implements Html.ImageGetter {
         @Override
         protected void onPostExecute(Drawable result) {
             // set the correct bound according to the result from HTTP call
+            try{
             urlDrawable.setBounds(0, 0, 0 + result.getIntrinsicWidth(), 0
                     + result.getIntrinsicHeight());
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
 
             // change the reference of the current drawable to the result
             // from the HTTP call

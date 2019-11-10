@@ -8,10 +8,13 @@
         android:title="Descending"/>
     <item
         android:id="@+id/three"
-        android:title="Time Added"/>
-
+        android:title="Time Added Asc"/>
     <item
         android:id="@+id/four"
+        android:title="Time Added Des"/>
+
+    <item
+        android:id="@+id/five"
         android:title="View Switch"/>
 
 </menu>

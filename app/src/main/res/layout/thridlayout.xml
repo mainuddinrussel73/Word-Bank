@@ -287,7 +287,7 @@
         android:id="@+id/belowhere"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginTop="350dp"
+        android:layout_marginTop="430dp"
         android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
         android:layout_marginRight="@dimen/alerter_activity_horizontal_margin">
 
@@ -301,9 +301,47 @@
             android:gravity="top|left"
             android:hint="Note.."
             android:textColorHint="@color/cardview_dark_background"
-            android:background="@drawable/listview_border">
+            android:background="@drawable/backgroundborder">
 
         </EditText>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
+        android:layout_marginTop="350dp"
+        android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
+        android:background="@drawable/backgroundborder">
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/soundpick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="5dp"
+            android:text="White Noise"
+            android:textColor="@color/white"
+
+            />
+
+        <TextView
+            android:id="@+id/viewsound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="210dp"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/darkgray">
+
+
+        </TextView>
+
     </RelativeLayout>
 
 

@@ -174,4 +174,5 @@
     <string name="title_activity_daily">Daily Details</string>
     <string name="action_daily">Daily Report</string>
     <string name="Walk">Walk Through</string>
+    <string name="menu_dailyreport">Daily Report</string>
 </resources>

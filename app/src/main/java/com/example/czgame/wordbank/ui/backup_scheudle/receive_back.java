@@ -44,6 +44,7 @@ public class receive_back  extends BroadcastReceiver {
 
         JSONArray jsonArray = new JSONArray();
         final Cursor cursor = mDBHelper.getAllData();
+        final Cursor cursor1 = mDBHelper.getAllData2();
 
         // looping through all rows and adding to list
         if (cursor.getCount() != 0) {
@@ -85,6 +86,50 @@ public class receive_back  extends BroadcastReceiver {
             }
 
         } else {
+
+            showMessage(context,"Error", "Nothing found");
+        }
+
+        jsonArray = new JSONArray();
+        if (cursor1.getCount() != 0) {
+            // show message
+            while (cursor1.moveToNext()) {
+
+                JSONObject word = new JSONObject();
+                try {
+                    word.put("ID", Integer.parseInt(cursor1.getString(0)));
+                    word.put("WORD", cursor1.getString(1));
+                    word.put("SENTENCE", cursor1.getString(2));
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                jsonArray.put(word);
+            }
+
+            File root = android.os.Environment.getExternalStorageDirectory();
+            // http://stackoverflow.com/questions/3551821/android-write-to-sd-card-folder
+            File dir = new File(root.getAbsolutePath() + "/wordstore");
+            dir.mkdirs();
+            File file = new File(dir, "backup_sentences.json");
+            try {
+                FileOutputStream f = new FileOutputStream(file);
+                PrintWriter pw = new PrintWriter(f);
+                pw.write(jsonArray.toString());
+                pw.flush();
+                pw.close();
+                f.close();
+                Toasty.success(context, "Done.", Toast.LENGTH_SHORT).show();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Toasty.error(context, "Opps.", Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toasty.error(context, "Opps.", Toast.LENGTH_SHORT).show();
+            }
+
+        } else {
+
 
             showMessage(context,"Error", "Nothing found");
         }

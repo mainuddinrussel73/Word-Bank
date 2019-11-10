@@ -3453,6 +3453,15 @@ public class Media_list_activity extends AppCompatActivity  {
                     myIcon3.setTint(play);
 
 
+                    NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
+                    NotificationService.notification.setCustomContentView(NotificationService.notificationView);
+
+                    NotificationService.notificationView1.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
+                    NotificationService.notification.setCustomContentView(NotificationService.notificationView1);
+                    // NotificationService.notificationView.setTextViewText(R.id.status_bar_track_name, "pllll");
+                    NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
+
+
                 } else {
                     // Playing
                     mp.pause();
@@ -3460,6 +3469,15 @@ public class Media_list_activity extends AppCompatActivity  {
                     playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
                     Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
                     myIcon2.setTint(play);
+
+                    NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
+                    NotificationService.notification.setCustomContentView(NotificationService.notificationView);
+
+                    NotificationService.notificationView1.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
+                    NotificationService.notification.setCustomContentView(NotificationService.notificationView1);
+
+                    // NotificationService.notificationView.setTextViewText(R.id.status_bar_track_name, "pllll");
+                    NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
 
                 }
             }
@@ -3505,13 +3523,25 @@ public class Media_list_activity extends AppCompatActivity  {
                             listView.setAdapter(adapter);
                             gridView = findViewById(R.id.gridviews);
                             gridView.setAdapter(adapterG);
-                        } else if (item.getTitle().equals("Time Added")) {
+                        } else if (item.getTitle().equals("Time Added Asc")) {
                             Collections.sort(ListElementsArrayList,
                                     new Comparator<Audio>() {
                                         public int compare(Audio f1, Audio f2) {
                                             return f1.getData().compareTo(f2.getData());
                                         }
                                     });
+                            listView = findViewById(R.id.listviews);
+                            listView.setAdapter(adapter);
+                            gridView = findViewById(R.id.gridviews);
+                            gridView.setAdapter(adapterG);
+                        }else if (item.getTitle().equals("Time Added Des")) {
+                            Collections.sort(ListElementsArrayList,
+                                    new Comparator<Audio>() {
+                                        public int compare(Audio f1, Audio f2) {
+                                            return f2.getData().compareTo(f1.getData());
+                                        }
+                                    });
+
                             listView = findViewById(R.id.listviews);
                             listView.setAdapter(adapter);
                             gridView = findViewById(R.id.gridviews);
@@ -3553,6 +3583,14 @@ public class Media_list_activity extends AppCompatActivity  {
                 Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
                 myIcon3.setTint(play);
 
+                NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
+                NotificationService.notification.setCustomContentView(NotificationService.notificationView);
+
+                NotificationService.notificationView1.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
+                NotificationService.notification.setCustomContentView(NotificationService.notificationView1);
+                // NotificationService.notificationView.setTextViewText(R.id.status_bar_track_name, "pllll");
+                NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
+
 
             } else{
                 // Playing
@@ -3561,6 +3599,15 @@ public class Media_list_activity extends AppCompatActivity  {
                 playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
                 Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
                 myIcon2.setTint(play);
+
+                NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
+                NotificationService.notification.setCustomContentView(NotificationService.notificationView);
+
+                NotificationService.notificationView1.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
+                NotificationService.notification.setCustomContentView(NotificationService.notificationView1);
+
+                // NotificationService.notificationView.setTextViewText(R.id.status_bar_track_name, "pllll");
+                NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
 
             }
 
@@ -4404,6 +4451,29 @@ public class Media_list_activity extends AppCompatActivity  {
                     break;
             }
         }
+    }
+
+    @Override
+    public  void onBackPressed(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.parseColor("#3a9ebe"));
+            setTitleColor(Color.WHITE);
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#3a9ebe")));
+            Toolbar actionBarToolbar = findViewById(R.id.toolbar);
+            if (actionBarToolbar != null)
+                actionBarToolbar.setTitleTextColor(Color.WHITE);
+        }
+
+
+        // fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
+        toolbar.getNavigationIcon().setTint(Color.WHITE);
+
+        Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
+        icon.setTint(Color.WHITE);
+        button.setBackground(icon);
+        super.onBackPressed();
     }
 
 }
