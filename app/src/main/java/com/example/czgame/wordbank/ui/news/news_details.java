@@ -3,6 +3,7 @@ package com.example.czgame.wordbank.ui.news;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -95,6 +96,7 @@ public class news_details extends AppCompatActivity {
     ScrollView scrollview;
     TextView textView;
     private Toolbar toolbar;
+    ProgressDialog progressBar;
     ViewFlipper vf;
     private boolean isCustomOverflowMenu;
     private DBNewsHelper mDBHelper;
@@ -147,9 +149,18 @@ public class news_details extends AppCompatActivity {
         intent = getIntent();
 
 
+
         final boolean[] okkk = {false};
 
         vf = findViewById(R.id.viewFlipper);
+
+        progressBar = new ProgressDialog(this);
+        progressBar.setMessage("Downloading Music");
+        progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressBar.setIndeterminate(false);
+        progressBar.setMax(10);
+        progressBar.setProgress(0);
+        progressBar.show();
 
         news_details = vf.findViewById(R.id.news_detail_des);
         RelativeLayout relativeLayout = vf.findViewById(R.id.some);
@@ -164,7 +175,10 @@ public class news_details extends AppCompatActivity {
         news_activityD = this;
 
 
+
         try {
+           // progressBar.setVisibility(View.VISIBLE);
+
             RetrieveFeedTask asyncTask = new RetrieveFeedTask();
             String s = intent.getStringExtra("body");
             asyncTask.execute(s);
@@ -313,6 +327,7 @@ public class news_details extends AppCompatActivity {
 
 
 
+        progressBar.setProgress(1);
         //Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar1);
         getSupportActionBar().setTitle(intent.getStringExtra("title"));
 
@@ -664,6 +679,7 @@ public class news_details extends AppCompatActivity {
                 popup.show();
             }
         });
+
     }
 
 
@@ -795,19 +811,6 @@ public class news_details extends AppCompatActivity {
         String html = Html.toHtml(wordToSpan1);
 
 
-        boolean b;
-        int id = intent.getExtras().getInt("id");
-        id++;
-        if (intent.getStringExtra("url").isEmpty()) {
-            b = mDBHelper.updateDatau(String.valueOf(id), intent.getStringExtra("title"), intent.getStringExtra("title"), html);
-        } else
-            b = mDBHelper.updateData(String.valueOf(id), intent.getStringExtra("title"), intent.getStringExtra("title"), html, intent.getStringExtra("url"));
-        if (b == true) {
-            Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
-        } else {
-            Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
-        }
-
 
         //this is to get the the cursor position
 
@@ -819,14 +822,15 @@ public class news_details extends AppCompatActivity {
         for (int i = news_details.getSelectionStart(); (i = html.indexOf("@i#", i + 1)) != -1; i++) {
             System.out.println("iddd" + i);
             start = i + 2;
-
             break;
         }
 
         System.out.println(html.contains("img"));
 
-        html = insertString(html, selectedText, start);
-        html = html.replace("@i#", " ");
+        StringBuilder builder = new StringBuilder(html);
+        builder.replace( start-2,start+1,selectedText);
+        html = builder.toString();
+       // html = html.replace("@i#", " ");
 
 
         //Spannable wordToSpan2 = new SpannableStringBuilder(news_details.getText());
@@ -846,53 +850,53 @@ public class news_details extends AppCompatActivity {
 
 
 
-                Display display = getWindowManager().getDefaultDisplay();
-                int width = display.getWidth();
+        Display display = getWindowManager().getDefaultDisplay();
+        int width = display.getWidth();
 
-                String dataq = "<html><head><meta name=\"viewport\"\"content=\"width="+width+" height="+width+ ", initial-scale=1 \" /></head>";
-                dataq = dataq + "<body>"+ html +"</body></html>";
+        String dataq = "<html><head><meta name=\"viewport\"\"content=\"width="+width+" height="+width+ ", initial-scale=1 \" /></head>";
+        dataq = dataq + "<body>"+ html +"</body></html>";
 
-                String stringToAdd = "width=\"100%\" ";
+        String stringToAdd = "width=\"100%\" ";
 
-                // Create a StringBuilder to insert string in the middle of content.
-                StringBuilder sb = new StringBuilder(dataq);
+        // Create a StringBuilder to insert string in the middle of content.
+        StringBuilder sb = new StringBuilder(dataq);
 
-                int i = 0;
-                int cont = 0;
+        int i = 0;
+        int cont = 0;
 
-                // Check for the "src" substring, if it exists, take the index where
-                // it appears and insert the stringToAdd there, then increment a counter
-                // because the string gets altered and you should sum the length of the inserted substring
-                while(i != -1){
-                    i = dataq.indexOf("src", i + 1);
-                    if(i != -1) sb.insert(i + (cont * stringToAdd.length()), stringToAdd );
-                    ++cont;
-                }
+        // Check for the "src" substring, if it exists, take the index where
+        // it appears and insert the stringToAdd there, then increment a counter
+        // because the string gets altered and you should sum the length of the inserted substring
+        while(i != -1){
+            i = dataq.indexOf("src", i + 1);
+            if(i != -1) sb.insert(i + (cont * stringToAdd.length()), stringToAdd );
+            ++cont;
+        }
 
-                html = sb.toString();
+        html = sb.toString();
 
 
-                webView.getSettings().setJavaScriptEnabled(true);
-                webView.loadData(html, "text/html; charset=utf-8", "UTF-8");
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.loadData(html, "text/html; charset=utf-8", "UTF-8");
 
-                // Spannable wordToSpan = new SpannableStringBuilder(news_details.getText());
-                // html = Html.toHtml(wordToSpan);
+        // Spannable wordToSpan = new SpannableStringBuilder(news_details.getText());
+        // html = Html.toHtml(wordToSpan);
 
-                System.out.println(html.contains("img"));
+        System.out.println(html.contains("img"));
 
-                boolean b1;
-                int id1 = intent.getExtras().getInt("id");
-                id1++;
-                if (intent.getStringExtra("url").isEmpty()) {
-                    b1 = mDBHelper.updateDatau(String.valueOf(id1), intent.getStringExtra("title"), intent.getStringExtra("title"), html);
-                } else
-                    b1 = mDBHelper.updateData(String.valueOf(id1), intent.getStringExtra("title"), intent.getStringExtra("title"), html, intent.getStringExtra("url"));
-                if (b1 == true) {
-                    Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
-                }
-                Toast toast = Toast.makeText(news_details.getContext(), "Something", Toast.LENGTH_SHORT);
+        boolean b1;
+        int id1 = intent.getExtras().getInt("id");
+        id1++;
+        if (intent.getStringExtra("url").isEmpty()) {
+            b1 = mDBHelper.updateDatau(String.valueOf(id1), intent.getStringExtra("title"), intent.getStringExtra("title"), html);
+        } else
+            b1 = mDBHelper.updateData(String.valueOf(id1), intent.getStringExtra("title"), intent.getStringExtra("title"), html, intent.getStringExtra("url"));
+        if (b1 == true) {
+            Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
+        }
+        Toast toast = Toast.makeText(news_details.getContext(), "Something", Toast.LENGTH_SHORT);
 
 
 
@@ -1186,9 +1190,12 @@ public class news_details extends AppCompatActivity {
 
     }
 
-    class RetrieveFeedTask extends AsyncTask<String, Void, Spanned> {
+    class RetrieveFeedTask extends AsyncTask<String, Integer, Spanned> {
+
 
         private Exception exception;
+        int ii = 0;
+
 
         protected Spanned doInBackground(String... data) {
 
@@ -1196,6 +1203,13 @@ public class news_details extends AppCompatActivity {
             boolean isDark = prefs.getBoolean("isDark", false);
             String replacedStr = "";
 
+            ii = 2;
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            publishProgress(ii);
             if (isDark) {
 
                 try {
@@ -1213,6 +1227,13 @@ public class news_details extends AppCompatActivity {
 
 
 
+            ii = 4;
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            publishProgress(ii);
 
             String stringToAdd = "width=\"100%\" ";
 
@@ -1231,14 +1252,34 @@ public class news_details extends AppCompatActivity {
                 ++cont;
             }
 
+            ii = 8;
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            publishProgress(ii);
+
             PicassoImageGetter imageGetter = new PicassoImageGetter(webView,news_details.this);
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                ii = 10;
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                publishProgress(ii);
                 return Html.fromHtml(replacedStr.replace("\n", "<br>"),Html.FROM_HTML_MODE_LEGACY, imageGetter, null);
             } else {
                 return Html.fromHtml(replacedStr.replace("\n", "<br>"), imageGetter, null);
             }
 
 
+        }
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            //txt.setText("Running..."+ values[0]);
+            progressBar.setProgress(values[0]);
         }
 
         protected void onPostExecute(Spanned text) {
@@ -1294,6 +1335,7 @@ public class news_details extends AppCompatActivity {
             textView.setText("Total Letters : " + news_details.getText().toString().length());
 
             vf.showNext();
+            progressBar.cancel();
 
         }
     }
