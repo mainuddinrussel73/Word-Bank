@@ -26,7 +26,7 @@ public class WalkThrough extends FancyWalkthroughActivity {
     public static final int PICKFILE_RESULT_CODE = 1;
     private static final int PERMISSION_REQUEST_CODE = 1;
     private final static String CUSTOM_ACTION = "custom_action";
-    public  static boolean isfirst = false;
+    public  static boolean isfirst;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

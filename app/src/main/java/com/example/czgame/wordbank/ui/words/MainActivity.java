@@ -40,6 +40,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.czgame.wordbank.R;
+import com.example.czgame.wordbank.root.WalkThrough;
 import com.example.czgame.wordbank.ui.Quiz.Quiz_confirm;
 import com.example.czgame.wordbank.ui.backup_scheudle.receive_back;
 import com.example.czgame.wordbank.ui.media.Media_list_activity;
@@ -76,7 +77,6 @@ import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetSequence;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    public  static boolean isfirst = false;
     public static final int PICKFILE_RESULT_CODE = 1;
     private static final int PERMISSION_REQUEST_CODE = 1;
     public static boolean isDark;
@@ -314,7 +314,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             });
         } else {
 
-            showMessage("Error", "Nothing found");
+            Toasty.info(MainActivity.this,"Error Nothing found");
         }
 
         size = contactList.size();
@@ -930,8 +930,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
 
-        if (isfirst) {
-            isfirst = false;
+        if (WalkThrough.isfirst) {
+            WalkThrough.isfirst = false;
             new MaterialTapTargetSequence()
                     .addPrompt(new MaterialTapTargetPrompt.Builder(MainActivity.this)
                             .setTarget(findViewById(R.id.fab))
