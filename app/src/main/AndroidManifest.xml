@@ -170,6 +170,11 @@
             android:name=".ui.backup_scheudle.receive_back"
             android:enabled="true"
             android:exported="true" />
+        <receiver
+            android:name=".ui.backup_scheudle.daily_service"
+            android:enabled="true"
+            android:exported="true" />
+
         <uses-library android:name ="org.apache.http.legacy" android:required ="false"/>
 
     </application>

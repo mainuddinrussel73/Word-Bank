@@ -42,6 +42,7 @@ import android.widget.Toast;
 import com.example.czgame.wordbank.R;
 import com.example.czgame.wordbank.root.WalkThrough;
 import com.example.czgame.wordbank.ui.Quiz.Quiz_confirm;
+import com.example.czgame.wordbank.ui.backup_scheudle.daily_service;
 import com.example.czgame.wordbank.ui.backup_scheudle.receive_back;
 import com.example.czgame.wordbank.ui.media.Media_list_activity;
 import com.example.czgame.wordbank.ui.news.add_news;
@@ -525,6 +526,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .setIntent(intent5)
                 .build();
         shortcutManager.addDynamicShortcuts(Arrays.asList(shortcutInfo5));
+
+
+        AlarmManager alarmMgr = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+
+        Intent intenta = new Intent(this, daily_service.class);
+        PendingIntent pIntent = PendingIntent.getBroadcast(this, 0, intenta, 0);
+
+        Calendar cal= Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 23);
+        cal.set(Calendar.MINUTE, 53);
+        cal.set(Calendar.SECOND, 0);
+
+        alarmMgr.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pIntent);
 
 
     }

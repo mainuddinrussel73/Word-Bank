@@ -99,8 +99,9 @@ public class daily_details extends AppCompatActivity {
 
         System.out.println();
         for (int j = 0; j <7 ; j++) {
-            taskList.add(j,new Task());
+            taskList.add(j,new Task(days[j],String.valueOf(currentWeek),monthss[currentMonth-1],String.valueOf(currentYear),0,j));
         }
+        System.out.println("task list"+taskList.size());
         // looping through all rows and adding to list
         if (cursor.getCount() != 0) {
             // show message
@@ -118,31 +119,31 @@ public class daily_details extends AppCompatActivity {
 
 
                 if(word.getDAY().equals("MON")){
-                    taskList.add(0,word);
+                    taskList.set(0,word);
 
                 }
                 if(word.getDAY().equals("TUE")){
-                    taskList.add(1,word);
+                    taskList.set(1,word);
 
                 }
                 if(word.getDAY().equals("WED")){
-                    taskList.add(2,word);
+                    taskList.set(2,word);
 
                 }
                 if(word.getDAY().equals("THU")){
-                    taskList.add(3,word);
+                    taskList.set(3,word);
 
                 }
                 if(word.getDAY().equals("FRI")){
-                    taskList.add(4,word);
+                    taskList.set(4,word);
 
                 }
                 if(word.getDAY().equals("SAT")){
-                    taskList.add(5,word);
+                    taskList.set(5,word);
 
                 }
                 if(word.getDAY().equals("SUN")){
-                    taskList.add(6,word);
+                    taskList.set(6,word);
 
                 }
 
@@ -160,7 +161,7 @@ public class daily_details extends AppCompatActivity {
 
 
         }
-        System.out.println(taskList.size());
+        System.out.println("task list"+taskList.size());
 
         i = 1;
         for (int j = 0; j <12 ; j++) {
@@ -211,40 +212,40 @@ public class daily_details extends AppCompatActivity {
 
             if(taskList1.size()!=0) {
                 if(month.equals("JAN")){
-                    taskList2.add(0, (totaltime / taskList1.size()));
+                    taskList2.set(0, (totaltime / taskList1.size()));
                 }
                 if(month.equals("FEB")){
-                    taskList2.add(1, (totaltime / taskList1.size()));
+                    taskList2.set(1, (totaltime / taskList1.size()));
                 }
                 if(month.equals("MAR")){
-                    taskList2.add(2, (totaltime / taskList1.size()));
+                    taskList2.set(2, (totaltime / taskList1.size()));
                 }
                 if(month.equals("APR")){
-                    taskList2.add(3, (totaltime / taskList1.size()));
+                    taskList2.set(3, (totaltime / taskList1.size()));
                 }
                 if(month.equals("MAY")){
-                    taskList2.add(4, (totaltime / taskList1.size()));
+                    taskList2.set(4, (totaltime / taskList1.size()));
                 }
                 if(month.equals("JUN")){
-                    taskList2.add(5, (totaltime / taskList1.size()));
+                    taskList2.set(5, (totaltime / taskList1.size()));
                 }
                 if(month.equals("JUL")){
-                    taskList2.add(6, (totaltime / taskList1.size()));
+                    taskList2.set(6, (totaltime / taskList1.size()));
                 }
                 if(month.equals("AUG")){
-                    taskList2.add(7, (totaltime / taskList1.size()));
+                    taskList2.set(7, (totaltime / taskList1.size()));
                 }
                 if(month.equals("SEP")){
-                    taskList2.add(8, (totaltime / taskList1.size()));
+                    taskList2.set(8, (totaltime / taskList1.size()));
                 }
                 if(month.equals("OCT")){
-                    taskList2.add(9, (totaltime / taskList1.size()));
+                    taskList2.set(9, (totaltime / taskList1.size()));
                 }
                 if(month.equals("NOV")){
-                    taskList2.add(10, (totaltime / taskList1.size()));
+                    taskList2.set(10, (totaltime / taskList1.size()));
                 }
                 if(month.equals("DEC")){
-                    taskList2.add(11, (totaltime / taskList1.size()));
+                    taskList2.set(11, (totaltime / taskList1.size()));
                 }
 
             }

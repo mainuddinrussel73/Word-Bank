@@ -214,8 +214,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                     //play();
                     if (!mp.isPlaying()) {
                         // Stopping();
-                        serviceIntent.setAction(Constants.ACTION.AUDIOFOCUS_LOSS);
-                        context.startService(serviceIntent);
+
 
                     } else{
                         // Playing

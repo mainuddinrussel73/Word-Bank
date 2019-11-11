@@ -17,6 +17,15 @@ public class Task {
         return DAY;
     }
 
+    public Task(String DAY, String WEEK, String MONTH, String YEAR, int TIME, int ID) {
+        this.DAY = DAY;
+        this.WEEK = WEEK;
+        this.MONTH = MONTH;
+        this.YEAR = YEAR;
+        this.TIME = TIME;
+        this.ID = ID;
+    }
+
     public void setDAY(String DAY) {
         this.DAY = DAY;
     }
