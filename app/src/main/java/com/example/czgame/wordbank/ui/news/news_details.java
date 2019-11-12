@@ -154,8 +154,12 @@ public class news_details extends AppCompatActivity {
 
         vf = findViewById(R.id.viewFlipper);
 
-        progressBar = new ProgressDialog(this);
-        progressBar.setMessage("Downloading Music");
+        if (isDark) {
+            progressBar = new ProgressDialog(this, R.style.DialogurDark);
+        } else {
+            progressBar = new ProgressDialog(this, R.style.DialogueLight);
+        }
+        progressBar.setMessage("Loading Content....");
         progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressBar.setIndeterminate(false);
         progressBar.setMax(10);
@@ -237,6 +241,7 @@ public class news_details extends AppCompatActivity {
                                 icon.setTint(Color.WHITE);
                                 button.setBackground(icon);
                                 finish();
+
                             }
                         });
 
@@ -316,7 +321,9 @@ public class news_details extends AppCompatActivity {
                                                 Drawable icon = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
                                                 icon.setTint(Color.WHITE);
                                                 button.setBackground(icon);
-                                                finish();
+                                                Intent myIntent = new Intent(news_details.getContext(), news_activity.class);
+                                                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                startActivityForResult(myIntent, 0);
                                             }
                                         });
                                         Log.v("Picasso","Could not fetch image");
@@ -648,7 +655,7 @@ public class news_details extends AppCompatActivity {
 
                                 new CreatePdf(news_details.this)
                                         .setPdfName(intent.getStringExtra("title"))
-                                        .openPrintDialog(false)
+                                        .openPrintDialog(true)
                                         .setContentBaseUrl(null)
                                         .setPageSize(PrintAttributes.MediaSize.ISO_A4)
                                         .setContent(intent.getStringExtra("body"))
@@ -1322,7 +1329,6 @@ public class news_details extends AppCompatActivity {
 
             news_details.setText(text);
 
-            System.out.println(html);
 
             webView.getSettings().setJavaScriptEnabled(true);
             webView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
@@ -1340,6 +1346,13 @@ public class news_details extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    public void onBackPressed(){
+        Intent myIntent = new Intent(news_details.getContext(), news_activity.class);
+        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivityForResult(myIntent, 0);
+    }
 }
 
 class BlurBuilder {

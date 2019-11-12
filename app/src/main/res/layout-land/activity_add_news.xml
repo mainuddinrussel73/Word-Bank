@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/add_news_item"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/white"
+    android:background="@color/cardview_light_background"
     android:gravity="center"
-    android:orientation="vertical"
-    android:id="@+id/item_detail">
+    android:orientation="vertical">
+
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbarlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/topbar"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
@@ -21,16 +22,40 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>
-
     <RelativeLayout
+        android:id="@+id/newslay"
         android:layout_width="match_parent"
-        android:id="@+id/wordsec"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/topbar"
-        android:orientation="vertical">
+        android:layout_below="@+id/appbarlayout"
+        android:layout_marginTop="20dp">
+
+
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/word"
+            android:id="@+id/titlelay"
+            style="@style/LoginTextInputLayoutStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
+            android:layout_marginRight="@dimen/alerter_activity_horizontal_margin">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/title1"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:hint="Title"
+                android:paddingLeft="5dp"
+                android:textColor="@android:color/background_dark"
+                android:textColorHint="@color/cardview_shadow_start_color"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/urllay"
             style="@style/LoginTextInputLayoutStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -40,87 +65,82 @@
             android:layout_marginRight="@dimen/alerter_activity_horizontal_margin">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/word1"
+                android:id="@+id/url1"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="50dp"
                 android:layout_marginTop="20dp"
-                android:gravity="top|left"
-                android:hint="TextView"
-                android:paddingLeft="15dp"
-                android:paddingTop="15dp"
-                android:paddingRight="15dp"
+                android:hint="Url"
+                android:paddingLeft="5dp"
                 android:textColor="@android:color/background_dark"
                 android:textColorHint="@color/cardview_shadow_start_color"
                 />
 
         </com.google.android.material.textfield.TextInputLayout>
-
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/meaning"
+            android:id="@+id/bodylay"
             style="@style/LoginTextInputLayoutStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/word"
+            android:layout_below="@+id/urllay"
             android:layout_margin="10dp"
             android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
+
             android:layout_marginRight="@dimen/alerter_activity_horizontal_margin">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/meaning1"
+                android:id="@+id/body1"
                 android:layout_width="match_parent"
-                android:layout_height="199dp"
+                android:layout_height="100dp"
                 android:layout_marginTop="20dp"
+                android:fastScrollEnabled="true"
                 android:gravity="top|left"
-                android:hint="TextView"
-                android:paddingLeft="15dp"
-                android:paddingTop="15dp"
-                android:paddingRight="15dp"
+                android:hint="News Body"
+                android:imeOptions="flagNoExtractUi"
+                android:inputType="textMultiLine|textCapSentences"
+                android:minLines="10"
+                android:overScrollMode="always"
+                android:paddingLeft="5dp"
+                android:paddingTop="10dp"
+                android:scrollbarAlwaysDrawVerticalTrack="true"
+                android:scrollbarStyle="insideInset"
+                android:scrollbars="vertical"
+                android:scrollHorizontally="false"
                 android:textColor="@android:color/background_dark"
                 android:textColorHint="@color/cardview_shadow_start_color"
                 />
 
         </com.google.android.material.textfield.TextInputLayout>
-
 
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layout_below="@+id/wordsec"
-        android:layout_marginTop="20dp">
+        android:layout_below="@+id/newslay"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/update"
+            android:id="@+id/save"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_gravity="left"
-            android:layout_marginStart="18dp"
-            android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
-            android:paddingLeft="18dp"
-            android:paddingTop="10dp"
-            android:paddingRight="30dp"
-            android:paddingBottom="10dp"
-            android:text="Update"
-            android:textColor="@color/cardview_light_background" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/delete"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
             android:layout_gravity="left"
-            android:layout_marginLeft="160dp"
-            android:layout_marginEnd="13dp"
-            android:paddingLeft="23dp"
+            android:layout_marginStart="357dp"
+            android:layout_marginLeft="150dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="389dp"
+            android:paddingLeft="30dp"
             android:paddingTop="10dp"
             android:paddingRight="30dp"
-
             android:paddingBottom="10dp"
-            android:text="Delete"
+            android:text="Save"
             android:textColor="@color/cardview_light_background" />
+
+
     </RelativeLayout>
 
 </RelativeLayout>

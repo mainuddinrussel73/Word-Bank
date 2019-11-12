@@ -7,8 +7,10 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -48,11 +50,14 @@ public class daily_details extends AppCompatActivity {
     ArrayList<BarEntry> BARENTRY ;
     ArrayList<String> BarEntryLabels ;
     BarDataSet Bardataset ;
+    ImageButton rightNav,leftNav;
     BarData BARDATA ;
     List<Task> taskList = new ArrayList<>();
     List<Task> taskList1 = new ArrayList<>();
     List<Float> taskList2 = new ArrayList<>();
     DBDaily dbDaily;
+    int currentYear,currentMonth,currentDay,currentWeek;
+    TextView weekly;
 
     String []monthss = {"JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"};
     String []days = {"MON", "TUR", "WED", "THU", "FRI","SAT","SUN"};
@@ -72,13 +77,14 @@ public class daily_details extends AppCompatActivity {
 
 
 
+
         Calendar calendar = Calendar.getInstance();
 
         Date time = Calendar.getInstance().getTime();
-        int currentYear = calendar.get(Calendar.YEAR);
-        int currentMonth = calendar.get(Calendar.MONTH) + 1;
-        int currentWeek = calendar.get(Calendar.WEEK_OF_YEAR);
-        int currentDay = calendar.get(Calendar.DAY_OF_WEEK);
+        currentYear = calendar.get(Calendar.YEAR);
+        currentMonth = calendar.get(Calendar.MONTH) + 1;
+        currentWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+        currentDay = calendar.get(Calendar.DAY_OF_WEEK);
         String dayLongName = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
         dbDaily = new DBDaily(this);
         //dbDaily.deleteAll();
@@ -86,7 +92,7 @@ public class daily_details extends AppCompatActivity {
 
       //  gen("2018");
 
-        taskList.clear();
+
         taskList1.clear();
         taskList2.clear();
 
@@ -94,74 +100,10 @@ public class daily_details extends AppCompatActivity {
 
 
 
+
+        weekly = findViewById(R.id.weekly);
         System.out.println(currentWeek +",,,,,"+monthss[currentMonth-1]+",,,,"+ currentYear);
-        final Cursor cursor = dbDaily.getAllWeek(String.valueOf(currentWeek),monthss[currentMonth-1],String.valueOf(currentYear));
-
-        System.out.println();
-        for (int j = 0; j <7 ; j++) {
-            taskList.add(j,new Task(days[j],String.valueOf(currentWeek),monthss[currentMonth-1],String.valueOf(currentYear),0,j));
-        }
-        System.out.println("task list"+taskList.size());
-        // looping through all rows and adding to list
-        if (cursor.getCount() != 0) {
-            // show message
-            while (cursor.moveToNext()) {
-
-               // System.out.println();
-                Task word = new Task();
-                word.setID(i);
-                word.setDAY(cursor.getString(1));
-                word.setWEEK(cursor.getString(2));
-                word.setMONTH(cursor.getString(3));
-                word.setYEAR(cursor.getString(4));
-                word.setTIME(cursor.getInt(5));
-                System.out.println(word.toString());
-
-
-                if(word.getDAY().equals("MON")){
-                    taskList.set(0,word);
-
-                }
-                if(word.getDAY().equals("TUE")){
-                    taskList.set(1,word);
-
-                }
-                if(word.getDAY().equals("WED")){
-                    taskList.set(2,word);
-
-                }
-                if(word.getDAY().equals("THU")){
-                    taskList.set(3,word);
-
-                }
-                if(word.getDAY().equals("FRI")){
-                    taskList.set(4,word);
-
-                }
-                if(word.getDAY().equals("SAT")){
-                    taskList.set(5,word);
-
-                }
-                if(word.getDAY().equals("SUN")){
-                    taskList.set(6,word);
-
-                }
-
-
-
-                // maintitle.add(word.WORD);
-                // subtitle.add(word.MEANING);
-
-                i++;
-            }
-
-
-
-        } else {
-
-
-        }
-        System.out.println("task list"+taskList.size());
+        setBarChartdata(currentWeek,currentMonth,currentYear);
 
         i = 1;
         for (int j = 0; j <12 ; j++) {
@@ -201,6 +143,34 @@ public class daily_details extends AppCompatActivity {
 
 
             }
+
+
+
+            barChart = findViewById(R.id.barchart);
+            initbar();
+            leftNav = findViewById(R.id.left_nav);
+            rightNav = findViewById(R.id.right_nav);
+
+            leftNav.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    currentWeek= currentWeek - 1;
+                    System.out.println(currentWeek +",,,,,"+monthss[currentMonth-1]+",,,,"+ currentYear);
+                    setBarChartdata(currentWeek,currentMonth,currentYear);
+                    initbar();
+                }
+            });
+
+            rightNav.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    currentWeek= currentWeek + 1;
+                    System.out.println(currentWeek +",,,,,"+monthss[currentMonth-1]+",,,,"+ currentYear);
+                    setBarChartdata(currentWeek,currentMonth,currentYear);
+                    initbar();
+                }
+            });
+
            // System.out.println(taskList1.size());
             float totaltime = 0;
             for (int j = 0; j < taskList1.size(); j++) {
@@ -256,8 +226,108 @@ public class daily_details extends AppCompatActivity {
             taskList1.clear();
         }
         //System.out.println(taskList2.size());
+
+        if(taskList2.size()!=0){
+
+            mChart = findViewById(R.id.chart);
+            mChart.setTouchEnabled(true);
+            mChart.setPinchZoom(true);
+            MyMarkerView mv = new MyMarkerView(getApplicationContext(), R.layout.custom_marker_view);
+            mv.setChartView(mChart);
+            mChart.setMarker(mv);
+            mChart.animateXY(5000,5000);
+            renderData();
+        }
+        SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+        boolean isDark = prefs.getBoolean("isDark", false);
+
+        RelativeLayout relativeLayout = findViewById(R.id.dailylayout);
+        if (isDark) {
+            mChart.setBackgroundColor(Color.BLACK);
+            mChart.getXAxis().setTextColor(Color.WHITE);
+            mChart.getAxisLeft().setTextColor(Color.WHITE);
+            mChart.getLegend().setTextColor(Color.WHITE);
+            barChart.getXAxis().setTextColor(Color.WHITE);
+            barChart.getAxisLeft().setTextColor(Color.WHITE);
+            barChart.getLegend().setTextColor(Color.WHITE);
+            barChart.setBackgroundColor(Color.BLACK);
+            relativeLayout.setBackgroundColor(Color.BLACK);
+        } else {
+            mChart.setBackgroundColor(Color.WHITE);
+            mChart.getXAxis().setTextColor(Color.BLACK);
+            mChart.getAxisLeft().setTextColor(Color.BLACK);
+            mChart.getLegend().setTextColor(Color.BLACK);
+            barChart.getXAxis().setTextColor(Color.BLACK);
+            barChart.getAxisLeft().setTextColor(Color.BLACK);
+            barChart.getLegend().setTextColor(Color.BLACK);
+            barChart.setBackgroundColor(Color.WHITE);
+            relativeLayout.setBackgroundColor(Color.WHITE);
+        }
+
+
+
+    }
+    private void setBarChartdata(int currentWeek,int currentMonth,int currentYear){
+        taskList.clear();
+        weekly.setText("Weekly Focus Time : "+currentWeek);
+        int i = 1;
+        final Cursor cursor = dbDaily.getAllWeek(String.valueOf(currentWeek),monthss[currentMonth-1],String.valueOf(currentYear));
+
+        System.out.println();
+        for (int j = 0; j <7 ; j++) {
+            taskList.add(j,new Task(days[j],String.valueOf(currentWeek),monthss[currentMonth-1],String.valueOf(currentYear),0,j));
+        }
+        System.out.println("task list"+taskList.size());
+        // looping through all rows and adding to list
+        if (cursor.getCount() != 0) {
+            // show message
+            while (cursor.moveToNext()) {
+
+                // System.out.println();
+                Task word = new Task();
+                word.setID(i);
+                word.setDAY(cursor.getString(1));
+                word.setWEEK(cursor.getString(2));
+                word.setMONTH(cursor.getString(3));
+                word.setYEAR(cursor.getString(4));
+                word.setTIME(cursor.getInt(5));
+                System.out.println(word.toString());
+                if(word.getDAY().equals("MON")){
+                    taskList.set(0,word);
+
+                }
+                if(word.getDAY().equals("TUE")){
+                    taskList.set(1,word);
+
+                }
+                if(word.getDAY().equals("WED")){
+                    taskList.set(2,word);
+
+                }
+                if(word.getDAY().equals("THU")){
+                    taskList.set(3,word);
+
+                }
+                if(word.getDAY().equals("FRI")){
+                    taskList.set(4,word);
+
+                }
+                if(word.getDAY().equals("SAT")){
+                    taskList.set(5,word);
+
+                }
+                if(word.getDAY().equals("SUN")){
+                    taskList.set(6,word);
+
+                }
+                i++;
+            }
+        } else {
+        }
+        System.out.println("task list"+taskList.size());
+    }
+    private  void initbar(){
         if(taskList.size()!=0) {
-            barChart = findViewById(R.id.barchart);
             XAxis xAxis = barChart.getXAxis();
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
             xAxis.setGranularity(0f);
@@ -301,43 +371,6 @@ public class daily_details extends AppCompatActivity {
             barChart.animateXY(5000, 5000);
             barChart.invalidate();
         }
-        if(taskList2.size()!=0){
-
-            mChart = findViewById(R.id.chart);
-            mChart.setTouchEnabled(true);
-            mChart.setPinchZoom(true);
-            MyMarkerView mv = new MyMarkerView(getApplicationContext(), R.layout.custom_marker_view);
-            mv.setChartView(mChart);
-            mChart.setMarker(mv);
-            mChart.animateXY(5000,5000);
-            renderData();
-        }
-        SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
-        boolean isDark = prefs.getBoolean("isDark", false);
-
-        RelativeLayout relativeLayout = findViewById(R.id.dailylayout);
-        if (isDark) {
-            mChart.setBackgroundColor(Color.BLACK);
-            mChart.getXAxis().setTextColor(Color.WHITE);
-            mChart.getAxisLeft().setTextColor(Color.WHITE);
-            mChart.getLegend().setTextColor(Color.WHITE);
-            barChart.getXAxis().setTextColor(Color.WHITE);
-            barChart.getAxisLeft().setTextColor(Color.WHITE);
-            barChart.getLegend().setTextColor(Color.WHITE);
-            barChart.setBackgroundColor(Color.BLACK);
-            relativeLayout.setBackgroundColor(Color.BLACK);
-        } else {
-            mChart.setBackgroundColor(Color.WHITE);
-            mChart.getXAxis().setTextColor(Color.BLACK);
-            mChart.getAxisLeft().setTextColor(Color.BLACK);
-            mChart.getLegend().setTextColor(Color.BLACK);
-            barChart.getXAxis().setTextColor(Color.BLACK);
-            barChart.getAxisLeft().setTextColor(Color.BLACK);
-            barChart.getLegend().setTextColor(Color.BLACK);
-            barChart.setBackgroundColor(Color.WHITE);
-            relativeLayout.setBackgroundColor(Color.WHITE);
-        }
-
     }
 
     private ArrayList getData(){

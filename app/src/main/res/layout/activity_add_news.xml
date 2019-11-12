@@ -121,17 +121,18 @@
         android:layout_marginTop="10dp">
 
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/save"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:layout_marginLeft="150dp"
             android:paddingBottom="10dp"
-            android:paddingLeft="30dp"
-            android:paddingRight="30dp"
+            android:background="@drawable/buttonshaperound"
+            android:paddingLeft="20dp"
             android:paddingTop="10dp"
             android:text="Save"
+            android:paddingRight="20dp"
             android:textColor="@color/cardview_light_background" />
 
 

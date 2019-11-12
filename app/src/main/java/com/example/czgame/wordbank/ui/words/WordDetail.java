@@ -30,7 +30,7 @@ public class WordDetail extends AppCompatActivity {
         });
 
         TabLayout tabLayout = findViewById(R.id.tabs);
-        tabLayout.addTab(tabLayout.newTab().setText("Meaning"));
+        tabLayout.addTab(tabLayout.newTab().setText("Word Section"));
         tabLayout.addTab(tabLayout.newTab().setText("Sentences"));
 
         final ViewPager viewPager = findViewById(R.id.view_pager);

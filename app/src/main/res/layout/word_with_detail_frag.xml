@@ -1,84 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/item_detail"
-    >
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="@android:color/white"
+    android:gravity="center"
+    android:orientation="vertical">
 
-    <LinearLayout
+
+    <RelativeLayout
         android:layout_width="match_parent"
+        android:id="@+id/wordsec"
+        android:layout_marginTop="10dp"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/word"
+            style="@style/LoginTextInputLayoutStyle"
             android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:hint="TextView"
-            android:textColorHint="@color/cardview_shadow_start_color"
-            android:textColor="@android:color/background_dark"
-            android:layout_marginTop="20dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="15dp"
-            android:gravity="top|left"
-
-            android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/titlelay"
+            android:layout_margin="10dp"
             android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
-            android:background="@drawable/backgroundborder"/>
+            android:layout_marginRight="@dimen/alerter_activity_horizontal_margin">
 
-        <EditText
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/word1"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_marginTop="20dp"
+                android:gravity="top|left"
+                android:hint="Word"
+                android:paddingLeft="15dp"
+                android:paddingTop="15dp"
+                android:paddingRight="15dp"
+                android:textColor="@android:color/background_dark"
+                android:textColorHint="@color/cardview_shadow_start_color"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/meaning"
+            style="@style/LoginTextInputLayoutStyle"
             android:layout_width="match_parent"
-            android:layout_height="299dp"
-            android:hint="TextView"
-            android:background="@drawable/backgroundborder"
-            android:fadeScrollbars="true"
-            android:isScrollContainer="true"
-            android:textColorHint="@color/cardview_shadow_start_color"
-            android:layout_marginTop="20dp"
-            android:textColor="@android:color/background_dark"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="15dp"
-            android:gravity="top|left"
-            android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/word"
+            android:layout_margin="10dp"
             android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
-            android:scrollbars="vertical"/>
-    </LinearLayout>
+            android:layout_marginRight="@dimen/alerter_activity_horizontal_margin">
 
-    <LinearLayout
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/meaning1"
+                android:layout_width="match_parent"
+                android:layout_height="199dp"
+                android:layout_marginTop="20dp"
+                android:gravity="top|left"
+                android:hint="Meaning"
+                android:paddingLeft="15dp"
+                android:paddingTop="15dp"
+                android:paddingRight="15dp"
+                android:textColor="@android:color/background_dark"
+                android:textColorHint="@color/cardview_shadow_start_color"
+                />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
+        android:layout_below="@+id/wordsec"
         android:layout_marginTop="20dp">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/update"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
             android:layout_gravity="left"
-            android:text="Update"
-            android:paddingLeft="18dp"
-            android:paddingRight="30dp"
-            android:paddingTop="10dp"
+            android:layout_marginStart="18dp"
             android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
-            android:textColor="@color/cardview_light_background"
+            android:paddingLeft="18dp"
+            android:paddingTop="10dp"
+            android:paddingRight="30dp"
             android:paddingBottom="10dp"
-            />
+            android:text="Update"
+            android:textColor="@color/cardview_light_background" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/delete"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_gravity="left"
-            android:paddingLeft="23dp"
-            android:paddingRight="30dp"
-            android:paddingTop="10dp"
-            android:textColor="@color/cardview_light_background"
-            android:paddingBottom="10dp"
             android:layout_marginLeft="160dp"
+            android:layout_marginEnd="13dp"
+            android:paddingLeft="23dp"
+            android:paddingTop="10dp"
+            android:paddingRight="30dp"
 
-            android:text="Delete" />
-    </LinearLayout>
-</LinearLayout>
+            android:paddingBottom="10dp"
+            android:text="Delete"
+            android:textColor="@color/cardview_light_background" />
+    </RelativeLayout>
+
+</RelativeLayout>
