@@ -6,6 +6,7 @@
     tools:context="com.example.czgame.wordbank.ui.news.news_details"
     tools:showIn="@layout/activity_news_details"
     xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
@@ -14,7 +15,7 @@
     <include layout="@layout/content_news_details" />
 
     <RelativeLayout
-
+        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
         android:id="@+id/some"
         android:layout_height="wrap_content"

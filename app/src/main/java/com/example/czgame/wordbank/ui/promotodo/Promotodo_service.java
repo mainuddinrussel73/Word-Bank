@@ -21,7 +21,6 @@ import com.example.czgame.wordbank.R;
 
 import java.io.IOException;
 
-import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 public class Promotodo_service extends Service {
@@ -40,7 +39,7 @@ public class Promotodo_service extends Service {
     public static CountDownTimer cdt;
     public static boolean ispause = true;
     public static MediaPlayer mp, mp1;
-    public static String fileName;
+    public static String fileName= "none";
 
     public static void pause() {
 
@@ -94,7 +93,6 @@ public class Promotodo_service extends Service {
 
         cdt.start();
     }
-
     @Override
     public void onDestroy() {
 
@@ -142,8 +140,10 @@ public class Promotodo_service extends Service {
         } catch (Exception e) {
             System.out.println("Unable to TunePlay: startRingtone(): " + e.toString());
         }
+
+
         stattimer();
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
 
@@ -167,7 +167,12 @@ public class Promotodo_service extends Service {
                 bi.setAction(Promotodo_receiver.GET_TIME);
                 bi.putExtra("countdown", millisUntilFinished);
 
+                try{
+                    bi.setClass(Promotodo_service.this, Promotodo_receiver.class);
                 sendBroadcast(bi);
+                }catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
             }
 
             @Override
@@ -177,8 +182,10 @@ public class Promotodo_service extends Service {
                 }
                 mp1.start();
                 Log.i(TAG, "Timer finished");
+
                 bi.setAction(Promotodo_receiver.SET_TIME);
                 bi.putExtra("countdown", new Long(0));
+                bi.setClass(Promotodo_service.this, Promotodo_receiver.class);
                 sendBroadcast(bi);
                 total = 1800000;
             }
@@ -193,17 +200,25 @@ public class Promotodo_service extends Service {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public void startMyOwnForeground() {
         String NOTIFICATION_CHANNEL_ID = "com.example.myapp";
         String channelName = "My Promotodo Service";
 
-        NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_HIGH);
-        chan.setLightColor(Color.BLUE);
-        chan.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+        NotificationChannel chan = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_HIGH);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            chan.setLightColor(Color.BLUE);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            chan.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+        }
         manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         assert manager != null;
-        manager.createNotificationChannel(chan);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            manager.createNotificationChannel(chan);
+        }
 
 
         notificationView = new RemoteViews(getPackageName(), R.layout.promo_notification);

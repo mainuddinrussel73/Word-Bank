@@ -8,6 +8,7 @@
     android:id="@+id/main_view"
     android:paddingTop="50dp"
     android:background="@drawable/backgroundborder"
+    android:fitsSystemWindows="true"
     android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
     android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
     android:layout_marginTop="@dimen/alerter_activity_horizontal_margin"

@@ -358,11 +358,11 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
         for (int i = 0; i < promotododataList.size(); i++) {
             tasktime += promotododataList.get(i).getNum_of_promotodo();
         }
-        totalhour.setText("Total hour : " + (tasktime * 0.5));
+        totalhour.setText("Total : " + (tasktime * 0.5)+"h");
 
 
         SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
-        remain.setText("Completed Hours : " + (prefs1.getInt("t", 0) * 0.5));
+        remain.setText("Completed : " + (prefs1.getInt("t", 0) * 0.5) +"h");
 
 
  /*       DBDaily dbDaily = new DBDaily(this);
@@ -473,7 +473,6 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
         }
 
 
-
     }
 
     public void initList() {
@@ -563,7 +562,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
             System.out.println(e.getMessage());
         }
 
-        toast("onDragViewStart   beginPosition--->" + beginPosition);
+        //toast("onDragViewStart   beginPosition--->" + beginPosition);
     }
 
     @Override
@@ -572,7 +571,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
         promotododata applicationInfo = promotododataList.remove(fromPosition);
         //f_promotodo(),applicationInfo.getDue_date());
         promotododataList.add(toPosition, applicationInfo);
-        toast("onDragDropViewMoved   fromPosition--->" + fromPosition + "  toPosition-->" + toPosition);
+       // toast("onDragDropViewMoved   fromPosition--->" + fromPosition + "  toPosition-->" + toPosition);
     }
 
     @Override
@@ -605,18 +604,18 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
             }
         }
 
-        toast("onDragViewDown   finalPosition--->" + finalPosition);
+        //toast("onDragViewDown   finalPosition--->" + finalPosition);
     }
 
     @Override
     public void onSlideOpen(View view, View parentView, int position, int direction) {
-        toast("onSlideOpen   position--->" + position + "  direction--->" + direction);
+        //toast("onSlideOpen   position--->" + position + "  direction--->" + direction);
         //cvh.findViewById().imgLogo2.setImageDrawable(Utils.getDrawable(Promotodo_activity.this, R.drawable.ic_keyboard_arrow_left_black_24dp));
     }
 
     @Override
     public void onSlideClose(View view, View parentView, int position, int direction) {
-        toast("onSlideClose   position--->" + position + "  direction--->" + direction);
+        //toast("onSlideClose   position--->" + position + "  direction--->" + direction);
     }
 
     @Override
@@ -708,7 +707,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        toast("onItemClick   position--->" + position);
+        //toast("onItemClick   position--->" + position);
 
         Intent myIntent = new Intent(view.getContext(), promodetail.class);
         //String s = view.findViewById(R.id.subtitle).toString();
@@ -722,7 +721,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        toast("onItemLongClick   position--->" + position);
+        //toast("onItemLongClick   position--->" + position);
         Object o = view.getTag();
         if (o != null && o instanceof Integer) {
             mListView.startDrag(((Integer) o).intValue());

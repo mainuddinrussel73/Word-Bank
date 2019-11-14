@@ -61,6 +61,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
 
 
+
         if (intent.getAction() != null) {
             switch (intent.getAction()) {
                 case RESUME_ACTION:
@@ -69,6 +70,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                     if (!mp.isPlaying()) {
                         mp.start();
 
+                        serviceIntent.setClass(context, NotificationService.class);
                         serviceIntent.setAction(Constants.ACTION.AUDIOFOCUS_LOSS);
                         context.startService(serviceIntent);
 
@@ -353,6 +355,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
             mp.setVolume(2.5f, 2.5f);
 
             Intent intenta = new Intent(context, NotificationService.class);
+            intenta.setClass(context, NotificationService.class);
             intenta.setAction("com.example.mainuddin.myapplication34.action.next");
             intenta.putExtra("p", position);
             context.startService(intenta);
@@ -461,6 +464,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
             mp.setVolume(2.5f, 2.5f);
 
             Intent intenta = new Intent(context, NotificationService.class);
+            intenta.setClass(context, NotificationService.class);
             intenta.setAction("com.example.mainuddin.myapplication34.action.prev");
             intenta.putExtra("p", position);
             context.startService(intenta);

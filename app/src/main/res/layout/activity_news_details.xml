@@ -85,6 +85,8 @@
 
 
     <com.leinardi.android.speeddial.SpeedDialOverlayLayout
+        android:fitsSystemWindows="true"
+        android:windowSoftInputMode="adjustResize"
         android:id="@+id/overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

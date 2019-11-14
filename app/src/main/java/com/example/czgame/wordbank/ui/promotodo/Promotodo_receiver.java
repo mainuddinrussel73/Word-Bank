@@ -72,7 +72,6 @@ public class Promotodo_receiver extends BroadcastReceiver {
         return image;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -82,16 +81,19 @@ public class Promotodo_receiver extends BroadcastReceiver {
 
         Log.e("action", action);
 
-
+        System.out.println("receive");
         if (action.equals(GET_TIME)) {
-            updateGUI(context, intent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                updateGUI(context, intent);
+            }
         }
         if (action.equals(SET_TIME)) {
             Intent service = new Intent(context, Promotodo_service.class);
             context.stopService(service);
-            updateGUI(context, intent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                updateGUI(context, intent);
+            }
         }
-
 
     }
 
@@ -137,6 +139,7 @@ public class Promotodo_receiver extends BroadcastReceiver {
             titletask.setText(ccco.getTitle());
 
             Log.i("receiver", "Countdown seconds remaining: " + millisUntilFinished / 1000);
+            System.out.println(hours);
 
             if (millisUntilFinished != 0) {
 

@@ -105,7 +105,9 @@ public class NotificationService extends Service {
 
                     // implementation reference
 
+                    bi.setClass(NotificationService.this, MyNotificationReceiver.class);
                     startMyOwnForeground();
+
 
                 }
                 mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -307,11 +309,13 @@ public class NotificationService extends Service {
 
         yesReceive = new Intent();
         yesReceive.setAction(MyNotificationReceiver.RESUME_ACTION);
+        yesReceive.setClass(NotificationService.this, MyNotificationReceiver.class);
         pendingIntentYes = PendingIntent.getBroadcast(this, MyNotificationReceiver.REQUEST_CODE_NOTIFICATION, yesReceive, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
         noReceive = new Intent();
         noReceive.setAction(MyNotificationReceiver.CANCEL_ACTION);
+        noReceive.setClass(NotificationService.this, MyNotificationReceiver.class);
         pendingIntentNo = PendingIntent.getBroadcast(this, MyNotificationReceiver.REQUEST_CODE_NOTIFICATION, noReceive, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
@@ -319,6 +323,7 @@ public class NotificationService extends Service {
 
         nxReceive = new Intent();
         nxReceive.setAction(MyNotificationReceiver.NEXT_ACTION);
+        nxReceive.setClass(NotificationService.this, MyNotificationReceiver.class);
         pendingIntentNx = PendingIntent.getBroadcast(this, MyNotificationReceiver.REQUEST_CODE_NOTIFICATION, nxReceive, PendingIntent.FLAG_UPDATE_CURRENT);
 
         notificationView.setOnClickPendingIntent(R.id.status_bar_next, pendingIntentNx);
@@ -357,6 +362,7 @@ public class NotificationService extends Service {
 
         Intent toggle = new Intent();
         toggle.setAction(MyNotificationReceiver.STOP_ACTION);
+        toggle.setClass(NotificationService.this, MyNotificationReceiver.class);
         pendingIntenttogg = PendingIntent.getBroadcast(this, MyNotificationReceiver.REQUEST_CODE_NOTIFICATION, toggle, PendingIntent.FLAG_UPDATE_CURRENT);
         notificationView1.setOnClickPendingIntent(R.id.status_bar_collapse, pendingIntenttogg);
         notificationView.setOnClickPendingIntent(R.id.status_bar_collapse, pendingIntenttogg);

@@ -38,6 +38,7 @@ import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -118,575 +119,15 @@ public class news_details extends AppCompatActivity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_news_details);
-
-        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.toolbar_layout);
-        ImageView imageView = collapsingToolbarLayout.findViewById(R.id.image);
-
-
-        toolbar = findViewById(R.id.toolbar1);
-
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-        // collapsingToolbarLayout.setTitle(itemTitle);
-
-        final Button button = findViewById(R.id.opt);
-        registerForContextMenu(button);
-
-
-
-        prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
-        isDark = prefs.getBoolean("isDark", false);
-
-        mDBHelper = new DBNewsHelper(this);
-        intent = getIntent();
-
-
-
-        final boolean[] okkk = {false};
-
-        vf = findViewById(R.id.viewFlipper);
-
-        if (isDark) {
-            progressBar = new ProgressDialog(this, R.style.DialogurDark);
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (imm.isActive()){
+            // Hide keyboard
+            imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
         } else {
-            progressBar = new ProgressDialog(this, R.style.DialogueLight);
+            // Show keyboard
+            imm.toggleSoftInput(0, InputMethodManager.HIDE_IMPLICIT_ONLY);
         }
-        progressBar.setMessage("Loading Content....");
-        progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        progressBar.setIndeterminate(false);
-        progressBar.setMax(10);
-        progressBar.setProgress(0);
-        progressBar.show();
-
-        news_details = vf.findViewById(R.id.news_detail_des);
-        RelativeLayout relativeLayout = vf.findViewById(R.id.some);
-        webView = vf.findViewById(R.id.nestedView1);
-        webView.setHorizontalScrollBarEnabled(false);
-        //news_details.setTextIsSelectable(false);
-
-        news_details.setFocusable(false);
-        news_details.setClickable(true);
-        news_details.clearFocus();
-
-        news_activityD = this;
-
-
-
-        try {
-           // progressBar.setVisibility(View.VISIBLE);
-
-            RetrieveFeedTask asyncTask = new RetrieveFeedTask();
-            String s = intent.getStringExtra("body");
-            asyncTask.execute(s);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-
-
-
-
-
-        final Bitmap[] bitmap = {null};
-        textView = findViewById(R.id.words);
-
-
-
-        Picasso.with(this)
-                .load(intent.getStringExtra("url"))
-                .networkPolicy(NetworkPolicy.OFFLINE)
-                .into(imageView, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                        // imageView.setBlur(20);
-                        okkk[0] = true;
-
-                        imageView.invalidate();
-                        BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
-                        bitmap[0] = drawable.getBitmap();
-                        Bitmap blurredBitmap = BlurBuilder.blur( news_details.this, bitmap[0]);
-                        imageView.setImageBitmap(blurredBitmap);
-                        if(bitmap[0]==null){
-                            System.out.println("null");
-                        }
-                        collapsingToolbarLayout.setExpandedTitleColor((getDominantColor(bitmap[0])));
-                        // Typeface typeface = ResourcesCompat.getFont(this, R.font.lobs_star);
-                        collapsingToolbarLayout.setExpandedTitleTypeface(TyperRoboto.ROBOTO_BOLD_ITALIC());
-
-
-                        System.out.println("herere");
-                        textView.setTextColor(getComplimentColor((getDominantColor(bitmap[0]))));
-
-
-                        Drawable icon = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
-                        icon.setTint(getComplimentColor(getDominantColor(bitmap[0])));
-                        button.setBackground(icon);
-
-                        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
-                        toolbar.getNavigationIcon().setTint(getComplimentColor(getDominantColor(bitmap[0])));
-                        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                System.out.println("go back");
-                                toolbar.getNavigationIcon().setTint(Color.WHITE);
-                                Drawable icon = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
-                                icon.setTint(Color.WHITE);
-                                button.setBackground(icon);
-                                finish();
-
-                            }
-                        });
-
-                    }
-
-                    @Override
-                    public void onError() {
-                        okkk[0] =false;
-                        System.out.println("failedddd");
-                        //Try again online if cache failed
-                        Picasso.with(news_details.this)
-                                .load(intent.getStringExtra("url"))
-                                .error(R.drawable.news)
-                                .into(imageView, new Callback() {
-                                    @Override
-                                    public void onSuccess() {
-                                        // imageView.setBlur(20);
-                                        try {
-
-                                            imageView.invalidate();
-                                            BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
-                                            bitmap[0] = drawable.getBitmap();
-                                        }catch (Exception e){
-                                            System.out.println(e.getMessage());
-                                        }
-
-                                        Bitmap blurredBitmap = BlurBuilder.blur( news_details.this, bitmap[0]);
-                                        imageView.setImageBitmap(blurredBitmap);
-                                        Palette.from(bitmap[0]).generate(new Palette.PaletteAsyncListener() {
-                                            public void onGenerated(Palette palette) {
-                                                Palette.Swatch vibrantSwatch = palette.getDarkVibrantSwatch();
-                                                if (vibrantSwatch != null) {
-                                                    collapsingToolbarLayout.setExpandedTitleColor(((getComplimentColor(vibrantSwatch.getTitleTextColor()))));
-                                                    // Typeface typeface = ResourcesCompat.getFont(this, R.font.lobs_star);
-                                                    collapsingToolbarLayout.setExpandedTitleTypeface(TyperRoboto.ROBOTO_BOLD_ITALIC());
-
-
-                                                    textView.setTextColor(getComplimentColor(vibrantSwatch.getBodyTextColor()));
-
-
-                                                    Drawable icon = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
-                                                    icon.setTint(vibrantSwatch.getRgb());
-                                                    button.setBackground(icon);
-
-                                                    toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
-                                                    toolbar.getNavigationIcon().setTint(vibrantSwatch.getRgb());
-                                                    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(View view) {
-                                                            System.out.println("go back");
-                                                            toolbar.getNavigationIcon().setTint(Color.WHITE);
-                                                            Drawable icon = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
-                                                            icon.setTint(Color.WHITE);
-                                                            button.setBackground(icon);
-                                                            finish();
-                                                        }
-                                                    });
-
-                                                }
-                                            }
-                                        });
-                                    }
-
-                                    @Override
-                                    public void onError() {
-                                        collapsingToolbarLayout.setExpandedTitleTypeface(TyperRoboto.ROBOTO_BOLD_ITALIC());
-                                        Drawable icon = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
-                                        icon.setTint(Color.WHITE);
-                                        button.setBackground(icon);
-                                        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
-                                        toolbar.getNavigationIcon().setTint(Color.WHITE);
-                                        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                                            @Override
-                                            public void onClick(View view) {
-                                                System.out.println("go back");
-                                                toolbar.getNavigationIcon().setTint(Color.WHITE);
-                                                Drawable icon = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
-                                                icon.setTint(Color.WHITE);
-                                                button.setBackground(icon);
-                                                Intent myIntent = new Intent(news_details.getContext(), news_activity.class);
-                                                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                startActivityForResult(myIntent, 0);
-                                            }
-                                        });
-                                        Log.v("Picasso","Could not fetch image");
-                                    }
-                                });
-                    }
-                });
-
-
-
-        progressBar.setProgress(1);
-        //Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar1);
-        getSupportActionBar().setTitle(intent.getStringExtra("title"));
-
-
-
-
-
-
-        CoordinatorLayout additem = findViewById(R.id.content_detail);
-
-
-
-        if (isDark) {
-
-
-            webView.getSettings().setJavaScriptEnabled(true);
-            webView.setBackgroundColor(Color.BLACK);
-            webView.setWebViewClient(new WebViewClient() {
-                public void onPageFinished(WebView view, String url) {
-                    view.loadUrl(
-                            "javascript:document.body.style.setProperty(\"color\", \"white\");"
-                    );
-                }
-            });
-
-            additem.setBackgroundColor(Color.BLACK);
-            news_details.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
-            news_details.setTextColor(Color.WHITE);
-            relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
-
-        } else {
-
-
-            webView.getSettings().setJavaScriptEnabled(true);
-            webView.setBackgroundColor(Color.WHITE);
-            webView.setWebViewClient(new WebViewClient() {
-                public void onPageFinished(WebView view, String url) {
-                    view.loadUrl(
-                            "javascript:document.body.style.setProperty(\"color\", \"black\");"
-                    );
-                }
-            });
-            additem.setBackgroundColor(Color.WHITE);
-            news_details.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
-            news_details.setTextColor(Color.BLACK);
-            relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
-        }
-
-
-        SpeedDialView speedDialView = findViewById(R.id.speedDial);
-        speedDialView.addActionItem(
-                new SpeedDialActionItem.Builder(R.id.fab, R.drawable.ic_content_copy_black_24dp).setLabel("Copy")
-                        .create()
-        );
-        speedDialView.addActionItem(
-                new SpeedDialActionItem.Builder(R.id.fab21, R.drawable.ic_format_underlined_black_24dp).setLabel("Highlight")
-                        .create()
-        );
-        speedDialView.addActionItem(
-                new SpeedDialActionItem.Builder(R.id.fab32, R.drawable.ic_format_underlined_black_24dp).setLabel("Highlight All")
-                        .create()
-        );
-        speedDialView.addActionItem(
-                new SpeedDialActionItem.Builder(R.id.fab34, R.drawable.ic_unhide).setLabel("Unhighlight All")
-                        .create()
-        );
-        speedDialView.addActionItem(
-                new SpeedDialActionItem.Builder(R.id.fab35, R.drawable.ic_mode_edit_black_24dp).setLabel("Edit Mode")
-                        .create()
-        );
-        speedDialView.addActionItem(
-                new SpeedDialActionItem.Builder(R.id.fab36, R.drawable.ic_done_black_24dp).setLabel("Disable Edit Mode")
-                        .create()
-        );
-        speedDialView.addActionItem(
-                new SpeedDialActionItem.Builder(R.id.fab37, R.drawable.ic_save_black_24dp).setLabel("Save")
-                        .create()
-        );
-        speedDialView.addActionItem(
-                new SpeedDialActionItem.Builder(R.id.fab38, R.drawable.ic_image_black_24dp).setLabel("Add Image")
-                        .create()
-        );
-
-
-        speedDialView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
-        speedDialView.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener() {
-            @Override
-            public boolean onActionSelected(SpeedDialActionItem actionItem) {
-                vf.showNext();
-                Toasty.success(news_details.getContext(),vf.getTransitionName(),Toasty.LENGTH_SHORT).show();
-                switch (actionItem.getId()) {
-                    case R.id.fab:
-                        copyText();
-                        speedDialView.close(); // To close the Speed Dial with animation
-                        return true; // false will close it without animation
-                    case R.id.fab21:
-
-                        setHighLightedText();
-                        speedDialView.close();
-
-                        // To close the Speed Dial with animation
-                        return true;
-                    case R.id.fab32:
-                        setHighLightedAllText();
-                        speedDialView.close();
-
-                        // To close the Speed Dial with animation
-                        return true;
-                    case R.id.fab34:
-                        setUnHighLightedText();
-                        speedDialView.close();
-
-                        // To close the Speed Dial with animation
-                        return true;
-                    case R.id.fab35:
-                        news_details.setFocusable(true);
-                        news_details.setEnabled(true);
-                        news_details.setFocusableInTouchMode(true);
-                        news_details.requestFocus();
-                        speedDialView.close();
-
-                        // To close the Speed Dial with animation
-                        return true;
-
-                    case R.id.fab36:
-                        //vf.showNext();
-                        news_details.setFocusable(false);
-                        news_details.setClickable(true);
-                        news_details.clearFocus();
-                        speedDialView.close();
-
-                        // To close the Speed Dial with animation
-                        return true;
-                    case R.id.fab37:
-                        // vf.showNext();
-                        updatetext();
-                        news_details.setFocusable(false);
-                        news_details.setClickable(true);
-                        news_details.clearFocus();
-                        speedDialView.close();
-
-                        // To close the Speed Dial with animation
-                        return true;
-                    case R.id.fab38:
-                        // vf.showNext();
-                        updatetextimage();
-
-                        news_details.setFocusable(false);
-                        news_details.setClickable(true);
-                        news_details.clearFocus();
-                        speedDialView.close();
-
-                        // To close the Speed Dial with animation
-                        return true;
-
-
-                    default:
-                        return false;
-                }
-
-            }
-
-        });
-
-
-
-
-        button.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                //Creating the instance of PopupMenu
-                //PopupMenu popup = new PopupMenu(MainActivity.this, sort);
-                //Inflating the Popup using xml file
-                Context wrapper = new ContextThemeWrapper(news_details.this, R.style.YOURSTYLE1);
-                if (MainActivity.isDark) {
-                    wrapper = new ContextThemeWrapper(news_details.this, R.style.YOURSTYLE);
-
-                } else {
-                    wrapper = new ContextThemeWrapper(news_details.this, R.style.YOURSTYLE1);
-                }
-
-                PopupMenu popup = new PopupMenu(wrapper, button);
-                popup.getMenuInflater().inflate(R.menu.top_menu, popup.getMenu());
-
-
-                //registering popup with OnMenuItemClickListener
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.create_new:
-                                try {
-                                    Intent myIntent = new Intent(news_details.this, news_update.class);
-                                    //String s = view.findViewById(R.id.subtitle).toString();
-                                    //String s = (String) parent.getI;
-                                    myIntent.putExtra("title", intent.getStringExtra("title"));
-                                    myIntent.putExtra("body", intent.getStringExtra("body"));
-                                    myIntent.putExtra("url", intent.getStringExtra("url"));
-                                    myIntent.putExtra("id", intent.getExtras().getInt("id"));
-                                    myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    startActivityForResult(myIntent, 0);
-                                } catch (Exception e) {
-                                    System.out.println(e.getMessage());
-                                }
-                                return true;
-                            case R.id.open:
-
-                                SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
-                                boolean isDark = prefs.getBoolean("isDark", false);
-                                if (isDark) {
-
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(news_details.this, R.style.DialogurDark);
-                                    builder.setTitle(R.string.nn);
-                                    builder.setMessage(R.string.deletethis);
-                                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            DBNewsHelper mDBHelper;
-
-                                            mDBHelper = new DBNewsHelper(news_details.this);
-                                            int id = intent.getExtras().getInt("id");
-                                            id++;
-                                            int b;
-                                            ActivityInfo activityInfo = null;
-                                            try {
-                                                activityInfo = getPackageManager().getActivityInfo(
-                                                        getComponentName(), PackageManager.GET_META_DATA);
-                                            } catch (PackageManager.NameNotFoundException e) {
-                                                e.printStackTrace();
-                                            }
-                                            String title = activityInfo.loadLabel(getPackageManager())
-                                                    .toString();
-
-                                            if (intent.getStringExtra("url").equals("empty")) {
-
-
-                                                b = mDBHelper.deleteDatau(String.valueOf(id), intent.getStringExtra("title"), title
-                                                        , intent.getStringExtra("body"));
-                                                System.out.println("called");
-                                            } else {
-                                                b = mDBHelper.deleteData(String.valueOf(id), intent.getStringExtra("title"), title
-                                                        , intent.getStringExtra("body"), intent.getStringExtra("url"));
-                                            }
-
-                                            if (b == 1) {
-                                                Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
-                                                Intent myIntent = new Intent(news_details.this, news_activity.class);
-                                                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                startActivityForResult(myIntent, 0);
-                                            } else {
-                                                Toasty.success(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
-                                            }
-
-                                        }
-                                    });
-                                    builder.setNegativeButton("NO", null);
-                                    builder.show();
-
-                                } else {
-
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(news_details.this, R.style.DialogueLight);
-                                    builder.setTitle(R.string.nn);
-                                    builder.setMessage(R.string.deletethis);
-                                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            DBNewsHelper mDBHelper;
-
-                                            mDBHelper = new DBNewsHelper(news_details.this);
-                                            int id = intent.getExtras().getInt("id");
-                                            id++;
-                                            int b;
-                                            ActivityInfo activityInfo = null;
-                                            try {
-                                                activityInfo = getPackageManager().getActivityInfo(
-                                                        getComponentName(), PackageManager.GET_META_DATA);
-                                            } catch (PackageManager.NameNotFoundException e) {
-                                                e.printStackTrace();
-                                            }
-                                            String title = activityInfo.loadLabel(getPackageManager())
-                                                    .toString();
-
-                                            if (intent.getStringExtra("url").equals("empty")) {
-
-
-                                                b = mDBHelper.deleteDatau(String.valueOf(id), intent.getStringExtra("title"), title
-                                                        , intent.getStringExtra("body"));
-                                                System.out.println("called");
-                                            } else {
-                                                b = mDBHelper.deleteData(String.valueOf(id), intent.getStringExtra("title"), title
-                                                        , intent.getStringExtra("body"), intent.getStringExtra("url"));
-                                            }
-
-                                            if (b == 1) {
-                                                Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
-                                                Intent myIntent = new Intent(news_details.this, news_activity.class);
-                                                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                startActivityForResult(myIntent, 0);
-                                            } else {
-                                                Toasty.success(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
-                                            }
-
-                                        }
-                                    });
-                                    builder.setNegativeButton("NO", null);
-                                    builder.show();
-                                }
-
-                                return true;
-
-                            case R.id.pdf:
-
-                                new CreatePdf(news_details.this)
-                                        .setPdfName(intent.getStringExtra("title"))
-                                        .openPrintDialog(true)
-                                        .setContentBaseUrl(null)
-                                        .setPageSize(PrintAttributes.MediaSize.ISO_A4)
-                                        .setContent(intent.getStringExtra("body"))
-                                        .setFilePath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Dir")
-                                        .setCallbackListener(new CreatePdf.PdfCallbackListener() {
-                                            @Override
-                                            public void onFailure(@NotNull String s) {
-                                                Toasty.error(news_details.this, "Failed", Toast.LENGTH_SHORT).show();
-                                            }
-
-                                            @Override
-                                            public void onSuccess(@NotNull String s) {
-                                                // do your stuff here
-                                                Toasty.success(news_details.this, "Success", Toast.LENGTH_SHORT).show();
-
-                                            }
-                                        })
-                                        .create();
-
-
-                            default:
-                                return false;
-                        }
-
-
-                    }
-                });
-                popup.show();
-            }
-        });
-
     }
 
 
@@ -1197,6 +638,583 @@ public class news_details extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_news_details);
+
+        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.toolbar_layout);
+        ImageView imageView = collapsingToolbarLayout.findViewById(R.id.image);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        toolbar = findViewById(R.id.toolbar1);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        // collapsingToolbarLayout.setTitle(itemTitle);
+
+        final Button button = findViewById(R.id.opt);
+        registerForContextMenu(button);
+
+
+
+        prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+        isDark = prefs.getBoolean("isDark", false);
+
+        mDBHelper = new DBNewsHelper(this);
+        intent = getIntent();
+
+
+
+        final boolean[] okkk = {false};
+
+        vf = findViewById(R.id.viewFlipper);
+
+        if (isDark) {
+            progressBar = new ProgressDialog(this, R.style.DialogurDark);
+        } else {
+            progressBar = new ProgressDialog(this, R.style.DialogueLight);
+        }
+        progressBar.setMessage("Loading Content....");
+        progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressBar.setIndeterminate(false);
+        progressBar.setMax(10);
+        progressBar.setProgress(0);
+        progressBar.show();
+
+        news_details = vf.findViewById(R.id.news_detail_des);
+        RelativeLayout relativeLayout = vf.findViewById(R.id.some);
+        webView = vf.findViewById(R.id.nestedView1);
+        webView.setHorizontalScrollBarEnabled(false);
+        //news_details.setTextIsSelectable(false);
+
+        news_details.setFocusable(false);
+        news_details.setClickable(true);
+        news_details.clearFocus();
+
+        news_activityD = this;
+
+
+
+        try {
+           // progressBar.setVisibility(View.VISIBLE);
+
+            RetrieveFeedTask asyncTask = new RetrieveFeedTask();
+            String s = intent.getStringExtra("body");
+            asyncTask.execute(s);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+
+
+
+
+
+        final Bitmap[] bitmap = {null};
+        textView = findViewById(R.id.words);
+
+
+
+        Picasso.with(this)
+                .load(intent.getStringExtra("url"))
+                .networkPolicy(NetworkPolicy.OFFLINE)
+                .into(imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        // imageView.setBlur(20);
+                        okkk[0] = true;
+
+                        imageView.invalidate();
+                        BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
+                        bitmap[0] = drawable.getBitmap();
+                        Bitmap blurredBitmap = BlurBuilder.blur( news_details.this, bitmap[0]);
+                        imageView.setImageBitmap(blurredBitmap);
+                        if(bitmap[0]==null){
+                            System.out.println("null");
+                        }
+                        collapsingToolbarLayout.setExpandedTitleColor((getDominantColor(bitmap[0])));
+                        // Typeface typeface = ResourcesCompat.getFont(this, R.font.lobs_star);
+                        collapsingToolbarLayout.setExpandedTitleTypeface(TyperRoboto.ROBOTO_BOLD_ITALIC());
+
+
+                        System.out.println("herere");
+                        textView.setTextColor(getComplimentColor((getDominantColor(bitmap[0]))));
+
+
+                        Drawable icon = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
+                        icon.setTint(getComplimentColor(getDominantColor(bitmap[0])));
+                        button.setBackground(icon);
+
+                        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
+                        toolbar.getNavigationIcon().setTint(getComplimentColor(getDominantColor(bitmap[0])));
+                        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                System.out.println("go back");
+                                toolbar.getNavigationIcon().setTint(Color.WHITE);
+                                Drawable icon = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
+                                icon.setTint(Color.WHITE);
+                                button.setBackground(icon);
+                                finish();
+
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        okkk[0] =false;
+                        System.out.println("failedddd");
+                        //Try again online if cache failed
+                        Picasso.with(news_details.this)
+                                .load(intent.getStringExtra("url"))
+                                .error(R.drawable.news)
+                                .into(imageView, new Callback() {
+                                    @Override
+                                    public void onSuccess() {
+                                        // imageView.setBlur(20);
+                                        try {
+
+                                            imageView.invalidate();
+                                            BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
+                                            bitmap[0] = drawable.getBitmap();
+                                        }catch (Exception e){
+                                            System.out.println(e.getMessage());
+                                        }
+
+                                        Bitmap blurredBitmap = BlurBuilder.blur( news_details.this, bitmap[0]);
+                                        imageView.setImageBitmap(blurredBitmap);
+                                        Palette.from(bitmap[0]).generate(new Palette.PaletteAsyncListener() {
+                                            public void onGenerated(Palette palette) {
+                                                Palette.Swatch vibrantSwatch = palette.getDarkVibrantSwatch();
+                                                if (vibrantSwatch != null) {
+                                                    collapsingToolbarLayout.setExpandedTitleColor(((getComplimentColor(vibrantSwatch.getTitleTextColor()))));
+                                                    // Typeface typeface = ResourcesCompat.getFont(this, R.font.lobs_star);
+                                                    collapsingToolbarLayout.setExpandedTitleTypeface(TyperRoboto.ROBOTO_BOLD_ITALIC());
+
+
+                                                    textView.setTextColor(getComplimentColor(vibrantSwatch.getBodyTextColor()));
+
+
+                                                    Drawable icon = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
+                                                    icon.setTint(vibrantSwatch.getRgb());
+                                                    button.setBackground(icon);
+
+                                                    toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
+                                                    toolbar.getNavigationIcon().setTint(vibrantSwatch.getRgb());
+                                                    toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                            System.out.println("go back");
+                                                            toolbar.getNavigationIcon().setTint(Color.WHITE);
+                                                            Drawable icon = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
+                                                            icon.setTint(Color.WHITE);
+                                                            button.setBackground(icon);
+                                                            finish();
+                                                        }
+                                                    });
+
+                                                }
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onError() {
+                                        collapsingToolbarLayout.setExpandedTitleTypeface(TyperRoboto.ROBOTO_BOLD_ITALIC());
+                                        Drawable icon = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
+                                        icon.setTint(Color.WHITE);
+                                        button.setBackground(icon);
+                                        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
+                                        toolbar.getNavigationIcon().setTint(Color.WHITE);
+                                        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                System.out.println("go back");
+                                                toolbar.getNavigationIcon().setTint(Color.WHITE);
+                                                Drawable icon = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
+                                                icon.setTint(Color.WHITE);
+                                                button.setBackground(icon);
+                                                Intent myIntent = new Intent(news_details.getContext(), news_activity.class);
+                                                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                startActivityForResult(myIntent, 0);
+                                            }
+                                        });
+                                        Log.v("Picasso","Could not fetch image");
+                                    }
+                                });
+                    }
+                });
+
+
+
+        progressBar.setProgress(1);
+        //Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar1);
+        getSupportActionBar().setTitle(intent.getStringExtra("title"));
+
+
+
+
+
+
+        CoordinatorLayout additem = findViewById(R.id.content_detail);
+
+
+
+        if (isDark) {
+
+
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.setBackgroundColor(Color.BLACK);
+            webView.setWebViewClient(new WebViewClient() {
+                public void onPageFinished(WebView view, String url) {
+                    view.loadUrl(
+                            "javascript:document.body.style.setProperty(\"color\", \"white\");"
+                    );
+                }
+            });
+
+            additem.setBackgroundColor(Color.BLACK);
+            news_details.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
+            news_details.setTextColor(Color.WHITE);
+            relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
+
+        } else {
+
+
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.setBackgroundColor(Color.WHITE);
+            webView.setWebViewClient(new WebViewClient() {
+                public void onPageFinished(WebView view, String url) {
+                    view.loadUrl(
+                            "javascript:document.body.style.setProperty(\"color\", \"black\");"
+                    );
+                }
+            });
+            additem.setBackgroundColor(Color.WHITE);
+            news_details.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
+            news_details.setTextColor(Color.BLACK);
+            relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
+        }
+
+
+        SpeedDialView speedDialView = findViewById(R.id.speedDial);
+        speedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.fab, R.drawable.ic_content_copy_black_24dp).setLabel("Copy")
+                        .create()
+        );
+        speedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.fab21, R.drawable.ic_format_underlined_black_24dp).setLabel("Highlight")
+                        .create()
+        );
+        speedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.fab32, R.drawable.ic_format_underlined_black_24dp).setLabel("Highlight All")
+                        .create()
+        );
+        speedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.fab34, R.drawable.ic_unhide).setLabel("Unhighlight All")
+                        .create()
+        );
+        speedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.fab35, R.drawable.ic_mode_edit_black_24dp).setLabel("Edit Mode")
+                        .create()
+        );
+        speedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.fab36, R.drawable.ic_done_black_24dp).setLabel("Disable Edit Mode")
+                        .create()
+        );
+        speedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.fab37, R.drawable.ic_save_black_24dp).setLabel("Save")
+                        .create()
+        );
+        speedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.fab38, R.drawable.ic_image_black_24dp).setLabel("Add Image")
+                        .create()
+        );
+
+
+        speedDialView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+            }
+        });
+
+        speedDialView.setOnActionSelectedListener(new SpeedDialView.OnActionSelectedListener() {
+            @Override
+            public boolean onActionSelected(SpeedDialActionItem actionItem) {
+                vf.showNext();
+                Toasty.success(news_details.getContext(),vf.getTransitionName(),Toasty.LENGTH_SHORT).show();
+                switch (actionItem.getId()) {
+                    case R.id.fab:
+                        copyText();
+                        speedDialView.close(); // To close the Speed Dial with animation
+                        return true; // false will close it without animation
+                    case R.id.fab21:
+                        hideKeyboard(news_details.this);
+                        news_details.setFocusable(false);
+                        setHighLightedText();
+                        speedDialView.close();
+
+                        // To close the Speed Dial with animation
+                        return true;
+                    case R.id.fab32:
+                        hideKeyboard(news_details.this);
+                        news_details.setFocusable(false);
+                        setHighLightedAllText();
+                        speedDialView.close();
+
+                        // To close the Speed Dial with animation
+                        return true;
+                    case R.id.fab34:
+                        hideKeyboard(news_details.this);
+                        news_details.setFocusable(false);
+                        setUnHighLightedText();
+                        speedDialView.close();
+
+                        // To close the Speed Dial with animation
+                        return true;
+                    case R.id.fab35:
+                        hideKeyboard(news_details.this);
+                        news_details.setFocusable(true);
+                        news_details.setEnabled(true);
+                        news_details.setFocusableInTouchMode(true);
+                        news_details.requestFocus();
+                        speedDialView.close();
+
+                        // To close the Speed Dial with animation
+                        return true;
+
+                    case R.id.fab36:
+                        //vf.showNext();
+                        news_details.setFocusable(false);
+                        news_details.setClickable(true);
+                        news_details.clearFocus();
+                        speedDialView.close();
+
+                        // To close the Speed Dial with animation
+                        return true;
+                    case R.id.fab37:
+                        // vf.showNext();
+                        updatetext();
+                        news_details.setFocusable(false);
+                        news_details.setClickable(true);
+                        news_details.clearFocus();
+                        speedDialView.close();
+
+                        // To close the Speed Dial with animation
+                        return true;
+                    case R.id.fab38:
+                        // vf.showNext();
+                        updatetextimage();
+
+                        news_details.setFocusable(false);
+                        news_details.setClickable(true);
+                        news_details.clearFocus();
+                        speedDialView.close();
+
+                        // To close the Speed Dial with animation
+                        return true;
+
+
+                    default:
+                        return false;
+                }
+
+            }
+
+        });
+
+
+
+
+        button.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                //Creating the instance of PopupMenu
+                //PopupMenu popup = new PopupMenu(MainActivity.this, sort);
+                //Inflating the Popup using xml file
+                Context wrapper = new ContextThemeWrapper(news_details.this, R.style.YOURSTYLE1);
+                if (MainActivity.isDark) {
+                    wrapper = new ContextThemeWrapper(news_details.this, R.style.YOURSTYLE);
+
+                } else {
+                    wrapper = new ContextThemeWrapper(news_details.this, R.style.YOURSTYLE1);
+                }
+
+                PopupMenu popup = new PopupMenu(wrapper, button);
+                popup.getMenuInflater().inflate(R.menu.top_menu, popup.getMenu());
+
+
+                //registering popup with OnMenuItemClickListener
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.create_new:
+                                try {
+                                    Intent myIntent = new Intent(news_details.this, news_update.class);
+                                    //String s = view.findViewById(R.id.subtitle).toString();
+                                    //String s = (String) parent.getI;
+                                    myIntent.putExtra("title", intent.getStringExtra("title"));
+                                    myIntent.putExtra("body", intent.getStringExtra("body"));
+                                    myIntent.putExtra("url", intent.getStringExtra("url"));
+                                    myIntent.putExtra("id", intent.getExtras().getInt("id"));
+                                    myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    startActivityForResult(myIntent, 0);
+                                } catch (Exception e) {
+                                    System.out.println(e.getMessage());
+                                }
+                                return true;
+                            case R.id.open:
+
+                                SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+                                boolean isDark = prefs.getBoolean("isDark", false);
+                                if (isDark) {
+
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(news_details.this, R.style.DialogurDark);
+                                    builder.setTitle(R.string.nn);
+                                    builder.setMessage(R.string.deletethis);
+                                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            DBNewsHelper mDBHelper;
+
+                                            mDBHelper = new DBNewsHelper(news_details.this);
+                                            int id = intent.getExtras().getInt("id");
+                                            id++;
+                                            int b;
+                                            ActivityInfo activityInfo = null;
+                                            try {
+                                                activityInfo = getPackageManager().getActivityInfo(
+                                                        getComponentName(), PackageManager.GET_META_DATA);
+                                            } catch (PackageManager.NameNotFoundException e) {
+                                                e.printStackTrace();
+                                            }
+                                            String title = activityInfo.loadLabel(getPackageManager())
+                                                    .toString();
+
+                                            if (intent.getStringExtra("url").equals("empty")) {
+
+
+                                                b = mDBHelper.deleteDatau(String.valueOf(id), intent.getStringExtra("title"), title
+                                                        , intent.getStringExtra("body"));
+                                                System.out.println("called");
+                                            } else {
+                                                b = mDBHelper.deleteData(String.valueOf(id), intent.getStringExtra("title"), title
+                                                        , intent.getStringExtra("body"), intent.getStringExtra("url"));
+                                            }
+
+                                            if (b == 1) {
+                                                Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
+                                                Intent myIntent = new Intent(news_details.this, news_activity.class);
+                                                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                startActivityForResult(myIntent, 0);
+                                            } else {
+                                                Toasty.success(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
+                                            }
+
+                                        }
+                                    });
+                                    builder.setNegativeButton("NO", null);
+                                    builder.show();
+
+                                } else {
+
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(news_details.this, R.style.DialogueLight);
+                                    builder.setTitle(R.string.nn);
+                                    builder.setMessage(R.string.deletethis);
+                                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            DBNewsHelper mDBHelper;
+
+                                            mDBHelper = new DBNewsHelper(news_details.this);
+                                            int id = intent.getExtras().getInt("id");
+                                            id++;
+                                            int b;
+                                            ActivityInfo activityInfo = null;
+                                            try {
+                                                activityInfo = getPackageManager().getActivityInfo(
+                                                        getComponentName(), PackageManager.GET_META_DATA);
+                                            } catch (PackageManager.NameNotFoundException e) {
+                                                e.printStackTrace();
+                                            }
+                                            String title = activityInfo.loadLabel(getPackageManager())
+                                                    .toString();
+
+                                            if (intent.getStringExtra("url").equals("empty")) {
+
+
+                                                b = mDBHelper.deleteDatau(String.valueOf(id), intent.getStringExtra("title"), title
+                                                        , intent.getStringExtra("body"));
+                                                System.out.println("called");
+                                            } else {
+                                                b = mDBHelper.deleteData(String.valueOf(id), intent.getStringExtra("title"), title
+                                                        , intent.getStringExtra("body"), intent.getStringExtra("url"));
+                                            }
+
+                                            if (b == 1) {
+                                                Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
+                                                Intent myIntent = new Intent(news_details.this, news_activity.class);
+                                                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                startActivityForResult(myIntent, 0);
+                                            } else {
+                                                Toasty.success(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
+                                            }
+
+                                        }
+                                    });
+                                    builder.setNegativeButton("NO", null);
+                                    builder.show();
+                                }
+
+                                return true;
+
+                            case R.id.pdf:
+
+                                new CreatePdf(news_details.this)
+                                        .setPdfName(intent.getStringExtra("title"))
+                                        .openPrintDialog(true)
+                                        .setContentBaseUrl(null)
+                                        .setPageSize(PrintAttributes.MediaSize.ISO_A4)
+                                        .setContent(intent.getStringExtra("body"))
+                                        .setFilePath(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Dir")
+                                        .setCallbackListener(new CreatePdf.PdfCallbackListener() {
+                                            @Override
+                                            public void onFailure(@NotNull String s) {
+                                                Toasty.error(news_details.this, "Failed", Toast.LENGTH_SHORT).show();
+                                            }
+
+                                            @Override
+                                            public void onSuccess(@NotNull String s) {
+                                                // do your stuff here
+                                                Toasty.success(news_details.this, "Success", Toast.LENGTH_SHORT).show();
+
+                                            }
+                                        })
+                                        .create();
+
+
+                            default:
+                                return false;
+                        }
+
+
+                    }
+                });
+                popup.show();
+            }
+        });
+
+    }
     class RetrieveFeedTask extends AsyncTask<String, Integer, Spanned> {
 
 

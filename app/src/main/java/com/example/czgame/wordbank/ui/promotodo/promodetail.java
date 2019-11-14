@@ -611,9 +611,9 @@ public class promodetail extends AppCompatActivity {
         titletask = dialogView.findViewById(R.id.tasktitle);
 
 
-        textView1.setText(String.format("%02d", 0));
-        textView2.setText(String.format("%02d", 0));
-        textView3.setText(String.format("%02d", 30));
+        textView1.setText(String.format("%02d", 30));
+        textView2.setText(String.format("%02d", 00));
+        textView3.setText(String.format("%02d", 00));
 
         circularProgressBar11 = dialogView.findViewById(R.id.circularProgressBar01);
         circularProgressBar11.setProgressMax(tike);
@@ -665,7 +665,9 @@ public class promodetail extends AppCompatActivity {
         float posiitonY = fab1.getPivotY();
         int translationX = (int) ((-(width - fab1.getWidth()) / 2f));
 
+
         if (isMyServiceRunning(Promotodo_service.class)) {
+
 
             System.out.println("RUnning.......");
             //toogle = true;
@@ -817,6 +819,10 @@ public class promodetail extends AppCompatActivity {
 
     public void startService() {
 
+
+        Intent resultBroadCastIntent = new Intent("android.intent.action.BOOT_COMPLETED");
+        resultBroadCastIntent.setAction("GET_TIME");
+        sendBroadcast(resultBroadCastIntent);
         startService(new Intent(this, Promotodo_service.class));
     }
 
