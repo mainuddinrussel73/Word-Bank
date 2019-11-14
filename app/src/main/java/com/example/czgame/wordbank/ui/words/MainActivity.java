@@ -534,13 +534,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         PendingIntent pIntent = PendingIntent.getBroadcast(this, 0, intenta, 0);
 
         Calendar cal= Calendar.getInstance();
+        cal.setTimeInMillis(System.currentTimeMillis());
         cal.set(Calendar.HOUR_OF_DAY, 23);
-        cal.set(Calendar.MINUTE, 53);
-        cal.set(Calendar.SECOND, 0);
-
-        alarmMgr.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pIntent);
+        cal.set(Calendar.MINUTE, 55);
+       // alarmMgr.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pIntent);
 
 
+
+        if (Build.VERSION.SDK_INT >= 23) {
+            alarmMgr.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,
+                    cal.getTimeInMillis(), pIntent);
+        } else if (Build.VERSION.SDK_INT >= 19) {
+            alarmMgr.setExact(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pIntent);
+        } else {
+            alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP,cal.getTimeInMillis(),AlarmManager.INTERVAL_DAY, pIntent);
+        }
     }
 
     public void showSequence(View view) {

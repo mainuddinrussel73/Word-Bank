@@ -7,14 +7,14 @@
     tools:context=".ui.promotodo.daily_details">
 
 
-
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="343dp"
-        android:layout_alignParentTop="true"
+        android:layout_width="wrap_content"
+        android:layout_height="391dp"
+        android:layout_above="@+id/uuuu"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="14dp"
         android:layout_marginRight="15dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/backgroundborder">
 
 
@@ -56,65 +56,85 @@
             android:layout_marginTop="5dp"
             android:background="@drawable/buttonshaperound"
             android:src="@drawable/ic_chevron_left_black_24dp" />
-    </RelativeLayout>
-    <RelativeLayout
-        android:id="@+id/topchart"
-        android:layout_width="match_parent"
-        android:layout_height="343dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="14dp"
-        android:layout_marginRight="15dp"
-        android:background="@drawable/backgroundborder">
-
 
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/barchart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
             android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="35dp"
-            android:layout_marginEnd="15dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginRight="15dp"
             android:layout_marginBottom="15dp" />
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_below="@+id/topchart"
+        android:id="@+id/uuuu"
+        android:layout_width="396dp"
+        android:layout_height="371dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:background="@drawable/backgroundborder"
-        android:layout_marginBottom="26dp">
-
+        android:layout_marginBottom="14dp"
+        android:background="@drawable/backgroundborder">
 
         <TextView
             android:id="@+id/monthly"
-            android:layout_width="match_parent"
+            android:layout_width="196dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginLeft="15dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="62dp"
+            android:layout_marginLeft="10dp"
             android:layout_marginTop="5dp"
-            android:layout_marginRight="15dp"
-            android:text="Monthly Focus Time : "
-            android:textSize="18sp">
+            android:layout_marginEnd="63dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:text="Monthly Focus Time : 2019"
+            android:textSize="15sp">
 
         </TextView>
 
+        <ImageButton
+            android:id="@+id/right_nav1"
+            android:layout_width="49dp"
+            android:layout_height="25dp"
+            android:layout_alignParentEnd="true"
+            android:layout_gravity="right"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/buttonshaperound"
+            android:src="@drawable/ic_chevron_right_black_24dp" />
+
+        <ImageButton
+            android:id="@+id/left_nav1"
+            android:layout_width="49dp"
+            android:layout_height="25dp"
+            android:layout_alignParentStart="true"
+            android:layout_gravity="left"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/buttonshaperound"
+            android:src="@drawable/ic_chevron_left_black_24dp" />
+
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/chart"
-            android:layout_width="356dp"
-            android:layout_height="395dp"
+            android:layout_width="wrap_content"
+            android:layout_height="357dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
             android:layout_marginStart="15dp"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="35dp"
-            android:layout_marginEnd="15dp"
+            android:layout_marginTop="39dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginRight="15dp"
-            android:layout_marginBottom="15dp" />
+            android:layout_marginBottom="18dp" />
     </RelativeLayout>
 </RelativeLayout>

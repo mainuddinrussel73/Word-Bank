@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -40,6 +41,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -50,14 +52,14 @@ public class daily_details extends AppCompatActivity {
     ArrayList<BarEntry> BARENTRY ;
     ArrayList<String> BarEntryLabels ;
     BarDataSet Bardataset ;
-    ImageButton rightNav,leftNav;
+    ImageButton rightNav,leftNav,rightNav1,leftNav1;
     BarData BARDATA ;
     List<Task> taskList = new ArrayList<>();
     List<Task> taskList1 = new ArrayList<>();
     List<Float> taskList2 = new ArrayList<>();
     DBDaily dbDaily;
     int currentYear,currentMonth,currentDay,currentWeek;
-    TextView weekly;
+    TextView weekly,monthly;
 
     String []monthss = {"JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"};
     String []days = {"MON", "TUR", "WED", "THU", "FRI","SAT","SUN"};
@@ -90,27 +92,156 @@ public class daily_details extends AppCompatActivity {
         //dbDaily.deleteAll();
 
 
-      //  gen("2018");
-
-
-        taskList1.clear();
-        taskList2.clear();
-
-        int i =1;
-
 
 
 
         weekly = findViewById(R.id.weekly);
+        monthly = findViewById(R.id.monthly);
         System.out.println(currentWeek +",,,,,"+monthss[currentMonth-1]+",,,,"+ currentYear);
         setBarChartdata(currentWeek,currentMonth,currentYear);
+        setmChartdata(currentYear);
 
-        i = 1;
+        barChart = findViewById(R.id.barchart);
+        initbar();
+        leftNav = findViewById(R.id.left_nav);
+        rightNav = findViewById(R.id.right_nav);
+
+        leftNav.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+
+                calendar.add(Calendar.WEEK_OF_YEAR,-1);
+                currentYear = calendar.get(Calendar.YEAR);
+                currentMonth = calendar.get(Calendar.MONTH) + 1;
+                currentWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+                currentDay = calendar.get(Calendar.DAY_OF_WEEK);
+
+                if(currentWeek<1){
+                    calendar.add(Calendar.YEAR,-1);
+                    calendar.set(Calendar.WEEK_OF_YEAR,52);
+
+                    currentYear = calendar.get(Calendar.YEAR);
+                    currentMonth = calendar.get(Calendar.MONTH) + 1;
+                    currentWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+                    currentDay = calendar.get(Calendar.DAY_OF_WEEK);
+
+                }
+
+
+
+                System.out.println(currentWeek +",,,,,"+monthss[currentMonth-1]+",,,,"+ currentYear);
+                setBarChartdata(currentWeek,currentMonth,currentYear);
+                initbar();
+            }
+        });
+
+        rightNav.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+                calendar.add(Calendar.WEEK_OF_YEAR,1);
+                currentYear = calendar.get(Calendar.YEAR);
+                currentMonth = calendar.get(Calendar.MONTH) + 1;
+                currentWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+                currentDay = calendar.get(Calendar.DAY_OF_WEEK);
+
+                if(currentWeek>52){
+                    calendar.add(Calendar.YEAR,1);
+                    calendar.set(Calendar.WEEK_OF_YEAR,1);
+
+                    currentYear = calendar.get(Calendar.YEAR);
+                    currentMonth = calendar.get(Calendar.MONTH) + 1;
+                    currentWeek = calendar.get(Calendar.WEEK_OF_YEAR);
+                    currentDay = calendar.get(Calendar.DAY_OF_WEEK);
+
+                }
+
+                System.out.println(currentWeek +",,,,,"+monthss[currentMonth-1]+",,,,"+ currentYear);
+                setBarChartdata(currentWeek,currentMonth,currentYear);
+                initbar();
+            }
+        });
+
+        mChart = findViewById(R.id.chart);
+       initmchart();
+        leftNav1 = findViewById(R.id.left_nav1);
+        rightNav1 = findViewById(R.id.right_nav1);
+
+        leftNav1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentYear= currentYear - 1;
+                System.out.println(currentWeek +",,,,,"+monthss[currentMonth-1]+",,,,"+ currentYear);
+                setmChartdata(currentYear);
+                initmchart();
+            }
+        });
+
+        rightNav1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentYear= currentYear + 1;
+                System.out.println(currentWeek +",,,,,"+monthss[currentMonth-1]+",,,,"+ currentYear);
+                setmChartdata(currentYear);
+                initmchart();
+            }
+        });
+
+        //System.out.println(taskList2.size());
+
+
+        SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+        boolean isDark = prefs.getBoolean("isDark", false);
+
+        RelativeLayout relativeLayout = findViewById(R.id.dailylayout);
+        if (isDark) {
+            mChart.setBackgroundColor(Color.BLACK);
+            mChart.getXAxis().setTextColor(Color.WHITE);
+            mChart.getAxisLeft().setTextColor(Color.WHITE);
+            mChart.getLegend().setTextColor(Color.WHITE);
+            barChart.getXAxis().setTextColor(Color.WHITE);
+            barChart.getAxisLeft().setTextColor(Color.WHITE);
+            barChart.getLegend().setTextColor(Color.WHITE);
+            barChart.setBackgroundColor(Color.BLACK);
+            relativeLayout.setBackgroundColor(Color.BLACK);
+        } else {
+            mChart.setBackgroundColor(Color.WHITE);
+            mChart.getXAxis().setTextColor(Color.BLACK);
+            mChart.getAxisLeft().setTextColor(Color.BLACK);
+            mChart.getLegend().setTextColor(Color.BLACK);
+            barChart.getXAxis().setTextColor(Color.BLACK);
+            barChart.getAxisLeft().setTextColor(Color.BLACK);
+            barChart.getLegend().setTextColor(Color.BLACK);
+            barChart.setBackgroundColor(Color.WHITE);
+            relativeLayout.setBackgroundColor(Color.WHITE);
+        }
+
+
+
+    }
+    private void initmchart(){
+        if(taskList2.size()!=0){
+            mChart.setTouchEnabled(true);
+            mChart.setPinchZoom(true);
+            MyMarkerView mv = new MyMarkerView(getApplicationContext(), R.layout.custom_marker_view);
+            mv.setChartView(mChart);
+            mChart.setMarker(mv);
+            mChart.animateXY(5000,5000);
+            renderData();
+        }
+    }
+    private void  setmChartdata(int currentYear){
+        int i=1;
+        taskList1.clear();
+        taskList2.clear();
+        monthly.setText("Monthly Focus Time : "+currentYear);
+
         for (int j = 0; j <12 ; j++) {
             taskList2.add(j,new Float(0));
         }
         for (String month:
-             monthss) {
+                monthss) {
             //System.out.println(month);
             final Cursor cursor1 = dbDaily.getAllMonth(month,String.valueOf(currentYear));
 
@@ -146,32 +277,9 @@ public class daily_details extends AppCompatActivity {
 
 
 
-            barChart = findViewById(R.id.barchart);
-            initbar();
-            leftNav = findViewById(R.id.left_nav);
-            rightNav = findViewById(R.id.right_nav);
 
-            leftNav.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    currentWeek= currentWeek - 1;
-                    System.out.println(currentWeek +",,,,,"+monthss[currentMonth-1]+",,,,"+ currentYear);
-                    setBarChartdata(currentWeek,currentMonth,currentYear);
-                    initbar();
-                }
-            });
 
-            rightNav.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    currentWeek= currentWeek + 1;
-                    System.out.println(currentWeek +",,,,,"+monthss[currentMonth-1]+",,,,"+ currentYear);
-                    setBarChartdata(currentWeek,currentMonth,currentYear);
-                    initbar();
-                }
-            });
-
-           // System.out.println(taskList1.size());
+            // System.out.println(taskList1.size());
             float totaltime = 0;
             for (int j = 0; j < taskList1.size(); j++) {
                 totaltime+=taskList1.get(j).getTIME();
@@ -219,52 +327,12 @@ public class daily_details extends AppCompatActivity {
                 }
 
             }
-           // System.out.println(taskList2.get(10));
+            // System.out.println(taskList2.get(10));
 
 
 
             taskList1.clear();
         }
-        //System.out.println(taskList2.size());
-
-        if(taskList2.size()!=0){
-
-            mChart = findViewById(R.id.chart);
-            mChart.setTouchEnabled(true);
-            mChart.setPinchZoom(true);
-            MyMarkerView mv = new MyMarkerView(getApplicationContext(), R.layout.custom_marker_view);
-            mv.setChartView(mChart);
-            mChart.setMarker(mv);
-            mChart.animateXY(5000,5000);
-            renderData();
-        }
-        SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
-        boolean isDark = prefs.getBoolean("isDark", false);
-
-        RelativeLayout relativeLayout = findViewById(R.id.dailylayout);
-        if (isDark) {
-            mChart.setBackgroundColor(Color.BLACK);
-            mChart.getXAxis().setTextColor(Color.WHITE);
-            mChart.getAxisLeft().setTextColor(Color.WHITE);
-            mChart.getLegend().setTextColor(Color.WHITE);
-            barChart.getXAxis().setTextColor(Color.WHITE);
-            barChart.getAxisLeft().setTextColor(Color.WHITE);
-            barChart.getLegend().setTextColor(Color.WHITE);
-            barChart.setBackgroundColor(Color.BLACK);
-            relativeLayout.setBackgroundColor(Color.BLACK);
-        } else {
-            mChart.setBackgroundColor(Color.WHITE);
-            mChart.getXAxis().setTextColor(Color.BLACK);
-            mChart.getAxisLeft().setTextColor(Color.BLACK);
-            mChart.getLegend().setTextColor(Color.BLACK);
-            barChart.getXAxis().setTextColor(Color.BLACK);
-            barChart.getAxisLeft().setTextColor(Color.BLACK);
-            barChart.getLegend().setTextColor(Color.BLACK);
-            barChart.setBackgroundColor(Color.WHITE);
-            relativeLayout.setBackgroundColor(Color.WHITE);
-        }
-
-
 
     }
     private void setBarChartdata(int currentWeek,int currentMonth,int currentYear){
@@ -513,7 +581,7 @@ public class daily_details extends AppCompatActivity {
             if(month.equals("JAN")){
                 for (; jk <=31 ; jk++) {
                     count++;
-                    dbDaily.insertAll(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
+                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
                     if(count==7){
                         count=0;
                         y++;
@@ -523,7 +591,7 @@ public class daily_details extends AppCompatActivity {
             if(month.equals("FEB")){
                 for (; jk <=59 ; jk++) {
                     count++;
-                    dbDaily.insertAll(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
+                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
                     if(count==7){
                         count=0;
                         y++;
@@ -533,7 +601,7 @@ public class daily_details extends AppCompatActivity {
             if(month.equals("MAR")){
                 for (; jk <=90 ; jk++) {
                     count++;
-                    dbDaily.insertAll(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
+                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
                     if(count==7){
                         count=0;
                         y++;
@@ -543,7 +611,7 @@ public class daily_details extends AppCompatActivity {
             if(month.equals("APR")){
                 for (; jk <=120 ; jk++) {
                     count++;
-                    dbDaily.insertAll(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
+                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
                     if(count==7){
                         count=0;
                         y++;
@@ -553,7 +621,7 @@ public class daily_details extends AppCompatActivity {
             if(month.equals("MAY")){
                 for (; jk <=151 ; jk++) {
                     count++;
-                    dbDaily.insertAll(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
+                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
                     if(count==7){
                         count=0;
                         y++;
@@ -563,7 +631,7 @@ public class daily_details extends AppCompatActivity {
             if(month.equals("JUN")){
                 for (; jk <=181 ; jk++) {
                     count++;
-                    dbDaily.insertAll(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
+                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
                     if(count==7){
                         count=0;
                         y++;
@@ -573,7 +641,7 @@ public class daily_details extends AppCompatActivity {
             if(month.equals("JUL")){
                 for (; jk <=212 ; jk++) {
                     count++;
-                    dbDaily.insertAll(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
+                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
                     if(count==7){
                         count=0;
                         y++;
@@ -583,7 +651,7 @@ public class daily_details extends AppCompatActivity {
             if(month.equals("AUG")){
                 for (; jk <=243 ; jk++) {
                     count++;
-                    dbDaily.insertAll(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
+                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
                     if(count==7){
                         count=0;
                         y++;
@@ -593,7 +661,7 @@ public class daily_details extends AppCompatActivity {
             if(month.equals("SEP")){
                 for (; jk <=273 ; jk++) {
                     count++;
-                    dbDaily.insertAll(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
+                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
                     if(count==7){
                         count=0;
                         y++;
@@ -613,7 +681,7 @@ public class daily_details extends AppCompatActivity {
             if(month.equals("NOV")){
                 for (; jk <=334 ; jk++) {
                     count++;
-                    dbDaily.insertAll(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
+                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
                     if(count==7){
                         count=0;
                         y++;
@@ -623,7 +691,7 @@ public class daily_details extends AppCompatActivity {
             if(month.equals("DEC")){
                 for (; jk <=365 ; jk++) {
                     count++;
-                    dbDaily.insertAll(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
+                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
                     if(count==7){
                         count=0;
                         y++;

@@ -1,6 +1,9 @@
 package com.example.czgame.wordbank.ui.backup_scheudle;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +11,7 @@ import android.database.Cursor;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.czgame.wordbank.R;
 import com.example.czgame.wordbank.ui.news.DBNewsHelper;
 import com.example.czgame.wordbank.ui.promotodo.DBproHandle;
 import com.example.czgame.wordbank.ui.words.DatabaseHelper;
@@ -22,6 +26,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import androidx.core.app.NotificationCompat;
 import es.dmoral.toasty.Toasty;
 
 public class receive_back  extends BroadcastReceiver {
@@ -133,6 +138,17 @@ public class receive_back  extends BroadcastReceiver {
         pro_back(context);
         news_back(context);
 
+        NotificationCompat.Builder mBuilder =   new NotificationCompat.Builder(context)
+                .setSmallIcon(R.drawable.ic_backup_black) // notification icon
+                .setContentTitle("Done!") // title for notification
+                .setContentText("Daily back completed") // message for notification
+                .setAutoCancel(true); // clear notification after click
+        @SuppressLint("WrongConstant")
+        PendingIntent pi = PendingIntent.getActivity(context,0,intent,Intent.FLAG_ACTIVITY_NEW_TASK);
+        mBuilder.setContentIntent(pi);
+        NotificationManager mNotificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        mNotificationManager.notify(7, mBuilder.build());
 
 
 
