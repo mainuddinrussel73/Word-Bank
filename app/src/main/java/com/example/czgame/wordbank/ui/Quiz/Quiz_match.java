@@ -21,7 +21,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.czgame.wordbank.ui.words.MainActivity;
 import com.example.czgame.wordbank.R;
 import com.example.czgame.wordbank.ui.words.DatabaseHelper;
 import com.example.czgame.wordbank.ui.words.word;
@@ -51,6 +50,8 @@ public class Quiz_match extends Activity {
     float y2;
     private DatabaseHelper mDBHelper;
     private SQLiteDatabase mDb;
+    public static TextView scoress;
+    public  static  int score1 = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,6 +62,10 @@ public class Quiz_match extends Activity {
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_quiz_match);
 
+        final Intent intent = getIntent();
+        score1 = intent.getIntExtra("ss", 0);
+        scoress = findViewById(R.id.scores);
+        scoress.setText("Current score : " + score1);
 
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
@@ -200,6 +205,7 @@ public class Quiz_match extends Activity {
             public void onClick(View view) {
 
                 Intent myIntent = new Intent(Quiz_match.this, Quiz_match.class);
+                myIntent.putExtra("ss", score1);
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(myIntent, 0);
             }
@@ -209,7 +215,20 @@ public class Quiz_match extends Activity {
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent myIntent = new Intent(view.getContext(), MainActivity.class);
+                SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+                if (score1 > prefs.getInt("highscore1", 0)) {
+
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.putInt("highscore1", score1);
+                    editor.commit();
+
+                }
+
+                Intent myIntent = new Intent(view.getContext(), quiz_result.class);
+
+                myIntent.putExtra("score", score1);
+
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(myIntent, 0);
                 finish();

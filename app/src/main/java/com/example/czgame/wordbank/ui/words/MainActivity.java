@@ -169,6 +169,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         navigationView = findViewById(R.id.nav_view);
+        View hView =  navigationView.getHeaderView(0);
+        TextView nav_user = hView.findViewById(R.id.appname);
+        TextView toalword = hView.findViewById(R.id.wordcount);
+        TextView scores = hView.findViewById(R.id.scores);
+        TextView scores1 = hView.findViewById(R.id.scores1);
 
 
         SpannableString s = new SpannableString(navigationView.getMenu().findItem(R.id.datas).getTitle());
@@ -178,6 +183,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         SpannableString s4 = new SpannableString(navigationView.getMenu().findItem(R.id.datas4).getTitle());
 
         if (isDark) {
+            hView.setBackground(ContextCompat.getDrawable(this, R.drawable.fadede_dark_blue));
+            nav_user.setTextColor(Color.WHITE);
+            toalword.setTextColor(Color.WHITE);
+            scores.setTextColor(Color.WHITE);
+            scores1.setTextColor(Color.WHITE);
             s.setSpan(new TextAppearanceSpan(this, R.style.TextAppearance45), 0, s.length(), 0);
             navigationView.getMenu().findItem(R.id.datas).setTitle(s);
 
@@ -194,6 +204,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navigationView.getMenu().findItem(R.id.datas4).setTitle(s4);
 
         } else {
+            hView.setBackground(ContextCompat.getDrawable(this, R.drawable.fade_blue));
+            nav_user.setTextColor(Color.BLACK);
+            toalword.setTextColor(Color.BLACK);
+            scores.setTextColor(Color.BLACK);
+            scores1.setTextColor(Color.BLACK);
             s.setSpan(new TextAppearanceSpan(this, R.style.TextAppearance44), 0, s.length(), 0);
             navigationView.getMenu().findItem(R.id.datas).setTitle(s);
 
@@ -216,13 +231,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         View headerView = navigationView.getHeaderView(0);
         TextView navUsername = headerView.findViewById(R.id.scores);
+        TextView navUsername1 = headerView.findViewById(R.id.scores1);
         TextView wordcount = headerView.findViewById(R.id.wordcount);
 
 
         //prefs = this.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
 
 
-        navUsername.setText("Highest Score is : " + prefs.getInt("highscore", 0));
+        navUsername.setText("Highest Score in multiple choice  : " + prefs.getInt("highscore", 0));
+        navUsername1.setText("Highest Score in matching game  : " + prefs.getInt("highscore1", 0));
 
 
         navigationView.bringToFront();

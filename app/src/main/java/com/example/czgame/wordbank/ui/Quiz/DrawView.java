@@ -14,7 +14,12 @@ import java.util.List;
 import static com.example.czgame.wordbank.ui.Quiz.Quiz_match.a;
 import static com.example.czgame.wordbank.ui.Quiz.Quiz_match.b;
 import static com.example.czgame.wordbank.ui.Quiz.Quiz_match.s2;
+import static com.example.czgame.wordbank.ui.Quiz.Quiz_match.score1;
+import static com.example.czgame.wordbank.ui.Quiz.Quiz_match.scoress;
 import static com.example.czgame.wordbank.ui.Quiz.Quiz_match.words;
+import static com.example.czgame.wordbank.ui.Quiz.quiz_page.correct;
+import static com.example.czgame.wordbank.ui.Quiz.quiz_page.wrong;
+import static com.example.czgame.wordbank.ui.Quiz.quiz_result.wordBuck;
 
 public class DrawView extends View {
 
@@ -74,6 +79,17 @@ public class DrawView extends View {
             position2.add(y2);
 
         }
+        if (words[a].getMEANING().equals(s2[b])) {
+            score1++;
+            correct++;
+        } else {
+            score1--;
+            if(score1<0)score1=0;
+            wrong++;
+            wordBuck.add(words[a].getWORD());
+
+        }
+        scoress.setText("Current score : " + score1);
         invalidate();
     }
 }
