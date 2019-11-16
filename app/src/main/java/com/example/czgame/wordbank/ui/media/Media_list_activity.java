@@ -3,11 +3,13 @@ package com.example.czgame.wordbank.ui.media;
 
 import android.Manifest;
 import android.app.ActivityManager;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -47,6 +49,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.czgame.wordbank.R;
+import com.gauravk.audiovisualizer.visualizer.WaveVisualizer;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.FileNotFoundException;
@@ -63,6 +66,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
 import es.dmoral.toasty.Toasty;
+
+import static com.example.czgame.wordbank.ui.media.NotificationService.mOnAudioFocusChangeListener;
 
 public class Media_list_activity extends AppCompatActivity  {
 
@@ -122,7 +127,9 @@ public class Media_list_activity extends AppCompatActivity  {
 
     static final int VIEW_MODE_LISTVIEW = 0;
     static final int VIEW_MODE_GRIDVIEW = 1;
+    public  static  WaveVisualizer mVisualizer;
     private Toast mToastToShow;
+    private final int MY_PERMISSIONS_RECORD_AUDIO = 1;
     private Runnable mDelayedStopRunnable = new Runnable() {
         @Override
         public void run() {
@@ -157,6 +164,9 @@ public class Media_list_activity extends AppCompatActivity  {
             }
         }
     };
+    private int requestCode;
+    private String[] permissions;
+    private int[] grantResults;
 
     private boolean isAppOnForeground(Context context, String appPackageName) {
         ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
@@ -193,10 +203,27 @@ public class Media_list_activity extends AppCompatActivity  {
 
             String remainingTime = createTimeLabel(totalTime - currentPosition);
 
+
             remainingTimeLabel.setText("- " + remainingTime);
             if (toogle1 == false && (remainingTime.equals("0:00"))) {
+                AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                boolean requestGranted = AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioManager.requestAudioFocus(mOnAudioFocusChangeListener, AudioManager.STREAM_MUSIC,
+                        AudioManager.AUDIOFOCUS_GAIN);
                 nxtsong();
             }
+        }
+    };
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // internet lost alert dialog method call from here...
+            if(intent.getAction()==Constants.ACTION.NEXT_ACTION){
+                nxtsong();
+            }
+            else if(intent.getAction()==Constants.ACTION.PREV_ACTION){
+                prevsong();
+            }
+
         }
     };
 
@@ -237,41 +264,84 @@ public class Media_list_activity extends AppCompatActivity  {
         }
     }
 
+    private void requestAudioPermissions() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            //When permission is not granted by user, show them message why this permission is needed.
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.RECORD_AUDIO)) {
+                Toast.makeText(this, "Please grant permissions to record audio", Toast.LENGTH_LONG).show();
+
+                //Give user option to still opt-in the permissions
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.RECORD_AUDIO},
+                        MY_PERMISSIONS_RECORD_AUDIO);
+
+            } else {
+                // Show user dialog to grant permission to record audio
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.RECORD_AUDIO},
+                        MY_PERMISSIONS_RECORD_AUDIO);
+            }
+        }
+        //If permission is granted, then go ahead recording audio
+        else if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO)
+                == PackageManager.PERMISSION_GRANTED) {
+
+            //Go ahead with recording audio now
+            int audioSessionId = mp.getAudioSessionId();
+            if (audioSessionId != -1){
+                mVisualizer.setAudioSessionId(audioSessionId);
+            }
+        }
+    }
+
     @Override
     public  void onPause(){
-        int result = mAudioManager.requestAudioFocus(mAudioFocusChangeListener,
-                AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+        if(!mp.isPlaying()){
+            int result = mAudioManager.requestAudioFocus(mAudioFocusChangeListener,
+                    AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 
-        switch (result) {
-            case AudioManager.AUDIOFOCUS_REQUEST_GRANTED:
-                mFocusGranted = true;
-                break;
-            case AudioManager.AUDIOFOCUS_REQUEST_FAILED:
-                mFocusGranted = false;
-                break;
+            switch (result) {
+                case AudioManager.AUDIOFOCUS_REQUEST_GRANTED:
+                    mFocusGranted = true;
+                    break;
+                case AudioManager.AUDIOFOCUS_REQUEST_FAILED:
+                    mFocusGranted = false;
+                    break;
+            }
         }
 
         String message = "Focus request " + (mFocusGranted ? "granted" : "failed");
+        System.out.println(message);
         super.onPause();
     }
 
     @Override
     public  void onResume(){
-        int result = mAudioManager.requestAudioFocus(mAudioFocusChangeListener,
-                AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+        if(!mp.isPlaying()){
+            int result = mAudioManager.requestAudioFocus(mAudioFocusChangeListener,
+                    AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 
-        switch (result) {
-            case AudioManager.AUDIOFOCUS_REQUEST_GRANTED:
-                mFocusGranted = true;
-                break;
-            case AudioManager.AUDIOFOCUS_REQUEST_FAILED:
-                mFocusGranted = false;
-                break;
+            switch (result) {
+                case AudioManager.AUDIOFOCUS_REQUEST_GRANTED:
+                    mFocusGranted = true;
+                    break;
+                case AudioManager.AUDIOFOCUS_REQUEST_FAILED:
+                    mFocusGranted = false;
+                    break;
+            }
         }
 
         String message = "Focus request " + (mFocusGranted ? "granted" : "failed");
+        System.out.println(message);
         super.onResume();
     }
+    //
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -287,7 +357,6 @@ public class Media_list_activity extends AppCompatActivity  {
 
         RelativeLayout relativeLayout = findViewById(R.id.content_music);
         LinearLayout linearLayout = relativeLayout.findViewById(R.id.listview);
-
         listView = relativeLayout.findViewById(R.id.listviews);
         gridView = relativeLayout.findViewById(R.id.gridviews);
 
@@ -305,8 +374,7 @@ public class Media_list_activity extends AppCompatActivity  {
 
 
 
-
-
+        //barVisualizer = findViewById(R.id.visualizer);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -331,6 +399,7 @@ public class Media_list_activity extends AppCompatActivity  {
                 finish();
             }
         });
+
 
 
 
@@ -421,6 +490,13 @@ public class Media_list_activity extends AppCompatActivity  {
         mAudioFocusChangeListener = new AudioFocusChangeListenerImpl();
 
 
+        registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION.NEXT_ACTION));
+        registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION.PREV_ACTION));
+        mVisualizer = findViewById(R.id.blast);
+
+        //TODO: init MediaPlayer and play the audio
+
+        //get the AudioSessionId from your MediaPlayer and pass it to the visualizer
 
         loop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -2492,6 +2568,7 @@ public class Media_list_activity extends AppCompatActivity  {
                             //myIcon3.setTint(mutedDark);
                             //myIcon2.setTint(mutedDark);
 
+                            //barVisualizer.setColor(ContextCompat.getColor(Media_list_activity.this,vibrant));
 
                             textView.setTextColor(mutedDark);
                             textView1.setTextColor(mutedDark);
@@ -2532,6 +2609,9 @@ public class Media_list_activity extends AppCompatActivity  {
 
                     mp.start();
 
+                    // barVisualizer.setDensity(70);
+                   // barVisualizer.setPlayer(mp.getAudioSessionId());
+
 
                     Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
                     myIcon2.setTint(play);
@@ -2540,6 +2620,8 @@ public class Media_list_activity extends AppCompatActivity  {
                     // myIcon2.setTint(play);
                     mp.setVolume(2.5f, 2.5f);
                     totalTime = mp.getDuration();
+
+                    requestAudioPermissions();
 
                     // Position Bar
                     positionBar = myView.findViewById(R.id.positionBar);
@@ -2812,7 +2894,7 @@ public class Media_list_activity extends AppCompatActivity  {
                     // myIcon2.setTint(play);
                     mp.setVolume(2.5f, 2.5f);
                     totalTime = mp.getDuration();
-
+                    requestAudioPermissions();
                     // Position Bar
                     positionBar = myView.findViewById(R.id.positionBar);
                     positionBar.setMax(totalTime);
@@ -3094,7 +3176,7 @@ public class Media_list_activity extends AppCompatActivity  {
                     // myIcon3.setTint(play);
                     mp.setVolume(5.5f, 5.5f);
                     totalTime = mp.getDuration();
-
+                    requestAudioPermissions();
                     // Position Bar
                     positionBar = myView.findViewById(R.id.positionBar);
 
@@ -3368,7 +3450,7 @@ public class Media_list_activity extends AppCompatActivity  {
                     // playBtn.setBackgroundColor(play);
                     mp.setVolume(2.5f, 2.5f);
                     totalTime = mp.getDuration();
-
+                    requestAudioPermissions();
                     // Position Bar
                     positionBar = myView.findViewById(R.id.positionBar);
 
@@ -3572,8 +3654,6 @@ public class Media_list_activity extends AppCompatActivity  {
 
         //registerReceiver(broadcastReceiver, new IntentFilter("Prev"));
     }
-    //
-
     public void play(){
 
             if (!mp.isPlaying()) {
@@ -3631,10 +3711,10 @@ public class Media_list_activity extends AppCompatActivity  {
         }
 
     }
+
     public void nxtsong() {
 
         // startService(view);
-
         System.out.println(pro);
 
         // startService(view);
@@ -3648,6 +3728,7 @@ public class Media_list_activity extends AppCompatActivity  {
             title = audio.getTitle();
             titleq = audio.getImagepath();
         }
+
 
         mp.stop();
         mp = new MediaPlayer();
@@ -3827,7 +3908,7 @@ public class Media_list_activity extends AppCompatActivity  {
             // myIcon3.setTint(play);
             mp.setVolume(2.5f, 2.5f);
             totalTime = mp.getDuration();
-
+            requestAudioPermissions();
             // Position Bar
             positionBar = myView.findViewById(R.id.positionBar);
 
@@ -3904,7 +3985,19 @@ public class Media_list_activity extends AppCompatActivity  {
     }
 
     public void prevsong() {
+        System.out.println(pro);
 
+        // startService(view);
+        if (mp.isPlaying()) {
+            Audio audio = getNest();
+            title = audio.getTitle();
+            titleq = audio.getImagepath();
+
+        } else {
+            Audio audio = getNest();
+            title = audio.getTitle();
+            titleq = audio.getImagepath();
+        }
 
         mp.stop();
         mp = new MediaPlayer();
@@ -4084,6 +4177,7 @@ public class Media_list_activity extends AppCompatActivity  {
             mp.setVolume(2.5f, 2.5f);
             totalTime = mp.getDuration();
 
+            requestAudioPermissions();
             // Position Bar
             positionBar = myView.findViewById(R.id.positionBar);
 
@@ -4278,6 +4372,10 @@ public class Media_list_activity extends AppCompatActivity  {
 
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
+                    int audioSessionId = mp.getAudioSessionId();
+                    if (audioSessionId != -1){
+                        mVisualizer.setAudioSessionId(audioSessionId);
+                    }
                 } else {
 
                 }
@@ -4387,12 +4485,13 @@ public class Media_list_activity extends AppCompatActivity  {
     }
 
     public void startService() {
-        serviceIntent.putExtra("p", (position));
         serviceIntent.setAction(Constants.ACTION.STARTFOREGROUND_ACTION);
+        serviceIntent.putExtra("p", (position));
         startService(serviceIntent);
     }
 
     public void stopService() {
+        serviceIntent.setClass(Media_list_activity.this, NotificationService.class);
         serviceIntent.setAction(Constants.ACTION.STOPFOREGROUND_ACTION);
         startService(serviceIntent);
     }
@@ -4422,7 +4521,10 @@ public class Media_list_activity extends AppCompatActivity  {
     public void onDestroy(){
         super.onDestroy();
 
+        unregisterReceiver(broadcastReceiver);
         mAudioManager.abandonAudioFocus(mAudioFocusChangeListener);
+        if (mVisualizer != null)
+            mVisualizer.release();
 
     }
 

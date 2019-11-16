@@ -99,6 +99,7 @@ dependencies {
     implementation 'com.github.rhlff:NestedScrollWebView:v1.0.2'
     implementation 'org.jbundle.util.osgi.wrapped:org.jbundle.util.osgi.wrapped.org.apache.http.client:4.1.2'
     implementation group: 'commons-io', name: 'commons-io', version: '2.6'
+    implementation 'com.gauravk.audiovisualizer:audiovisualizer:0.9.2'
 
 
 }

@@ -87,7 +87,7 @@
             android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
             android:background="@drawable/buttonshaperound"
             android:paddingTop="10dp"
-            android:paddingRight="30dp"
+            android:paddingRight="10dp"
             android:paddingBottom="10dp"
             android:text="Update"
             android:paddingLeft="14dp"
@@ -103,9 +103,8 @@
             android:layout_marginEnd="13dp"
             android:background="@drawable/buttonshaperound"
             android:paddingTop="10dp"
-
             android:paddingBottom="10dp"
-            android:paddingLeft="14dp"
+            android:paddingLeft="5dp"
             android:text="Delete"
             android:textColor="@color/cardview_light_background" />
     </RelativeLayout>

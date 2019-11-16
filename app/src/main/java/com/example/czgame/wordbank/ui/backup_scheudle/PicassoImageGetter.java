@@ -118,7 +118,23 @@ public class PicassoImageGetter  implements Html.ImageGetter {
                 }
             } else {
                 //No internet
-                return null;
+                String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
+                Uri uri = Uri.parse(urlString);
+                String path = uri.getLastPathSegment();
+                Bitmap bitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().getAbsolutePath() + "/images_cz/"+path);
+                System.out.println(bitmap.getByteCount());
+                ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 90 /*ignored for PNG*/, bos);
+                byte[] bitmapdata = bos.toByteArray();
+                ByteArrayInputStream bs = new ByteArrayInputStream(bitmapdata);
+
+
+                Drawable drawable =  Drawable.createFromStream(bs, "src");
+
+                drawable.setBounds(0, 0, 0 + drawable.getIntrinsicWidth(), 0
+                        + drawable.getIntrinsicHeight());
+
+                return drawable;
             }
 
         }

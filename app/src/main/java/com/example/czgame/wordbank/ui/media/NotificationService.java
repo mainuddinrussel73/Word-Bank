@@ -42,6 +42,8 @@ import androidx.core.app.NotificationCompat;
 import androidx.palette.graphics.Palette;
 import es.dmoral.toasty.Toasty;
 
+import static com.example.czgame.wordbank.ui.media.Media_list_activity.mVisualizer;
+import static com.example.czgame.wordbank.ui.media.Media_list_activity.mp;
 import static com.tobiasrohloff.view.NestedScrollWebView.TAG;
 
 public class NotificationService extends Service {
@@ -100,8 +102,9 @@ public class NotificationService extends Service {
         }
         if (intent.getAction().equals(Constants.ACTION.STARTFOREGROUND_ACTION)) {
             try {
+                p = intent.getIntExtra("p", 0);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    p = intent.getIntExtra("p", 0);
+
 
                     // implementation reference
 
@@ -136,6 +139,7 @@ public class NotificationService extends Service {
                         }
                     }
                 };
+                System.out.println(p);
 
                 AsynchTaskTimer();
 
@@ -169,6 +173,7 @@ public class NotificationService extends Service {
             p = intent.getIntExtra("p", 0);
 
             // implementation reference
+
 
             startMyOwnForeground();
             AsynchTaskTimer();
@@ -214,18 +219,21 @@ public class NotificationService extends Service {
         nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         Intent yesReceive = new Intent();
+        yesReceive.setClass(NotificationService.this, MyNotificationReceiver.class);
         yesReceive.setAction(MyNotificationReceiver.RESUME_ACTION);
         PendingIntent pendingIntentYes = PendingIntent.getBroadcast(this, MyNotificationReceiver.REQUEST_CODE_NOTIFICATION, yesReceive, PendingIntent.FLAG_UPDATE_CURRENT);
         notif.addAction(R.drawable.play, "resume", pendingIntentYes);
 
 
         Intent yesReceive2 = new Intent();
+        yesReceive2.setClass(NotificationService.this, MyNotificationReceiver.class);
         yesReceive2.setAction(MyNotificationReceiver.STOP_ACTION);
         PendingIntent pendingIntentYes2 = PendingIntent.getBroadcast(this, MyNotificationReceiver.REQUEST_CODE_NOTIFICATION, yesReceive2, PendingIntent.FLAG_UPDATE_CURRENT);
         notif.addAction(R.drawable.stop, "stop", pendingIntentYes2);
 
 
         Intent maybeReceive2 = new Intent();
+        maybeReceive2.setClass(NotificationService.this, MyNotificationReceiver.class);
         maybeReceive2.setAction(MyNotificationReceiver.CANCEL_ACTION);
         PendingIntent pendingIntentMaybe2 = PendingIntent.getBroadcast(this, MyNotificationReceiver.REQUEST_CODE_NOTIFICATION, maybeReceive2, PendingIntent.FLAG_UPDATE_CURRENT);
         notif.addAction(R.drawable.ic_cancel_black_24dp, "cancel", pendingIntentMaybe2);
@@ -241,6 +249,7 @@ public class NotificationService extends Service {
     public void Stopfunc() {
 
         yesReceive = new Intent();
+        yesReceive.setClass(NotificationService.this, MyNotificationReceiver.class);
         yesReceive.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         yesReceive.setAction(MyNotificationReceiver.STOP_ACTION);
         pendingIntentYes = PendingIntent.getBroadcast(this, MyNotificationReceiver.REQUEST_CODE_NOTIFICATION, yesReceive, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -305,25 +314,29 @@ public class NotificationService extends Service {
 
 
         }
+        int audioSessionId = mp.getAudioSessionId();
+        if (audioSessionId != -1){
+            mVisualizer.setAudioSessionId(audioSessionId);
+        }
 
 
         yesReceive = new Intent();
-        yesReceive.setAction(MyNotificationReceiver.RESUME_ACTION);
         yesReceive.setClass(NotificationService.this, MyNotificationReceiver.class);
+        yesReceive.setAction(MyNotificationReceiver.RESUME_ACTION);
         pendingIntentYes = PendingIntent.getBroadcast(this, MyNotificationReceiver.REQUEST_CODE_NOTIFICATION, yesReceive, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
         noReceive = new Intent();
-        noReceive.setAction(MyNotificationReceiver.CANCEL_ACTION);
         noReceive.setClass(NotificationService.this, MyNotificationReceiver.class);
+        noReceive.setAction(MyNotificationReceiver.CANCEL_ACTION);
         pendingIntentNo = PendingIntent.getBroadcast(this, MyNotificationReceiver.REQUEST_CODE_NOTIFICATION, noReceive, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
 
 
         nxReceive = new Intent();
-        nxReceive.setAction(MyNotificationReceiver.NEXT_ACTION);
         nxReceive.setClass(NotificationService.this, MyNotificationReceiver.class);
+        nxReceive.setAction(MyNotificationReceiver.NEXT_ACTION);
         pendingIntentNx = PendingIntent.getBroadcast(this, MyNotificationReceiver.REQUEST_CODE_NOTIFICATION, nxReceive, PendingIntent.FLAG_UPDATE_CURRENT);
 
         notificationView.setOnClickPendingIntent(R.id.status_bar_next, pendingIntentNx);
@@ -361,8 +374,8 @@ public class NotificationService extends Service {
 
 
         Intent toggle = new Intent();
-        toggle.setAction(MyNotificationReceiver.STOP_ACTION);
         toggle.setClass(NotificationService.this, MyNotificationReceiver.class);
+        toggle.setAction(MyNotificationReceiver.STOP_ACTION);
         pendingIntenttogg = PendingIntent.getBroadcast(this, MyNotificationReceiver.REQUEST_CODE_NOTIFICATION, toggle, PendingIntent.FLAG_UPDATE_CURRENT);
         notificationView1.setOnClickPendingIntent(R.id.status_bar_collapse, pendingIntenttogg);
         notificationView.setOnClickPendingIntent(R.id.status_bar_collapse, pendingIntenttogg);
@@ -496,10 +509,17 @@ public class NotificationService extends Service {
 
                            if(!isAppRunning()) {
 
-                               int result = mAudioManager.requestAudioFocus(mOnAudioFocusChangeListener,
-                                       AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-
+                               AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                               boolean requestGranted = AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioManager.requestAudioFocus(mOnAudioFocusChangeListener, AudioManager.STREAM_MUSIC,
+                                       AudioManager.AUDIOFOCUS_GAIN);
+                               if(requestGranted){
+                                   // you now has the audio focus
                                    mTimer.cancel();
+                               }else{
+
+                               }
+
+
 
 
                            }

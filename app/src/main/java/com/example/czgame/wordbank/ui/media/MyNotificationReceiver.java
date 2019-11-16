@@ -32,6 +32,7 @@ import androidx.palette.graphics.Palette;
 import es.dmoral.toasty.Toasty;
 
 import static android.content.Context.ACTIVITY_SERVICE;
+import static com.example.czgame.wordbank.ui.media.Media_list_activity.mVisualizer;
 import static com.example.czgame.wordbank.ui.media.Media_list_activity.mp;
 import static com.example.czgame.wordbank.ui.media.Media_list_activity.position;
 import static com.example.czgame.wordbank.ui.media.Media_list_activity.serviceIntent;
@@ -46,7 +47,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
     public static final String AUDIOFOCUS_LOSS_TRANSIENT = "AUDIOFOCUS_LOSS_TRANSIENT";
     public static int REQUEST_CODE_NOTIFICATION = 1212;
     public static int REQUEST_CODE = 10;
-    Media_list_activity mediaListActivity;
+    Media_list_activity mediaListActivity  ;
 
     public void setMainActivityHandler(Media_list_activity main) {
         mediaListActivity = main;
@@ -128,6 +129,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                         }
 
                         Intent service = new Intent(context, NotificationService.class);
+                        service.setClass(context, NotificationService.class);
                         context.stopService(service);
                     }
 
@@ -145,9 +147,10 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                             prevsong(context);
                             NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
                         } else {
-                            mediaListActivity.prevsong();
-                        }
+                            System.out.println(position);
+                            context.sendBroadcast(new Intent(Constants.ACTION.PREV_ACTION));
 
+                        }
 
                     } catch (Exception e) {
 
@@ -171,15 +174,17 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                         if (!isAppOnForeground(context, "com.example.czgame.wordbank")) {
                             nxtsong(context);
 
-                            //NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
+                            NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
                         } else {
-                            mediaListActivity.nxtsong();
+                            context.sendBroadcast(new Intent(Constants.ACTION.NEXT_ACTION));
                         }
                         //  NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
 
+                        NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
                     } catch (Exception e) {
                         System.out.println(e.getMessage());
                     }
+
 
 
                     //Media_list_activity.nxt = true;
@@ -196,8 +201,6 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
                     } else{
                         // Playing
-                        serviceIntent.setAction(Constants.ACTION.AUDIOFOCUS_LOSS);
-                        context.startService(serviceIntent);
 
 
                     }
@@ -222,6 +225,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                         // Playing
 
                         mp.pause();
+
 
 
                     }
@@ -259,105 +263,111 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
     public void nxtsong(Context context) {
 
-        // startService(view);
+            // startService(view);
 
-        //System.out.println(pro);
-        final int[] mutedColor = new int[1];
+            //System.out.println(pro);
+            final int[] mutedColor = new int[1];
 
-        mp.stop();
-        mp = new MediaPlayer();
+            mp.stop();
+            mp = new MediaPlayer();
 
-        if (position + 1 >= Media_list_activity.ListElementsArrayList.size()) {
-            position = -1;
-        }
-        position++;
-        {
-
-            // playBtn = (Button) findViewById(R.id.playBtn);
-            // elapsedTimeLabel = (TextView) findViewById(R.id.elapsedTimeLabel);
-            //  remainingTimeLabel = (TextView) findViewById(R.id.remainingTimeLabel);
-
-            // Media Player
-
-
-            String title = Media_list_activity.ListElementsArrayList.get(position).getTitle();
-            String artist = Media_list_activity.ListElementsArrayList.get(position).getArtist();
-            String album = Media_list_activity.ListElementsArrayList.get(position).getAlbum();
-
-
-            String titleq = Media_list_activity.ListElementsArrayList.get(position).getImagepath();
-            Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
-
-            Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(titleq));
-            ContentResolver res = context.getContentResolver();
-            InputStream in;
-            Bitmap bm = null;
-            try {
-                in = res.openInputStream(uri);
-
-                bm = BitmapFactory.decodeStream(in);
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                InputStream is = context.getResources().openRawResource(R.raw.image);
-                bm = BitmapFactory.decodeStream(is);
+            if (position + 1 >= Media_list_activity.ListElementsArrayList.size()) {
+                position = -1;
             }
+            position++;
+            {
+
+                // playBtn = (Button) findViewById(R.id.playBtn);
+                // elapsedTimeLabel = (TextView) findViewById(R.id.elapsedTimeLabel);
+                //  remainingTimeLabel = (TextView) findViewById(R.id.remainingTimeLabel);
+
+                // Media Player
 
 
-            Bitmap finalBm = bm;
-            Palette.from(bm).generate(new Palette.PaletteAsyncListener() {
-                @Override
-                public void onGenerated(Palette palette) {
-                    // Use generated instance
-                    //work with the palette here
-                    int defaultValue = 0x000000;
-                    int vibrant = getDominantColor(finalBm);
-                    int vibrantLight = palette.getLightVibrantColor(defaultValue);
-                    int vibrantDark = palette.getDarkVibrantColor(defaultValue);
-                    int muted = palette.getMutedColor(defaultValue);
-                    int mutedLight = palette.getLightMutedColor(defaultValue);
-                    int mutedDark = getComplimentColor(vibrant);
-                    mutedColor[0] = mutedDark;
+                String title = Media_list_activity.ListElementsArrayList.get(position).getTitle();
+                String artist = Media_list_activity.ListElementsArrayList.get(position).getArtist();
+                String album = Media_list_activity.ListElementsArrayList.get(position).getAlbum();
 
 
-                    if (vibrant == 0) {
-                        mutedDark = palette.getDarkVibrantColor(vibrant);
+                String titleq = Media_list_activity.ListElementsArrayList.get(position).getImagepath();
+                Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
+
+                Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(titleq));
+                ContentResolver res = context.getContentResolver();
+                InputStream in;
+                Bitmap bm = null;
+                try {
+                    in = res.openInputStream(uri);
+
+                    bm = BitmapFactory.decodeStream(in);
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    InputStream is = context.getResources().openRawResource(R.raw.image);
+                    bm = BitmapFactory.decodeStream(is);
+                }
+
+
+                Bitmap finalBm = bm;
+                Palette.from(bm).generate(new Palette.PaletteAsyncListener() {
+                    @Override
+                    public void onGenerated(Palette palette) {
+                        // Use generated instance
+                        //work with the palette here
+                        int defaultValue = 0x000000;
+                        int vibrant = getDominantColor(finalBm);
+                        int vibrantLight = palette.getLightVibrantColor(defaultValue);
+                        int vibrantDark = palette.getDarkVibrantColor(defaultValue);
+                        int muted = palette.getMutedColor(defaultValue);
+                        int mutedLight = palette.getLightMutedColor(defaultValue);
+                        int mutedDark = getComplimentColor(vibrant);
+                        mutedColor[0] = mutedDark;
+
+
+                        if (vibrant == 0) {
+                            mutedDark = palette.getDarkVibrantColor(vibrant);
+                        }
+
+
                     }
+                });
 
 
+                String[] abspath = getAudioPath(context, title);
+
+                try {
+                    if (!mp.isPlaying()) {
+                        mp.setDataSource(abspath[0]);
+                        mp.prepare();
+
+                    } else {
+
+
+                    }
+                } catch (Exception e) {
+
+                    System.out.println(e.getMessage());
                 }
-            });
 
 
-            String[] abspath = getAudioPath(context, title);
+                //   if(! other.equals("yes") ) {
+                mp.setLooping(false);
+                mp.seekTo(0);
 
-            try {
-                if (!mp.isPlaying()) {
-                    mp.setDataSource(abspath[0]);
-                    mp.prepare();
+                mp.start();
 
-                } else {
+                mp.setVolume(2.5f, 2.5f);
 
-
+                int audioSessionId = mp.getAudioSessionId();
+                if (audioSessionId != -1){
+                    mVisualizer.setAudioSessionId(audioSessionId);
                 }
-            } catch (Exception e) {
-
-                System.out.println(e.getMessage());
-            }
-
-
-            //   if(! other.equals("yes") ) {
-            mp.setLooping(false);
-            mp.seekTo(0);
-
-            mp.start();
-
-            mp.setVolume(2.5f, 2.5f);
 
             Intent intenta = new Intent(context, NotificationService.class);
-            intenta.setClass(context, NotificationService.class);
-            intenta.setAction("com.example.mainuddin.myapplication34.action.next");
+
             intenta.putExtra("p", position);
+            intenta.setClass(context, NotificationService.class);
+            intenta.setAction(Constants.ACTION.NEXT_ACTION);
             context.startService(intenta);
 
         }
@@ -463,10 +473,16 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
             mp.setVolume(2.5f, 2.5f);
 
+            int audioSessionId = mp.getAudioSessionId();
+            if (audioSessionId != -1){
+                mVisualizer.setAudioSessionId(audioSessionId);
+            }
+
             Intent intenta = new Intent(context, NotificationService.class);
-            intenta.setClass(context, NotificationService.class);
-            intenta.setAction("com.example.mainuddin.myapplication34.action.prev");
+
             intenta.putExtra("p", position);
+            intenta.setClass(context, NotificationService.class);
+            intenta.setAction(Constants.ACTION.PREV_ACTION);
             context.startService(intenta);
 
         }
