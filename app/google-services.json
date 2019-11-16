@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1012932243580",
+    "firebase_url": "https://word-bank-dde3b.firebaseio.com",
+    "project_id": "word-bank-dde3b",
+    "storage_bucket": "word-bank-dde3b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1012932243580:android:10b51c3b3a8c84382d19f9",
+        "android_client_info": {
+          "package_name": "com.example.czgame.wordbank"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1012932243580-il19l809v0otl1cqui65ghmorbha3bct.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.czgame.wordbank",
+            "certificate_hash": "ea037c74ee3827cecf1d2462e2d35655d9094265"
+          }
+        },
+        {
+          "client_id": "1012932243580-htfme01u6mp4s08ot9057grckhr0r4tq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5p1CYMQLpaC0U0Q7v2FgqvqxMPzlBW6o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1012932243580-htfme01u6mp4s08ot9057grckhr0r4tq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

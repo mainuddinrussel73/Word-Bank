@@ -79,7 +79,7 @@
         android:layout_marginTop="20dp">
 
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/save1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -90,6 +90,7 @@
             android:paddingRight="30dp"
             android:paddingTop="10dp"
             android:text="Update"
+            android:background="@drawable/buttonshaperound"
             android:textColor="@color/cardview_light_background" />
 
 

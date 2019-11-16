@@ -110,7 +110,7 @@
    >
 
 
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/nextpage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -124,11 +124,12 @@
         android:paddingRight="@dimen/alerter_activity_horizontal_margin"
         android:paddingTop="@dimen/alerter_activity_horizontal_margin"
         android:text="Next"
+        android:background="@drawable/buttonshaperound"
         android:textColor="@color/white">
 
-    </com.google.android.material.button.MaterialButton>
+    </Button>
 
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/extpage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -140,9 +141,10 @@
         android:paddingRight="@dimen/alerter_activity_horizontal_margin"
         android:paddingTop="@dimen/alerter_activity_horizontal_margin"
         android:text="Exit"
+        android:background="@drawable/buttonshaperound"
         android:textColor="@color/white">
 
-    </com.google.android.material.button.MaterialButton>
+    </Button>
 
 
 </RelativeLayout>

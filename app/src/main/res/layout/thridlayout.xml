@@ -255,17 +255,18 @@
         android:layout_marginRight="@dimen/alerter_activity_horizontal_margin">
 
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/datepick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginLeft="7dp"
+            android:layout_marginTop="6dp"
             android:paddingRight="5dp"
             android:paddingLeft="5dp"
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
             android:text="Date Pick"
+            android:background="@drawable/buttonshaperound"
             android:textColor="@color/white"
 
            />
@@ -316,18 +317,19 @@
         android:background="@drawable/backgroundborder">
 
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/soundpick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginLeft="7dp"
+            android:layout_marginTop="6dp"
             android:paddingLeft="5dp"
             android:paddingTop="5dp"
             android:paddingRight="5dp"
             android:paddingBottom="5dp"
             android:text="White Noise"
             android:textColor="@color/white"
+            android:background="@drawable/buttonshaperound"
 
             />
 

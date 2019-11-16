@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,8 +22,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.czgame.wordbank.ui.words.MainActivity;
 import com.example.czgame.wordbank.R;
+import com.example.czgame.wordbank.ui.words.MainActivity;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -60,6 +64,9 @@ public class news_backup extends AppCompatActivity {
     private ProgressBar progressBar;
     private int progressStatus = 0;
     private Handler handler = new Handler();
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef = database.getReference("news");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,10 +106,13 @@ public class news_backup extends AppCompatActivity {
                 JSONArray jsonArray = new JSONArray();
                 final Cursor cursor = mDBHelper.getAllData();
 
+
+
                 // looping through all rows and adding to list
                 if (cursor.getCount() != 0) {
                     // show message
                     while (cursor.moveToNext()) {
+
 
                         JSONObject word = new JSONObject();
                         try {
@@ -110,10 +120,27 @@ public class news_backup extends AppCompatActivity {
                             word.put("TITLE", cursor.getString(1));
                             word.put("BODY", cursor.getString(2));
                             word.put("URL", cursor.getString(3));
+                            ConnectivityManager conMgr =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+                            NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
+                            if (netInfo != null) {
+                                if (netInfo.isConnected()) {
+                                    myRef.child(cursor.getString(0)).child("ID").setValue(cursor.getString(0));
+                                    myRef.child(cursor.getString(0)).child("TITLE").setValue(cursor.getString(1));
+                                    myRef.child(cursor.getString(0)).child("BODY").setValue(cursor.getString(2));
+                                    myRef.child(cursor.getString(0)).child("URL").setValue(cursor.getString(3));
+                                }
+                            }else{
+                                Toasty.error(news_backup.this,"No internet connection.",Toast.LENGTH_LONG).show();
+                            }
                         } catch (JSONException e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
                         }
+
+
+
+                       // myRef.setValue(new News(Integer.parseInt(cursor.getString(0)),cursor.getString(1),cursor.getString(2),cursor.getString(3)));
+
                         jsonArray.put(word);
                     }
 
@@ -357,4 +384,5 @@ public class news_backup extends AppCompatActivity {
         }
         return 0;
     }
+
 }

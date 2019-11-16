@@ -91,7 +91,7 @@
         android:layout_below="@+id/wordsec"
         android:layout_marginTop="20dp">
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/update"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
@@ -99,14 +99,15 @@
             android:layout_gravity="left"
             android:layout_marginStart="18dp"
             android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
-            android:paddingLeft="18dp"
+            android:background="@drawable/buttonshaperound"
             android:paddingTop="10dp"
             android:paddingRight="30dp"
             android:paddingBottom="10dp"
             android:text="Update"
+            android:paddingLeft="14dp"
             android:textColor="@color/cardview_light_background" />
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/delete"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
@@ -114,11 +115,12 @@
             android:layout_gravity="left"
             android:layout_marginLeft="160dp"
             android:layout_marginEnd="13dp"
-            android:paddingLeft="23dp"
+            android:background="@drawable/buttonshaperound"
             android:paddingTop="10dp"
             android:paddingRight="30dp"
 
             android:paddingBottom="10dp"
+            android:paddingLeft="14dp"
             android:text="Delete"
             android:textColor="@color/cardview_light_background" />
     </RelativeLayout>

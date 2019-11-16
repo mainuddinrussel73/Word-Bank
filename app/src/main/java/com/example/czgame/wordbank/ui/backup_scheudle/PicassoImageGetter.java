@@ -64,9 +64,12 @@ public class PicassoImageGetter  implements Html.ImageGetter {
         protected void onPostExecute(Drawable result) {
             // set the correct bound according to the result from HTTP call
 
-            urlDrawable.setBounds(0, 0, 0 + result.getIntrinsicWidth(), 0
-                    + result.getIntrinsicHeight());
-
+            try {
+                urlDrawable.setBounds(0, 0, 0 + result.getIntrinsicWidth(), 0
+                        + result.getIntrinsicHeight());
+            }catch (Exception e){
+                System.out.println(e.getMessage());
+            }
 
             // change the reference of the current drawable to the result
             // from the HTTP call
@@ -115,26 +118,7 @@ public class PicassoImageGetter  implements Html.ImageGetter {
                 }
             } else {
                 //No internet
-                String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
-                Uri uri = Uri.parse(urlString);
-                String path = uri.getLastPathSegment();
-                Bitmap bitmap = BitmapFactory.decodeFile(Environment.getExternalStorageDirectory().getAbsolutePath() + "/images_cz/"+path);
-                System.out.println("no conn");
-                System.out.println(bitmap.getByteCount());
-                ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
-                byte[] bitmapdata = bos.toByteArray();
-                ByteArrayInputStream bs = new ByteArrayInputStream(bitmapdata);
-
-                System.out.println(bs.toString());
-                Drawable drawable =  Drawable.createFromStream(bs, "src");
-
-                System.out.println(drawable.getIntrinsicHeight());
-                System.out.println(drawable.getIntrinsicWidth());
-                drawable.setBounds(0, 0, 0 + drawable.getIntrinsicWidth(), 0
-                        + drawable.getIntrinsicHeight());
-
-                return drawable;
+                return null;
             }
 
         }

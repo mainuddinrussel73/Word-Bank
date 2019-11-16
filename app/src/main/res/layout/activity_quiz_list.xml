@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
 
     android:id="@+id/relative_quiz">
-
 
 
     <TextView
@@ -17,20 +14,20 @@
 
         android:layout_height="70dp"
 
-        android:layout_alignParentLeft="true"
-
         android:layout_alignParentStart="true"
+
+        android:layout_alignParentLeft="true"
 
         android:layout_alignParentTop="true"
 
+        android:layout_marginStart="15dp"
+
+        android:layout_marginLeft="15dp"
+
+        android:layout_marginTop="34dp"
+
         android:layout_marginEnd="10dp"
-
-        android:layout_marginLeft="13dp"
-
         android:layout_marginRight="10dp"
-
-        android:layout_marginStart="13dp"
-        android:layout_marginTop="85dp"
 
         android:paddingLeft="@dimen/padd"
         android:scrollbars="vertical"
@@ -163,7 +160,7 @@
     </ScrollView>
 
 
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/btnDisplay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -174,14 +171,15 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="12dp"
         android:paddingBottom="10dp"
-        android:paddingLeft="30dp"
+        android:background="@drawable/buttonshaperound"
         android:paddingRight="10dp"
         android:paddingTop="10dp"
         android:text="@string/btn_display"
+        android:paddingLeft="10dp"
         android:textColor="@color/cardview_light_background" />
 
 
-    <com.google.android.material.button.MaterialButton
+    <Button
 
         android:id="@+id/nextquiz"
 
@@ -206,42 +204,43 @@
 
         android:paddingTop="10dp"
         android:text="@string/next_questions"
+        android:background="@drawable/buttonshaperound"
         android:textColor="@color/cardview_light_background" />
 
-    <com.google.android.material.button.MaterialButton
+    <Button
 
         android:id="@+id/endquiz"
 
         android:layout_width="87dp"
 
         android:layout_height="56dp"
-        android:layout_alignParentRight="true"
+        android:layout_below="@+id/timer"
 
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/scrollButtons"
 
-        android:layout_marginRight="175dp"
-        android:layout_marginStart="149dp"
-        android:layout_marginTop="140dp"
-        android:paddingLeft="25dp"
-        android:paddingTop="10dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="165dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginRight="159dp"
+
         android:text="@string/end"
+        android:background="@drawable/buttonshaperound"
         android:textColor="@color/cardview_light_background" />
 
     <TextView
         android:id="@+id/scores"
         android:layout_width="100dp"
         android:layout_height="77dp"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:layout_marginBottom="100dp"
-        android:layout_marginEnd="21dp"
-
+        android:layout_alignParentEnd="true"
         android:layout_marginLeft="290dp"
+        android:layout_marginTop="29dp"
+
+        android:layout_marginEnd="21dp"
 
         android:layout_marginRight="5dp"
 
-        android:layout_marginTop="79dp"
+        android:layout_marginBottom="100dp"
         android:background="@drawable/backgroundborder"
         android:paddingLeft="10dp"
         android:paddingTop="8dp"
@@ -251,17 +250,19 @@
 
     <TextView
         android:id="@+id/timer"
-        android:layout_width="356dp"
-        android:layout_height="56dp"
-        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/scrollButtons"
 
         android:layout_alignParentStart="true"
-        android:layout_marginEnd="15dp"
+        android:layout_alignParentEnd="true"
 
+        android:layout_marginStart="16dp"
         android:layout_marginLeft="30dp"
+        android:layout_marginTop="77dp"
+        android:layout_marginEnd="13dp"
         android:layout_marginRight="35dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="650dp"
+        android:paddingLeft="60dp"
         android:background="@drawable/backgroundborder"
         android:text="@string/Time"
         android:textColor="@color/cardview_dark_background"

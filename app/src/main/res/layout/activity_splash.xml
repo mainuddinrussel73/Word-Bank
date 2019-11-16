@@ -30,7 +30,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         app:waveMax="100"
-        app:waveColor="#994dd2ff"
+        app:waveColor="#33DDFF"
         app:waveAmplitude="4dp"
         app:waveBorderWidth="3dp"
         app:waveBorderRadius="2dp"

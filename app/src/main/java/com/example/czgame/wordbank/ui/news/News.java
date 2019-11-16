@@ -1,8 +1,8 @@
 package com.example.czgame.wordbank.ui.news;
 
-import com.example.czgame.wordbank.ui.words.word;
+import java.util.ArrayList;
 
-public class News implements Comparable<News> {
+public class News extends ArrayList<News> implements Comparable<News> {
     int ID;
 
 
@@ -10,9 +10,10 @@ public class News implements Comparable<News> {
     String BODY;
     String URL;
 
-    public News(int id, String title, String body) {
+    public News(int id, String title, String body,String url) {
         this.ID = id;
         this.TITLE = title;
+        this.URL = url;
         this.BODY = body;
 
     }

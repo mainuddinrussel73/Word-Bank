@@ -11,6 +11,13 @@
     android:id="@+id/newslistview"
     android:background="@drawable/listview_border">
 
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/pullToRefresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fastScrollAlwaysVisible="true"
+        android:fastScrollEnabled="true"
+        android:padding="10dp">
     <ListView
         android:id="@+id/news_list"
 
@@ -32,5 +39,6 @@
 
 
     </ListView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>
