@@ -129,7 +129,7 @@ public class DBDaily extends SQLiteOpenHelper {
         return res;
     }
 
-    public boolean insertAll(String day, String  week,String  month, String year, int time) {
+    public boolean insertAll(String day, String  week,String  month, String year, String time) {
         SQLiteDatabase db1 = this.getReadableDatabase();
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -159,7 +159,7 @@ public class DBDaily extends SQLiteOpenHelper {
             return result != -1;
         }else return false;
     }
-    public boolean insertAll1(String day, String  week,String  month, String year, int time) {
+    public boolean insertAll1(String day, String  week,String  month, String year, String time) {
         SQLiteDatabase db1 = this.getReadableDatabase();
 
 

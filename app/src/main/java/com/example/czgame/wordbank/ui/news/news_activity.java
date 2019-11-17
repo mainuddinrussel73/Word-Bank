@@ -274,6 +274,7 @@ public class news_activity extends AppCompatActivity {
             newsList.clear();
             mDBHelper = new DBNewsHelper(news_activity.this);
             mDBHelper.deleteAll();
+            ref = database.getReference("news");
             ref.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {

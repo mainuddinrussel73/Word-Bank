@@ -62,7 +62,7 @@ public class daily_details extends AppCompatActivity {
     TextView weekly,monthly;
 
     String []monthss = {"JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"};
-    String []days = {"MON", "TUR", "WED", "THU", "FRI","SAT","SUN"};
+    String []days = {"SUN","MON","TUR", "WED", "THU", "FRI","SAT"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +81,7 @@ public class daily_details extends AppCompatActivity {
 
 
         Calendar calendar = Calendar.getInstance();
-
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
         Date time = Calendar.getInstance().getTime();
         currentYear = calendar.get(Calendar.YEAR);
         currentMonth = calendar.get(Calendar.MONTH) + 1;
@@ -360,34 +360,35 @@ public class daily_details extends AppCompatActivity {
                 word.setYEAR(cursor.getString(4));
                 word.setTIME(cursor.getInt(5));
                 System.out.println(word.toString());
-                if(word.getDAY().equals("MON")){
+                if(word.getDAY().equals("SUN")){
                     taskList.set(0,word);
 
                 }
-                if(word.getDAY().equals("TUE")){
+                if(word.getDAY().equals("MON")){
                     taskList.set(1,word);
 
                 }
-                if(word.getDAY().equals("WED")){
+                if(word.getDAY().equals("TUE")){
                     taskList.set(2,word);
 
                 }
-                if(word.getDAY().equals("THU")){
+                if(word.getDAY().equals("WED")){
                     taskList.set(3,word);
 
                 }
-                if(word.getDAY().equals("FRI")){
+                if(word.getDAY().equals("THU")){
                     taskList.set(4,word);
 
                 }
-                if(word.getDAY().equals("SAT")){
+                if(word.getDAY().equals("FRI")){
                     taskList.set(5,word);
 
                 }
-                if(word.getDAY().equals("SUN")){
+                if(word.getDAY().equals("SAT")){
                     taskList.set(6,word);
 
                 }
+
                 i++;
             }
         } else {
@@ -401,13 +402,13 @@ public class daily_details extends AppCompatActivity {
             xAxis.setGranularity(0f);
             final ArrayList<String> xAxisLabeln = new ArrayList<>();
             xAxisLabeln.add(" ");
+            xAxisLabeln.add("SUN");
             xAxisLabeln.add("MON");
             xAxisLabeln.add("TUE");
-            xAxisLabeln.add("WEB");
+            xAxisLabeln.add("WED");
             xAxisLabeln.add("THU");
             xAxisLabeln.add("FRI");
             xAxisLabeln.add("SAT");
-            xAxisLabeln.add("SUN");
             xAxisLabeln.add(" ");
 
             xAxis.setGranularity(0f);
@@ -581,7 +582,7 @@ public class daily_details extends AppCompatActivity {
             if(month.equals("JAN")){
                 for (; jk <=31 ; jk++) {
                     count++;
-                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
+                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),Integer.toString(random.nextInt(24)));
                     if(count==7){
                         count=0;
                         y++;
@@ -591,7 +592,7 @@ public class daily_details extends AppCompatActivity {
             if(month.equals("FEB")){
                 for (; jk <=59 ; jk++) {
                     count++;
-                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
+                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),Integer.toString(random.nextInt(24)));
                     if(count==7){
                         count=0;
                         y++;
@@ -601,7 +602,7 @@ public class daily_details extends AppCompatActivity {
             if(month.equals("MAR")){
                 for (; jk <=90 ; jk++) {
                     count++;
-                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
+                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),Integer.toString(random.nextInt(24)));
                     if(count==7){
                         count=0;
                         y++;
@@ -611,7 +612,7 @@ public class daily_details extends AppCompatActivity {
             if(month.equals("APR")){
                 for (; jk <=120 ; jk++) {
                     count++;
-                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
+                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),Integer.toString(random.nextInt(24)));
                     if(count==7){
                         count=0;
                         y++;
@@ -621,7 +622,7 @@ public class daily_details extends AppCompatActivity {
             if(month.equals("MAY")){
                 for (; jk <=151 ; jk++) {
                     count++;
-                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
+                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),Integer.toString(random.nextInt(24)));
                     if(count==7){
                         count=0;
                         y++;
@@ -631,7 +632,7 @@ public class daily_details extends AppCompatActivity {
             if(month.equals("JUN")){
                 for (; jk <=181 ; jk++) {
                     count++;
-                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
+                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),Integer.toString(random.nextInt(24)));
                     if(count==7){
                         count=0;
                         y++;
@@ -641,7 +642,7 @@ public class daily_details extends AppCompatActivity {
             if(month.equals("JUL")){
                 for (; jk <=212 ; jk++) {
                     count++;
-                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
+                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),Integer.toString(random.nextInt(24)));
                     if(count==7){
                         count=0;
                         y++;
@@ -651,7 +652,7 @@ public class daily_details extends AppCompatActivity {
             if(month.equals("AUG")){
                 for (; jk <=243 ; jk++) {
                     count++;
-                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
+                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),Integer.toString(random.nextInt(24)));
                     if(count==7){
                         count=0;
                         y++;
@@ -661,7 +662,7 @@ public class daily_details extends AppCompatActivity {
             if(month.equals("SEP")){
                 for (; jk <=273 ; jk++) {
                     count++;
-                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
+                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),Integer.toString(random.nextInt(24)));
                     if(count==7){
                         count=0;
                         y++;
@@ -671,7 +672,7 @@ public class daily_details extends AppCompatActivity {
             if(month.equals("OCT")){
                 for (; jk <=304 ; jk++) {
                     count++;
-                    dbDaily.insertAll(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
+                    dbDaily.insertAll(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),Integer.toString(random.nextInt(24)));
                     if(count==7){
                         count=0;
                         y++;
@@ -681,7 +682,7 @@ public class daily_details extends AppCompatActivity {
             if(month.equals("NOV")){
                 for (; jk <=334 ; jk++) {
                     count++;
-                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
+                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),Integer.toString(random.nextInt(24)));
                     if(count==7){
                         count=0;
                         y++;
@@ -691,7 +692,7 @@ public class daily_details extends AppCompatActivity {
             if(month.equals("DEC")){
                 for (; jk <=365 ; jk++) {
                     count++;
-                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),random.nextInt(24));
+                    dbDaily.insertAll1(days[(jk-1)%7],String.valueOf(y),month,String.valueOf(currentYear),Integer.toString(random.nextInt(24)));
                     if(count==7){
                         count=0;
                         y++;

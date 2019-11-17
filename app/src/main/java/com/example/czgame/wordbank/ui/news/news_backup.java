@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -97,21 +98,27 @@ public class news_backup extends AppCompatActivity {
         mDBHelper = new DBNewsHelper(this);
 
         backup = findViewById(R.id.backup);
+        backup.setEnabled(true);
 
         backup.setOnClickListener(new View.OnClickListener() {
 
 
             @Override
             public void onClick(View v) {
+                new MyTask().execute();
+
+
                 JSONArray jsonArray = new JSONArray();
                 final Cursor cursor = mDBHelper.getAllData();
 
 
-
-                // looping through all rows and adding to list
                 if (cursor.getCount() != 0) {
+
+
                     // show message
                     while (cursor.moveToNext()) {
+
+
 
 
                         JSONObject word = new JSONObject();
@@ -120,18 +127,7 @@ public class news_backup extends AppCompatActivity {
                             word.put("TITLE", cursor.getString(1));
                             word.put("BODY", cursor.getString(2));
                             word.put("URL", cursor.getString(3));
-                            ConnectivityManager conMgr =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-                            NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
-                            if (netInfo != null) {
-                                if (netInfo.isConnected()) {
-                                    myRef.child(cursor.getString(0)).child("ID").setValue(cursor.getString(0));
-                                    myRef.child(cursor.getString(0)).child("TITLE").setValue(cursor.getString(1));
-                                    myRef.child(cursor.getString(0)).child("BODY").setValue(cursor.getString(2));
-                                    myRef.child(cursor.getString(0)).child("URL").setValue(cursor.getString(3));
-                                }
-                            }else{
-                                Toasty.error(news_backup.this,"No internet connection.",Toast.LENGTH_LONG).show();
-                            }
+
                         } catch (JSONException e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
@@ -139,7 +135,7 @@ public class news_backup extends AppCompatActivity {
 
 
 
-                       // myRef.setValue(new News(Integer.parseInt(cursor.getString(0)),cursor.getString(1),cursor.getString(2),cursor.getString(3)));
+                        // myRef.setValue(new News(Integer.parseInt(cursor.getString(0)),cursor.getString(1),cursor.getString(2),cursor.getString(3)));
 
                         jsonArray.put(word);
                     }
@@ -157,6 +153,7 @@ public class news_backup extends AppCompatActivity {
                         pw.close();
                         f.close();
                         Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
+                        backup.setEnabled(false);
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                         Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
@@ -169,6 +166,8 @@ public class news_backup extends AppCompatActivity {
 
                     showMessage("Error", "Nothing found");
                 }
+
+
 
 
             }
@@ -383,6 +382,78 @@ public class news_backup extends AppCompatActivity {
             }
         }
         return 0;
+    }
+    private class MyTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            ConnectivityManager conMgr =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
+
+            if (netInfo != null) {
+                if (netInfo.isConnected()) {
+
+
+                    myRef = database.getReference("news");
+                    myRef.setValue(null);
+
+                }
+            }else{
+                Toasty.error(news_backup.this,"No internet connection.",Toast.LENGTH_LONG).show();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void c) {
+            new MyTask2().execute();
+            // do something with result
+        }
+    }
+    private class MyTask2 extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            ConnectivityManager conMgr =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
+
+            final Cursor cursor = mDBHelper.getAllData();
+
+
+            if (cursor.getCount() != 0) {
+
+
+                // show message
+                while (cursor.moveToNext()) {
+
+
+                    if (netInfo != null) {
+                        if (netInfo.isConnected()) {
+
+
+                            myRef.child(cursor.getString(0)).child("ID").setValue(cursor.getString(0));
+                            myRef.child(cursor.getString(0)).child("TITLE").setValue(cursor.getString(1));
+                            myRef.child(cursor.getString(0)).child("BODY").setValue(cursor.getString(2));
+                            myRef.child(cursor.getString(0)).child("URL").setValue(cursor.getString(3));
+
+
+                        }
+                    } else {
+                    }
+
+                }
+
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void c) {
+
+            // do something with result
+        }
     }
 
 }

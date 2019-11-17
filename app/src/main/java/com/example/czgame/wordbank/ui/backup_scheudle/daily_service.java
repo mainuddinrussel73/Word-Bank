@@ -7,9 +7,19 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 
 import com.example.czgame.wordbank.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -24,7 +34,7 @@ public class daily_service extends BroadcastReceiver {
         DBDaily dbDaily = new DBDaily(context);
         //dbDaily.deleteAll();
         String []months = {"JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"};
-        String []days = {"MON", "TUR", "WED", "THU", "FRI","SAT","SUN"};
+        String []days = {"SUN","MON", "TUR", "WED", "THU", "FRI","SAT"};
 
         Calendar calendar = Calendar.getInstance();
 
@@ -44,12 +54,62 @@ public class daily_service extends BroadcastReceiver {
 
 
         System.out.println(dayLongName.toUpperCase().substring(0,3)+","+months[currentMonth-1]);
-        boolean b = dbDaily.insertAll(dayLongName.toUpperCase().substring(0,3),String.valueOf(currentWEEK),months[currentMonth-1],String.valueOf(currentYear),prefs1.getInt("t", 0));
+        boolean b = dbDaily.insertAll(dayLongName.toUpperCase().substring(0,3),String.valueOf(currentWEEK),months[currentMonth-1],String.valueOf(currentYear),prefs1.getString("t","0"));
+
 
         if(b) {
             SharedPreferences.Editor editor1 = prefs1.edit();
             editor1.putInt("t", 0);
             editor1.commit();
+        }
+
+        JSONArray jsonArray = new JSONArray();
+        final Cursor cursor = dbDaily.getAll();
+
+        // looping through all rows and adding to list
+        if (cursor.getCount() != 0) {
+            // show message
+            while (cursor.moveToNext()) {
+
+                JSONObject word = new JSONObject();
+                try {
+                    word.put("ID", Integer.parseInt(cursor.getString(0)));
+                    word.put("DAY", cursor.getString(1));
+                    word.put("WEEK", cursor.getString(2));
+                    word.put("MONTH", cursor.getString(3));
+                    word.put("YEAR", cursor.getString(4));
+                    word.put("TIME", cursor.getString(5));
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                jsonArray.put(word);
+            }
+
+            File root = android.os.Environment.getExternalStorageDirectory();
+            // http://stackoverflow.com/questions/3551821/android-write-to-sd-card-folder
+            File dir = new File(root.getAbsolutePath() + "/wordstore");
+            dir.mkdirs();
+            File file = new File(dir, "backup_daily.json");
+            try {
+                FileOutputStream f = new FileOutputStream(file);
+                PrintWriter pw = new PrintWriter(f);
+                pw.write(jsonArray.toString());
+                pw.flush();
+                pw.close();
+                f.close();
+                //Toasty.success(context, "Done.", Toast.LENGTH_SHORT).show();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                //Toasty.error(context, "Opps.", Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                e.printStackTrace();
+                //Toasty.error(context, "Opps.", Toast.LENGTH_SHORT).show();
+            }
+
+        } else {
+
+           // showMessage("Error", "Nothing found");
         }
 
         NotificationCompat.Builder mBuilder =   new NotificationCompat.Builder(context)
