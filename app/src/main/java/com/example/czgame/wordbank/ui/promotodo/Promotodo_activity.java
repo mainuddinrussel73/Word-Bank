@@ -365,7 +365,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
         remain.setText("Completed : " + (prefs1.getInt("t", 0) * 0.5) +"h");
 
 
- /*       DBDaily dbDaily = new DBDaily(this);
+     /*  DBDaily dbDaily = new DBDaily(this);
         //dbDaily.deleteAll();
         String []months = {"JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"};
         String []days = {"MON", "TUR", "WED", "THU", "FRI","SAT","SUN"};
@@ -382,14 +382,23 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
         String dayLongName = calendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
         // currentDay-=1;
 
-        dbDaily.insertAll1("WED",String.valueOf(currentWEEK),months[currentMonth-1],String.valueOf(currentYear),11);
-         dbDaily.insertAll1("THU",String.valueOf(currentWEEK),months[currentMonth-1],String.valueOf(currentYear),3);
-        dbDaily.insertAll1("FRI",String.valueOf(currentWEEK),months[currentMonth-1],String.valueOf(currentYear),1);
-        dbDaily.insertAll1("SAT",String.valueOf(currentWEEK),months[currentMonth-1],String.valueOf(currentYear),1);
+        dbDaily.insertAll1("WED",String.valueOf(45),months[currentMonth-1],String.valueOf(currentYear),Integer.toString(11));
+         dbDaily.insertAll1("THU",String.valueOf(45),months[currentMonth-1],String.valueOf(currentYear),Integer.toString(3));
+        dbDaily.insertAll1("FRI",String.valueOf(45),months[currentMonth-1],String.valueOf(currentYear),Integer.toString(1));
+        dbDaily.insertAll1("SAT",String.valueOf(45),months[currentMonth-1],String.valueOf(currentYear),Integer.toString(1));
+
+
+        dbDaily.insertAll1("SUN",String.valueOf(46),months[currentMonth-1],String.valueOf(currentYear),Integer.toString(0));
+        dbDaily.insertAll1("MON",String.valueOf(46),months[currentMonth-1],String.valueOf(currentYear),Integer.toString(1));
+        dbDaily.insertAll1("TUR",String.valueOf(46),months[currentMonth-1],String.valueOf(currentYear),Integer.toString(0));
+        dbDaily.insertAll1("WED",String.valueOf(46),months[currentMonth-1],String.valueOf(currentYear),Integer.toString(1));
+        dbDaily.insertAll1("THU",String.valueOf(46),months[currentMonth-1],String.valueOf(currentYear),Integer.toString(0));
+        dbDaily.insertAll1("FRI",String.valueOf(46),months[currentMonth-1],String.valueOf(currentYear),Integer.toString(1));
+        dbDaily.insertAll1("SAT",String.valueOf(46),months[currentMonth-1],String.valueOf(currentYear),Integer.toString(5));
+
+        dbDaily.insertAll1("SUN",String.valueOf(47),months[currentMonth-1],String.valueOf(currentYear),Integer.toString(0));
 
 */
-
-
         mToast = Toast.makeText(Promotodo_activity.this, "", Toast.LENGTH_SHORT);
 
         button.setOnClickListener(new View.OnClickListener() {

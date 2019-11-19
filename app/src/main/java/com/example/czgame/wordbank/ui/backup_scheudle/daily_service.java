@@ -54,7 +54,7 @@ public class daily_service extends BroadcastReceiver {
 
 
         System.out.println(dayLongName.toUpperCase().substring(0,3)+","+months[currentMonth-1]);
-        boolean b = dbDaily.insertAll(dayLongName.toUpperCase().substring(0,3),String.valueOf(currentWEEK),months[currentMonth-1],String.valueOf(currentYear),prefs1.getString("t","0"));
+        boolean b = dbDaily.insertAll(dayLongName.toUpperCase().substring(0,3),String.valueOf(currentWEEK),months[currentMonth-1],String.valueOf(currentYear),Integer.toString(prefs1.getInt("t",0)));
 
 
         if(b) {

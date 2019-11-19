@@ -319,6 +319,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     // TODO Auto-generated method stub
                     // System.out.println(position);
+                    list.getChildAt(position).setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.card_state_pressed));
                     Intent myIntent = new Intent(view.getContext(), WordDetail.class);
                     //String s = view.findViewById(R.id.subtitle).toString();
                     //String s = (String) parent.getI;
@@ -901,6 +902,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             super.onBackPressed();
         }
+        finishAffinity();
+        finish();
+
     }
     @Override
     protected void onResume() {
@@ -1049,6 +1053,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
     }
+
 
 
 

@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -32,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
 
 public class Audiogrid_adapter  extends BaseAdapter {
@@ -79,6 +79,7 @@ public class Audiogrid_adapter  extends BaseAdapter {
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.music_item_grid, null, true);
 
+        RelativeLayout griditm = rowView.findViewById(R.id.grid_item);
         titleText = rowView.findViewById(R.id.play_pause);
         tt = rowView.findViewById(R.id.title5);
         tt1 = rowView.findViewById(R.id.title6);
@@ -106,7 +107,7 @@ public class Audiogrid_adapter  extends BaseAdapter {
         Glide.with(context).load(uri).apply(options).into(titleText);
 
 
-        LinearLayout listitem = rowView.findViewById(R.id.grid_item);
+        RelativeLayout listitem = rowView.findViewById(R.id.grid_item);
 
         SharedPreferences prefs = context.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
@@ -121,6 +122,7 @@ public class Audiogrid_adapter  extends BaseAdapter {
 
             tt1.setTextColor(context.getResources().getColor(R.color.material_white));
 
+            griditm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background_dark));
 
         } else {
 
@@ -129,6 +131,7 @@ public class Audiogrid_adapter  extends BaseAdapter {
             tt.setTextColor(context.getResources().getColor(R.color.per54black));
 
             tt1.setTextColor(context.getResources().getColor(R.color.darkgray));
+            griditm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background));
         }
 
 

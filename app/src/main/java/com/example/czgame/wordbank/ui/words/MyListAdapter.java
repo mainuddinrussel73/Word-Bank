@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
@@ -19,6 +20,8 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
+
+import androidx.core.content.ContextCompat;
 
 public class MyListAdapter extends BaseAdapter implements SectionIndexer {
 
@@ -75,6 +78,7 @@ public class MyListAdapter extends BaseAdapter implements SectionIndexer {
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.list_item, null, true);
 
+        LinearLayout listitm = rowView.findViewById(R.id.list_item);
         TextView titleText = rowView.findViewById(R.id.title);
         TextView number = rowView.findViewById(R.id.num);
 
@@ -96,12 +100,14 @@ public class MyListAdapter extends BaseAdapter implements SectionIndexer {
 
             titleText.setTextColor(Color.WHITE);
             number.setTextColor(Color.WHITE);
+            listitm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background_dark));
 
 
         } else {
 
             titleText.setTextColor(Color.BLACK);
             number.setTextColor(Color.BLACK);
+            listitm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background));
         }
 
 

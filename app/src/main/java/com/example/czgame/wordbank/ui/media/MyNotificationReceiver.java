@@ -32,7 +32,6 @@ import androidx.palette.graphics.Palette;
 import es.dmoral.toasty.Toasty;
 
 import static android.content.Context.ACTIVITY_SERVICE;
-import static com.example.czgame.wordbank.ui.media.Media_list_activity.mVisualizer;
 import static com.example.czgame.wordbank.ui.media.Media_list_activity.mp;
 import static com.example.czgame.wordbank.ui.media.Media_list_activity.position;
 import static com.example.czgame.wordbank.ui.media.Media_list_activity.serviceIntent;
@@ -78,6 +77,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
 
                         Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_pause_black_24dp);
+                        Media_list_activity.ply.setBackgroundResource(R.drawable.ic_pause_black_24dp);
 
                         NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
                         NotificationService.notification.setCustomContentView(NotificationService.notificationView);
@@ -91,6 +91,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                     } else {
                         mp.pause();
                         Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
+                        Media_list_activity.ply.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
 
                         NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
                         NotificationService.notification.setCustomContentView(NotificationService.notificationView);
@@ -358,10 +359,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
                 mp.setVolume(2.5f, 2.5f);
 
-                int audioSessionId = mp.getAudioSessionId();
-                if (audioSessionId != -1){
-                    mVisualizer.setAudioSessionId(audioSessionId);
-                }
+
 
             Intent intenta = new Intent(context, NotificationService.class);
 
@@ -473,10 +471,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
             mp.setVolume(2.5f, 2.5f);
 
-            int audioSessionId = mp.getAudioSessionId();
-            if (audioSessionId != -1){
-                mVisualizer.setAudioSessionId(audioSessionId);
-            }
+
 
             Intent intenta = new Intent(context, NotificationService.class);
 

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.czgame.wordbank.R;
@@ -25,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import androidx.core.content.ContextCompat;
 
 public class News_adapter extends BaseAdapter {
 
@@ -66,6 +69,7 @@ public class News_adapter extends BaseAdapter {
         titleText = rowView.findViewById(R.id.news_title);
         body = rowView.findViewById(R.id.news_detail);
 
+        LinearLayout listitm = rowView.findViewById(R.id.list_item);
         ImageView imageView = rowView.findViewById(R.id.topnews);
 
         //System.out.println("klkl"+MainActivity.contactList.size());
@@ -122,12 +126,16 @@ public class News_adapter extends BaseAdapter {
 
             titleText.setTextColor(Color.WHITE);
             body.setTextColor(Color.WHITE);
+            listitm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background_dark));
+
 
 
         } else {
 
             titleText.setTextColor(Color.BLACK);
             body.setTextColor(Color.BLACK);
+            listitm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background));
+
         }
 
 

@@ -1,20 +1,12 @@
 package com.example.czgame.wordbank.ui.media;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.provider.MediaStore;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,19 +17,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.czgame.wordbank.R;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import androidx.collection.LruCache;
-import androidx.palette.graphics.Palette;
+import androidx.core.content.ContextCompat;
 
 import static com.example.czgame.wordbank.ui.media.Media_list_activity.ListElementsArrayList;
 
@@ -85,7 +71,7 @@ public class Audiolist_adapter extends BaseAdapter {
 
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.media_item_layout, null, true);
-
+        RelativeLayout listitm = rowView.findViewById(R.id.list_item);
         titleText = rowView.findViewById(R.id.play_pause);
         tt = rowView.findViewById(R.id.title5);
         tt1 = rowView.findViewById(R.id.title6);
@@ -129,6 +115,7 @@ public class Audiolist_adapter extends BaseAdapter {
 
             tt1.setTextColor(context.getResources().getColor(R.color.material_white));
 
+            listitm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background_dark));
 
         } else {
 
@@ -137,6 +124,7 @@ public class Audiolist_adapter extends BaseAdapter {
             tt.setTextColor(context.getResources().getColor(R.color.per54black));
 
             tt1.setTextColor(context.getResources().getColor(R.color.darkgray));
+            listitm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background));
         }
 
 
