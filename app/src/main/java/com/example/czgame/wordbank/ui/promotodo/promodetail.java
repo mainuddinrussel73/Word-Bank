@@ -527,7 +527,7 @@ public class promodetail extends AppCompatActivity {
             //spinner1.setBackgroundColor(Color.rgb(185,185,185));
             // edittext.setHintTextColor(Color.BLACK);
             text_field_boxes2.setTextColor(Color.BLACK);
-            edittext.setBackground(ContextCompat.getDrawable(this, R.drawable.backgroundborder));
+            //edittext.setBackground(ContextCompat.getDrawable(this, R.drawable.backgroundborder));
             text_field_boxes2.setHintTextColor(Color.rgb(64, 64, 64));
             text_field_boxes2.setPrefixTextColor(Color.BLACK);
             textView.setTextColor(Color.BLACK);

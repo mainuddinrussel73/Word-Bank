@@ -144,10 +144,10 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
 
                     try {
-                        if (!isAppOnForeground(context, "com.example.czgame.wordbank")) {
+                        if(!isAppOnForeground(context,"com.example.czgame.wordbank")){
                             prevsong(context);
-                            NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
-                        } else {
+                        }
+                         else {
                             System.out.println(position);
                             context.sendBroadcast(new Intent(Constants.ACTION.PREV_ACTION));
 
@@ -172,12 +172,14 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
 
                     try {
-                        if (!isAppOnForeground(context, "com.example.czgame.wordbank")) {
+                        if (!isAppOnForeground(context,"com.example.czgame.wordbank")) {
                             nxtsong(context);
 
+                            System.out.println("called1");
                             NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
                         } else {
                             context.sendBroadcast(new Intent(Constants.ACTION.NEXT_ACTION));
+                            System.out.println("called2");
                         }
                         //  NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
 

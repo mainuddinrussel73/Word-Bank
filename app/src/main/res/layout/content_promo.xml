@@ -34,7 +34,8 @@
             android:paddingRight="10dp"
             android:paddingBottom="10dp"
             android:text="gvhgvh,jh,jhb"
-            android:textSize="10sp">
+            android:fontFamily="@font/lobs_star"
+            android:textSize="13sp">
 
         </TextView>
 
@@ -49,7 +50,8 @@
             android:paddingRight="10dp"
             android:paddingBottom="10dp"
             android:text="gvhgvh,jh,jhb"
-            android:textSize="10sp">
+            android:fontFamily="@font/lobs_star"
+            android:textSize="13sp">
 
         </TextView>
 
@@ -64,7 +66,8 @@
             android:paddingRight="10dp"
             android:paddingBottom="10dp"
             android:text="completed h"
-            android:textSize="10sp">
+            android:fontFamily="@font/lobs_star"
+            android:textSize="13sp">
 
         </TextView>
     </LinearLayout>
@@ -127,7 +130,7 @@
         >
         <com.yydcdut.sdlv.SlideAndDragListView
             android:id="@+id/lv_edit"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
             android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
             android:layout_marginBottom="@dimen/alerter_activity_horizontal_margin"

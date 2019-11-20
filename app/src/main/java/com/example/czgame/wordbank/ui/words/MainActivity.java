@@ -554,7 +554,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Calendar cal= Calendar.getInstance();
         cal.setTimeInMillis(System.currentTimeMillis());
         cal.set(Calendar.HOUR_OF_DAY, 23);
-        cal.set(Calendar.MINUTE, 55);
+        cal.set(Calendar.MINUTE, 58);
        // alarmMgr.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pIntent);
 
 
