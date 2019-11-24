@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/prothomalo"
+        android:title="প্রথম আলো" />
+
+    <item
+        android:id="@+id/itterfaq"
+        android:title="ইত্তেফাক" />
+    <item
+        android:id="@+id/dailystar"
+        android:title="Daily Star" />
+
+    <item
+        android:id="@+id/jugantor"
+        android:title="যুগান্তর" />
+
+    <item
+        android:id="@+id/janakantho"
+        android:title="জনকন্ঠ" />
+
+
+</menu>

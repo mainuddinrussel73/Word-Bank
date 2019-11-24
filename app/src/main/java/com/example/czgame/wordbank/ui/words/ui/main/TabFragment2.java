@@ -1,22 +1,17 @@
 package com.example.czgame.wordbank.ui.words.ui.main;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -24,13 +19,8 @@ import android.widget.Toast;
 
 import com.example.czgame.wordbank.R;
 import com.example.czgame.wordbank.ui.words.DatabaseHelper;
-import com.example.czgame.wordbank.ui.words.MainActivity;
-import com.example.czgame.wordbank.ui.words.WordDetail;
-import com.example.czgame.wordbank.ui.words.word;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import androidx.appcompat.widget.PopupMenu;
@@ -108,7 +98,17 @@ public class TabFragment2 extends Fragment {
                         int pos = parent.getPositionForView(view);
                        // Toast.makeText(getContext(),pos+"",Toast.LENGTH_SHORT).show();
 
-                        PopupMenu popup = new PopupMenu(getContext(), view);
+                        Context wrapper = new ContextThemeWrapper(getContext(), R.style.YOURSTYLE1);
+                        SharedPreferences prefs = getContext().getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+                        boolean isDark = prefs.getBoolean("isDark", false);
+                        if (isDark) {
+                            wrapper = new ContextThemeWrapper(getContext(), R.style.YOURSTYLE);
+
+                        } else {
+                            wrapper = new ContextThemeWrapper(getContext(), R.style.YOURSTYLE1);
+                        }
+
+                        PopupMenu popup = new PopupMenu(wrapper, view);
                         popup.getMenuInflater().inflate(R.menu.popup_delete, popup.getMenu());
                         //
                         popup.show();

@@ -4,6 +4,7 @@
     package="com.example.czgame.wordbank">
 
     <permission android:name="android.permission.MEDIA_CONTENT_CONTROL" />
+
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BROADCAST_PACKAGE_REPLACED" />
@@ -31,11 +32,16 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.promotodo.daily_details"
-            android:label="@string/title_activity_daily"
+        <activity android:name=".ui.news.news_online"
+            android:label="@string/news_online_title"
             android:theme="@style/AppTheme.NoActionBar"
             ></activity>
+        <activity
+            android:name=".ui.promotodo.daily_details"
+            android:label="@string/title_activity_daily"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.words.WordDetail"
             android:label="@string/title_activity_word_detail"
@@ -136,10 +142,10 @@
             android:label="@string/music_play"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <receiver android:name=".ui.media.MyNotificationReceiver"
+        <receiver
+            android:name=".ui.media.MyNotificationReceiver"
             android:enabled="true"
-            android:exported="true"
-            >
+            android:exported="true">
             <intent-filter android:priority="1000">
                 <action android:name="RESUME_ACTION" />
                 <action android:name="STOP_ACTION" />
@@ -159,8 +165,7 @@
         <service
             android:name=".ui.promotodo.Promotodo_service"
             android:enabled="true"
-            android:exported="true"
-            />
+            android:exported="true" />
 
         <receiver
             android:name=".ui.promotodo.Promotodo_receiver"
@@ -182,9 +187,9 @@
             android:enabled="true"
             android:exported="true" />
 
-        <uses-library android:name ="org.apache.http.legacy" android:required ="false"/>
-
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
     </application>
-
 
 </manifest>

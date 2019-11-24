@@ -48,6 +48,7 @@ import com.example.czgame.wordbank.ui.media.Media_list_activity;
 import com.example.czgame.wordbank.ui.news.add_news;
 import com.example.czgame.wordbank.ui.news.news_activity;
 import com.example.czgame.wordbank.ui.news.news_backup;
+import com.example.czgame.wordbank.ui.news.news_online;
 import com.example.czgame.wordbank.ui.promotodo.Promotodo_activity;
 import com.example.czgame.wordbank.ui.promotodo.daily_details;
 import com.example.czgame.wordbank.ui.promotodo.pro_backup;
@@ -319,7 +320,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     // TODO Auto-generated method stub
                     // System.out.println(position);
-                    list.getChildAt(position).setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.card_state_pressed));
+                    //list.getChildAt(position).setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.card_state_pressed));
                     Intent myIntent = new Intent(view.getContext(), WordDetail.class);
                     //String s = view.findViewById(R.id.subtitle).toString();
                     //String s = (String) parent.getI;
@@ -420,6 +421,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 popup.show();//showing popup menu
             }
         });//closing the setOnClickListener method
+
+
 
 
         ConstraintLayout constraintLayout1 = findViewById(R.id.content_main);
@@ -746,7 +749,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } catch (Exception e) {
                 e.getMessage();
             }
-        } else if (id == R.id.nav_tools) {
+        }
+        else if (id == R.id.news_online) {
+            try {
+                Intent myIntent = new Intent(MainActivity.this, news_online.class);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivityForResult(myIntent, 0);
+            } catch (Exception e) {
+                e.getMessage();
+            }
+        }
+        else if (id == R.id.nav_tools) {
             mContext = getApplicationContext();
             mActivity = MainActivity.this;
 

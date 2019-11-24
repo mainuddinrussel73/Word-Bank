@@ -345,7 +345,7 @@ public class daily_details extends AppCompatActivity {
         for (int j = 0; j <7 ; j++) {
             taskList.add(j,new Task(days[j],String.valueOf(currentWeek),monthss[currentMonth-1],String.valueOf(currentYear),0,j));
         }
-        System.out.println("task list"+taskList.size());
+        //System.out.println("task list"+taskList.size());
         // looping through all rows and adding to list
         if (cursor.getCount() != 0) {
             // show message
@@ -359,7 +359,7 @@ public class daily_details extends AppCompatActivity {
                 word.setMONTH(cursor.getString(3));
                 word.setYEAR(cursor.getString(4));
                 word.setTIME(cursor.getInt(5));
-                System.out.println(word.toString());
+                //System.out.println(word.toString());
                 if(word.getDAY().equals("SUN")){
                     taskList.set(0,word);
 
@@ -393,7 +393,7 @@ public class daily_details extends AppCompatActivity {
             }
         } else {
         }
-        System.out.println("task list"+taskList.size());
+       // System.out.println("task list"+taskList.size());
     }
     private  void initbar(){
         if(taskList.size()!=0) {

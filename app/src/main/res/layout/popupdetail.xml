@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/popup_element"
+    android:layout_width="370dp"
+    android:layout_height="685dp"
+    android:background="@drawable/customborder">
+
+    <TextView
+        android:id="@+id/goldNamet"
+        android:layout_width="341dp"
+        android:layout_height="65dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginBottom="5dp"
+        android:text="Gold Name"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/goldName"
+        android:layout_width="340dp"
+        android:layout_height="567dp"
+        android:layout_below="@+id/goldNamet"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="18dp"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="vertical"
+        android:text="Gold Name"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/white"
+        android:textSize="15dp" />
+
+</RelativeLayout>

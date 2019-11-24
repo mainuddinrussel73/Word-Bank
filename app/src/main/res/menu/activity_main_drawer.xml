@@ -30,6 +30,11 @@
             android:id="@+id/news"
             android:icon="@drawable/ic_newss"
             android:title="@string/news" />
+
+        <item
+            android:id="@+id/news_online"
+            android:icon="@drawable/ic_newss"
+            android:title="@string/online" />
     </group>
 
     </menu>

@@ -89,4 +89,6 @@
     <string name="action_daily">Daily Report</string>
     <string name="Walk">Walk Through</string>
     <string name="menu_dailyreport">Daily Report</string>
+    <string name="online">Editorial Online</string>
+    <string name="news_online_title">Editorial Online</string>
 </resources>
