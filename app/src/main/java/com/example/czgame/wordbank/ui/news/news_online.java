@@ -14,8 +14,10 @@ import android.view.ContextThemeWrapper;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -166,9 +168,9 @@ public class news_online extends AppCompatActivity {
 
 
                                 ((TextView)layout.findViewById(R.id.goldName)).setText(newsList.get(position).BODY);
-                                ((TextView)layout.findViewById(R.id.goldNamet)).setText(newsList.get(position).TITLE);
-
                                 ((TextView)layout.findViewById(R.id.goldName)).setMovementMethod(new ScrollingMovementMethod());
+                                ((TextView)layout.findViewById(R.id.goldNamet)).setText(newsList.get(position).TITLE);
+                                ((TextView)layout.findViewById(R.id.goldNamet)).setMovementMethod(new ScrollingMovementMethod());
 
                                 pw.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                                 pw.setTouchInterceptor(new View.OnTouchListener() {
@@ -272,6 +274,7 @@ public class news_online extends AppCompatActivity {
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     public boolean onMenuItemClick(MenuItem item) {
                         if (item.getTitle().equals("প্রথম আলো")) {
+                            Toasty.info(news_online.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
                             ConnectivityManager conMgr =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
                             NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
                             if (netInfo != null) {
@@ -283,6 +286,7 @@ public class news_online extends AppCompatActivity {
                             }
 
                         } else if (item.getTitle().equals("ইত্তেফাক")) {
+                            Toasty.info(news_online.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
                             ConnectivityManager conMgr =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
                             NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
                             if (netInfo != null) {
@@ -294,7 +298,7 @@ public class news_online extends AppCompatActivity {
                             }
 
                         } else if (item.getTitle().equals("Daily Star")) {
-
+                            Toasty.info(news_online.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
                             ConnectivityManager conMgr =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
                             NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
                             if (netInfo != null) {
@@ -305,7 +309,7 @@ public class news_online extends AppCompatActivity {
                                 Toasty.error(news_online.this,"No internet connection.", Toast.LENGTH_LONG).show();
                             }
                         }else if (item.getTitle().equals("যুগান্তর")) {
-
+                            Toasty.info(news_online.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
                             ConnectivityManager conMgr =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
                             NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
                             if (netInfo != null) {
@@ -316,6 +320,7 @@ public class news_online extends AppCompatActivity {
                                 Toasty.error(news_online.this,"No internet connection.", Toast.LENGTH_LONG).show();
                             }
                         } else  if(item.getTitle().equals("জনকন্ঠ")){
+                            Toasty.info(news_online.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
                             ConnectivityManager conMgr =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
                             NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
                             if (netInfo != null) {
@@ -325,12 +330,71 @@ public class news_online extends AppCompatActivity {
                             }else{
                                 Toasty.error(news_online.this,"No internet connection.", Toast.LENGTH_LONG).show();
                             }
+                        } else  if(item.getTitle().equals("Aljazeera")){
+                            Toasty.info(news_online.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                            ConnectivityManager conMgr =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+                            NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
+                            if (netInfo != null) {
+                                if (netInfo.isConnected()) {
+                                    new RetrieveFeedTask().execute("aljazeera");
+                                }
+                            }else{
+                                Toasty.error(news_online.this,"No internet connection.", Toast.LENGTH_LONG).show();
+                            }
+                        }else  if(item.getTitle().equals("নয়াদিগন্ত")){
+                            Toasty.info(news_online.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                            ConnectivityManager conMgr =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+                            NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
+                            if (netInfo != null) {
+                                if (netInfo.isConnected()) {
+                                    new RetrieveFeedTask().execute("nayadiganta");
+                                }
+                            }else{
+                                Toasty.error(news_online.this,"No internet connection.", Toast.LENGTH_LONG).show();
+                            }
                         }
 
-                        Toasty.info(news_online.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
                         return true;
                     }
                 });
+                if(isDark){
+                    Menu itemSetAs = popup.getMenu();
+                    SubMenu s = itemSetAs.findItem(R.id.datas2).getSubMenu();
+                    TextView headerView = (TextView) LayoutInflater.from(news_online.this).inflate(R.layout.lay_header, null);
+                    headerView.setText("Your_thoght");
+                    s.setHeaderView(headerView);
+
+                    Menu itemSetAs1 = popup.getMenu();
+                    SubMenu s1 = itemSetAs1.findItem(R.id.datas3).getSubMenu();
+                    TextView headerView1 = (TextView) LayoutInflater.from(news_online.this).inflate(R.layout.lay_header, null);
+                    headerView1.setText("Your_thoght");
+                    s1.setHeaderView(headerView1);
+
+                    Menu itemSetAs2 = popup.getMenu();
+                    SubMenu s2 = itemSetAs2.findItem(R.id.datas4).getSubMenu();
+                    TextView headerView2 = (TextView) LayoutInflater.from(news_online.this).inflate(R.layout.lay_header, null);
+                    headerView2.setText("Your_thoght");
+                    s2.setHeaderView(headerView2);
+
+                }else {
+                    Menu itemSetAs = popup.getMenu();
+                    SubMenu s = itemSetAs.findItem(R.id.datas2).getSubMenu();
+                    TextView headerView = (TextView) LayoutInflater.from(news_online.this).inflate(R.layout.lay_header, null);
+                    headerView.setText("Your_thoght");
+                    s.setHeaderView(headerView);
+
+                    Menu itemSetAs1 = popup.getMenu();
+                    SubMenu s1 = itemSetAs1.findItem(R.id.datas3).getSubMenu();
+                    TextView headerView1 = (TextView) LayoutInflater.from(news_online.this).inflate(R.layout.lay_header, null);
+                    headerView1.setText("Your_thoght");
+                    s1.setHeaderView(headerView1);
+
+                    Menu itemSetAs2 = popup.getMenu();
+                    SubMenu s2 = itemSetAs2.findItem(R.id.datas4).getSubMenu();
+                    TextView headerView2 = (TextView) LayoutInflater.from(news_online.this).inflate(R.layout.lay_header, null);
+                    headerView2.setText("Your_thoght");
+                    s2.setHeaderView(headerView2);
+                }
 
                 popup.show();//showing popup menu
             }
@@ -371,7 +435,7 @@ public class news_online extends AppCompatActivity {
                         //docs.outputSettings(new Document.OutputSettings().prettyPrint(false));
 
 
-                        Elements _ContentRegion =  docs.getElementsByTag("p");
+                        Elements _ContentRegion =  docs.select("div[itemprop=articleBody]");
                         Elements image = docs.select("div.col_in").select("img");
                         String url;
                         if(image.size()>0){
@@ -383,8 +447,7 @@ public class news_online extends AppCompatActivity {
                         news.setURL(url);
                         StringBuilder ss = new StringBuilder();
                         for (Element ee : _ContentRegion){
-                            ss.append(ee.ownText());
-                            ss.append("\n");
+                            ss.append(ee.wholeText());
                         }
                         news.setBODY(ss.toString());
 
@@ -434,7 +497,7 @@ public class news_online extends AppCompatActivity {
                         news.setURL(url);
                         StringBuilder ss = new StringBuilder();
                         for (Element ee : _ContentRegion){
-                            ss.append(ee.ownText());
+                            ss.append(ee.wholeText());
                             ss.append("\n");
                         }
                         news.setBODY(ss.toString());
@@ -476,16 +539,12 @@ public class news_online extends AppCompatActivity {
 
                         docs.outputSettings(new Document.OutputSettings().prettyPrint(false));
                         //select all <br> tags and append \n after that
-                        docs.select("br").after("\\n");
-                        //select all <p> tags and prepend \n before that
-                        docs.select("p").before("\\n");
-                        doc.outputSettings().prettyPrint(true);
-                        Elements _ContentRegion =  docs.select("div.node-content p");
+                        docs.outputSettings().prettyPrint(true);
+                        Elements _ContentRegion =  docs.select("div.node-content");
 
                         StringBuilder ss = new StringBuilder();
                         for (Element ee : _ContentRegion){
-                            ss.append(ee.ownText());
-                            ss.append("\n");
+                            ss.append(ee.wholeText());
                         }
                         news.setBODY(ss.toString());
 
@@ -527,16 +586,16 @@ public class news_online extends AppCompatActivity {
 
                         docs.outputSettings(new Document.OutputSettings().prettyPrint(false));
                         //select all <br> tags and append \n after that
-                        docs.select("br").after("\\n");
+                        docs.select("br").after("\n");
                         //select all <p> tags and prepend \n before that
-                        docs.select("p").before("\\n");
-                        doc.outputSettings().prettyPrint(true);
-                        Elements _ContentRegion =  docs.select("div#myText p");
+                        docs.select("p").before("\n");
+                        docs.outputSettings().prettyPrint(true);
+                        Elements _ContentRegion =  docs.select("div#myText");
 
 
                         StringBuilder ss = new StringBuilder();
                         for (Element ee : _ContentRegion){
-                            ss.append(ee.ownText());
+                            ss.append(ee.wholeText());
                             ss.append("\n");
                         }
                         news.setBODY(ss.toString());
@@ -576,18 +635,14 @@ public class news_online extends AppCompatActivity {
 
                         news.setURL("https://www.dailyjanakantha.com/files/201701/1485886687_JK-LOGO.jpg");
                         docs.outputSettings(new Document.OutputSettings().prettyPrint(false));
-                        //select all <br> tags and append \n after that
-                        docs.select("br").after("\\n");
-                        //select all <p> tags and prepend \n before that
-                        docs.select("p").before("\\n");
-                        doc.outputSettings().prettyPrint(true);
+                        docs.outputSettings().prettyPrint(true);
                         Elements _ContentRegion =  docs.select("div.artContent p");
 
 
                         StringBuilder ss = new StringBuilder();
                         for (Element ee : _ContentRegion){
-                            ss.append(ee.ownText());
-                            ss.append("\n");
+                            ss.append(ee.wholeText());
+                            ss.append("\n\n");
                         }
                         news.setBODY(ss.toString());
 
@@ -596,6 +651,119 @@ public class news_online extends AppCompatActivity {
                     }
 
 
+
+                    // In case of any IO errors, we want the messages written to the console
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }else if(urls[0].equals("aljazeera")){
+                newsList.clear();
+                try {
+
+                    Document doc = Jsoup.connect("https://www.aljazeera.com/indepth/opinion/").get();
+                    Elements links = doc.select("a[href]");
+                    List<Element> elements = new ArrayList<>();
+                    //Iterate links and print link attributes.
+                    for (Element link : links) {
+                        if(link.attr("href").contains("/indepth/opinion/") && link.attr("href").contains(".html") && !link.attr("href").contains("/indepth/opinion/profile/") ){
+                            elements.add(link);
+                            System.out.println(link.attr("abs:href"));
+                        }else{
+                            elements.remove(link);
+                        }
+                    }
+                    for (Element link:
+                            elements) {
+                        Document docs = Jsoup.connect(link.attr("abs:href")).userAgent("Mozila").get();
+                        // With the document fetched, we use JSoup's title() method to fetch the title
+                        News news = new News();
+                        news.setTITLE(docs.title());
+                        //Elements _ContentRegions =  docs.select("img.image-style-very-big-1");
+
+                        docs.outputSettings(new Document.OutputSettings().prettyPrint(false));
+                        //select all <br> tags and append \n after that
+                        docs.select("br").after("\n");
+                        //select all <p> tags and prepend \n before that
+                        docs.select("p").before("\n");
+                        docs.outputSettings().prettyPrint(true);
+                        docs.outputSettings().prettyPrint(true);
+                        Elements _ContentRegion =  docs.select("div[class=article-p-wrapper]");
+
+                        Element image =  docs.select("div.main-article-body img").first();
+
+                        news.setURL(image.absUrl("src"));
+
+                        StringBuilder ss = new StringBuilder();
+                        for (Element ee : _ContentRegion){
+                            ss.append(ee.wholeText());
+                            ss.append("\n");
+                        }
+                        news.setBODY(ss.toString());
+
+                        newsList.add(news);
+
+                    }
+
+                    // In case of any IO errors, we want the messages written to the console
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }else if(urls[0].equals("nayadiganta")){
+
+                newsList.clear();
+                try {
+
+                    Document doc = Jsoup.connect("http://www.dailynayadiganta.com/editorial/9").get();
+                    Elements links = doc.select("a[href]");
+                    List<Element> elements = new ArrayList<>();
+                    //Iterate links and print link attributes.
+                    for (Element link : links) {
+                        if(!link.attr("abs:href").contains("http://www.dailynayadiganta.com/sub-editorial/9") && link.attr("href").contains("/sub-editorial/")){
+                            elements.add(link);
+                            //System.out.println(link.attr("abs:href"));
+                        }else{
+                            elements.remove(link);
+                        }
+                    }
+                    Document doc1 = Jsoup.connect("http://www.dailynayadiganta.com/opinion/10").get();
+                    Elements links1 = doc1.select("a[href]");
+                    // List<Element> elements = new ArrayList<>();
+                    //Iterate links and print link attributes.
+                    for (Element link : links1) {
+                        if(!link.attr("abs:href").contains("http://www.dailynayadiganta.com/opinion/10") && link.attr("href").contains("/opinion/")){
+                            elements.add(link);
+                            //System.out.println(link.attr("abs:href"));
+                        }else{
+                            elements.remove(link);
+                        }
+                    }
+
+
+                    for (Element link:
+                            elements) {
+                        Document docs = Jsoup.connect(link.attr("abs:href")).userAgent("Mozila").get();
+                        // With the document fetched, we use JSoup's title() method to fetch the title
+                        News news = new News();
+                        news.setTITLE(docs.title());
+
+                        docs.outputSettings(new Document.OutputSettings().prettyPrint(false));
+
+                        docs.outputSettings().prettyPrint(true);
+                        Elements _ContentRegion =  docs.select("div[class=news-content]");
+
+                        Element image =  docs.select("div[class=image-holder margin-bottom-10]").first();
+
+                        news.setURL(image.getElementsByTag("img").attr("abs:src"));
+
+
+                        StringBuilder ss = new StringBuilder();
+                        for (Element ee : _ContentRegion){
+                            ss.append(ee.wholeText());
+                        }
+                        news.setBODY(ss.toString());
+
+                        newsList.add(news);
+                    }
 
                     // In case of any IO errors, we want the messages written to the console
                 } catch (IOException e) {
@@ -694,8 +862,9 @@ public class news_online extends AppCompatActivity {
 
 
                                 ((TextView)layout.findViewById(R.id.goldName)).setText(newsList.get(position).BODY);
-                                ((TextView)layout.findViewById(R.id.goldNamet)).setText(newsList.get(position).TITLE);
                                 ((TextView)layout.findViewById(R.id.goldName)).setMovementMethod(new ScrollingMovementMethod());
+                                ((TextView)layout.findViewById(R.id.goldNamet)).setText(newsList.get(position).TITLE);
+                                ((TextView)layout.findViewById(R.id.goldNamet)).setMovementMethod(new ScrollingMovementMethod());
 
                                 pw.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
                                 pw.setTouchInterceptor(new View.OnTouchListener() {

@@ -33,7 +33,7 @@
 
         <item
             android:id="@+id/news_online"
-            android:icon="@drawable/ic_newss"
+            android:icon="@drawable/ic_editorial"
             android:title="@string/online" />
     </group>
 

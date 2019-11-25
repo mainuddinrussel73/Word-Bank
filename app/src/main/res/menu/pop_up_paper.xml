@@ -1,24 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/prothomalo"
-        android:title="প্রথম আলো" />
+    <item android:id="@+id/datas2" android:title="Bengali Papers">
+        <menu>
+    <group android:checkableBehavior="single">
 
-    <item
-        android:id="@+id/itterfaq"
-        android:title="ইত্তেফাক" />
+        <item
+            android:id="@+id/prothomalo"
+            android:title="প্রথম আলো" />
+
+        <item
+            android:id="@+id/itterfaq"
+            android:title="ইত্তেফাক" />
+
+        <item
+            android:id="@+id/jugantor"
+            android:title="যুগান্তর" />
+
+        <item
+            android:id="@+id/janakantho"
+            android:title="জনকন্ঠ" />
+
+        <item
+            android:id="@+id/nayadiganta"
+            android:title="নয়াদিগন্ত" />
+
+    </group>
+        </menu>
+    </item>
+
+    <item android:id="@+id/datas3" android:title="English Papers">
+        <menu>
+    <group android:checkableBehavior="single">
     <item
         android:id="@+id/dailystar"
         android:title="Daily Star" />
 
-    <item
-        android:id="@+id/jugantor"
-        android:title="যুগান্তর" />
+    </group>
+</menu>
+    </item>
 
+    <item android:id="@+id/datas4" android:title="International Papers">
+        <menu>
+            <group android:checkableBehavior="single">
     <item
-        android:id="@+id/janakantho"
-        android:title="জনকন্ঠ" />
+        android:id="@+id/aljazeera"
+        android:title="Aljazeera" />
+
+            </group>
+        </menu>
+    </item>
 
 
 </menu>
