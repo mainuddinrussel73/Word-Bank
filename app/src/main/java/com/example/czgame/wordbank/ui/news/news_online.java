@@ -356,6 +356,17 @@ public class news_online extends AppCompatActivity {
                             }else{
                                 Toasty.error(news_online.this,"No internet connection.", Toast.LENGTH_LONG).show();
                             }
+                        } else  if(item.getTitle().equals("Daily Sun")){
+                            Toasty.info(news_online.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                            ConnectivityManager conMgr =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+                            NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
+                            if (netInfo != null) {
+                                if (netInfo.isConnected()) {
+                                    new RetrieveFeedTask().execute("dailysun");
+                                }
+                            }else{
+                                Toasty.error(news_online.this,"No internet connection.", Toast.LENGTH_LONG).show();
+                            }
                         }
 
                         return true;
@@ -537,14 +548,14 @@ public class news_online extends AppCompatActivity {
 
                 try {
 
-                    Document doc = Jsoup.connect("https://www.thedailystar.net/editorial/").get();
+                    Document doc = Jsoup.connect("https://www.thedailystar.net/editorial").userAgent("Mozila/5.0").timeout(3000).get();
                     Elements links = doc.select("a[href]");
                     List<Element> elements = new ArrayList<>();
                     //Iterate links and print link attributes.
                     for (Element link : links) {
                         if(!elements.contains(link) && link.attr("href").contains("/editorial/") && !link.attr("href").contains("?page")){
                             elements.add(link);
-                            System.out.println(link.attr("abs:href"));
+                            //System.out.println(link.attr("abs:href"));
                         }else{
                             elements.remove(link);
                         }
@@ -575,15 +586,15 @@ public class news_online extends AppCompatActivity {
                     }
 
                     // In case of any IO errors, we want the messages written to the console
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
                 }
             }else if(urls[0].equals("jugantor")){
 
                 newsList.clear();
                 try {
 
-                    Document doc = Jsoup.connect("https://www.jugantor.com/todays-paper/").get();
+                    Document doc = Jsoup.connect("https://www.jugantor.com/todays-paper").get();
                     Elements links = doc.select("a[href]");
                     List<Element> elements = new ArrayList<>();
                     //Iterate links and print link attributes.
@@ -786,6 +797,58 @@ public class news_online extends AppCompatActivity {
                         news.setBODY(ss.toString());
 
                         newsList.add(news);
+                    }
+
+                    // In case of any IO errors, we want the messages written to the console
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }else if(urls[0].equals("dailysun")){
+                newsList.clear();
+                try {
+
+                    Document doc = Jsoup.connect("https://www.daily-sun.com/printversion/type/editorial").userAgent("Mozila").get();
+                    Elements links = doc.select("a[href]");
+                    List<Element> elements = new ArrayList<>();
+                    //Iterate links and print link attributes.
+                    for (Element link : links) {
+                        if(!elements.contains(link) && link.attr("href").contains("/printversion/details/") && !link.attr("href").contains("/Quote-of-the-day")){
+                            elements.add(link);
+                            //System.out.println(link.attr("abs:href"));
+                        }else{
+                            elements.remove(link);
+                        }
+                    }
+                    for (Element link:
+                            elements) {
+                        Document docs = Jsoup.connect(link.attr("abs:href")).get();
+                        // With the document fetched, we use JSoup's title() method to fetch the title
+                        News news = new News();
+                        news.setTITLE(docs.title());
+
+                        Element image = docs.select("img[class=main_img]").first();
+                        String url;
+                        if(image==null){
+                            url = "https://devo-tech.com/wp-content/uploads/2018/05/Daily_Sun_Bd.png";
+                        }else{
+                            url = image.absUrl("src");
+                        }
+                        news.setURL(url);
+
+                        docs.outputSettings(new Document.OutputSettings().prettyPrint(false));
+                        //select all <br> tags and append \n after that
+                        docs.outputSettings().prettyPrint(true);
+                        Elements _ContentRegion =  docs.getElementsByTag("article");
+
+                        StringBuilder ss = new StringBuilder();
+                        for (Element ee : _ContentRegion){
+                            ss.append(ee.wholeText());
+                        }
+                        news.setBODY(ss.toString());
+
+                        newsList.add(news);
+
+                        // newsList.add(news);
                     }
 
                     // In case of any IO errors, we want the messages written to the console

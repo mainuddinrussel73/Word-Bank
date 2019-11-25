@@ -32,9 +32,13 @@
     <item android:id="@+id/datas3" android:title="English Papers">
         <menu>
     <group android:checkableBehavior="single">
-    <item
-        android:id="@+id/dailystar"
-        android:title="Daily Star" />
+         <item
+            android:id="@+id/dailystar"
+            android:title="Daily Star" />
+
+        <item
+            android:id="@+id/dailysun"
+            android:title="Daily Sun" />
 
     </group>
 </menu>
