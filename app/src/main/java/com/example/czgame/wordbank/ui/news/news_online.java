@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.czgame.wordbank.R;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
@@ -56,6 +57,7 @@ public class news_online extends AppCompatActivity {
     ListView list;
     online_adapter adapter;
     private DBNewsHelper mDBHelper;
+    private ShimmerFrameLayout mShimmerViewContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +89,8 @@ public class news_online extends AppCompatActivity {
                 finish();
             }
         });
+
+        mShimmerViewContainer = findViewById(R.id.shimmer_view_container);
 
         if(newsList.size()>0){
 
@@ -403,9 +407,28 @@ public class news_online extends AppCompatActivity {
 
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    protected void onPause() {
+
+        super.onPause();
+    }
+
     class RetrieveFeedTask extends AsyncTask<String, Void, Boolean> {
 
         private Exception exception;
+
+        @Override
+        public void onPreExecute(){
+            mShimmerViewContainer.startShimmer();
+            mShimmerViewContainer.setVisibility(View.VISIBLE);
+        }
 
 
         public Boolean doInBackground(String... urls) {
@@ -779,12 +802,15 @@ public class news_online extends AppCompatActivity {
             // TODO: check this.exception
             // TODO: do something with the feed
 
+
+
             HashSet<Object> seen=new HashSet<>();
             newsList.removeIf(e->!seen.add(e.TITLE));
 
             adapter = new online_adapter(news_online.this);
 
             list = findViewById(R.id.list);
+            list.setVisibility(View.VISIBLE);
             list.setAdapter(adapter);
 
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -886,6 +912,10 @@ public class news_online extends AppCompatActivity {
 
                 }
             });
+
+
+            mShimmerViewContainer.stopShimmer();
+            mShimmerViewContainer.setVisibility(View.GONE);
 
         }
     }

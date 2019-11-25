@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="350dp"
-    android:layout_height="match_parent"
-    android:paddingLeft="5dp"
-    android:paddingRight="5dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal">
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp">
 
 
 
 
-    <LinearLayout android:layout_width="match_parent"
+    <LinearLayout android:id="@+id/list_item"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/card_background"
+        android:descendantFocusability="afterDescendants"
         android:orientation="vertical"
         android:paddingLeft="15dp"
         android:paddingTop="15dp"
-        android:paddingBottom="15dp"
         android:paddingRight="15dp"
-        android:id="@+id/list_item"
-        android:background="@drawable/card_background"
-        android:descendantFocusability="afterDescendants"
+        android:paddingBottom="15dp"
         >
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            app:cardCornerRadius="10dp"
-            android:elevation="15dp">
+            android:elevation="15dp"
+            app:cardCornerRadius="10dp">
             <com.github.siyamed.shapeimageview.RoundedImageView
                 android:id="@+id/topnews"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:src="@drawable/news">
+                android:src="@color/background">
 
             </com.github.siyamed.shapeimageview.RoundedImageView>
 
@@ -41,11 +41,12 @@
             android:layout_width="318dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="1dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@color/background"
             android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
             android:maxLines="1"
-            android:text="Medium Text"
-
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/background_dark"
             android:textStyle="bold"
@@ -58,11 +59,11 @@
             android:layout_height="99dp"
 
             android:layout_marginLeft="5dp"
+            android:background="@color/background"
             android:ellipsize="end"
             android:fontFamily="sans-serif-condensed"
             android:maxLines="4"
             android:paddingTop="5dp"
-            android:text="Medium Text"
             android:textAppearance="?android:attr/textAppearanceListItemSmall"
             android:textColor="@android:color/background_dark"
             android:textSize="12dp"

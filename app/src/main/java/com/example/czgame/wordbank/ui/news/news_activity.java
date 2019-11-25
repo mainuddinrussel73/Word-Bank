@@ -21,6 +21,7 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.czgame.wordbank.R;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -49,7 +50,7 @@ public class news_activity extends AppCompatActivity {
     News_adapter adapter;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference ref = database.getReference("news");
-
+    private ShimmerFrameLayout mShimmerViewContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +96,7 @@ public class news_activity extends AppCompatActivity {
 
         DBNewsHelper mDBHelper = new DBNewsHelper(this);
 
+        mShimmerViewContainer = findViewById(R.id.shimmer_view_container);
 
         newsList.clear();
 
@@ -169,6 +171,7 @@ public class news_activity extends AppCompatActivity {
                 if (netInfo != null) {
                     if (netInfo.isConnected()) {
                         new LoadData().execute();
+
                     }
                 }else{
                     Toasty.error(news_activity.this,"No internet connection.",Toast.LENGTH_LONG).show();
@@ -258,15 +261,16 @@ public class news_activity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Void result) {
-            if (dialog.isShowing()) {
-                dialog.dismiss();
-            }
+
+            mShimmerViewContainer.stopShimmer();
+            mShimmerViewContainer.setVisibility(View.GONE);
+
         }
 
         @Override
         protected void onPreExecute() {
-            dialog.setMessage("Doing something, please wait.");
-            dialog.show();
+            mShimmerViewContainer.startShimmer();
+            mShimmerViewContainer.setVisibility(View.VISIBLE);
         }
 
         @Override
