@@ -496,7 +496,7 @@ public class news_online extends AppCompatActivity {
                 newsList.clear();
                 try {
 
-                    Document doc = Jsoup.connect("https://www.ittefaq.com.bd/print-edition/editorial/").get();
+                    Document doc = Jsoup.connect("https://www.ittefaq.com.bd/print-edition/editorial").get();
                     Elements links = doc.select("a[href]");
                     List<Element> elements = new ArrayList<>();
                     //Iterate links and print link attributes.
@@ -506,6 +506,18 @@ public class news_online extends AppCompatActivity {
                             //System.out.println(link.attr("abs:href"));
                         }else{
                             elements.remove(link);
+                        }
+                    }
+                    Document doc1 = Jsoup.connect("https://www.ittefaq.com.bd/print-edition/opinion").get();
+                    Elements links1 = doc1.select("a[href]");
+                    List<Element> elements1 = new ArrayList<>();
+                    //Iterate links and print link attributes.
+                    for (Element link : links1) {
+                        if(!elements1.contains(link) && link.attr("href").contains("/print-edition/opinion/") && !link.attr("href").contains("?page")){
+                            elements1.add(link);
+                            //System.out.println(link.attr("abs:href"));
+                        }else{
+                            elements1.remove(link);
                         }
                     }
                     for (Element link:
@@ -539,6 +551,37 @@ public class news_online extends AppCompatActivity {
                         newsList.add(news);
                     }
 
+                    for (Element link:
+                            elements1) {
+                        Document docs = Jsoup.connect(link.attr("abs:href")).get();
+                        // With the document fetched, we use JSoup's title() method to fetch the title
+                        News news = new News();
+                        news.setTITLE(docs.title());
+
+                        Element image = docs.select("div[class=dtl_img_block]").select("img").first();
+                        String url = image.absUrl("src");
+                        news.setURL(url);
+
+                        docs.outputSettings(new Document.OutputSettings().prettyPrint(false));
+                        //select all <br> tags and append \n after that
+                        docs.select("br").after("\\n");
+                        //select all <p> tags and prepend \n before that
+                        docs.select("p").before("\\n");
+                        doc.outputSettings().prettyPrint(true);
+                        Elements _ContentRegion =  docs.getElementById("dtl_content_block").children();
+
+
+                        news.setURL(url);
+                        StringBuilder ss = new StringBuilder();
+                        for (int i = 2; i<_ContentRegion.size(); i++){
+                            ss.append(_ContentRegion.get(i).wholeText());
+                            ss.append("\n");
+                        }
+                        news.setBODY(ss.toString());
+
+                        newsList.add(news);
+                    }
+
                     // In case of any IO errors, we want the messages written to the console
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -548,11 +591,30 @@ public class news_online extends AppCompatActivity {
 
                 try {
 
-                    Document doc = Jsoup.connect("https://www.thedailystar.net/editorial").userAgent("Mozila/5.0").timeout(3000).get();
+                    Document doc = Jsoup.connect("https://www.thedailystar.net/opinion").userAgent("Mozila/5.0").timeout(3000).get();
                     Elements links = doc.select("a[href]");
                     List<Element> elements = new ArrayList<>();
                     //Iterate links and print link attributes.
                     for (Element link : links) {
+                        if(!elements.contains(link) &&
+                                (link.attr("href").contains("/opinion/politics/")
+                                        ||link.attr("href").contains("/opinion/human-rights/")
+                                        ||link.attr("href").contains("/opinion/perspective/")
+                                        ||link.attr("href").contains("/opinion/project-syndicate/")
+                                        ||link.attr("href").contains("/opinion/economics/")
+                                )
+                                && !link.attr("href").contains("?page")){
+                            elements.add(link);
+                            //System.out.println(link.attr("abs:href"));
+                        }else{
+                            elements.remove(link);
+                        }
+                    }
+                    Document doc1 = Jsoup.connect("https://www.thedailystar.net/editorial").userAgent("Mozila/5.0").timeout(3000).get();
+                    Elements links1 = doc1.select("a[href]");
+                    //List<Element> elements = new ArrayList<>();
+                    //Iterate links and print link attributes.
+                    for (Element link : links1) {
                         if(!elements.contains(link) && link.attr("href").contains("/editorial/") && !link.attr("href").contains("?page")){
                             elements.add(link);
                             //System.out.println(link.attr("abs:href"));
