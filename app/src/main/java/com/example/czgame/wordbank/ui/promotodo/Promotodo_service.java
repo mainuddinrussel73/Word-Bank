@@ -13,6 +13,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.RemoteViews;
@@ -116,7 +117,15 @@ public class Promotodo_service extends Service {
         mp1.setAudioStreamType(AudioManager.STREAM_RING); //set streaming according to ur needs
         try {
             if(!fileName.equals("none")) {
-                mp.setDataSource(Promotodo_service.this, Uri.parse("android.resource://com.example.czgame.wordbank/raw/" + fileName));
+                if(fileName.equals("rain")
+                        || fileName.equals("oceanshore")
+                        || fileName.equals("ticking")){
+                    mp.setDataSource(Promotodo_service.this, Uri.parse("android.resource://com.example.czgame.wordbank/raw/" + fileName));
+                }else {
+                    System.out.println(Environment.getExternalStorageDirectory().getAbsolutePath());
+                    mp.setDataSource(Promotodo_service.this, Uri.parse(Environment.getExternalStorageDirectory().getAbsolutePath() +
+                            "/White_noise/" + fileName+".mp3"));
+                }
             }
             mp1.setDataSource(Promotodo_service.this, Uri.parse("android.resource://com.example.czgame.wordbank/raw/" + fileNameend));
         } catch (IOException e) {

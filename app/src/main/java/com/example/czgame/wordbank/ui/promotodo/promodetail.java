@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,8 +16,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.Window;
@@ -27,18 +30,26 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.czgame.wordbank.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.mikhaellopez.circularprogressbar.CircularProgressBar;
 import com.suke.widget.SwitchButton;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -76,6 +87,7 @@ public class promodetail extends AppCompatActivity {
     TextView textViewss,shownoise;
     private CountDownTimer cdTimer;
     private long total = 1800000;
+    private StorageReference mStorageRef;
 
     public static Bitmap textAsBitmap(String text, float textSize, int textColor) {
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -420,7 +432,7 @@ public class promodetail extends AppCompatActivity {
                         myCalendar.get(Calendar.DAY_OF_MONTH)).show();
             }
         });
-
+        mStorageRef = FirebaseStorage.getInstance().getReference();
         whitenoise = findViewById(R.id.soundpick);
         shownoise = findViewById(R.id.viewsound);
         shownoise.setText(Promotodo_service.fileName);
@@ -440,7 +452,11 @@ public class promodetail extends AppCompatActivity {
                 }
 
                 b.setTitle("White Noise.");
-                String[] types = {"Rain", "Ticking", "Ocean Shore","None"};
+                String[] types = {"Rain", "Ticking", "Ocean Shore","Shower","Train","Water Fall","Water","Storm","Water Rain","Ancient Woodlane","Blue Lagoon",
+                        "Cedarwood Spring","Cracking Log Fire","Desert Night","Fire Place","Lullaby","Rain Chimes","Rain On Window","Rainforest Waterfall",
+                        "Thunder Rain","Tranquil Pond","Tropical Rain Forest","Under Water","Under Water Soft",
+                        "Space Smooth","Space Voyager","Island Of Sorrow","Rain Of Sorrow","The Trappers Remorse",
+                        "A Brand New Dawn","None"};
                 b.setItems(types, (dialog, which) -> {
 
                     dialog.dismiss();
@@ -453,18 +469,130 @@ public class promodetail extends AppCompatActivity {
 
                             Promotodo_service.fileName = "ticking";
                             shownoise.setText(Promotodo_service.fileName);
-
                             break;
                         case 2:
                             Promotodo_service.fileName = "oceanshore";
                             shownoise.setText(Promotodo_service.fileName);
                             break;
                         case 3:
+                            Promotodo_service.fileName = "shower";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 4:
+                            Promotodo_service.fileName = "train";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 5:
+                            Promotodo_service.fileName = "waterfall";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 6:
+                            Promotodo_service.fileName = "water";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 7:
+                            Promotodo_service.fileName = "storm";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 8:
+                            Promotodo_service.fileName = "rainonwater";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 9:
+                            Promotodo_service.fileName = "ancient_woodland";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 10:
+                            Promotodo_service.fileName = "blue_lagoon";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 11:
+                            Promotodo_service.fileName = "ceder_wood_spring";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 12:
+                            Promotodo_service.fileName = "cracking_log_fire";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 13:
+                            Promotodo_service.fileName = "desert_night";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 14:
+                            Promotodo_service.fileName = "fireplace";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 15:
+                            Promotodo_service.fileName = "music_box_lullaby";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 16:
+                            Promotodo_service.fileName = "rain_chimes";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 17:
+                            Promotodo_service.fileName = "rain_on_window";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 18:
+                            Promotodo_service.fileName = "rainforest_waterfall";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 19:
+                            Promotodo_service.fileName = "thunder_rain";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 20:
+                            Promotodo_service.fileName = "tranquil_pond";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 21:
+                            Promotodo_service.fileName = "tropical_rain_forest";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 22:
+                            Promotodo_service.fileName = "underwater";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 23:
+                            Promotodo_service.fileName = "underwater_a";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 24:
+                            Promotodo_service.fileName = "space_smooth";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 25:
+                            Promotodo_service.fileName = "space_voyager";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 26:
+                            Promotodo_service.fileName = "island_of_sorrow";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 27:
+                            Promotodo_service.fileName = "rain_of_sorrow";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 28:
+                            Promotodo_service.fileName = "trappers_remorse";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 29:
+                            Promotodo_service.fileName = "new_dawn";
+                            shownoise.setText(Promotodo_service.fileName);
+                            break;
+                        case 30:
                             Promotodo_service.fileName = "none";
                             shownoise.setText(Promotodo_service.fileName);
                             break;
                     }
+                    if(!Promotodo_service.fileName.equals("none") || !Promotodo_service.fileName.equals("rain") ||
+                            !Promotodo_service.fileName.equals("ticking")||!Promotodo_service.fileName.equals("oceanshore")) {
+                        downloadFile(Promotodo_service.fileName);
+                    }
                 });
+
                 b.show();
 
 
@@ -541,6 +669,81 @@ public class promodetail extends AppCompatActivity {
         }
 
     }
+    private boolean isFileExists(String filename){
+
+        File folder1 = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +"/White_noise/" + filename+".mp3");
+        return folder1.exists();
+
+
+    }
+
+    public boolean deleteFile(String filename){
+
+        File folder1 = new File(Environment.getExternalStorageDirectory().getAbsolutePath() +"/White_noise/" + filename+".mp3");
+        return folder1.delete();
+
+
+    }
+    private void downloadFile(String  filenames){
+
+
+        File localFile = null;
+        try {
+            localFile = File.createTempFile(filenames, "mp3");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        StorageReference reference = mStorageRef.child(filenames.concat(".mp3"));
+        reference.getDownloadUrl().addOnSuccessListener(
+                new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        String file_path = Environment.getExternalStorageDirectory().getAbsolutePath()  +
+                                "/White_noise";
+                        File dir = new File(file_path);
+
+
+                        if(!dir.exists()) {
+                            dir.mkdirs();
+                        }
+                        System.out.println(dir.getPath());
+                        if(!isFileExists(filenames)){
+
+                            downloadFile(promodetail.this,filenames,".mp3",file_path,uri.toString());
+                            Toasty.success(promodetail.this,
+                                    "Downloaded the file",
+                                    Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toasty.success(promodetail.this,
+                                    "File Exists",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
+
+                    }
+                }
+        ).addOnFailureListener(
+                new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toasty.success(promodetail.this,
+                                "Couldn't be downloaded",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+    }
+    private void downloadFile(Context context,String fileName, String ext, String destination, String url){
+
+        DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+        Uri uri = Uri.parse(url);
+        DownloadManager.Request request = new DownloadManager.Request(uri);
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir("/White_noise",fileName+ext);
+        downloadManager.enqueue(request);
+    }
 
     private void updateLabel() {
         String myFormat = "yyyy-MM-dd"; //In which you need put here
@@ -555,7 +758,7 @@ public class promodetail extends AppCompatActivity {
 
         boolean b = Promotodo_activity.mDBHelper.updateDuedate(currenttask.TITLE, sdf.format(myCalendar.getTime()));
         if (b) {
-            Toasty.success(promodetail.this, "ss", Toasty.LENGTH_LONG).show();
+            Toasty.success(promodetail.this, "Done", Toasty.LENGTH_LONG).show();
         }
     }
 
