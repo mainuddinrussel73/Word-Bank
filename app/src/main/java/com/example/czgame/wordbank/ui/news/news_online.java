@@ -367,6 +367,17 @@ public class news_online extends AppCompatActivity {
                             }else{
                                 Toasty.error(news_online.this,"No internet connection.", Toast.LENGTH_LONG).show();
                             }
+                        } else  if(item.getTitle().equals("ইনকিলাব")){
+                            Toasty.info(news_online.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                            ConnectivityManager conMgr =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+                            NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
+                            if (netInfo != null) {
+                                if (netInfo.isConnected()) {
+                                    new RetrieveFeedTask().execute("inquilab");
+                                }
+                            }else{
+                                Toasty.error(news_online.this,"No internet connection.", Toast.LENGTH_LONG).show();
+                            }
                         }
 
                         return true;
@@ -558,8 +569,16 @@ public class news_online extends AppCompatActivity {
                         News news = new News();
                         news.setTITLE(docs.title());
 
+
+                        String url;
                         Element image = docs.select("div[class=dtl_img_block]").select("img").first();
-                        String url = image.absUrl("src");
+                        if(image==null){
+                            url = "https://www.ittefaq.com.bd/templates/desktop-v1/images/news-logo.jpg";
+                        }
+                        else{
+                            url = image.absUrl("src");
+                        }
+
                         news.setURL(url);
 
                         docs.outputSettings(new Document.OutputSettings().prettyPrint(false));
@@ -912,6 +931,64 @@ public class news_online extends AppCompatActivity {
 
                         // newsList.add(news);
                     }
+
+                    // In case of any IO errors, we want the messages written to the console
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }else if(urls[0].equals("inquilab")){
+                newsList.clear();
+                try {
+
+                    Document doc = Jsoup.connect("https://www.dailyinqilab.com/newscategory/editors").get();
+                    Elements links = doc.select("div[class=row news_list]").select("a[href]");
+                    List<Element> elements = new ArrayList<>();
+                    //Iterate links and print link attributes.
+                    for (Element link : links) {
+                        if(!elements.contains(link) && link.attr("href").contains("/article/") ){
+                            elements.add(link);
+                        }else{
+                            elements.remove(link);
+                        }
+                    }
+                    for (Element link:
+                            elements) {
+                        Document docs = Jsoup.connect(link.attr("abs:href")).get();
+
+                        News news = new News();
+                        news.setTITLE(docs.title());
+
+                        Element image = docs.select("div[class=image_block]").select("img").first();
+
+                        String url;
+                        if(image==null){
+                            url="https://www.dailyinqilab.com/news_original/1574777349_editorial-inq.jpg";
+                        }else {
+                            url = image.absUrl("src");
+                        }
+                        docs.outputSettings(new Document.OutputSettings().prettyPrint(false));
+                        //select all <br> tags and append \n after that
+                        docs.select("br").after("\\n");
+                        //select all <p> tags and prepend \n before that
+                        docs.select("p").before("\\n");
+                        doc.outputSettings().prettyPrint(true);
+                        Elements _ContentRegion =  docs.getElementById("ar_news_content").children();
+
+
+                        news.setURL(url);
+
+                        StringBuilder ss = new StringBuilder();
+                        for (Element ee : _ContentRegion){
+                            ss.append(ee.wholeText());
+                        }
+                        news.setBODY(ss.toString());
+
+                        newsList.add(news);
+
+                        //newsList.add(news);
+                    }
+
+
 
                     // In case of any IO errors, we want the messages written to the console
                 } catch (IOException e) {

@@ -30,14 +30,18 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_foreground"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
-        android:networkSecurityConfig="@xml/network_security_config"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.news.news_online"
-            android:label="@string/news_online_title"
+        <activity android:name=".ui.promotodo.tree"
+            android:label="@string/tree_activity"
             android:theme="@style/AppTheme.NoActionBar"
             ></activity>
+        <activity
+            android:name=".ui.news.news_online"
+            android:label="@string/news_online_title"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.promotodo.daily_details"
             android:label="@string/title_activity_daily"

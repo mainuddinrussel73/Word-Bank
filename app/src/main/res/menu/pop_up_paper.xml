@@ -24,6 +24,9 @@
         <item
             android:id="@+id/nayadiganta"
             android:title="নয়াদিগন্ত" />
+        <item
+            android:id="@+id/inquilab"
+            android:title="ইনকিলাব" />
 
     </group>
         </menu>
