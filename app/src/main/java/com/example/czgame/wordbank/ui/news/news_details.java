@@ -37,6 +37,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebSettings;
@@ -1213,6 +1214,40 @@ public class news_details extends AppCompatActivity {
                 popup.show();
             }
         });
+
+
+        webView.getViewTreeObserver()
+                .addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
+                    @Override
+                    public void onScrollChanged() {
+                        if(webView!=null){
+                            if (!webView.canScrollVertically(1)){
+                                //scroll view is at bottom
+
+                                boolean b;
+                                int id = intent.getExtras().getInt("id");
+                                id++;
+                                if (intent.getStringExtra("url").isEmpty()) {
+                                    b = mDBHelper.updateDataR(String.valueOf(id), intent.getStringExtra("title"), intent.getStringExtra("title"),1);
+                                } else
+                                    b = mDBHelper.updateDataR(String.valueOf(id), intent.getStringExtra("title"), intent.getStringExtra("title"), 1);
+
+                                if (b == true) {
+                                    Toasty.success(getApplicationContext(), "Done reading whole news.", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    //Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
+                                }
+
+
+                            } else {
+                                //scroll view is not at bottom
+                            }
+                        }
+                    }
+                });
+
+
+
 
     }
     class RetrieveFeedTask extends AsyncTask<String, Integer, Spanned> {

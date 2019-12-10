@@ -34,10 +34,14 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.promotodo.tree"
-            android:label="@string/tree_activity"
+        <activity android:name=".ui.promotodo.TimelineView"
+            android:label="@string/timeline_activity"
             android:theme="@style/AppTheme.NoActionBar"
             ></activity>
+        <activity
+            android:name=".ui.promotodo.tree"
+            android:label="@string/tree_activity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.news.news_online"
             android:label="@string/news_online_title"
@@ -179,6 +183,8 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="GET_TIME" />
                 <action android:name="SET_TIME" />
+                <action android:name="PAUSE_TIME" />
+                <action android:name="RESUME_TIME" />
                 <action android:name="com.example.czgame.wordbank.ui.promotodo.DONE" />
             </intent-filter>
         </receiver>

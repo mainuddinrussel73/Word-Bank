@@ -814,8 +814,9 @@ public class promodetail extends AppCompatActivity {
         titletask = dialogView.findViewById(R.id.tasktitle);
 
 
-        textView1.setText(String.format("%02d", 30));
-        textView2.setText(String.format("%02d", 00));
+
+        textView1.setText(String.format("%02d", 00));
+        textView2.setText(String.format("%02d", 30));
         textView3.setText(String.format("%02d", 00));
 
         circularProgressBar11 = dialogView.findViewById(R.id.circularProgressBar01);

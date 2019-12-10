@@ -3,6 +3,7 @@ package com.example.czgame.wordbank.ui.promotodo;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -32,6 +33,8 @@ public class Promotodo_service extends Service {
     private final static String fileNameend = "bell";
     public static RemoteViews notificationView;
     public static RemoteViews notificationView1;
+    public static PendingIntent pendingIntentPs;
+    public static Intent nxReceive = new Intent();
     public static NotificationManager manager;
     public static NotificationCompat.Builder notificationBuilder;
     public static Notification notification;
@@ -235,10 +238,18 @@ public class Promotodo_service extends Service {
         notificationView.setTextViewText(R.id.timerview1, "MM");
         notificationView.setTextViewText(R.id.timerview2, "SS");
 
+        nxReceive = new Intent();
+        nxReceive.setClass(Promotodo_service.this, Promotodo_receiver.class);
+        nxReceive.setAction(Promotodo_receiver.PAUSE_TIME);
+        pendingIntentPs = PendingIntent.getBroadcast(this, Promotodo_receiver.REQUEST_CODE_NOTIFICATION, nxReceive, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        notificationView.setOnClickPendingIntent(R.id.promo_bar_play, pendingIntentPs);
         notificationView1 = new RemoteViews(getPackageName(), R.layout.promo_notification_detail);
         notificationView1.setTextViewText(R.id.timerview, "HH");
         notificationView1.setTextViewText(R.id.timerview1, "MM");
         notificationView1.setTextViewText(R.id.timerview2, "SS");
+
+        notificationView1.setOnClickPendingIntent(R.id.promo_bar_play, pendingIntentPs);
 
         notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
         notificationBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);

@@ -111,7 +111,8 @@ public class news_activity extends AppCompatActivity {
                 word.setID(Integer.parseInt(cursor.getString(0)));
                 word.setTITLE(cursor.getString(1));
                 word.setBODY(cursor.getString(2));
-                word.setURL(cursor.getString(3));
+                word.ISREAD =  cursor.getInt(3);
+                word.setURL(cursor.getString(4));
 
                 newsList.add(word);
 

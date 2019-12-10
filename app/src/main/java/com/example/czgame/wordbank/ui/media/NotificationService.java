@@ -113,6 +113,7 @@ public class NotificationService extends Service {
 
 
                 }
+
                 mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                 mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
                     @Override
@@ -125,6 +126,7 @@ public class NotificationService extends Service {
                                 break;
                             case AudioManager.AUDIOFOCUS_LOSS:
                                 Log.i(TAG, "AUDIOFOCUS_LOSS");
+                                mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
                                 bi.setAction(MyNotificationReceiver.AUDIOFOCUS_LOSS);
                                 sendBroadcast(bi);
                                 break;
@@ -139,6 +141,7 @@ public class NotificationService extends Service {
                         }
                     }
                 };
+
                 System.out.println(p);
 
                 AsynchTaskTimer();

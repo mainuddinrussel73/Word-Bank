@@ -59,6 +59,18 @@
                 android:text="SS"
                 android:layout_marginLeft="10dp"
                 android:textSize="30dp"/>
+            <ImageButton
+                android:id="@+id/promo_bar_play"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/play_controls_notification"
+                android:layout_gravity="right|center"
+                android:layout_marginLeft="15dp"
+                android:background="@color/A400red"
+                android:padding="10.0dip"
+                android:scaleType="fitCenter"
+                android:src="@drawable/play_arrow_black_24dp">
+
+            </ImageButton>
         </LinearLayout>
 
 </LinearLayout>

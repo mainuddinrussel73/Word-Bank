@@ -27,6 +27,9 @@
         <item
             android:id="@+id/inquilab"
             android:title="ইনকিলাব" />
+        <item
+            android:id="@+id/kalerkantho"
+            android:title="কালেরকন্ঠ" />
 
     </group>
         </menu>

@@ -126,7 +126,8 @@ public class news_backup extends AppCompatActivity {
                             word.put("ID", Integer.parseInt(cursor.getString(0)));
                             word.put("TITLE", cursor.getString(1));
                             word.put("BODY", cursor.getString(2));
-                            word.put("URL", cursor.getString(3));
+                            word.put("ISREAD", cursor.getInt(3));
+                            word.put("URL", cursor.getString(4));
 
                         } catch (JSONException e) {
                             // TODO Auto-generated catch block
@@ -436,7 +437,8 @@ public class news_backup extends AppCompatActivity {
                             myRef.child(cursor.getString(0)).child("ID").setValue(cursor.getString(0));
                             myRef.child(cursor.getString(0)).child("TITLE").setValue(cursor.getString(1));
                             myRef.child(cursor.getString(0)).child("BODY").setValue(cursor.getString(2));
-                            myRef.child(cursor.getString(0)).child("URL").setValue(cursor.getString(3));
+                            myRef.child(cursor.getString(0)).child("ISREAD").setValue(cursor.getInt(3));
+                            myRef.child(cursor.getString(0)).child("URL").setValue(cursor.getString(4));
 
 
                         }

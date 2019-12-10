@@ -9,6 +9,7 @@ public class News extends ArrayList<News> implements Comparable<News> {
     String TITLE;
     String BODY;
     String URL;
+    int ISREAD;
 
     public News(int id, String title, String body,String url) {
         this.ID = id;

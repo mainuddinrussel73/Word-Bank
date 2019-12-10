@@ -378,7 +378,19 @@ public class news_online extends AppCompatActivity {
                             }else{
                                 Toasty.error(news_online.this,"No internet connection.", Toast.LENGTH_LONG).show();
                             }
+                        } else  if(item.getTitle().equals("কালেরকন্ঠ")){
+                            Toasty.info(news_online.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                            ConnectivityManager conMgr =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+                            NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
+                            if (netInfo != null) {
+                                if (netInfo.isConnected()) {
+                                    new RetrieveFeedTask().execute("kalerkantho");
+                                }
+                            }else{
+                                Toasty.error(news_online.this,"No internet connection.", Toast.LENGTH_LONG).show();
+                            }
                         }
+
 
                         return true;
                     }
@@ -981,6 +993,75 @@ public class news_online extends AppCompatActivity {
                         for (Element ee : _ContentRegion){
                             ss.append(ee.wholeText());
                         }
+                        news.setBODY(ss.toString());
+
+                        newsList.add(news);
+
+                        //newsList.add(news);
+                    }
+
+
+
+                    // In case of any IO errors, we want the messages written to the console
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }else if(urls[0].equals("kalerkantho")){
+                newsList.clear();
+                try {
+
+                    Document doc = Jsoup.connect("https://www.kalerkantho.com/print-edition/editorial").get();
+                    Elements links = doc.select("a[href]");
+                    List<Element> elements = new ArrayList<>();
+                    //Iterate links and print link attributes.
+                    for (Element link : links) {
+                        if(!elements.contains(link) && link.attr("abs:href").contains("https://www.kalerkantho.com/print-edition/editorial/") ){
+                            elements.add(link);
+                           // System.out.println(link.attr("abs:href"));
+                        }else{
+                            elements.remove(link);
+                        }
+                    }
+                    Document doc1 = Jsoup.connect("https://www.kalerkantho.com/print-edition/sub-editorial").get();
+                    Elements links1 = doc1.select("a[href]");
+                    //Iterate links and print link attributes.
+                    for (Element link : links1) {
+                        if(!elements.contains(link) && link.attr("abs:href").contains("https://www.kalerkantho.com/print-edition/sub-editorial/") ){
+                            elements.add(link);
+                            //System.out.println(link.attr("abs:href"));
+                        }else{
+                            elements.remove(link);
+                        }
+                    }
+                    for (Element link:
+                            elements) {
+                        Document docs = Jsoup.connect(link.attr("abs:href")).get();
+
+                        News news = new News();
+                        news.setTITLE(docs.title());
+                        //System.out.println("Title : "+docs.title());
+
+                        Element image = docs.select("div[class=img-popup]").select("img").first();
+
+                        String url;
+                        if(image==null){
+                            url="https://www.bkash.com/sites/default/files/Kaler%20Kontho%20logo.jpg";
+                        }else {
+                            url = image.absUrl("src");
+                        }
+                        docs.outputSettings(new Document.OutputSettings().prettyPrint(false));
+                        doc.outputSettings().prettyPrint(true);
+                        Elements _ContentRegion =  docs.getElementsByClass("some-class-name2");
+
+
+                        //System.out.println("Url : "+url);
+                        news.setURL(url);
+
+                        StringBuilder ss = new StringBuilder();
+                        for (Element ee : _ContentRegion){
+                            ss.append(ee.wholeText());
+                        }
+                        //System.out.println("Body : "+ ss.toString());
                         news.setBODY(ss.toString());
 
                         newsList.add(news);

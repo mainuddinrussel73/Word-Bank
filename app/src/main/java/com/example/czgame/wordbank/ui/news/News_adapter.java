@@ -28,12 +28,14 @@ import java.util.Comparator;
 import java.util.List;
 
 import androidx.core.content.ContextCompat;
+import cdflynn.android.library.checkview.CheckView;
 
 public class News_adapter extends BaseAdapter {
 
     private final Activity context;
     List<News> newsList;
     TextView titleText, body;
+    CheckView mCheckView;
 
     // private final Integer[] imgid;
 
@@ -68,12 +70,18 @@ public class News_adapter extends BaseAdapter {
 
         titleText = rowView.findViewById(R.id.news_title);
         body = rowView.findViewById(R.id.news_detail);
-
+        mCheckView = rowView.findViewById(R.id.check);
         LinearLayout listitm = rowView.findViewById(R.id.list_item);
         ImageView imageView = rowView.findViewById(R.id.topnews);
 
         //System.out.println("klkl"+MainActivity.contactList.size());
         titleText.setText(news_activity.newsList.get(position).getTITLE());
+
+        if(news_activity.newsList.get(position).ISREAD==1){
+            mCheckView.check();
+        }else{
+            mCheckView.uncheck();
+        }
 
 
         RetrieveFeedTask asyncTask = new RetrieveFeedTask();

@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import androidx.palette.graphics.Palette;
+import be.rijckaert.tim.animatedvector.FloatingMusicActionButton;
 import es.dmoral.toasty.Toasty;
 
 import static android.content.Context.ACTIVITY_SERVICE;
@@ -76,7 +77,8 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
 
 
-                        Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_pause_black_24dp);
+                        //Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_pause_black_24dp);
+                        Media_list_activity.playBtn.changeMode(FloatingMusicActionButton.Mode.PLAY_TO_PAUSE);
                         Media_list_activity.ply.setBackgroundResource(R.drawable.ic_pause_black_24dp);
 
                         NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
@@ -90,7 +92,8 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
                     } else {
                         mp.pause();
-                        Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
+                       // Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
+                        Media_list_activity.playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
                         Media_list_activity.ply.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
 
                         NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
@@ -143,11 +146,14 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                     //if(mediaListActivity.mp.isPlaying()){
 
 
+                    ActivityManager am = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
+                    List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
+                    Log.d("topActivity", "CURRENT Activity ::" + taskInfo.get(0).topActivity.getClassName());
+
                     try {
-                        if(!isAppOnForeground(context,"com.example.czgame.wordbank")){
+                        if(!taskInfo.get(0).topActivity.getClassName().equals("com.example.czgame.wordbank.ui.media.Media_list_activity")){
                             prevsong(context);
-                        }
-                         else {
+                        }else {
                             System.out.println(position);
                             context.sendBroadcast(new Intent(Constants.ACTION.PREV_ACTION));
 
@@ -171,22 +177,23 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                     //if(mediaListActivity.mp.isPlaying()){
 
 
+                    ActivityManager am1 = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
+                    List<ActivityManager.RunningTaskInfo> taskInfo1 = am1.getRunningTasks(1);
+                    Log.d("topActivity", "CURRENT Activity ::" + taskInfo1.get(0).topActivity.getClassName());
+
                     try {
-                        if (!isAppOnForeground(context,"com.example.czgame.wordbank")) {
+                        if(!taskInfo1.get(0).topActivity.getClassName().equals("com.example.czgame.wordbank.ui.media.Media_list_activity")){
                             nxtsong(context);
-
-                            System.out.println("called1");
-                            NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
-                        } else {
+                        }else {
+                            System.out.println(position);
                             context.sendBroadcast(new Intent(Constants.ACTION.NEXT_ACTION));
-                            System.out.println("called2");
-                        }
-                        //  NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
 
-                        NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
+                        }
+
                     } catch (Exception e) {
-                        System.out.println(e.getMessage());
+
                     }
+
 
 
 

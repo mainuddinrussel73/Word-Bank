@@ -50,6 +50,7 @@ import com.example.czgame.wordbank.ui.news.news_activity;
 import com.example.czgame.wordbank.ui.news.news_backup;
 import com.example.czgame.wordbank.ui.news.news_online;
 import com.example.czgame.wordbank.ui.promotodo.Promotodo_activity;
+import com.example.czgame.wordbank.ui.promotodo.TimelineView;
 import com.example.czgame.wordbank.ui.promotodo.daily_details;
 import com.example.czgame.wordbank.ui.promotodo.pro_backup;
 import com.example.czgame.wordbank.ui.promotodo.tree;
@@ -762,6 +763,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.tree) {
             try {
                 Intent myIntent = new Intent(MainActivity.this, tree.class);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivityForResult(myIntent, 0);
+            } catch (Exception e) {
+                e.getMessage();
+            }
+        }else if (id == R.id.tasktime) {
+            try {
+                Intent myIntent = new Intent(MainActivity.this, TimelineView.class);
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(myIntent, 0);
             } catch (Exception e) {

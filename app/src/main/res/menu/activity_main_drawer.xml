@@ -50,6 +50,10 @@
                 android:id="@+id/tree"
                 android:icon="@drawable/ic_plant"
                 android:title="@string/tree_activity" />
+            <item
+                android:id="@+id/tasktime"
+                android:icon="@drawable/ic_timeline"
+                android:title="@string/timeline_activity" />
         </group>
 
     </menu>

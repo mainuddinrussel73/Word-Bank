@@ -45,6 +45,8 @@ import static com.example.czgame.wordbank.ui.promotodo.promodetail.titletask;
 public class Promotodo_receiver extends BroadcastReceiver {
     public static final String GET_TIME = "GET_TIME";
     public static final String SET_TIME = "SET_TIME";
+    public static final String PAUSE_TIME = "PAUSE_TIME";
+    public static final String RESUME_TIME = "RESUME_TIME";
     public static final String DONE = "DONE";
     public static int REQUEST_CODE_NOTIFICATION = 1212;
     int tp = 0;
@@ -92,6 +94,31 @@ public class Promotodo_receiver extends BroadcastReceiver {
             context.stopService(service);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 updateGUI(context, intent);
+            }
+        }
+        if(action.equals(PAUSE_TIME)){
+            ActivityManager am = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
+            List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
+            Log.d("topActivity", "CURRENT Activity ::" + taskInfo.get(0).topActivity.getClassName());
+            if(!taskInfo.get(0).topActivity.getClassName().equals("com.example.czgame.wordbank.ui.promotodo.promodetail")){
+                if(Promotodo_service.ispause==false){
+                    Promotodo_service.pause();
+                    Promotodo_service.notificationView.setImageViewResource(R.id.promo_bar_play, R.drawable.ic_play_arrow_black_24dp);
+                    Promotodo_service.notificationView1.setImageViewResource(R.id.promo_bar_play, R.drawable.ic_play_arrow_black_24dp);
+                    Promotodo_service.notificationBuilder.setCustomContentView(Promotodo_service.notificationView);
+                    Promotodo_service.notificationBuilder.setCustomContentView(Promotodo_service.notificationView1);
+                    Promotodo_service.manager.notify(6, Promotodo_service.notificationBuilder.build());
+                    Toasty.success(context, "Pause", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Promotodo_service.resume(context);
+                    Promotodo_service.notificationView.setImageViewResource(R.id.promo_bar_play, R.drawable.ic_pause_black_24dp);
+                    Promotodo_service.notificationView1.setImageViewResource(R.id.promo_bar_play, R.drawable.ic_pause_black_24dp);
+                    Promotodo_service.notificationBuilder.setCustomContentView(Promotodo_service.notificationView);
+                    Promotodo_service.notificationBuilder.setCustomContentView(Promotodo_service.notificationView1);
+                    Promotodo_service.manager.notify(6, Promotodo_service.notificationBuilder.build());
+                    Toasty.success(context, "Resume", Toast.LENGTH_SHORT).show();
+                }
             }
         }
 
@@ -381,6 +408,15 @@ public class Promotodo_receiver extends BroadcastReceiver {
 
                 }
 
+                //done.setEnabled(true);
+                DbTaskDhandle mDBHelper = new DbTaskDhandle(context);
+                LocalDate parsedDate = LocalDate.now(); //Parse date from String
+
+                String str = parsedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+                boolean b = mDBHelper.insertAll(ccco.TITLE,
+                        ccco.ISREPEAT
+                        ,ccco.NUM,str
+                        ,ccco.COMPLETED);
 
             }
         }

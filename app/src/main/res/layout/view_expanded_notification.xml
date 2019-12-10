@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="8dp"
-    android:background="@android:color/black">
+    android:background="@color/colorAccent">
 
     <RelativeLayout
         android:id="@+id/icon_container"
@@ -17,7 +17,7 @@
             android:paddingBottom="1dp"
             android:paddingLeft="4dp"
             android:paddingRight="6dp"
-            android:src="@drawable/ic_pawprint"/>
+            android:src="@mipmap/ic_launcher_foreground"/>
 
         <ImageView
             android:id="@+id/small_icon"
