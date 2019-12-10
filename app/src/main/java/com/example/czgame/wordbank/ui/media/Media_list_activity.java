@@ -65,6 +65,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.palette.graphics.Palette;
 import be.rijckaert.tim.animatedvector.FloatingMusicActionButton;
 import es.dmoral.toasty.Toasty;
@@ -268,7 +269,6 @@ public class Media_list_activity extends AppCompatActivity  {
             //Go ahead with recording audio now
             int audioSessionId = mp.getAudioSessionId();
             if (audioSessionId != -1){
-                mVisualizer.setEnabled(false);
                 mVisualizer.setAudioSessionId(audioSessionId);
             }
         }
@@ -479,10 +479,10 @@ public class Media_list_activity extends AppCompatActivity  {
         mAudioFocusChangeListener = new AudioFocusChangeListenerImpl();
 
 
-        registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION.NEXT_ACTION));
-        registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION.PREV_ACTION));
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION.NEXT_ACTION));
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION.PREV_ACTION));
         mVisualizer = findViewById(R.id.blast);
-
+        mVisualizer.show();
         //TODO: init MediaPlayer and play the audio
 
         //get the AudioSessionId from your MediaPlayer and pass it to the visualizer
@@ -559,6 +559,7 @@ public class Media_list_activity extends AppCompatActivity  {
         myView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                //requestAudioPermissions();
                 switch (motionEvent.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
                         slideDown(myView);
@@ -581,6 +582,7 @@ public class Media_list_activity extends AppCompatActivity  {
             @Override
             public void onClick(View view) {
                 System.out.println(pro);
+                //requestAudioPermissions();
                 if (mp.isPlaying()) {
                     if (!isUp) {
                         slideUp(myView);
@@ -2285,7 +2287,8 @@ public class Media_list_activity extends AppCompatActivity  {
             }
         });//closing the setOnClickListener method
 
-        //registerReceiver(broadcastReceiver, new IntentFilter("Prev"));
+        //
+        // registerReceiver(broadcastReceiver, new IntentFilter("Prev"));
     }
     public void play(){
 
@@ -3194,8 +3197,9 @@ public class Media_list_activity extends AppCompatActivity  {
     public void onDestroy(){
         super.onDestroy();
 
-        unregisterReceiver(broadcastReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
         mAudioManager.abandonAudioFocus(mAudioFocusChangeListener);
+
         if (mVisualizer != null)
             mVisualizer.release();
 
@@ -3244,12 +3248,11 @@ public class Media_list_activity extends AppCompatActivity  {
 
         // fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
         toolbar.getNavigationIcon().setTint(Color.WHITE);
-
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+        mAudioManager.abandonAudioFocus(mAudioFocusChangeListener);
         Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
         icon.setTint(Color.WHITE);
         button.setBackground(icon);
-        if (mVisualizer != null)
-            mVisualizer.release();
         super.onBackPressed();
     }
 

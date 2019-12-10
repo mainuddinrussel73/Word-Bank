@@ -396,10 +396,14 @@ public class Promotodo_receiver extends BroadcastReceiver {
                     }
 
 
+                    ActivityManager am = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
+                    List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
+                    Log.d("topActivity", "CURRENT Activity ::" + taskInfo.get(0).topActivity.getClassName());
+
                     Promotodo_service.ispause = true;
                     //promodetail.fab1.setImageResource(R.drawable.ic_play_arrow_black_24dp);
                     //toogle=!toogle;
-                    if (!promodetail.toogleview) {
+                    if (taskInfo.get(0).topActivity.getClassName().equals("com.example.czgame.wordbank.ui.promotodo.promodetail") && !promodetail.toogleview) {
 
                         promodetail.revealShow(false);
 

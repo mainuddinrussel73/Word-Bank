@@ -511,7 +511,7 @@ public class daily_details extends AppCompatActivity {
         ArrayList<Entry> values = new ArrayList<>();
         float f = 0;
         for(float t:taskList2){
-            values.add(new BarEntry(f, t));
+            values.add(new BarEntry(f, t/2.0f));
             f++;
         }
         System.out.println(taskList2.size());
