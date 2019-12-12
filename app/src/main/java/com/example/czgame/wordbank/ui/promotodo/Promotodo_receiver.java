@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.example.czgame.wordbank.R;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.List;
@@ -24,6 +25,7 @@ import androidx.annotation.RequiresApi;
 import es.dmoral.toasty.Toasty;
 
 import static android.content.Context.ACTIVITY_SERVICE;
+import static com.example.czgame.wordbank.ui.promotodo.Promotodo_service.isStart;
 import static com.example.czgame.wordbank.ui.promotodo.promodetail.circularProgressBar;
 import static com.example.czgame.wordbank.ui.promotodo.promodetail.circularProgressBar1;
 import static com.example.czgame.wordbank.ui.promotodo.promodetail.circularProgressBar11;
@@ -42,6 +44,7 @@ import static com.example.czgame.wordbank.ui.promotodo.promodetail.textView2;
 import static com.example.czgame.wordbank.ui.promotodo.promodetail.textView3;
 import static com.example.czgame.wordbank.ui.promotodo.promodetail.titletask;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class Promotodo_receiver extends BroadcastReceiver {
     public static final String GET_TIME = "GET_TIME";
     public static final String SET_TIME = "SET_TIME";
@@ -51,7 +54,10 @@ public class Promotodo_receiver extends BroadcastReceiver {
     public static int REQUEST_CODE_NOTIFICATION = 1212;
     int tp = 0;
 
-    long tike = 18000;
+    long tike = 1000;//18000;
+   String end;
+
+
 
 
     //SharedPreferences  prefs ;
@@ -83,7 +89,7 @@ public class Promotodo_receiver extends BroadcastReceiver {
 
         Log.e("action", action);
 
-        System.out.println("receive");
+       // System.out.println("receive");
         if (action.equals(GET_TIME)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 updateGUI(context, intent);
@@ -154,6 +160,7 @@ public class Promotodo_receiver extends BroadcastReceiver {
             //  prefs = context.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
 
 
+            //isStart = true;
             long millisUntilFinished = intent.getLongExtra("countdown", 0);
 
             int seconds = (int) (millisUntilFinished / 1000);
@@ -166,7 +173,7 @@ public class Promotodo_receiver extends BroadcastReceiver {
             titletask.setText(ccco.getTitle());
 
             Log.i("receiver", "Countdown seconds remaining: " + millisUntilFinished / 1000);
-            System.out.println(hours);
+           // System.out.println(hours);
 
             if (millisUntilFinished != 0) {
 
@@ -300,7 +307,7 @@ public class Promotodo_receiver extends BroadcastReceiver {
                         myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         context.startActivity(myIntent);
                     } catch (Exception e) {
-                        System.out.println(e.getMessage());
+                       e.getStackTrace();
                     }
 
 
@@ -416,11 +423,18 @@ public class Promotodo_receiver extends BroadcastReceiver {
                 DbTaskDhandle mDBHelper = new DbTaskDhandle(context);
                 LocalDate parsedDate = LocalDate.now(); //Parse date from String
 
+                isStart = true;
+                LocalTime localTime = LocalTime.now();
+                DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
+                String time = localTime.format(dateTimeFormatter);
+                end = time;
+                System.out.println(Promotodo_service.start);
+                System.out.println(end);
                 String str = parsedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 boolean b = mDBHelper.insertAll(ccco.TITLE,
                         ccco.ISREPEAT
                         ,ccco.NUM,str
-                        ,ccco.COMPLETED);
+                        ,ccco.COMPLETED,Promotodo_service.start,end);
 
             }
         }

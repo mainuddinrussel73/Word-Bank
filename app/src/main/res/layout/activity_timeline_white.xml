@@ -5,8 +5,9 @@
     android:id="@+id/timelineview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     tools:showIn="@layout/activity_timeline_view"
+    android:layout_margin="15dp"
+    android:background="@drawable/listview_border"
     >
 
 
@@ -15,8 +16,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/appbar"
-        android:layout_margin="15dp"
         app:isSticky="true"
+        android:layout_margin="5dp"
+        app:sectionTitleTextColor="@color/red"
         app:sectionBackgroundColor="@color/white"
 
         />

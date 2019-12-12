@@ -55,6 +55,7 @@ public class pro_backup extends AppCompatActivity {
     TextView textView;
     private DBproHandle mDBHelper;
     private DBDaily dbDaily;
+    private DbTaskDhandle dbTaskDhandle;
     private Button insert, backup, restore, ok, restore1;
     private EditText retext;
     private Uri fileUri;
@@ -91,6 +92,7 @@ public class pro_backup extends AppCompatActivity {
 
         mDBHelper = new DBproHandle(this);
         dbDaily = new DBDaily(this);
+        dbTaskDhandle = new DbTaskDhandle(this);
 
         backup = findViewById(R.id.backup);
 
@@ -198,6 +200,65 @@ public class pro_backup extends AppCompatActivity {
                     // showMessage("Error", "Nothing found");
                 }
 
+                JSONArray jsonArray2 = new JSONArray();
+                final Cursor cursor2 = dbTaskDhandle.getAllData();
+
+                // looping through all rows and adding to list
+                if (cursor2.getCount() != 0) {
+                    // show message
+                    while (cursor2.moveToNext()) {
+
+                        JSONObject word = new JSONObject();
+
+
+                                try {
+                                    word.put("ID", Integer.parseInt(cursor2.getString(0)));
+                                    word.put("TITLE", cursor2.getString(1));
+                                    word.put("NUM", cursor2.getInt(2));
+                                    word.put("COMPLETED", cursor2.getInt(3));
+                                    word.put("ISREPEAT", cursor2.getInt(4));
+                                    word.put("DUE_DATE", cursor2.getString(5));
+                                    word.put("START_TIME", cursor2.getString(6));
+                                    word.put("END_TIME", cursor2.getString(7));
+                                    } catch (JSONException e) {
+                                    // TODO Auto-generated catch block
+
+                                    e.printStackTrace();
+                                }
+
+
+
+
+
+                        jsonArray2.put(word);
+                    }
+
+                    File root = android.os.Environment.getExternalStorageDirectory();
+                    // http://stackoverflow.com/questions/3551821/android-write-to-sd-card-folder
+                    File dir = new File(root.getAbsolutePath() + "/wordstore");
+                    dir.mkdirs();
+                    File file = new File(dir, "backup_timeline.json");
+                    try {
+                        FileOutputStream f = new FileOutputStream(file);
+                        PrintWriter pw = new PrintWriter(f);
+                        pw.write(jsonArray2.toString());
+                        pw.flush();
+                        pw.close();
+                        f.close();
+                        //Toasty.success(context, "Done.", Toast.LENGTH_SHORT).show();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                        //Toasty.error(context, "Opps.", Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        //Toasty.error(context, "Opps.", Toast.LENGTH_SHORT).show();
+                    }
+
+                } else {
+
+                    // showMessage("Error", "Nothing found");
+                }
+
 
 
             }
@@ -240,6 +301,9 @@ public class pro_backup extends AppCompatActivity {
 
                 number.set(dothings());
                 try{dothings_daily();}catch (Exception e){
+
+                }
+                try{dothings_timeline();}catch (Exception e){
 
                 }
 
@@ -464,6 +528,68 @@ public class pro_backup extends AppCompatActivity {
                             jsonObject.get("MONTH").toString(), jsonObject.get("YEAR").toString(), jsonObject.getString("TIME"));
                 }
                 // Toast.makeText(getApplicationContext(),"Done.",Toast.LENGTH_SHORT).show();
+                return 1;
+
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+                //Toast.makeText(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
+                return 0;
+            }
+        }
+        return 0;
+    }
+    private int dothings_timeline() {
+        FileChannel source = null;
+        FileChannel destination = null;
+        String currentDB = getDatabasePath(DBDaily.DATABASE_NAME).getPath();
+        String[] parts = fileUri.getLastPathSegment().split(":");
+        String part2 = "wordstore/backup_timeline.json"; // 0
+
+
+        if (part2.contains(".json")) {
+            String retreivedDBPAth = Environment.getExternalStorageDirectory() + "/" + part2;
+            File retrievedDB = new File(retreivedDBPAth);
+            InputStream is = null;
+
+
+            try {
+                is = new FileInputStream(retrievedDB);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+
+                //Toast.makeText(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
+                return 0;
+            }
+            InputStreamReader isr = new InputStreamReader(is);
+
+            JSONArray jsonArray = new JSONArray();
+            JSONObject jsonObject = new JSONObject();
+            StringBuilder stringBuilder = new StringBuilder();
+            JSONObject reader = new JSONObject();
+            String json = null;
+            try {
+                //is = getActivity().getAssets().open("yourfilename.json");
+                int size = is.available();
+                byte[] buffer = new byte[size];
+                is.read(buffer);
+                is.close();
+                json = new String(buffer, StandardCharsets.UTF_8);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                //Toast.makeText(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
+                return 0;
+            }
+            try {
+                jsonArray = new JSONArray(json);
+                dbTaskDhandle.deleteAll();
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    jsonObject = new JSONObject(jsonArray.get(i).toString());
+                    dbTaskDhandle.insertAll(jsonObject.get("TITLE").toString(), jsonObject.getInt("ISREPEAT"),
+                            jsonObject.getInt("NUM"), jsonObject.get("DUE_DATE").toString(),
+                            jsonObject.getInt("COMPLETED"),jsonObject.get("START_TIME").toString(), jsonObject.get("END_TIME").toString());
+                   // System.out.println(jsonObject.toString());
+                }
                 return 1;
 
 

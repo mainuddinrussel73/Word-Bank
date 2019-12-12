@@ -8,6 +8,38 @@ public class Task_Detail {
     int COMPLETED;
     int ISREPEAT;
     String DUE_DATE;
+    String START_TIME;
+    String END_TIME;
+
+    public String getSTART_TIME() {
+        return START_TIME;
+    }
+
+    public void setSTART_TIME(String START_TIME) {
+        this.START_TIME = START_TIME;
+    }
+
+    @Override
+    public String toString() {
+        return "Task_Detail{" +
+                "ID=" + ID +
+                ", TITLE='" + TITLE + '\'' +
+                ", NUM=" + NUM +
+                ", COMPLETED=" + COMPLETED +
+                ", ISREPEAT=" + ISREPEAT +
+                ", DUE_DATE='" + DUE_DATE + '\'' +
+                ", START_TIME='" + START_TIME + '\'' +
+                ", END_TIME='" + END_TIME + '\'' +
+                '}';
+    }
+
+    public String getEND_TIME() {
+        return END_TIME;
+    }
+
+    public void setEND_TIME(String END_TIME) {
+        this.END_TIME = END_TIME;
+    }
 
 
     public Task_Detail(int ID, String TITLE, int NUM, int COMPLETED, int ISREPEAT, String DUE_DATE) {

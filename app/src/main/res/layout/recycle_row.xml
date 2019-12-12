@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--Don't set margin value in the parent view-->
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rowview"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/card_background">
 
     <TextView
         android:id="@+id/full_name_tv"
@@ -18,5 +19,24 @@
         android:gravity="right"
         android:padding="10dp"
         android:text="@string/tree_activity" />
+    <TextView
+        android:id="@+id/time_s"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:padding="10dp"
+        android:text="Start: 000:00"
+        android:textColor="@color/red"/>
+    <TextView
+        android:id="@+id/time_e"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="150dp"
+        android:layout_marginTop="60dp"
+        android:padding="10dp"
+        android:text="End: 000:00"
+        android:textColor="@color/red"/>
 
-</androidx.cardview.widget.CardView>
+
+
+</RelativeLayout>

@@ -432,7 +432,9 @@ public class daily_details extends AppCompatActivity {
             barDataSet.setBarBorderWidth(0.9f);
             barDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
             BarData barData = new BarData(barDataSet);
-
+            MyMarkerView mv = new MyMarkerView(getApplicationContext(), R.layout.custom_marker_view);
+            mv.setChartView(barChart);
+            barChart.setMarker(mv);
             barChart.setDescription(new Description());
             barChart.setMinimumHeight(24);
             barChart.setData(barData);
@@ -541,11 +543,15 @@ public class daily_details extends AppCompatActivity {
             month.setTextColor(Color.WHITE);
             week.setTextColor(Color.WHITE);
             set1.setCircleColor(Color.RED);
+            mChart.setNoDataTextColor(Color.WHITE);
+            barChart.setNoDataTextColor(Color.WHITE);
         } else {
             set1.setColor(Color.RED);
             month.setTextColor(Color.BLACK);
             week.setTextColor(Color.BLACK);
             set1.setCircleColor(Color.RED);
+            mChart.setNoDataTextColor(Color.BLACK);
+            barChart.setNoDataTextColor(Color.BLACK);
         }
 
             set1.setLineWidth(1f);

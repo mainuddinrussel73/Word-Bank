@@ -15,6 +15,8 @@ import com.example.czgame.wordbank.ui.backup_scheudle.Task_Detail;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import androidx.annotation.Nullable;
@@ -95,13 +97,18 @@ public class TimelineView extends AppCompatActivity {
             while (cursor.moveToNext()) {
 
                 Task_Detail word = new Task_Detail();
-                word.setID(Integer.parseInt(cursor.getString(0)));
-                word.setTitle(cursor.getString(1));
-                word.setNum_of_promotodo(cursor.getInt(2));
-                word.setCompleted_promotodo(cursor.getInt(3));
-                word.setIsrepeat(cursor.getInt(4));
-                word.setDue_date(cursor.getString(5));
 
+                    word.setID(Integer.parseInt(cursor.getString(0)));
+                    word.setTitle(cursor.getString(1));
+                    word.setNum_of_promotodo(cursor.getInt(2));
+                    word.setCompleted_promotodo(cursor.getInt(3));
+                    word.setIsrepeat(cursor.getInt(4));
+                    word.setDue_date(cursor.getString(5));
+                    word.setSTART_TIME(cursor.getString(6));
+                    word.setEND_TIME(cursor.getString(7));
+
+
+              //  System.out.println(word.toString());
                 singerList.add(word);
 
             }
@@ -134,6 +141,13 @@ public class TimelineView extends AppCompatActivity {
             singerList.add(new Task_Detail(i++,"read".concat(Integer.toString(i)),0,r.nextInt(),0,spf.format(dt)));
         }
 */
+        Collections.sort(singerList,new Comparator<Task_Detail>() {
+            @Override
+            public int compare(Task_Detail a, Task_Detail b) {
+                return b.getDue_date().compareTo(a.getDue_date());
+            }
+        });
+
         recyclerView.addItemDecoration(getSectionCallback(singerList));
 
         recyclerView.setAdapter(new SingerAdapter(singerList,this));
@@ -146,7 +160,7 @@ public class TimelineView extends AppCompatActivity {
             @Nullable
             @Override
             public SectionInfo getSectionHeader(int position) {
-                LocalDate parsedDate = LocalDate.now().minusDays(1); //Parse date from String
+                LocalDate parsedDate = LocalDate.now(); //Parse date from String
                 String str = parsedDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
                 Task_Detail singer = singerList.get(position);
                 Drawable dot;

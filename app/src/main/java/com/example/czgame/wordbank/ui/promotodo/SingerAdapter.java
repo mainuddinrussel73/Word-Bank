@@ -51,6 +51,8 @@ public class SingerAdapter  extends RecyclerView.Adapter<SingerAdapter.ViewHolde
         final Task_Detail myListData = listdata.get(position);
         holder.textView.setText(listdata.get(position).getTitle());
         holder.num.setText(listdata.get(position).getCompleted_promotodo() / 2.0 +"h");
+        holder.s.setText("Start : "+listdata.get(position).getSTART_TIME());
+        holder.e.setText("End : "+listdata.get(position).getEND_TIME());
 
         SharedPreferences prefs = context.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
@@ -82,11 +84,13 @@ public class SingerAdapter  extends RecyclerView.Adapter<SingerAdapter.ViewHolde
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textView,num;
+        public TextView textView,num,s,e;
         public ViewHolder(View itemView) {
             super(itemView);
             this.textView = itemView.findViewById(R.id.full_name_tv);
             this.num = itemView.findViewById(R.id.num_of_pro);
+            this.s = itemView.findViewById(R.id.time_s);
+            this.e = itemView.findViewById(R.id.time_e);
         }
     }
 }

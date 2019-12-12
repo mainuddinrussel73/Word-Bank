@@ -28,6 +28,8 @@ public class DbTaskDhandle extends SQLiteOpenHelper {
     public static final String COMPLETED = "COMPLETED";
     public static final String ISREPEAT = "ISREPEAT";
     public static final String DUE_DATE = "DUE_DATE";
+    public static final String START_TIME = "START_TIME";
+    public static final String END_TIME = "END_TIME";
     static String DB_PATH = "";
     private SQLiteDatabase mDataBase;
     private Context mContext;
@@ -108,7 +110,9 @@ public class DbTaskDhandle extends SQLiteOpenHelper {
                 + NUM + " INTEGER,"
                 + COMPLETED + " INTEGER,"
                 + ISREPEAT + " INTEGER,"
-                + DUE_DATE + " TEXT" + ")";
+                + DUE_DATE + " TEXT,"
+                + START_TIME + " TEXT,"
+                + END_TIME + " TEXT" + ")";
 
         db.execSQL(CREATE_CONTACTS_TABLE);
     }
@@ -138,13 +142,15 @@ public class DbTaskDhandle extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    public boolean insertAll(String title, int isrepeat, int num, String date, int completed) {
+    public boolean insertAll(String title, int isrepeat, int num, String date, int completed,String start,String end) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(TITLE, title);
         contentValues.put(NUM, num);
         contentValues.put(ISREPEAT, isrepeat);
         contentValues.put(DUE_DATE, date);
+        contentValues.put(START_TIME, start);
+        contentValues.put(END_TIME, end);
         contentValues.put(COMPLETED, completed);
         long result = db.insert(TABLE_NAME, null, contentValues);
         return result != -1;

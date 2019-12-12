@@ -131,8 +131,8 @@
         <com.yydcdut.sdlv.SlideAndDragListView
             android:id="@+id/lv_edit"
             android:layout_width="match_parent"
-            android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
-            android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:layout_marginBottom="@dimen/alerter_activity_horizontal_margin"
             android:background="?android:selectableItemBackground"
             android:layout_height="580dp"

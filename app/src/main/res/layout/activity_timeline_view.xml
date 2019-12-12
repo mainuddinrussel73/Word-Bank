@@ -32,7 +32,8 @@
         android:id = "@+id/layout2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/appbar">
+        android:layout_below="@+id/appbar"
+        android:background="@color/white">
         <include
 
             layout ="@layout/activity_timeline_white"
@@ -43,7 +44,8 @@
         android:id = "@+id/layout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/appbar">
+        android:layout_below="@+id/appbar"
+        android:background="@color/black">
         <include
 
             layout ="@layout/activity_timeline_dark"

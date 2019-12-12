@@ -306,7 +306,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
     public static List<promotododata> promotododataList = new ArrayList<>();
     public static SlideAndDragListView mListView;
     public static DBproHandle mDBHelper;
-    long tike = 18000;
+    long tike = 1000;//18000;
     String titles = "  ";
     ExtendedEditText tfb;
     TextView totaltask, totalhour, remain;

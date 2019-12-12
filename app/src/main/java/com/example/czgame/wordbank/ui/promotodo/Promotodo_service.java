@@ -22,7 +22,10 @@ import android.widget.RemoteViews;
 import com.example.czgame.wordbank.R;
 
 import java.io.IOException;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
+import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 public class Promotodo_service extends Service {
@@ -38,12 +41,14 @@ public class Promotodo_service extends Service {
     public static NotificationManager manager;
     public static NotificationCompat.Builder notificationBuilder;
     public static Notification notification;
-    public static long total = 1800000;
+    public static long total = 10000;//1800000;
     public static Intent bi = new Intent(COUNTDOWN_BR);
     public static CountDownTimer cdt;
     public static boolean ispause = true;
     public static MediaPlayer mp, mp1;
     public static String fileName= "none";
+    public static boolean isStart;
+    public static  String start = "";
 
     public static void pause() {
 
@@ -69,6 +74,7 @@ public class Promotodo_service extends Service {
 
         //cdt.cancel();
         cdt = new CountDownTimer(total, 1000) {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -81,6 +87,7 @@ public class Promotodo_service extends Service {
                 context.sendBroadcast(bi);
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onFinish() {
                 if(!fileName.equals("none")) {
@@ -91,7 +98,7 @@ public class Promotodo_service extends Service {
                 bi.setAction(Promotodo_receiver.SET_TIME);
                 bi.putExtra("countdown", new Long(0));
                 context.sendBroadcast(bi);
-                total = 1800000;
+                total = 10000;//1800000;
             }
         };
 
@@ -110,6 +117,7 @@ public class Promotodo_service extends Service {
         super.onDestroy();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -154,6 +162,15 @@ public class Promotodo_service extends Service {
         }
 
 
+        isStart =true;
+        if(isStart==true){
+            isStart = false;
+            LocalTime localTime = LocalTime.now();
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
+            String time = localTime.format(dateTimeFormatter);
+            start = time;
+            System.out.println(start);
+        }
         stattimer();
         return START_NOT_STICKY;
     }
@@ -169,6 +186,7 @@ public class Promotodo_service extends Service {
         }
 
         cdt = new CountDownTimer(total, 1000) {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -187,6 +205,7 @@ public class Promotodo_service extends Service {
                 }
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onFinish() {
                 if(!fileName.equals("none")) {
@@ -199,7 +218,7 @@ public class Promotodo_service extends Service {
                 bi.putExtra("countdown", new Long(0));
                 bi.setClass(Promotodo_service.this, Promotodo_receiver.class);
                 sendBroadcast(bi);
-                total = 1800000;
+                total = 10000;//1800000;
             }
         };
 
@@ -212,6 +231,7 @@ public class Promotodo_service extends Service {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void startMyOwnForeground() {
         String NOTIFICATION_CHANNEL_ID = "com.example.myapp";
         String channelName = "My Promotodo Service";
