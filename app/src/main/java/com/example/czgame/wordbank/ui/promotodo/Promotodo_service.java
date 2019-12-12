@@ -41,7 +41,7 @@ public class Promotodo_service extends Service {
     public static NotificationManager manager;
     public static NotificationCompat.Builder notificationBuilder;
     public static Notification notification;
-    public static long total = 10000;//1800000;
+    public static long total = 1800000;
     public static Intent bi = new Intent(COUNTDOWN_BR);
     public static CountDownTimer cdt;
     public static boolean ispause = true;
@@ -98,7 +98,7 @@ public class Promotodo_service extends Service {
                 bi.setAction(Promotodo_receiver.SET_TIME);
                 bi.putExtra("countdown", new Long(0));
                 context.sendBroadcast(bi);
-                total = 10000;//1800000;
+                total = 1800000;
             }
         };
 
@@ -218,7 +218,7 @@ public class Promotodo_service extends Service {
                 bi.putExtra("countdown", new Long(0));
                 bi.setClass(Promotodo_service.this, Promotodo_receiver.class);
                 sendBroadcast(bi);
-                total = 10000;//1800000;
+                total = 1800000;
             }
         };
 

@@ -4,9 +4,8 @@
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
 
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/A400red">
+    android:background="@drawable/yoda">
 
     <Button
         android:id="@+id/cancel_task"
@@ -34,11 +33,12 @@
         android:paddingRight="@dimen/alerter_activity_horizontal_margin"
         android:paddingLeft="@dimen/alerter_activity_horizontal_margin"
         app:cpb_background_progressbar_color="#F8F9F9"
-        app:cpb_background_progressbar_width="15dp"
+        app:cpb_background_progressbar_width="35dp"
         app:cpb_progress_direction="to_right"
-        app:cpb_progressbar_color="#7CFC00"
+        app:cpb_progress="30"
+        app:cpb_progressbar_color="#0ACDC5"
         app:cpb_progressbar_width="20dp"
-        app:cpb_round_border="false" />
+        app:cpb_round_border="true" />
     <TextView
         android:id="@+id/procountH"
         android:layout_width="wrap_content"
@@ -46,7 +46,7 @@
         android:layout_marginTop="180dp"
         android:layout_marginLeft="125dp"
         android:textSize="40dp"
-        android:textColor="#7CFC00"
+        android:textColor="#0ACDC5"
         >
 
     </TextView>
@@ -56,7 +56,7 @@
         android:layout_marginTop="175dp"
         android:layout_marginLeft="175dp"
         android:textSize="40dp"
-        android:textColor="#7CFC00"
+        android:textColor="#0ACDC5"
         android:text=":"
         >
 
@@ -69,7 +69,7 @@
         android:layout_marginTop="180dp"
         android:layout_marginLeft="185dp"
         android:textSize="40dp"
-        android:textColor="#7CFC00"
+        android:textColor="#0ACDC5"
         >
 
     </TextView>
@@ -81,7 +81,7 @@
         android:layout_marginTop="175dp"
         android:layout_marginLeft="235dp"
         android:textSize="40dp"
-        android:textColor="#7CFC00"
+        android:textColor="#0ACDC5"
         android:text=":"
         >
 
@@ -94,43 +94,45 @@
         android:layout_marginTop="180dp"
         android:layout_marginLeft="245dp"
         android:textSize="40dp"
-        android:textColor="#7CFC00"
+        android:textColor="#0ACDC5"
         >
 
     </TextView>
 
 
-
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="450dp"
+        android:layout_width="196dp"
+        android:layout_height="79dp"
         android:layout_marginLeft="100dp"
+        android:layout_marginTop="450dp"
         android:background="@drawable/backgroundborder"
-        android:backgroundTint="#FFB2B2"
-        >
+        android:backgroundTint="#ebc4ff">
 
 
         <TextView
             android:id="@+id/tasktitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:textSize="30dp"
-            android:textColor="#ffff"
-            android:textStyle="italic"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="14dp"
 
-            android:text="ppplp">
+            android:layout_marginEnd="9dp"
+            android:text="ppplp"
+            android:textAlignment="center"
+            android:textSize="30dp"
+            android:textColor="#21142a"
+            android:textStyle="italic">
 
         </TextView>
 
         <LinearLayout
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginBottom="5dp"
             android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
             android:layout_marginTop="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="5dp"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
@@ -142,7 +144,7 @@
                 app:cpb_background_progressbar_color="#b6bbd8"
                 app:cpb_background_progressbar_width="5dp"
                 app:cpb_progress_direction="to_right"
-                app:cpb_progressbar_color="#7CFC00"
+                app:cpb_progressbar_color="#ba4eff"
                 app:cpb_progressbar_width="5dp" />
 
         </LinearLayout>
@@ -150,10 +152,10 @@
         <LinearLayout
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginBottom="5dp"
             android:layout_marginLeft="75dp"
-            android:layout_marginRight="50dp"
             android:layout_marginTop="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="5dp"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
@@ -165,7 +167,7 @@
                 app:cpb_background_progressbar_color="#b6bbd8"
                 app:cpb_background_progressbar_width="5dp"
                 app:cpb_progress_direction="to_right"
-                app:cpb_progressbar_color="#7CFC00"
+                app:cpb_progressbar_color="#ba4eff"
                 app:cpb_progressbar_width="5dp" />
 
         </LinearLayout>
@@ -173,10 +175,10 @@
         <LinearLayout
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginBottom="5dp"
             android:layout_marginLeft="100dp"
-            android:layout_marginRight="50dp"
             android:layout_marginTop="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="5dp"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
@@ -188,7 +190,7 @@
                 app:cpb_background_progressbar_color="#b6bbd8"
                 app:cpb_background_progressbar_width="5dp"
                 app:cpb_progress_direction="to_right"
-                app:cpb_progressbar_color="#7CFC00"
+                app:cpb_progressbar_color="#ba4eff"
                 app:cpb_progressbar_width="5dp" />
 
         </LinearLayout>
@@ -196,10 +198,10 @@
         <LinearLayout
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginBottom="5dp"
             android:layout_marginLeft="125dp"
-            android:layout_marginRight="50dp"
             android:layout_marginTop="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="5dp"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
@@ -211,7 +213,7 @@
                 app:cpb_background_progressbar_color="#b6bbd8"
                 app:cpb_background_progressbar_width="5dp"
                 app:cpb_progress_direction="to_right"
-                app:cpb_progressbar_color="#7CFC00"
+                app:cpb_progressbar_color="#ba4eff"
                 app:cpb_progressbar_width="5dp" />
 
         </LinearLayout>
@@ -224,7 +226,7 @@
         android:layout_gravity="bottom|center"
         android:layout_marginLeft="170dp"
         android:layout_marginTop="600dp"
-        android:backgroundTint="#7CFC00"
+        android:backgroundTint="#ba4eff"
         android:src="@drawable/play_arrow_black_24dp"
 
         >
@@ -238,7 +240,7 @@
         android:layout_gravity="bottom|center"
         android:layout_marginLeft="100dp"
         android:layout_marginTop="600dp"
-        android:backgroundTint="#7CFC00"
+        android:backgroundTint="#ba4eff"
         android:src="@drawable/pause_black_24dp"
 
         >
@@ -252,7 +254,7 @@
         android:layout_gravity="bottom|center"
         android:layout_marginLeft="240dp"
         android:layout_marginTop="600dp"
-        android:backgroundTint="#7CFC00"
+        android:backgroundTint="#ba4eff"
         android:src="@drawable/ic_close_black_24dp"
 
         >

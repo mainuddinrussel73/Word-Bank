@@ -71,7 +71,7 @@
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
             android:adjustViewBounds="true"
-            android:src="@drawable/cat"/>
+            android:src="@drawable/www"/>
 
         <TextView
             android:id="@+id/notification_message"

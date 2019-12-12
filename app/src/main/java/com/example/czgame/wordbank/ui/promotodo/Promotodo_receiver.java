@@ -54,7 +54,7 @@ public class Promotodo_receiver extends BroadcastReceiver {
     public static int REQUEST_CODE_NOTIFICATION = 1212;
     int tp = 0;
 
-    long tike = 1000;//18000;
+    long tike = 18000;
    String end;
 
 

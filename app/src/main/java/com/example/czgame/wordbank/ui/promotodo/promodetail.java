@@ -76,7 +76,7 @@ public class promodetail extends AppCompatActivity {
     public static boolean toogleview = false;
     public static Dialog dialog;
     Button button1;
-    long tike = 1000;//18000;
+    long tike = 18000;
     // public static FABRevealLayout fabRevealLayout;
     promotododata currenttask;
     boolean isfinish = false;
@@ -86,7 +86,7 @@ public class promodetail extends AppCompatActivity {
     MediaPlayer mediaPlayer;
     TextView textViewss,shownoise;
     private CountDownTimer cdTimer;
-    private long total = 10000;//1800000;
+    private long total = 1800000;
     private StorageReference mStorageRef;
 
     public static Bitmap textAsBitmap(String text, float textSize, int textColor) {
@@ -937,7 +937,7 @@ public class promodetail extends AppCompatActivity {
                     //Promotodo_service.pause();
 
 
-                    Promotodo_service.total = 10000;//1800000;
+                    Promotodo_service.total = 1800000;
 
                     Promotodo_service.ispause = true;
                     stopService(new Intent(promodetail.this, Promotodo_service.class));
