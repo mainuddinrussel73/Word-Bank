@@ -29,7 +29,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import androidx.palette.graphics.Palette;
-import be.rijckaert.tim.animatedvector.FloatingMusicActionButton;
 import es.dmoral.toasty.Toasty;
 
 import static android.content.Context.ACTIVITY_SERVICE;
@@ -78,7 +77,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
 
                         //Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_pause_black_24dp);
-                        Media_list_activity.playBtn.changeMode(FloatingMusicActionButton.Mode.PLAY_TO_PAUSE);
+                        Media_list_activity.playBtn.change(false);
                         Media_list_activity.ply.setBackgroundResource(R.drawable.ic_pause_black_24dp);
 
                         NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
@@ -93,7 +92,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                     } else {
                         mp.pause();
                        // Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
-                        Media_list_activity.playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
+                        Media_list_activity.playBtn.change(true);
                         Media_list_activity.ply.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
 
                         NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);

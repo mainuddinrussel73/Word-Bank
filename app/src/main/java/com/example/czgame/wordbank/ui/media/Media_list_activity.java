@@ -25,9 +25,11 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.text.InputType;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
@@ -38,7 +40,9 @@ import android.view.WindowManager;
 import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -49,11 +53,21 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.czgame.wordbank.R;
 import com.gauravk.audiovisualizer.visualizer.WaveVisualizer;
 import com.github.siyamed.shapeimageview.RoundedImageView;
+import com.lauzy.freedom.library.Lrc;
+import com.lauzy.freedom.library.LrcHelper;
+import com.lauzy.freedom.library.LrcView;
+import com.ohoussein.playpause.PlayPauseView;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -67,9 +81,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.palette.graphics.Palette;
-import be.rijckaert.tim.animatedvector.FloatingMusicActionButton;
 import es.dmoral.toasty.Toasty;
+import jp.wasabeef.glide.transformations.BlurTransformation;
 
+import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 import static com.example.czgame.wordbank.ui.media.NotificationService.mOnAudioFocusChangeListener;
 
 public class Media_list_activity extends AppCompatActivity  {
@@ -78,7 +93,7 @@ public class Media_list_activity extends AppCompatActivity  {
     private static final String TAG = "Audio";
     public static List<Audio> ListElementsArrayList = new ArrayList<Audio>();
     public static int position = 0;
-    public static FloatingMusicActionButton playBtn;
+    public static PlayPauseView playBtn;
     public static MediaPlayer mp = new MediaPlayer();
     public static ImageView image;
     public static int totalTime;
@@ -139,6 +154,9 @@ public class Media_list_activity extends AppCompatActivity  {
     private int requestCode;
     private String[] permissions;
     private int[] grantResults;
+    ImageButton showlrc;
+    private LrcView mLrcView;
+
 
     private boolean isAppOnForeground(Context context, String appPackageName) {
         ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
@@ -174,6 +192,16 @@ public class Media_list_activity extends AppCompatActivity  {
             elapsedTimeLabel.setText(elapsedTime);
 
             String remainingTime = createTimeLabel(totalTime - currentPosition);
+
+
+            mLrcView.updateTime(currentPosition);
+
+            mLrcView.setOnPlayIndicatorLineListener(new LrcView.OnPlayIndicatorLineListener() {
+                @Override
+                public void onPlay(long time, String content) {
+                    mp.seekTo((int) time);
+                }
+            });
 
 
             remainingTimeLabel.setText("- " + remainingTime);
@@ -317,6 +345,33 @@ public class Media_list_activity extends AppCompatActivity  {
     }
     //
 
+    public void save(EditText mEditText,String name) {
+
+        File docsFolder = new File(Environment.getExternalStorageDirectory() + "/Lyrics");
+        boolean isPresent = true;
+        if (!docsFolder.exists()) {
+            isPresent = docsFolder.mkdir();
+        }
+        if (isPresent) {
+            File file = new File(docsFolder.getAbsolutePath(), name);
+            try {
+                FileOutputStream fos = new FileOutputStream(file);
+                fos.write(mEditText.getText().toString().getBytes());
+                fos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            // Failure
+        }
+
+
+        mEditText.getText().clear();
+        Toast.makeText(this, "Saved to " + getFilesDir() + "/" + name,
+                Toast.LENGTH_LONG).show();
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -346,6 +401,7 @@ public class Media_list_activity extends AppCompatActivity  {
             //  stubGrid.setVisibility(View.VISIBLE);
             switchView();
         }
+
 
 
 
@@ -394,6 +450,8 @@ public class Media_list_activity extends AppCompatActivity  {
         textView = myView.findViewById(R.id.song_title);
         textView1 = myView.findViewById(R.id.song_artist);
 
+        textView.setSelected(true);
+        textView1.setSelected(true);
 
 
         pauseBtn = myView.findViewById(R.id.prevBtn);
@@ -469,7 +527,10 @@ public class Media_list_activity extends AppCompatActivity  {
             add_phone.setVisibility(View.VISIBLE);
 
         titleS = add_phone.findViewById(R.id.textViewSongTitle);
+        titleS.setSelected(true);
+
         desS = add_phone.findViewById(R.id.textViewArtistName);
+        desS.setSelected(true);
         songI = add_phone.findViewById(R.id.play_pause);
         ply = add_phone.findViewById(R.id.buttonPlayAndStop);
         nxt = add_phone.findViewById(R.id.buttonForward);
@@ -477,6 +538,7 @@ public class Media_list_activity extends AppCompatActivity  {
 
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         mAudioFocusChangeListener = new AudioFocusChangeListenerImpl();
+
 
 
         LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION.NEXT_ACTION));
@@ -547,6 +609,7 @@ public class Media_list_activity extends AppCompatActivity  {
 
         slideUp1(add_phone);
         if(mp.isPlaying()){
+
             Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
             myIcon3.setTint(mutedDark);
             ply.setBackground(myIcon3);
@@ -555,6 +618,60 @@ public class Media_list_activity extends AppCompatActivity  {
             myIcon3.setTint(mutedDark);
             ply.setBackground(myIcon3);
         }
+
+        mLrcView = findViewById(R.id.lrc_view);
+
+
+        if(mp!=null){
+            File file = new File(Environment.getExternalStorageDirectory() + "/Lyrics/"
+                    +Media_list_activity.ListElementsArrayList.get(position).getTitle().toLowerCase().replace(" ","_").concat(".lrc"));
+
+            System.out.println(file);
+            List<Lrc> lrcs = LrcHelper.parseLrcFromFile(file);
+            mLrcView.setLrcData(lrcs);
+        }
+
+
+
+        showlrc = myView.findViewById(R.id.showlrc);
+
+        showlrc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder alertDialog = new AlertDialog.Builder(Media_list_activity.this);
+                alertDialog.setMessage("Lyrics");
+
+                final EditText input = new EditText(Media_list_activity.this);
+                input.setInputType(InputType.TYPE_CLASS_TEXT);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+                input.setLayoutParams(lp);
+                alertDialog.setView(input);
+                alertDialog.setIcon(R.drawable.common_google_signin_btn_icon_dark);
+
+                alertDialog.setPositiveButton("YES",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                if(!input.getText().equals("")){
+                                   save(input, Media_list_activity.ListElementsArrayList.get(position).getTitle().toLowerCase().replace(" ","_").concat(".lrc"));
+                                }
+                            }
+                        });
+
+                alertDialog.setNegativeButton("NO",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+
+                            }
+                        });
+
+                alertDialog.show();
+            }
+        });
+
+
 
         myView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -578,6 +695,8 @@ public class Media_list_activity extends AppCompatActivity  {
                 return true;
             }
         });
+
+
         add_phone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -647,7 +766,10 @@ public class Media_list_activity extends AppCompatActivity  {
                                     }
 
                                     volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                    volumeBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
                                     positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                    positionBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
+
                                     remainingTimeLabel.setTextColor(mutedDark);
                                     elapsedTimeLabel.setTextColor(mutedDark);
                                     toolbar.getNavigationIcon().setTint(mutedDark);
@@ -674,8 +796,8 @@ public class Media_list_activity extends AppCompatActivity  {
                                     play = (mutedDark);
                                     pause = (mutedDark);
 
-                                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_skip_next_black_24dp);
-                                    Drawable myIcon = getResources().getDrawable(R.drawable.ic_skip_previous_black_24dp);
+                                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
+                                    Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
                                     Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
                                     Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
 
@@ -685,15 +807,18 @@ public class Media_list_activity extends AppCompatActivity  {
                                     myIcon2.setTint(play);
                                     nxtBtn.setBackground(myIcon3);
                                     if(mp.isPlaying()) {
-                                        playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
+                                        playBtn.change(false);
+                                       // playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
                                     }else {
-                                        playBtn.changeMode(FloatingMusicActionButton.Mode.PLAY_TO_PAUSE);
+                                        playBtn.change(true);
+                                       // playBtn.changeMode(FloatingMusicActionButton.Mode.PLAY_TO_PAUSE);
                                     }
                                     pauseBtn.setBackground(myIcon);
                                     playBtn.setBackground(myIcon2);
 
-                                    Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_skip_next_black_24dp);
-                                    Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_skip_previous_black_24dp);
+                                    playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
+                                    Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
+                                    Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
                                     Drawable myIcon22 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
                                     Drawable myIcon21 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
                                     myIcon33.setTint(play);
@@ -871,7 +996,10 @@ public class Media_list_activity extends AppCompatActivity  {
                                     }
 
                                     volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                    volumeBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
                                     positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                    positionBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
+
                                     remainingTimeLabel.setTextColor(mutedDark);
                                     elapsedTimeLabel.setTextColor(mutedDark);
 
@@ -917,8 +1045,8 @@ public class Media_list_activity extends AppCompatActivity  {
                                     play = (mutedDark);
                                     pause = (mutedDark);
 
-                                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_skip_next_black_24dp);
-                                    Drawable myIcon = getResources().getDrawable(R.drawable.ic_skip_previous_black_24dp);
+                                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
+                                    Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
                                     Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
                                     Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
 
@@ -929,14 +1057,16 @@ public class Media_list_activity extends AppCompatActivity  {
                                     nxtBtn.setBackground(myIcon3);
                                     pauseBtn.setBackground(myIcon);
                                     if(mp.isPlaying()) {
-                                        playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
+                                        playBtn.change(false);
+                                        // playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
                                     }else {
-                                        playBtn.changeMode(FloatingMusicActionButton.Mode.PLAY_TO_PAUSE);
+                                        playBtn.change(true);
+                                        // playBtn.changeMode(FloatingMusicActionButton.Mode.PLAY_TO_PAUSE);
                                     }
-                                    playBtn.setBackground(myIcon2);
+                                    playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
 
-                                    Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_skip_next_black_24dp);
-                                    Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_skip_previous_black_24dp);
+                                    Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
+                                    Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
                                     Drawable myIcon22 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
                                     Drawable myIcon21 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
                                     myIcon33.setTint(play);
@@ -972,7 +1102,7 @@ public class Media_list_activity extends AppCompatActivity  {
 
                             Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
                             myIcon2.setTint(play);
-                            playBtn.setBackground(myIcon2);
+                            playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
 
 
                             // Position Bar
@@ -1115,7 +1245,10 @@ public class Media_list_activity extends AppCompatActivity  {
                                     }
 
                                     volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                    volumeBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
                                     positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                    positionBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
+
                                     remainingTimeLabel.setTextColor(mutedDark);
                                     elapsedTimeLabel.setTextColor(mutedDark);
 
@@ -1159,8 +1292,8 @@ public class Media_list_activity extends AppCompatActivity  {
                                     play = (mutedDark);
                                     pause = (mutedDark);
 
-                                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_skip_next_black_24dp);
-                                    Drawable myIcon = getResources().getDrawable(R.drawable.ic_skip_previous_black_24dp);
+                                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
+                                    Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
                                     Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
                                     Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
 
@@ -1171,14 +1304,16 @@ public class Media_list_activity extends AppCompatActivity  {
                                     nxtBtn.setBackground(myIcon3);
                                     pauseBtn.setBackground(myIcon);
                                     if(mp.isPlaying()) {
-                                        playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
+                                        playBtn.change(false);
+                                        // playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
                                     }else {
-                                        playBtn.changeMode(FloatingMusicActionButton.Mode.PLAY_TO_PAUSE);
+                                        playBtn.change(true);
+                                        // playBtn.changeMode(FloatingMusicActionButton.Mode.PLAY_TO_PAUSE);
                                     }
-                                    playBtn.setBackground(myIcon1);
+                                    playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
 
-                                    Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_skip_next_black_24dp);
-                                    Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_skip_previous_black_24dp);
+                                    Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
+                                    Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
                                     Drawable myIcon22 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
                                     Drawable myIcon21 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
                                     myIcon33.setTint(play);
@@ -1357,7 +1492,10 @@ public class Media_list_activity extends AppCompatActivity  {
                                     }
 
                                     volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                    volumeBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
                                     positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                    positionBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
+
                                     remainingTimeLabel.setTextColor(mutedDark);
                                     elapsedTimeLabel.setTextColor(mutedDark);
 
@@ -1396,8 +1534,8 @@ public class Media_list_activity extends AppCompatActivity  {
                                     play = (mutedDark);
                                     pause = (mutedDark);
 
-                                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_skip_next_black_24dp);
-                                    Drawable myIcon = getResources().getDrawable(R.drawable.ic_skip_previous_black_24dp);
+                                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
+                                    Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
                                     Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
                                     Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
 
@@ -1408,14 +1546,16 @@ public class Media_list_activity extends AppCompatActivity  {
                                     nxtBtn.setBackground(myIcon3);
                                     pauseBtn.setBackground(myIcon);
                                     if(mp.isPlaying()) {
-                                        playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
+                                        playBtn.change(false);
+                                        // playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
                                     }else {
-                                        playBtn.changeMode(FloatingMusicActionButton.Mode.PLAY_TO_PAUSE);
+                                        playBtn.change(true);
+                                        // playBtn.changeMode(FloatingMusicActionButton.Mode.PLAY_TO_PAUSE);
                                     }
-                                    playBtn.setBackground(myIcon1);
+                                    playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
 
-                                    Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_skip_next_black_24dp);
-                                    Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_skip_previous_black_24dp);
+                                    Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
+                                    Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
                                     Drawable myIcon22 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
                                     Drawable myIcon21 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
                                     myIcon33.setTint(play);
@@ -1537,8 +1677,8 @@ public class Media_list_activity extends AppCompatActivity  {
         });
 
 
-        myIcon3 = getResources().getDrawable(R.drawable.ic_skip_next_black_24dp);
-        myIcon = getResources().getDrawable(R.drawable.ic_skip_previous_black_24dp);
+        myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
+        myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
         myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
         myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
 
@@ -1665,7 +1805,10 @@ public class Media_list_activity extends AppCompatActivity  {
                                     actionBarToolbar.setTitleTextColor(mutedDark);
                             }
                             volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                            volumeBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
                             positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                            positionBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
+
                             remainingTimeLabel.setTextColor(mutedDark);
                             elapsedTimeLabel.setTextColor(mutedDark);
 
@@ -1675,6 +1818,14 @@ public class Media_list_activity extends AppCompatActivity  {
                             icon.setTint(mutedDark);
                             button.setBackground(icon);
 
+                            Glide.with(context).load(bm).apply(bitmapTransform(new BlurTransformation(context,25))).into(new SimpleTarget<Drawable>() {
+                                @Override
+                                public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                        myView.setBackground(resource);
+                                    }
+                                }
+                            });
                             mVisualizer.setColor(mutedColor);
                             SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
 
@@ -1711,8 +1862,8 @@ public class Media_list_activity extends AppCompatActivity  {
                             play = (mutedDark);
                             pause = (mutedDark);
 
-                            Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_skip_next_black_24dp);
-                            Drawable myIcon = getResources().getDrawable(R.drawable.ic_skip_previous_black_24dp);
+                            Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
+                            Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
                             Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
                             Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
 
@@ -1722,11 +1873,12 @@ public class Media_list_activity extends AppCompatActivity  {
                             myIcon2.setTint(play);
                             nxtBtn.setBackground(myIcon3);
                             pauseBtn.setBackground(myIcon);
-                            playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
-                            playBtn.setBackground(myIcon2);
+                            playBtn.change(false);
+                            //playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
+                            playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
 
-                            Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_skip_next_black_24dp);
-                            Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_skip_previous_black_24dp);
+                            Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
+                            Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
                             myIcon33.setTint(play);
                             myIcon31.setTint(play);
                             ply.setBackground(myIcon2);
@@ -1782,6 +1934,16 @@ public class Media_list_activity extends AppCompatActivity  {
                     mp.seekTo(0);
 
                     mp.start();
+
+
+                    File file = new File(Environment.getExternalStorageDirectory() + "/Lyrics/"
+                            +Media_list_activity.ListElementsArrayList.get(position).getTitle().toLowerCase().replace(" ","_").concat(".lrc"));
+
+                    System.out.println(file);
+                    List<Lrc> lrcs = LrcHelper.parseLrcFromFile(file);
+                    mLrcView.setLrcData(lrcs);
+
+
 
                     // barVisualizer.setDensity(70);
                     // barVisualizer.setPlayer(mp.getAudioSessionId());
@@ -1957,7 +2119,10 @@ public class Media_list_activity extends AppCompatActivity  {
                                     actionBarToolbar.setTitleTextColor(mutedDark);
                             }
                             volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                            volumeBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
                             positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                            positionBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
+
                             remainingTimeLabel.setTextColor(mutedDark);
                             elapsedTimeLabel.setTextColor(mutedDark);
 
@@ -1989,8 +2154,8 @@ public class Media_list_activity extends AppCompatActivity  {
                             play = (mutedDark);
                             pause = (mutedDark);
 
-                            Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_skip_next_black_24dp);
-                            Drawable myIcon = getResources().getDrawable(R.drawable.ic_skip_previous_black_24dp);
+                            Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
+                            Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
                             Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
                             Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
 
@@ -2000,11 +2165,12 @@ public class Media_list_activity extends AppCompatActivity  {
                             myIcon2.setTint(play);
                             nxtBtn.setBackground(myIcon3);
                             pauseBtn.setBackground(myIcon);
-                            playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
-                            playBtn.setBackground(myIcon2);
+                            playBtn.change(false);
+                            //playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
+                            playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
 
-                            Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_skip_next_black_24dp);
-                            Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_skip_previous_black_24dp);
+                            Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
+                            Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
                             myIcon33.setTint(play);
                             myIcon31.setTint(play);
                             ply.setBackground(myIcon2);
@@ -2058,6 +2224,13 @@ public class Media_list_activity extends AppCompatActivity  {
                     mp.seekTo(0);
 
                     mp.start();
+
+                    File file = new File(Environment.getExternalStorageDirectory() + "/Lyrics/"
+                            +Media_list_activity.ListElementsArrayList.get(position).getTitle().toLowerCase().replace(" ","_").concat(".lrc"));
+
+                    System.out.println(file);
+                    List<Lrc> lrcs = LrcHelper.parseLrcFromFile(file);
+                    mLrcView.setLrcData(lrcs);
 
 
                     Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
@@ -2295,7 +2468,9 @@ public class Media_list_activity extends AppCompatActivity  {
         if (!mp.isPlaying()) {
             // Stopping
             mp.start();
-            playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
+            mLrcView.resume();
+            playBtn.change(false);
+            //playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
             // playBtn.setBackgroundResource(R.drawable.ic_pause_black_24dp);
             ply.setBackgroundResource(R.drawable.ic_pause_black_24dp);
             Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
@@ -2313,7 +2488,8 @@ public class Media_list_activity extends AppCompatActivity  {
         } else{
             // Playing
             mp.pause();
-            playBtn.changeMode(FloatingMusicActionButton.Mode.PLAY_TO_PAUSE);
+            playBtn.change(true);
+           // playBtn.changeMode(FloatingMusicActionButton.Mode.PLAY_TO_PAUSE);
             //playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
             ply.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
             Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
@@ -2339,6 +2515,7 @@ public class Media_list_activity extends AppCompatActivity  {
             playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
             Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
             myIcon2.setTint(play);
+            mLrcView.pause();
 
 
         } else{
@@ -2449,8 +2626,11 @@ public class Media_list_activity extends AppCompatActivity  {
                     pause = (mutedDark);
                     // fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Media_list_activity.this,mutedDark)));
 
-                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
                     volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                    volumeBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
+                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                    positionBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
+
                     remainingTimeLabel.setTextColor(mutedColor);
                     elapsedTimeLabel.setTextColor(mutedColor);
 
@@ -2480,8 +2660,8 @@ public class Media_list_activity extends AppCompatActivity  {
 
 
 
-                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_skip_next_black_24dp);
-                    Drawable myIcon = getResources().getDrawable(R.drawable.ic_skip_previous_black_24dp);
+                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
+                    Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
                     Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
                     Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
 
@@ -2491,11 +2671,12 @@ public class Media_list_activity extends AppCompatActivity  {
                     myIcon2.setTint(play);
                     nxtBtn.setBackground(myIcon3);
                     pauseBtn.setBackground(myIcon);
-                    playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
-                    playBtn.setBackground(myIcon2);
+                    playBtn.change(false);
+                   // playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
+                    playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
 
-                    Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_skip_next_black_24dp);
-                    Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_skip_previous_black_24dp);
+                    Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
+                    Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
                     myIcon33.setTint(play);
                     myIcon31.setTint(play);
                     ply.setBackground(myIcon2);
@@ -2542,6 +2723,14 @@ public class Media_list_activity extends AppCompatActivity  {
             mp.seekTo(0);
 
             mp.start();
+
+            File file = new File(Environment.getExternalStorageDirectory() + "/Lyrics/"
+                    +Media_list_activity.ListElementsArrayList.get(position).getTitle().toLowerCase().replace(" ","_").concat(".lrc"));
+
+            System.out.println(file);
+            List<Lrc> lrcs = LrcHelper.parseLrcFromFile(file);
+            mLrcView.setLrcData(lrcs);
+
             Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
             myIcon2.setTint(play);
             playBtn.setBackground(myIcon2);
@@ -2719,8 +2908,11 @@ public class Media_list_activity extends AppCompatActivity  {
 
                     //fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Media_list_activity.this,mutedDark)));
 
-                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
                     volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                    volumeBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
+                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                    positionBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
+
                     remainingTimeLabel.setTextColor(mutedColor);
                     elapsedTimeLabel.setTextColor(mutedColor);
 
@@ -2749,8 +2941,8 @@ public class Media_list_activity extends AppCompatActivity  {
 
 
 
-                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_skip_next_black_24dp);
-                    Drawable myIcon = getResources().getDrawable(R.drawable.ic_skip_previous_black_24dp);
+                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
+                    Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
                     Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
                     Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
 
@@ -2760,11 +2952,12 @@ public class Media_list_activity extends AppCompatActivity  {
                     myIcon2.setTint(play);
                     nxtBtn.setBackground(myIcon3);
                     pauseBtn.setBackground(myIcon);
-                    playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
-                    playBtn.setBackground(myIcon2);
+                    playBtn.change(false);
+                  //  playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
+                    playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
 
-                    Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_skip_next_black_24dp);
-                    Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_skip_previous_black_24dp);
+                    Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
+                    Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
                     myIcon33.setTint(play);
                     myIcon31.setTint(play);
                     ply.setBackground(myIcon2);
@@ -2810,6 +3003,14 @@ public class Media_list_activity extends AppCompatActivity  {
             mp.seekTo(0);
 
             mp.start();
+
+            File file = new File(Environment.getExternalStorageDirectory() + "/Lyrics/"
+                    +Media_list_activity.ListElementsArrayList.get(position).getTitle().toLowerCase().replace(" ","_").concat(".lrc"));
+
+            System.out.println(file);
+            List<Lrc> lrcs = LrcHelper.parseLrcFromFile(file);
+            mLrcView.setLrcData(lrcs);
+
             Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
             myIcon2.setTint(play);
             playBtn.setBackground(myIcon2);
@@ -3047,6 +3248,8 @@ public class Media_list_activity extends AppCompatActivity  {
         playBtn.setEnabled(true);
         pauseBtn.setEnabled(true);
         nxtBtn.setEnabled(true);
+        showlrc.setEnabled(true);
+        mLrcView.setVisibility(View.VISIBLE);
 
 
     }
@@ -3073,6 +3276,8 @@ public class Media_list_activity extends AppCompatActivity  {
         playBtn.setEnabled(false);
         pauseBtn.setEnabled(false);
         nxtBtn.setEnabled(false);
+        showlrc.setEnabled(false);
+        mLrcView.setVisibility(View.INVISIBLE);
 
     }
 

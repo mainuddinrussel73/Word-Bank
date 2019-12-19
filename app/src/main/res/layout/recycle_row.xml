@@ -26,15 +26,17 @@
         android:layout_marginTop="60dp"
         android:padding="10dp"
         android:text="Start: 000:00"
+        android:textSize="10dp"
         android:textColor="@color/red"/>
     <TextView
         android:id="@+id/time_e"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="150dp"
+        android:layout_marginLeft="140dp"
         android:layout_marginTop="60dp"
         android:padding="10dp"
         android:text="End: 000:00"
+        android:textSize="10dp"
         android:textColor="@color/red"/>
 
 

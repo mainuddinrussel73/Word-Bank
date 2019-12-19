@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
+    buildToolsVersion '24.0.2'
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.czgame.wordbank"
@@ -10,6 +11,8 @@ android {
         versionName "1.0"
         useLibrary 'org.apache.http.legacy'
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        renderscriptSupportModeEnabled true
+        renderscriptTargetApi 28
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -28,6 +31,7 @@ android {
         // but continue the build even when errors are found:
         abortOnError false
     }
+
 }
 
 dependencies {
@@ -109,7 +113,13 @@ dependencies {
     implementation 'com.github.sangcomz:StickyTimeLine:v0.0.20'
     compile 'com.github.vipulasri:timelineview:1.0.5'
     implementation 'com.xw.repo:bubbleseekbar:3.20-lite'
-
+    compile 'jp.wasabeef:blurry:3.0.0'
+    compile 'com.github.jrvansuita:GaussianBlur:+'
+    compile 'jp.wasabeef:glide-transformations:2.0.1'
+    implementation 'com.android.support:palette-v7:28.0.0'
+    implementation 'com.github.mmin18:realtimeblurview:1.2.1'
+    implementation 'com.github.Lauzy:LyricView:1.0.4'
+    compile 'com.github.ohoussein.playpauseview:playpauseview:1.0.2'
 
 }
 

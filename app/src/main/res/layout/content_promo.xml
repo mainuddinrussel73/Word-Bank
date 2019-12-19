@@ -35,7 +35,7 @@
             android:paddingBottom="10dp"
             android:text="gvhgvh,jh,jhb"
             android:fontFamily="@font/lobs_star"
-            android:textSize="13sp">
+            android:textSize="13dp">
 
         </TextView>
 
@@ -51,7 +51,7 @@
             android:paddingBottom="10dp"
             android:text="gvhgvh,jh,jhb"
             android:fontFamily="@font/lobs_star"
-            android:textSize="13sp">
+            android:textSize="13dp">
 
         </TextView>
 
@@ -67,7 +67,7 @@
             android:paddingBottom="10dp"
             android:text="completed h"
             android:fontFamily="@font/lobs_star"
-            android:textSize="13sp">
+            android:textSize="13dp">
 
         </TextView>
     </LinearLayout>

@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Random;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import es.dmoral.toasty.Toasty;
 
 import static com.example.czgame.wordbank.ui.Quiz.quiz_result.wordBuck;
@@ -139,6 +140,7 @@ public class quiz_page extends AppCompatActivity {
 
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
+        ScrollView scrollView = findViewById(R.id.scrollButtons);
         if (isDark) {
             textView.setBackgroundColor(Color.BLACK);
             scoress.setTextColor(Color.WHITE);
@@ -148,8 +150,10 @@ public class quiz_page extends AppCompatActivity {
 
 
                 ((RadioButton) radioGroup.getChildAt(i)).setTextColor(Color.WHITE);
+                radioGroup.getChildAt(i).setBackground(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
             }
             relativeLayout.setBackgroundColor(Color.BLACK);
+            scrollView.setBackground(ContextCompat.getDrawable(this, R.drawable.list_viewdark));
         } else {
             textView.setBackgroundColor(Color.WHITE);
             scoress.setTextColor(Color.BLACK);
@@ -159,8 +163,10 @@ public class quiz_page extends AppCompatActivity {
 
 
                 ((RadioButton) radioGroup.getChildAt(i)).setTextColor(Color.BLACK);
+                radioGroup.getChildAt(i).setBackground(ContextCompat.getDrawable(this, R.drawable.card_background));
             }
             relativeLayout.setBackgroundColor(Color.WHITE);
+            scrollView.setBackground(ContextCompat.getDrawable(this, R.drawable.listview_border));
         }
 
         Button button2 = findViewById(R.id.endquiz);
@@ -282,8 +288,9 @@ public class quiz_page extends AppCompatActivity {
 
                             if (sr.get(1).equals(((RadioButton) radioSexGroup.getChildAt(i)).getText())) {
                                 Drawable marker;
-                                marker = getResources().getDrawable(R.drawable.backgroundborder1);
+                                marker = getResources().getDrawable(R.drawable.card_background_green);
                                 radioSexGroup.getChildAt(i).setBackground(marker);
+
 
                                 //rb_flash.setTextColor(Color.BLACK);
                             }
@@ -319,11 +326,11 @@ public class quiz_page extends AppCompatActivity {
 
                             if (sr.get(1).equals(((RadioButton) radioSexGroup.getChildAt(i)).getText())) {
                                 Drawable marker;
-                                marker = getResources().getDrawable(R.drawable.backgroundborder1);
+                                marker = getResources().getDrawable(R.drawable.card_background_green);
                                 radioSexGroup.getChildAt(i).setBackground(marker);
                             } else if (((RadioButton) radioSexGroup.getChildAt(i)).getText().equals(radioSexButton.getText())) {
                                 Drawable marker;
-                                marker = getResources().getDrawable(R.drawable.backgroundborder2);
+                                marker = getResources().getDrawable(R.drawable.card_red);
                                 radioSexGroup.getChildAt(i).setBackground(marker);
                             }
 

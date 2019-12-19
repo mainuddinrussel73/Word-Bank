@@ -5,5 +5,5 @@
             <solid android:color="@color/bright_foreground_disabled_material_light" />
         </shape>
     </item>
-    <item android:drawable="@drawable/shadow_13037"/>
+    <item android:drawable="@drawable/shadow_143049"/>
 </layer-list>
