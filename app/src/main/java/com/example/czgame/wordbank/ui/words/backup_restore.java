@@ -115,10 +115,15 @@ public class backup_restore extends AppCompatActivity {
 
                         JSONObject word = new JSONObject();
                         try {
-                            word.put("ID", Integer.parseInt(cursor.getString(0)));
-                            word.put("WORD", cursor.getString(1));
-                            word.put("MEANING", cursor.getString(2));
-                            word.put("SENTENCE", cursor.getString(3));
+
+                                word.put("ID", Integer.parseInt(cursor.getString(0)));
+                                word.put("WORD", cursor.getString(1));
+                                word.put("MEANINGB", cursor.getString(2));
+                                word.put("MEANINGE", cursor.getString(3));
+                                word.put("SYNONYM", cursor.getString(4));
+                                word.put("ANTONYM", cursor.getString(5));
+
+                            System.out.println(word.toString());
                         } catch (JSONException e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
@@ -162,6 +167,7 @@ public class backup_restore extends AppCompatActivity {
                             word.put("ID", Integer.parseInt(cursor1.getString(0)));
                             word.put("WORD", cursor1.getString(1));
                             word.put("SENTENCE", cursor1.getString(2));
+
                         } catch (JSONException e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
@@ -454,7 +460,7 @@ public class backup_restore extends AppCompatActivity {
                 mDBHelper.deleteAll();
                 for (i = 0; i < jsonArray.length(); i++) {
                     jsonObject = new JSONObject(jsonArray.get(i).toString());
-                    mDBHelper.insertData(jsonObject.get("WORD").toString(), jsonObject.get("MEANING").toString(), jsonObject.get("SENTENCE").toString());
+                    mDBHelper.insertData(jsonObject.get("WORD").toString(), jsonObject.get("MEANINGB").toString(),jsonObject.get("MEANINGE").toString(), jsonObject.get("SENTENCE").toString(),jsonObject.get("SYNONYM").toString(),jsonObject.get("ANTONYM").toString());
                 }
                 //Toast.makeText(getApplicationContext(),"Done.",Toast.LENGTH_SHORT).show();
                 return 1;
@@ -505,7 +511,12 @@ public class backup_restore extends AppCompatActivity {
                 mDBHelper.deleteAll();
                 for (int i = 0; i < jsonArray.length(); i++) {
                     jsonObject = new JSONObject(jsonArray.get(i).toString());
-                    mDBHelper.insertData(jsonObject.get("WORD").toString(), jsonObject.get("MEANING").toString(), jsonObject.get("SENTENCE").toString());
+                    if(jsonObject.has("MEANINGE") && jsonObject.has("MEANINGB") && jsonObject.has("SYNONYM") && jsonObject.has("ANTONYM")){
+                        mDBHelper.insertData(jsonObject.get("WORD").toString(), jsonObject.get("MEANINGB").toString(),jsonObject.get("MEANINGE").toString(), "",jsonObject.get("SYNONYM").toString(),jsonObject.get("ANTONYM").toString());
+                    }else{
+                        mDBHelper.insertData(jsonObject.get("WORD").toString(), jsonObject.get("MEANING").toString(),"None", "","None","None");
+                    }
+
                 }
                 // Toast.makeText(getApplicationContext(),"Done.",Toast.LENGTH_SHORT).show();
                 return 1;

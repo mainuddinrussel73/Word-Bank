@@ -86,8 +86,8 @@ public class Quiz_match extends Activity {
 
             s1[i] = word.getWORD();
             words[i] = word;
-            s2[i] = word.getMEANING();
-            s3[i] = word.getMEANING();
+            s2[i] = word.getMEANINGB();
+            s3[i] = word.getMEANINGB();
 
             word = null;
         }
@@ -287,7 +287,7 @@ public class Quiz_match extends Activity {
 
             word.setID(Integer.parseInt(cursor.getString(0)));
             word.setWORD(cursor.getString(1));
-            word.setMEANING(cursor.getString(2));
+            word.setMEANINGB(cursor.getString(2));
 
         }
 

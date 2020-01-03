@@ -57,8 +57,11 @@ public class receive_back  extends BroadcastReceiver {
                 try {
                     word.put("ID", Integer.parseInt(cursor.getString(0)));
                     word.put("WORD", cursor.getString(1));
-                    word.put("MEANING", cursor.getString(2));
-                    word.put("SENTENCE", cursor.getString(3));
+                    word.put("MEANINGB", cursor.getString(2));
+                    word.put("MEANINGE", cursor.getString(3));
+                    word.put("SENTENCE", cursor.getString(4));
+                    word.put("SYNONYM", cursor.getString(5));
+                    word.put("ANTONYM", cursor.getString(5));
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
@@ -78,18 +81,18 @@ public class receive_back  extends BroadcastReceiver {
                 pw.flush();
                 pw.close();
                 f.close();
-                Toasty.success(context, "Done.", Toast.LENGTH_SHORT).show();
+               // Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-                Toasty.error(context, "Opps.", Toast.LENGTH_SHORT).show();
+               // Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
             } catch (IOException e) {
                 e.printStackTrace();
-                Toasty.error(context, "Opps.", Toast.LENGTH_SHORT).show();
+                //Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
             }
 
         } else {
 
-            showMessage(context,"Error", "Nothing found");
+            //showMessage("Error", "Nothing found");
         }
 
         jsonArray = new JSONArray();
@@ -121,19 +124,19 @@ public class receive_back  extends BroadcastReceiver {
                 pw.flush();
                 pw.close();
                 f.close();
-                Toasty.success(context, "Done.", Toast.LENGTH_SHORT).show();
+                //Toasty.success(context, "Done.", Toast.LENGTH_SHORT).show();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-                Toasty.error(context, "Opps.", Toast.LENGTH_SHORT).show();
+                //Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
             } catch (IOException e) {
                 e.printStackTrace();
-                Toasty.error(context, "Opps.", Toast.LENGTH_SHORT).show();
+                //Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
             }
 
         } else {
 
 
-            showMessage(context,"Error", "Nothing found");
+            //showMessage("Error", "Nothing found");
         }
         pro_back(context);
         news_back(context);

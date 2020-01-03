@@ -408,7 +408,7 @@ public class quiz_page extends AppCompatActivity {
 
         if (cursor != null && cursor.moveToFirst()) {
             str.add(cursor.getString(cursor.getColumnIndex("WORD")));
-            str.add(cursor.getString(cursor.getColumnIndex("MEANING")));
+            str.add(cursor.getString(cursor.getColumnIndex("MEANINGB")));
             cursor.close();
         }
         mDb.close();
@@ -448,7 +448,7 @@ public class quiz_page extends AppCompatActivity {
         Cursor cursor = mDb.rawQuery(query, null);
 
         if (cursor != null && cursor.moveToFirst()) {
-            str = cursor.getString(cursor.getColumnIndex("MEANING"));
+            str = cursor.getString(cursor.getColumnIndex("MEANINGB"));
             cursor.close();
         }
         mDb.close();

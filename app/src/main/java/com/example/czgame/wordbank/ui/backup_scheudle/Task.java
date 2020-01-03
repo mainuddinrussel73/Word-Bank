@@ -25,6 +25,13 @@ public class Task {
         this.TIME = TIME;
         this.ID = ID;
     }
+    public Task(String DAY, String WEEK, String YEAR, int TIME, int ID) {
+        this.DAY = DAY;
+        this.WEEK = WEEK;
+        this.YEAR = YEAR;
+        this.TIME = TIME;
+        this.ID = ID;
+    }
 
     public void setDAY(String DAY) {
         this.DAY = DAY;

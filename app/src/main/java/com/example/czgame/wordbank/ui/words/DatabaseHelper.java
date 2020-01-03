@@ -24,8 +24,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String TABLE_NAME = "Word_table";
     public static final String ID = "ID";
     public static final String WORD = "WORD";
-    public static final String MEANING = "MEANING";
+    public static final String MEANINGB = "MEANINGB";
+    public static final String MEANINGE = "MEANINGE";
     public static final String SENTENCE = "SENTENCE";
+    public static final String SYNONYM = "SYNONYM";
+    public static final String ANTONYM = "ANTONYM";
 
     public static final String TABLE_NAME2 = "Sentence_table";
     public static final String ID1 = "ID1";
@@ -112,8 +115,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_NAME + "("
                 + ID + " INTEGER PRIMARY KEY,"
                 + WORD + " TEXT,"
-                + MEANING + " TEXT,"
-                + SENTENCE + " TEXT" + ")";
+                + MEANINGB + " TEXT,"
+                + MEANINGE + " TEXT,"
+                + SENTENCE + " TEXT,"
+                + SYNONYM + " TEXT,"
+                + ANTONYM + " TEXT" + ")";
         db.execSQL(CREATE_CONTACTS_TABLE);
 
         String TASK_TABLE_CREATE = "CREATE TABLE "
@@ -132,12 +138,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public boolean insertData(String word, String meaning, String sentence) {
+    public boolean insertData(String word, String meaningB,String meaningE, String sentence,String syn,String ant) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
+        System.out.println(syn+"\n"+ant);
         contentValues.put(WORD, word);
-        contentValues.put(MEANING, meaning);
+        contentValues.put(MEANINGB, meaningB);
+        contentValues.put(MEANINGE, meaningE);
         contentValues.put(SENTENCE, sentence);
+        contentValues.put(SYNONYM, syn);
+        contentValues.put(ANTONYM, ant);
         long result = db.insert(TABLE_NAME, null, contentValues);
 
         return result != -1;
@@ -169,7 +179,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return res;
     }
 
-    public boolean updateData(String id, String old_word, String word, String meaining, String sentence) {
+    public boolean updateData(String id, String old_word, String word, String meainingB,String meainingE, String sentence,String syn,String ant) {
         SQLiteDatabase db = this.getWritableDatabase();
         SQLiteDatabase db1 = this.getReadableDatabase();
         try {
@@ -189,13 +199,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(ID, id);
         contentValues.put(WORD, word);
-        contentValues.put(MEANING, meaining);
+        contentValues.put(MEANINGB, meainingB);
+        contentValues.put(MEANINGE, meainingE);
         contentValues.put(SENTENCE, sentence);
+        contentValues.put(SYNONYM, syn);
+        contentValues.put(ANTONYM, ant);
         db.update(TABLE_NAME, contentValues, "ID = ?", new String[]{id});
         return true;
     }
 
-    public Integer deleteData(String id, String old_word, String word, String meaining, String sentence) {
+    public Integer deleteData(String id, String old_word, String word, String meainingB,String meainingE, String sentence,String syn,String ant) {
         SQLiteDatabase db = this.getWritableDatabase();
         SQLiteDatabase db1 = this.getReadableDatabase();
         try {
@@ -215,8 +228,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(ID, id);
         contentValues.put(WORD, word);
-        contentValues.put(MEANING, meaining);
+        contentValues.put(MEANINGB, meainingB);
+        contentValues.put(MEANINGE, meainingE);
         contentValues.put(SENTENCE, sentence);
+        contentValues.put(SYNONYM, syn);
+        contentValues.put(ANTONYM, ant);
         return db.delete(TABLE_NAME, "ID = ?", new String[]{id});
     }
 
@@ -286,7 +302,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.query(TABLE_NAME,
-                new String[]{ID, WORD, MEANING, SENTENCE},
+                new String[]{ID, WORD, MEANINGB, SENTENCE},
                 WORD + "=?",
                 new String[]{setId}, null, null, null, null);
 
@@ -296,7 +312,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 word stats = new word();
                 stats.setID(cursor.getInt(0));
                 stats.setWORD(cursor.getString(1));
-                stats.setMEANING(cursor.getString(2));
+                stats.setMEANINGB(cursor.getString(2));
                 stats.setSENTENCE(cursor.getString(3));
                 // Adding card to list
                 cardList.add(stats);

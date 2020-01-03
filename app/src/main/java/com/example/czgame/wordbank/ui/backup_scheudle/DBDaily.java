@@ -117,9 +117,9 @@ public class DBDaily extends SQLiteOpenHelper {
     }
 
 
-    public Cursor getAllWeek(String week,String month,String year) {
+    public Cursor getAllWeek(String week,String year) {
         SQLiteDatabase db1 = this.getWritableDatabase();
-        Cursor res = db1.rawQuery("SELECT * FROM daily_table WHERE WEEK = ? AND MONTH = ? AND YEAR = ? ", new String[]{week,month,year});
+        Cursor res = db1.rawQuery("SELECT * FROM daily_table WHERE WEEK = ? AND YEAR = ? ", new String[]{week,year});
         return res;
     }
 

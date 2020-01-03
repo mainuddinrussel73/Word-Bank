@@ -74,7 +74,7 @@ public class Mainservice extends IntentService {
         remoteCollapsedViews.setTextViewText(R.id.content_title, word.getWORD());
 
         remoteExpandedViews.setTextViewText(R.id.content_title, "Today's word is : " + word.getWORD());
-        remoteExpandedViews.setTextViewText(R.id.notification_message, word.getMEANING());
+        remoteExpandedViews.setTextViewText(R.id.notification_message, word.getMEANINGB());
 
 
         //start this(MainActivity) on by Tapping notification
@@ -157,7 +157,7 @@ public class Mainservice extends IntentService {
 
             word.setID(Integer.parseInt(cursor.getString(0)));
             word.setWORD(cursor.getString(1));
-            word.setMEANING(cursor.getString(2));
+            word.setMEANINGB(cursor.getString(2));
 
         }
 

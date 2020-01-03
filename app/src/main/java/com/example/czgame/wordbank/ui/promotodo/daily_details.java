@@ -83,7 +83,7 @@ public class daily_details extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
         Date time = Calendar.getInstance().getTime();
-        currentYear = calendar.get(Calendar.YEAR);
+        currentYear = Calendar.getInstance().get(Calendar.YEAR);
         currentMonth = calendar.get(Calendar.MONTH) + 1;
         currentWeek = calendar.get(Calendar.WEEK_OF_YEAR);
         currentDay = calendar.get(Calendar.DAY_OF_WEEK);
@@ -105,14 +105,13 @@ public class daily_details extends AppCompatActivity {
         initbar();
         leftNav = findViewById(R.id.left_nav);
         rightNav = findViewById(R.id.right_nav);
-
+        currentYear = Calendar.getInstance().get(Calendar.YEAR);
         leftNav.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
 
                 calendar.add(Calendar.WEEK_OF_YEAR,-1);
-                currentYear = calendar.get(Calendar.YEAR);
                 currentMonth = calendar.get(Calendar.MONTH) + 1;
                 currentWeek = calendar.get(Calendar.WEEK_OF_YEAR);
                 currentDay = calendar.get(Calendar.DAY_OF_WEEK);
@@ -141,7 +140,6 @@ public class daily_details extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 calendar.add(Calendar.WEEK_OF_YEAR,1);
-                currentYear = calendar.get(Calendar.YEAR);
                 currentMonth = calendar.get(Calendar.MONTH) + 1;
                 currentWeek = calendar.get(Calendar.WEEK_OF_YEAR);
                 currentDay = calendar.get(Calendar.DAY_OF_WEEK);
@@ -339,11 +337,12 @@ public class daily_details extends AppCompatActivity {
         taskList.clear();
         weekly.setText("Weekly Focus Time : "+currentWeek);
         int i = 1;
-        final Cursor cursor = dbDaily.getAllWeek(String.valueOf(currentWeek),monthss[currentMonth-1],String.valueOf(currentYear));
+        System.out.println(currentMonth);
+        final Cursor cursor = dbDaily.getAllWeek(String.valueOf(currentWeek),String.valueOf(currentYear));
 
-        System.out.println();
+        System.out.println(currentYear);
         for (int j = 0; j <7 ; j++) {
-            taskList.add(j,new Task(days[j],String.valueOf(currentWeek),monthss[currentMonth-1],String.valueOf(currentYear),0,j));
+            taskList.add(j,new Task(days[j],String.valueOf(currentWeek),String.valueOf(currentYear),0,j));
         }
         //System.out.println("task list"+taskList.size());
         // looping through all rows and adding to list
@@ -359,7 +358,7 @@ public class daily_details extends AppCompatActivity {
                 word.setMONTH(cursor.getString(3));
                 word.setYEAR(cursor.getString(4));
                 word.setTIME(cursor.getInt(5));
-                //System.out.println(word.toString());
+                System.out.println(word.toString());
                 if(word.getDAY().equals("SUN")){
                     taskList.set(0,word);
 

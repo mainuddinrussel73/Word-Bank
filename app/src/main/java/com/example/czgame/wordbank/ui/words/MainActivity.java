@@ -276,10 +276,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             while (cursor.moveToNext()) {
 
                 word word = new word();
-                word.setID(i);
-                word.setWORD(cursor.getString(1));
-                word.setMEANING(cursor.getString(2));
 
+                if(cursor.getString(5)!=null){
+                    word.setID(i);
+                    word.setWORD(cursor.getString(1));
+                    word.setMEANINGB(cursor.getString(2));
+                    word.setMEANINGE(cursor.getString(3));
+                    word.setSYNONYMS(cursor.getString(5));
+                    word.setANTONYMS(cursor.getString(6));
+
+                }else {
+                    word.setID(i);
+                    word.setWORD(cursor.getString(1));
+                    word.setMEANINGB(cursor.getString(2));
+                    word.setMEANINGE("nope");
+                    word.setSYNONYMS("nope");
+                    word.setANTONYMS("nope");
+                }
+
+                System.out.println(word);
                 contactList.add(word);
 
                 // maintitle.add(word.WORD);
@@ -327,7 +342,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     //String s = view.findViewById(R.id.subtitle).toString();
                     //String s = (String) parent.getI;
                     myIntent.putExtra("message", contactList.get(position).getWORD());
-                    myIntent.putExtra("meaning", contactList.get(position).getMEANING());
+                    myIntent.putExtra("meaningb", contactList.get(position).getMEANINGB());
+                    myIntent.putExtra("meaninge", contactList.get(position).getMEANINGE());
+                    myIntent.putExtra("syn", contactList.get(position).getSYNONYMS());
+                    myIntent.putExtra("ant", contactList.get(position).getANTONYMS());
                     myIntent.putExtra("id", position);
                     myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivityForResult(myIntent, 0);

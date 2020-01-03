@@ -155,7 +155,7 @@ public class MyListAdapter extends BaseAdapter implements SectionIndexer {
             MainActivity.contactList.addAll(this.contactList);
         } else {
             for (word wp : this.contactList) {
-                if (wp.getMEANING().toLowerCase().contains(charText)) {
+                if (wp.getMEANINGB().toLowerCase().contains(charText) || wp.getMEANINGE().toLowerCase().contains(charText)) {
                     MainActivity.contactList.add(wp);
                 }
             }

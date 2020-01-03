@@ -132,11 +132,14 @@
         <activity
             android:name=".ui.words.add_page"
             android:label="@string/title_activity_addpage"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan|adjustResize"
+            />
         <activity
             android:name=".ui.words.word_details"
             android:label="@string/title_activity_word_details"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan|adjustResize"/>
         <activity
             android:name=".ui.Quiz.quiz_page"
             android:label="@string/title_quiz"

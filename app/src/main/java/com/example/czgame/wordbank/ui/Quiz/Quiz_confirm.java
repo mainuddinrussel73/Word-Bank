@@ -64,7 +64,7 @@ public class Quiz_confirm extends AppCompatActivity {
                 word word = new word();
                 word.setID(Integer.parseInt(cursor.getString(0)));
                 word.setWORD(cursor.getString(1));
-                word.setMEANING(cursor.getString(2));
+                word.setMEANINGB(cursor.getString(2));
 
                 contactList.add(word);
 

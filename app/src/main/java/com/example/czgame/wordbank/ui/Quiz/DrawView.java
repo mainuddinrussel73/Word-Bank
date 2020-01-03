@@ -48,7 +48,7 @@ public class DrawView extends View {
             float y2 = position2.get(i + 1);
 
             Paint paint = new Paint();
-            if (words[a].getMEANING().equals(s2[b])) {
+            if (words[a].getMEANINGB().equals(s2[b])) {
                 paint.setPathEffect(new CornerPathEffect(10));
                 paint.setColor(Color.GREEN);
                 paint.setStrokeWidth(13);
@@ -79,7 +79,7 @@ public class DrawView extends View {
             position2.add(y2);
 
         }
-        if (words[a].getMEANING().equals(s2[b])) {
+        if (words[a].getMEANINGB().equals(s2[b])) {
             score1++;
             correct++;
         } else {

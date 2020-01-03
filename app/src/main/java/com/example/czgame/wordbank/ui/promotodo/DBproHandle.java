@@ -358,7 +358,7 @@ public class DBproHandle extends SQLiteOpenHelper {
                 word stats = new word();
                 stats.setID(cursor.getInt(0));
                 stats.setWORD(cursor.getString(1));
-                stats.setMEANING(cursor.getString(2));
+                stats.setMEANINGB(cursor.getString(2));
                 stats.setSENTENCE(cursor.getString(3));
                 // Adding card to list
                 cardList.add(stats);

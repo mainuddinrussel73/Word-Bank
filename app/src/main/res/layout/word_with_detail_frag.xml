@@ -7,106 +7,264 @@
     android:gravity="center"
     android:orientation="vertical">
 
-
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:id="@+id/wordsec"
-        android:layout_marginTop="10dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/word"
-            style="@style/LoginTextInputLayoutStyle"
+
+
+        <RelativeLayout
+            android:id="@+id/wordsec"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/titlelay"
-            android:layout_margin="10dp"
-            android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
-            android:layout_marginRight="@dimen/alerter_activity_horizontal_margin">
+            android:layout_below="@+id/appbarlayout"
+            android:layout_marginTop="10dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/word1"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/word"
+                style="@style/LoginTextInputLayoutStyle"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_marginTop="20dp"
-                android:gravity="top|left"
-                android:hint="Word"
-                android:paddingLeft="15dp"
-                android:paddingTop="15dp"
-                android:paddingRight="15dp"
-                android:textColor="@android:color/background_dark"
-                android:textColorHint="@color/cardview_shadow_start_color"
-                />
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/titlelay"
+                android:layout_margin="10dp"
+                android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
+                android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
+                android:inputType="textMultiLine"
+                android:overScrollMode="always"
+                android:scrollbarStyle="insideInset"
+                android:scrollbars = "vertical">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/word1"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="20dp"
+                    android:gravity="top|left"
+                    android:hint="Word"
+                    android:inputType="textMultiLine"
+                    android:overScrollMode="always"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="15dp"
+                    android:paddingRight="15dp"
+                    android:scrollbarStyle="insideInset"
+                    android:scrollbars = "vertical"
+                    android:textColor="@android:color/background_dark"
+                    android:textColorHint="@color/cardview_shadow_start_color"
+                    />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/meaning"
-            style="@style/LoginTextInputLayoutStyle"
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:id="@+id/topliner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/word"
+                android:orientation="vertical">
+                <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true"
+                    android:scrollbars="vertical">
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/meaningB"
+                        style="@style/LoginTextInputLayoutStyle"
+                        android:layout_width="375dp"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/word"
+                        android:layout_margin="10dp"
+                        android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/alerter_activity_horizontal_margin">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/meaningB1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginBottom="20dp"
+                            android:gravity="top|left"
+                            android:hint="Meaning in Bengali"
+                            android:inputType="textMultiLine"
+                            android:overScrollMode="always"
+                            android:paddingLeft="15dp"
+                            android:paddingTop="15dp"
+                            android:paddingRight="15dp"
+                            android:scrollbarStyle="insideInset"
+                            android:scrollbars = "vertical"
+                            android:textColor="@android:color/background_dark"
+                            android:textColorHint="@color/cardview_shadow_start_color"
+                            />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </ScrollView>
+                <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true"
+                    android:scrollbars="vertical">
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/meaningE"
+                        style="@style/LoginTextInputLayoutStyle"
+                        android:layout_width="375dp"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/meaningB"
+                        android:layout_margin="10dp"
+                        android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/alerter_activity_horizontal_margin">
+
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/meaningE1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginBottom="20dp"
+                            android:gravity="top|left"
+                            android:hint="Meaning in English"
+                            android:inputType="textMultiLine"
+                            android:overScrollMode="always"
+                            android:paddingLeft="15dp"
+                            android:paddingTop="15dp"
+                            android:paddingRight="15dp"
+                            android:scrollbarStyle="insideInset"
+                            android:scrollbars = "vertical"
+                            android:textColor="@android:color/background_dark"
+                            android:textColorHint="@color/cardview_shadow_start_color"
+                            />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </ScrollView>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/topliner"
+                android:orientation="horizontal">
+                <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true"
+                    android:scrollbars="vertical">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/synonyme"
+                    style="@style/LoginTextInputLayoutStyle"
+                    android:layout_width="180dp"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/meaningE"
+                    android:layout_margin="10dp"
+                    android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/alerter_activity_horizontal_margin">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/synonyme1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:gravity="top|left"
+                        android:hint="Synonym"
+                        android:inputType="textMultiLine"
+                        android:overScrollMode="always"
+                        android:paddingLeft="15dp"
+                        android:paddingTop="15dp"
+                        android:paddingRight="15dp"
+                        android:scrollbarStyle="insideInset"
+                        android:scrollbars = "vertical"
+                        android:textColor="@android:color/background_dark"
+                        android:textColorHint="@color/cardview_shadow_start_color"
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+                </ScrollView>
+                <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fillViewport="true"
+                    android:scrollbars="vertical">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/antonyme"
+                    style="@style/LoginTextInputLayoutStyle"
+                    android:layout_width="170dp"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/meaningE"
+                    android:layout_margin="10dp"
+                    android:layout_marginRight="@dimen/alerter_activity_horizontal_margin">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/antonyme1"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:gravity="top|left"
+                        android:hint="Antonym"
+                        android:inputType="textMultiLine"
+                        android:overScrollMode="always"
+                        android:paddingLeft="15dp"
+                        android:paddingTop="15dp"
+                        android:paddingRight="15dp"
+                        android:scrollbarStyle="insideInset"
+                        android:scrollbars = "vertical"
+                        android:textColor="@android:color/background_dark"
+                        android:textColorHint="@color/cardview_shadow_start_color"
+                        />
+
+                </com.google.android.material.textfield.TextInputLayout>
+                </ScrollView>
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/word"
-            android:layout_margin="10dp"
-            android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
-            android:layout_marginRight="@dimen/alerter_activity_horizontal_margin">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/meaning1"
-                android:layout_width="match_parent"
-                android:layout_height="199dp"
-                android:layout_marginTop="20dp"
-                android:gravity="top|left"
-                android:hint="Meaning"
-                android:paddingLeft="15dp"
-                android:paddingTop="15dp"
-                android:paddingRight="15dp"
-                android:textColor="@android:color/background_dark"
-                android:textColorHint="@color/cardview_shadow_start_color"
-                />
-
-        </com.google.android.material.textfield.TextInputLayout>
+            android:layout_height="match_parent"
+            android:layout_below="@+id/wordsec"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
 
 
+            <Button
+                android:id="@+id/update"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_gravity="left"
+                android:layout_marginStart="18dp"
+                android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/buttonshaperound"
+                android:paddingLeft="14dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp"
+                android:text="Update"
+                android:textColor="@color/cardview_light_background" />
+
+            <Button
+                android:id="@+id/delete"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="left"
+                android:layout_marginLeft="160dp"
+                android:layout_marginEnd="13dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/buttonshaperound"
+                android:paddingLeft="5dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:text="Delete"
+                android:textColor="@color/cardview_light_background" />
+
+
+
+
+        </RelativeLayout>
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layout_below="@+id/wordsec"
-        android:layout_marginTop="20dp">
-
-        <Button
-            android:id="@+id/update"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_gravity="left"
-            android:layout_marginStart="18dp"
-            android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
-            android:background="@drawable/buttonshaperound"
-            android:paddingTop="10dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="10dp"
-            android:text="Update"
-            android:paddingLeft="14dp"
-            android:textColor="@color/cardview_light_background" />
-
-        <Button
-            android:id="@+id/delete"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_gravity="left"
-            android:layout_marginLeft="160dp"
-            android:layout_marginEnd="13dp"
-            android:background="@drawable/buttonshaperound"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingLeft="5dp"
-            android:text="Delete"
-            android:textColor="@color/cardview_light_background" />
-    </RelativeLayout>
-
+    </ScrollView>
 </RelativeLayout>

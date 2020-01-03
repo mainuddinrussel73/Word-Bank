@@ -4,8 +4,6 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/cardview_light_background"
-    android:gravity="center"
-    android:orientation="vertical"
     android:id="@+id/add_item">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -22,103 +20,15 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </com.google.android.material.appbar.AppBarLayout>
-    <RelativeLayout
-        android:id="@+id/wordlayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_below="@+id/appbarlayout"
-        android:layout_marginTop="20dp"
-        >
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/wordlay"
-            style="@style/LoginTextInputLayoutStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
-            android:layout_marginRight="@dimen/alerter_activity_horizontal_margin">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/word1"
-                android:layout_width="match_parent"
-                android:layout_height="129dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/backgroundborder"
-                android:gravity="top|left"
-                android:hint="Word"
-                android:paddingLeft="15dp"
-                android:paddingTop="15dp"
-                android:paddingRight="15dp"
-                />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-
+        <include layout="@layout/content_add_item" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/meaninglayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/wordlayout"
-        android:layout_marginTop="20dp"
-        >
 
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/meaninglay"
-            style="@style/LoginTextInputLayoutStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
-            android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
-            android:layout_margin="10dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/meaning1"
-                android:layout_width="match_parent"
-                android:layout_height="199dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/backgroundborder"
-                android:gravity="top|left"
-                android:hint="Meaning"
-                android:paddingLeft="15dp"
-                android:paddingTop="15dp"
-                android:paddingRight="15dp"
-                />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layout_below="@+id/meaninglayout"
-        android:layout_marginTop="60dp">
-
-
-        <Button
-            android:id="@+id/done"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:text="Done"
-            android:background="@drawable/buttonshaperound"
-            android:paddingLeft="20dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:paddingRight="20dp"
-            android:textColor="@color/cardview_light_background"
-            android:layout_marginLeft="150dp"/>
-
-
-
-
-    </RelativeLayout>
 
 </RelativeLayout>

@@ -3,13 +3,65 @@ package com.example.czgame.wordbank.ui.words;
 public class word implements Comparable<word> {
     int ID;
     String WORD;
-    String MEANING;
-    String SENTENCE;
-    public word(int id, String root, String meaning, String sentence) {
+    String MEANINGB;
+    String MEANINGE;
+    String SYNONYMS;
+    String ANTONYMS;
+
+    public word(int id, String root, String meaningB,String meaningE, String sentence, String syn,String ant) {
         this.ID = id;
         this.WORD = root;
-        this.MEANING = meaning;
+        this.MEANINGB = meaningB;
+        this.MEANINGE = meaningE;
         this.SENTENCE = sentence;
+        this.SYNONYMS = syn;
+        this.ANTONYMS = ant;
+    }
+    String SENTENCE;
+
+    @Override
+    public String toString() {
+        return "word{" +
+                "ID=" + ID +
+                ", WORD='" + WORD + '\'' +
+                ", MEANINGB='" + MEANINGB + '\'' +
+                ", MEANINGE='" + MEANINGE + '\'' +
+                ", SYNONYMS='" + SYNONYMS + '\'' +
+                ", ANTONYMS='" + ANTONYMS + '\'' +
+                ", SENTENCE='" + SENTENCE + '\'' +
+                '}';
+    }
+
+    public String getMEANINGB() {
+        return MEANINGB;
+    }
+
+    public void setMEANINGB(String MEANINGB) {
+        this.MEANINGB = MEANINGB;
+    }
+
+    public String getMEANINGE() {
+        return MEANINGE;
+    }
+
+    public void setMEANINGE(String MEANINGE) {
+        this.MEANINGE = MEANINGE;
+    }
+
+    public String getSYNONYMS() {
+        return SYNONYMS;
+    }
+
+    public void setSYNONYMS(String SYNONYMS) {
+        this.SYNONYMS = SYNONYMS;
+    }
+
+    public String getANTONYMS() {
+        return ANTONYMS;
+    }
+
+    public void setANTONYMS(String ANTONYMS) {
+        this.ANTONYMS = ANTONYMS;
     }
     public word() {
 
@@ -39,13 +91,6 @@ public class word implements Comparable<word> {
         this.WORD = WORD;
     }
 
-    public String getMEANING() {
-        return MEANING;
-    }
-
-    public void setMEANING(String MEANING) {
-        this.MEANING = MEANING;
-    }
 
     @Override
     public int compareTo(word o) {
