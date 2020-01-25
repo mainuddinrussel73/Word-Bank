@@ -18,7 +18,7 @@
         android:layout_below="@+id/appbar"
         app:isSticky="true"
         android:layout_margin="5dp"
-        app:sectionBackgroundColor="@color/black"
+        app:sectionBackgroundColor="@color/bbb"
         app:sectionTitleTextColor="@color/red"
 
 

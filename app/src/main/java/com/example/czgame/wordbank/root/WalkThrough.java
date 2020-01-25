@@ -1,11 +1,13 @@
 package com.example.czgame.wordbank.root;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.widget.Toast;
 
 import com.example.czgame.wordbank.BuildConfig;
@@ -37,14 +39,17 @@ public class WalkThrough extends FancyWalkthroughActivity {
             FancyWalkthroughCard fancywalkthroughCard3 = new FancyWalkthroughCard("Listen Music", "You can listen music while studying.", R.drawable.first);
             FancyWalkthroughCard fancywalkthroughCard4 = new FancyWalkthroughCard("Follow Promotodo", "You can maintain promodo for a better focus on time.", R.drawable.four);
 
+            float density= WalkThrough.this.getResources().getDisplayMetrics().density;
+            LayoutInflater inflater = (LayoutInflater) WalkThrough.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
             fancywalkthroughCard1.setBackgroundColor(R.color.white);
-            fancywalkthroughCard1.setIconLayoutParams(1800, 1200, 0, 0, 0, 0);
+            fancywalkthroughCard1.setIconLayoutParams((int)density*1200, (int)density*400, 0, 0, 0, 0);
             fancywalkthroughCard2.setBackgroundColor(R.color.white);
-            fancywalkthroughCard2.setIconLayoutParams(1800, 1200, 0, 0, 0, 0);
+            fancywalkthroughCard2.setIconLayoutParams((int)density*1200, (int)density*400, 0, 0, 0, 0);
             fancywalkthroughCard3.setBackgroundColor(R.color.white);
-            fancywalkthroughCard3.setIconLayoutParams(1800, 1200, 0, 0, 0, 0);
+            fancywalkthroughCard3.setIconLayoutParams((int)density*1200, (int)density*400, 0, 0, 0, 0);
             fancywalkthroughCard4.setBackgroundColor(R.color.white);
-            fancywalkthroughCard4.setIconLayoutParams(1800, 1200, 0, 0, 0, 0);
+            fancywalkthroughCard4.setIconLayoutParams((int)density*1200, (int)density*400, 0, 0, 0, 0);
             List<FancyWalkthroughCard> pages = new ArrayList<>();
 
             pages.add(fancywalkthroughCard1);

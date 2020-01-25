@@ -27,6 +27,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -45,10 +47,10 @@ import com.example.czgame.wordbank.ui.Quiz.Quiz_confirm;
 import com.example.czgame.wordbank.ui.backup_scheudle.daily_service;
 import com.example.czgame.wordbank.ui.backup_scheudle.receive_back;
 import com.example.czgame.wordbank.ui.media.Media_list_activity;
+import com.example.czgame.wordbank.ui.news.Editorialonline;
 import com.example.czgame.wordbank.ui.news.add_news;
 import com.example.czgame.wordbank.ui.news.news_activity;
 import com.example.czgame.wordbank.ui.news.news_backup;
-import com.example.czgame.wordbank.ui.news.news_online;
 import com.example.czgame.wordbank.ui.promotodo.Promotodo_activity;
 import com.example.czgame.wordbank.ui.promotodo.TimelineView;
 import com.example.czgame.wordbank.ui.promotodo.daily_details;
@@ -118,22 +120,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-
-        mActivity = this;
-
-
-
-
 
         prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
 
 
         isDark = prefs.getBoolean("isDark", false);
 
+
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+
+
+        mActivity = this;
+
+        if(isDark) {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
+        }else {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        }
 
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkPermission()) {
@@ -266,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         contactList.clear();
 
-        int i =1;
+        int i =0;
 
         final Cursor cursor = mDBHelper.getAllData();
 
@@ -277,25 +287,48 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 word word = new word();
 
-                if(cursor.getString(5)!=null){
+                if(!cursor.getString(3).isEmpty() && !cursor.getString(5).isEmpty()
+                        && !cursor.getString(6).isEmpty()){
                     word.setID(i);
                     word.setWORD(cursor.getString(1));
                     word.setMEANINGB(cursor.getString(2));
                     word.setMEANINGE(cursor.getString(3));
                     word.setSYNONYMS(cursor.getString(5));
                     word.setANTONYMS(cursor.getString(6));
+                }
+                else if(cursor.getString(3).isEmpty()){
 
-                }else {
                     word.setID(i);
                     word.setWORD(cursor.getString(1));
                     word.setMEANINGB(cursor.getString(2));
-                    word.setMEANINGE("nope");
-                    word.setSYNONYMS("nope");
-                    word.setANTONYMS("nope");
+                    word.setMEANINGE("None");
+                    word.setSYNONYMS(cursor.getString(5));
+                    word.setANTONYMS(cursor.getString(6));
+
+                }else if(cursor.getString(5).isEmpty()){
+
+                    word.setID(i);
+                    word.setWORD(cursor.getString(1));
+                    word.setMEANINGB(cursor.getString(2));
+                    word.setMEANINGE(cursor.getString(3));
+                    word.setSYNONYMS("None");
+                    word.setANTONYMS(cursor.getString(6));
+
+                }else if(cursor.getString(6).isEmpty()){
+
+                    word.setID(i);
+                    word.setWORD(cursor.getString(1));
+                    word.setMEANINGB(cursor.getString(2));
+                    word.setMEANINGE(cursor.getString(3));
+                    word.setSYNONYMS(cursor.getString(5));
+                    word.setANTONYMS("None");
                 }
 
-                System.out.println(word);
+
+
+
                 contactList.add(word);
+             //   System.out.println(word.ANTONYMS);
 
                 // maintitle.add(word.WORD);
                 // subtitle.add(word.MEANING);
@@ -772,7 +805,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         else if (id == R.id.news_online) {
             try {
-                Intent myIntent = new Intent(MainActivity.this, news_online.class);
+                Intent myIntent = new Intent(MainActivity.this, Editorialonline.class);
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(myIntent, 0);
             } catch (Exception e) {

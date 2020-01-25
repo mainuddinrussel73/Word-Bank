@@ -13,6 +13,8 @@ import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -67,6 +69,9 @@ public class pro_backup extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         try {
 
             setContentView(R.layout.activity_probackup);
@@ -330,6 +335,11 @@ public class pro_backup extends AppCompatActivity {
         coordinatorLayout = mainlayout.findViewById(R.id.coordinate_backup);
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
+        if(isDark) {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
+        }else {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        }
         if (isDark) {
             retext.setBackgroundColor(Color.rgb(64, 64, 64));
             retext.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.backgroundborderwhite));

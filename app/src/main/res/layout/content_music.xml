@@ -10,240 +10,38 @@
     tools:showIn="@layout/activity_music">
 
 
-    <include layout="@layout/music_list" />
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        android:id="@+id/sliding_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom">
 
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:background="@color/material_white"
-        android:id="@+id/medic_base">
 
-        <androidx.cardview.widget.CardView
-            android:layout_marginTop="45dp"
-            android:id="@+id/quizcard"
-            android:elevation="25dp"
-            app:cardPreventCornerOverlap="false"
+
+
+
+
+        <include
+            layout="@layout/music_list"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+
+
+            ></include>
+
+
+        <include
+            layout="@layout/music_slidingpannel"
             android:layout_width="match_parent"
-            app:cardCornerRadius="20dp"
-            android:layout_marginHorizontal="50dp"
-            android:layout_height="250dp">
+            android:layout_height="match_parent"
 
-            <ImageView
-                android:id="@+id/albumart"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:src="@drawable/download"
-                android:scaleType="centerCrop"
+            ></include>
 
-                />
-
-            <com.lauzy.freedom.library.LrcView
-                android:id="@+id/lrc_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:currentIndicateLrcColor="@color/colorAccent"
-                app:indicatorTextColor="@android:color/holo_orange_dark"
-                app:isLrcCurrentTextBold="true"
-                app:isLrcIndicatorTextBold="true"
-                app:lrcCurrentTextColor="@color/colorAccent"
-                app:lrcLineSpaceSize="10dp"
-                app:lrcTextSize="20sp"
-                app:noLrcTextColor="@color/colorTransparent"
-                app:playIcon="@drawable/play" />
-            <ImageButton
-                android:id="@+id/showlrc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/colorTransparent"
-                android:src="@drawable/ic_keyboard_arrow_up_black_24dp"
-                >
-
-            </ImageButton>
-
-            <com.gauravk.audiovisualizer.visualizer.WaveVisualizer
-                xmlns:custom="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/blast"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                custom:avColor="@color/av_light_blue"
-                custom:avDensity="0.175"
-                custom:avSpeed="normal"
-                custom:avType="fill"/>
-
-
-        </androidx.cardview.widget.CardView>
-
-        <SeekBar
-            android:id="@+id/positionBar"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:indeterminate="false"
-            android:max="100"
-            android:maxHeight="5dp"
-            android:minHeight="5dp"
-            android:progress="50"
-            android:progressDrawable="@drawable/seekbardraw"
-            android:progressTint="#DF0974"
-            android:thumbTint="#DF0974"
-            android:layout_marginTop="30dp"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/loops"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/ic_loop"
-                android:layout_marginLeft="15dp"/>
-            <TextView
-                android:id="@+id/elapsedTimeLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="0:11"
-                android:layout_marginLeft="15dp"/>
-            <TextView
-                android:id="@+id/remainingTimeLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="-1:49"
-                android:layout_marginLeft="198dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="300dp"
-            android:layout_height="wrap_content">
-
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/prevBtn"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginTop="26dp"
-                android:background="@drawable/ic_prev_fill"
-                android:layout_marginLeft="10dp"/>
-
-
-            <com.ohoussein.playpause.PlayPauseView
-                android:id="@+id/playBtn"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="50dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="8dp"
-                android:clickable="true"
-                android:foreground="?android:selectableItemBackground"
-                app:fill_color="#e1e1e1"
-                app:pause_bg="#00a2ed"
-                app:play_bg="#001eff" />
-
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/nxtBtn"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginTop="28dp"
-                android:background="@drawable/ic_next_fill"
-                android:layout_marginLeft="48dp"
-                android:paddingTop="5dp"/>
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
 
 
 
 
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="40dp"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:src="@drawable/ic_volume_mute_black_24dp"/>
-            <SeekBar
-                android:id="@+id/volumeBar"
-                android:layout_width="300dp"
-                android:layout_height="wrap_content"
-                android:indeterminate="false"
-                android:maxHeight="4dp"
-                android:progress="50"
-                android:minHeight="4dp"
-                android:progressDrawable="@drawable/seekbardraw"
-                android:progressTint="#DF0974"
-                android:thumbTint="#DF0974"
-                android:max="100"/>
-            <ImageView
-                android:layout_width="26dp"
-                android:layout_height="26dp"
-                android:src="@drawable/ic_volume_up_black_24dp"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/song_title"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:ellipsize="marquee"
-                android:textAlignment="center"
-                android:fontFamily="@font/lilita_regular"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:scrollHorizontally="true"
-                android:singleLine = "true"
-                android:text="Wild Dreams"
-                android:textColor="#DF0974"
-                android:textSize="30dp"
-                >
-            </TextView>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            >
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/song_artist"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/activity_horizontal_margin"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:ellipsize="marquee"
-                android:layout_gravity="center"
-                android:textAlignment="center"
-                android:fontFamily="@font/lilita_regular"
-                android:marqueeRepeatLimit="marquee_forever"
-                android:scrollHorizontally="true"
-                android:singleLine = "true"
-                android:text="Tailor Swift : 1989"
-                android:textColor="#DF0974"
-
-                android:textSize="15dp"
-                >
-            </TextView>
-
-
-        </LinearLayout>
-
-    </LinearLayout>
 </RelativeLayout>

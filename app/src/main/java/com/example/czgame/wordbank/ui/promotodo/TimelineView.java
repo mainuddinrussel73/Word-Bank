@@ -7,6 +7,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
 import com.example.czgame.wordbank.R;
@@ -39,6 +41,8 @@ public class TimelineView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         SharedPreferences prefs = this.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
         setContentView(R.layout.activity_timeline_view);
@@ -48,6 +52,7 @@ public class TimelineView extends AppCompatActivity {
         RelativeLayout layout2 = findViewById(R.id.layout2);
 
         layout1.setVisibility(RelativeLayout.GONE);
+
 
         if (isDark && layout1.getVisibility()==View.GONE) {
             layout1.setVisibility(RelativeLayout.VISIBLE);
@@ -86,6 +91,12 @@ public class TimelineView extends AppCompatActivity {
             }
         });
 
+
+        if(isDark) {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
+        }else {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        }
 
         DbTaskDhandle mDBHelper = new DbTaskDhandle(this);
         List<Task_Detail> singerList = new ArrayList<>();

@@ -1,6 +1,7 @@
 package com.example.czgame.wordbank.ui.news;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -19,6 +20,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.SubMenu;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -48,7 +51,6 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import es.dmoral.toasty.Toasty;
 
 public class news_online extends AppCompatActivity {
@@ -62,6 +64,9 @@ public class news_online extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_news_online);
 
         try {
@@ -200,25 +205,27 @@ public class news_online extends AppCompatActivity {
             Toasty.info(news_online.this,"Swip to load",Toast.LENGTH_LONG).show();
         }
 
-        final SwipeRefreshLayout pullToRefresh = findViewById(R.id.pullToRefresh);
-        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                ConnectivityManager conMgr =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
-                if (netInfo != null) {
-                    if (netInfo.isConnected()) {
-                        new RetrieveFeedTask().execute("p");
-                    }
-                }else{
-                    Toasty.error(news_online.this,"No internet connection.", Toast.LENGTH_LONG).show();
-                }
-                pullToRefresh.setRefreshing(false);
+
+        final Intent intent = getIntent();
+        String type = intent.getStringExtra("tag");
+
+        ConnectivityManager conMgr =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
+        if (netInfo != null) {
+            if (netInfo.isConnected()) {
+                new RetrieveFeedTask().execute(type);
             }
-        });
+        }else{
+            Toasty.error(news_online.this,"No internet connection.", Toast.LENGTH_LONG).show();
+        }
 
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
+        if(isDark) {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
+        }else {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        }
         if (isDark && newsList.size() != 0) {
 
             ConstraintLayout constraintLayout = findViewById(R.id.content_editsre);
@@ -506,7 +513,7 @@ public class news_online extends AppCompatActivity {
                         for (Element ee : _ContentRegion){
                             ss.append(ee.wholeText());
                         }
-                        news.setBODY(ss.toString());
+                        news.setBODY(ss.toString().trim());
 
                         newsList.add(news);
                      //   System.out.println(news.TITLE);
@@ -569,7 +576,7 @@ public class news_online extends AppCompatActivity {
                             ss.append(ee.wholeText());
                             ss.append("\n");
                         }
-                        news.setBODY(ss.toString());
+                        news.setBODY(ss.toString().trim());
 
                         newsList.add(news);
                     }
@@ -608,7 +615,7 @@ public class news_online extends AppCompatActivity {
                             ss.append(_ContentRegion.get(i).wholeText());
                             ss.append("\n");
                         }
-                        news.setBODY(ss.toString());
+                        news.setBODY(ss.toString().trim());
 
                         newsList.add(news);
                     }
@@ -673,7 +680,7 @@ public class news_online extends AppCompatActivity {
                         for (Element ee : _ContentRegion){
                             ss.append(ee.wholeText());
                         }
-                        news.setBODY(ss.toString());
+                        news.setBODY(ss.toString().trim());
 
                         newsList.add(news);
                     }
@@ -725,7 +732,7 @@ public class news_online extends AppCompatActivity {
                             ss.append(ee.wholeText());
                             ss.append("\n");
                         }
-                        news.setBODY(ss.toString());
+                        news.setBODY(ss.toString().trim());
 
                         newsList.add(news);
                     }
@@ -771,7 +778,7 @@ public class news_online extends AppCompatActivity {
                             ss.append(ee.wholeText());
                             ss.append("\n\n");
                         }
-                        news.setBODY(ss.toString());
+                        news.setBODY(ss.toString().trim());
 
                         newsList.add(news);
 
@@ -825,7 +832,7 @@ public class news_online extends AppCompatActivity {
                             ss.append(ee.wholeText());
                             ss.append("\n");
                         }
-                        news.setBODY(ss.toString());
+                        news.setBODY(ss.toString().trim());
 
                         newsList.add(news);
 
@@ -887,7 +894,7 @@ public class news_online extends AppCompatActivity {
                         for (Element ee : _ContentRegion){
                             ss.append(ee.wholeText());
                         }
-                        news.setBODY(ss.toString());
+                        news.setBODY(ss.toString().trim());
 
                         newsList.add(news);
                     }
@@ -937,7 +944,7 @@ public class news_online extends AppCompatActivity {
                         for (Element ee : _ContentRegion){
                             ss.append(ee.wholeText());
                         }
-                        news.setBODY(ss.toString());
+                        news.setBODY(ss.toString().trim());
 
                         newsList.add(news);
 
@@ -993,7 +1000,7 @@ public class news_online extends AppCompatActivity {
                         for (Element ee : _ContentRegion){
                             ss.append(ee.wholeText());
                         }
-                        news.setBODY(ss.toString());
+                        news.setBODY(ss.toString().trim());
 
                         newsList.add(news);
 
@@ -1062,7 +1069,7 @@ public class news_online extends AppCompatActivity {
                             ss.append(ee.wholeText());
                         }
                         //System.out.println("Body : "+ ss.toString());
-                        news.setBODY(ss.toString());
+                        news.setBODY(ss.toString().trim());
 
                         newsList.add(news);
 
@@ -1170,9 +1177,9 @@ public class news_online extends AppCompatActivity {
                                 final PopupWindow pw = new PopupWindow(layout, (int)density*370, (int)density*685, true);
 
 
-                                ((TextView)layout.findViewById(R.id.goldName)).setText(newsList.get(position).BODY);
+                                ((TextView)layout.findViewById(R.id.goldName)).setText(newsList.get(position).BODY.trim());
                                 ((TextView)layout.findViewById(R.id.goldName)).setMovementMethod(new ScrollingMovementMethod());
-                                ((TextView)layout.findViewById(R.id.goldNamet)).setText(newsList.get(position).TITLE);
+                                ((TextView)layout.findViewById(R.id.goldNamet)).setText(newsList.get(position).TITLE.trim());
                                 ((TextView)layout.findViewById(R.id.goldNamet)).setMovementMethod(new ScrollingMovementMethod());
 
                                 pw.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));

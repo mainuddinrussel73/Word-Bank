@@ -126,11 +126,31 @@ public class DBNewsHelper extends SQLiteOpenHelper {
         return result != -1;
     }
 
-    public Cursor getAllData() {
+    public Cursor getAllData12(int i) {
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor res = db.rawQuery("select * from " + TABLE_NAME, null);
+        Cursor res = null;
+        if(i==0){
+         res = db.rawQuery("select * from " + TABLE_NAME , null);
+        }
+        else if(i==1){
+             res = db.rawQuery("select * from " + TABLE_NAME + " ORDER BY " + ID + " DESC", null);
+        }
+        else if(i==2){
+             res = db.rawQuery("select * from " + TABLE_NAME + " ORDER BY " + TITLE + " DESC", null);
+        }
         return res;
     }
+
+    public Cursor getAllData() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor res = null;
+
+            res = db.rawQuery("select * from " + TABLE_NAME , null);
+
+
+        return res;
+    }
+
 
     public boolean updateData(String id, String old_title, String title, String body, String url) {
         SQLiteDatabase db = this.getWritableDatabase();

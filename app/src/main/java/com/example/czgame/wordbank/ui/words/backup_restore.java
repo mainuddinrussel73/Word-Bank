@@ -8,11 +8,14 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -71,7 +74,8 @@ public class backup_restore extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         try {
 
             setContentView(R.layout.activity_backup_restore);
@@ -79,6 +83,8 @@ public class backup_restore extends AppCompatActivity {
         } catch (Exception e) {
             Log.d("error", e.getMessage());
         }
+
+
 
         progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.INVISIBLE);
@@ -104,105 +110,10 @@ public class backup_restore extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                JSONArray jsonArray = new JSONArray();
-                final Cursor cursor = mDBHelper.getAllData();
-                final Cursor cursor1 = mDBHelper.getAllData2();
-
-                // looping through all rows and adding to list
-                if (cursor.getCount() != 0) {
-                    // show message
-                    while (cursor.moveToNext()) {
-
-                        JSONObject word = new JSONObject();
-                        try {
-
-                                word.put("ID", Integer.parseInt(cursor.getString(0)));
-                                word.put("WORD", cursor.getString(1));
-                                word.put("MEANINGB", cursor.getString(2));
-                                word.put("MEANINGE", cursor.getString(3));
-                                word.put("SYNONYM", cursor.getString(4));
-                                word.put("ANTONYM", cursor.getString(5));
-
-                            System.out.println(word.toString());
-                        } catch (JSONException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                        jsonArray.put(word);
-                    }
-
-                    File root = android.os.Environment.getExternalStorageDirectory();
-                    // http://stackoverflow.com/questions/3551821/android-write-to-sd-card-folder
-                    File dir = new File(root.getAbsolutePath() + "/wordstore");
-                    dir.mkdirs();
-                    File file = new File(dir, "backup.json");
-                    try {
-                        FileOutputStream f = new FileOutputStream(file);
-                        PrintWriter pw = new PrintWriter(f);
-                        pw.write(jsonArray.toString());
-                        pw.flush();
-                        pw.close();
-                        f.close();
-                        Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                        Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
-                    }
-
-                } else {
-
-                    showMessage("Error", "Nothing found");
-                }
-
-                jsonArray = new JSONArray();
-                if (cursor1.getCount() != 0) {
-                    // show message
-                    while (cursor1.moveToNext()) {
-
-                        JSONObject word = new JSONObject();
-                        try {
-                            word.put("ID", Integer.parseInt(cursor1.getString(0)));
-                            word.put("WORD", cursor1.getString(1));
-                            word.put("SENTENCE", cursor1.getString(2));
-
-                        } catch (JSONException e) {
-                            // TODO Auto-generated catch block
-                            e.printStackTrace();
-                        }
-                        jsonArray.put(word);
-                    }
-
-                    File root = android.os.Environment.getExternalStorageDirectory();
-                    // http://stackoverflow.com/questions/3551821/android-write-to-sd-card-folder
-                    File dir = new File(root.getAbsolutePath() + "/wordstore");
-                    dir.mkdirs();
-                    File file = new File(dir, "backup_sentences.json");
-                    try {
-                        FileOutputStream f = new FileOutputStream(file);
-                        PrintWriter pw = new PrintWriter(f);
-                        pw.write(jsonArray.toString());
-                        pw.flush();
-                        pw.close();
-                        f.close();
-                        Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                        Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Toasty.error(getApplicationContext(), "Opps.", Toast.LENGTH_SHORT).show();
-                    }
-
-                } else {
-
-
-                    showMessage("Error", "Nothing found");
-                }
-
-
+                MyTask myTask = new MyTask();
+                MyTask2 myTask2 = new MyTask2();
+                myTask.execute();
+                myTask2.execute();
             }
 
 
@@ -267,7 +178,11 @@ public class backup_restore extends AppCompatActivity {
         coordinatorLayout = mainlayout.findViewById(R.id.coordinate_backup);
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
-
+        if(isDark) {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
+        }else {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        }
         if (isDark) {
             retext.setBackgroundColor(Color.rgb(64, 64, 64));
             retext.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.backgroundborderwhite));
@@ -686,7 +601,10 @@ public class backup_restore extends AppCompatActivity {
                 mDBHelper.deleteAll1();
                 for (int i = 0; i < jsonArray.length(); i++) {
                     jsonObject = new JSONObject(jsonArray.get(i).toString());
-                    mDBHelper.insertData1(jsonObject.get("WORD").toString(), jsonObject.get("SENTENCE").toString());
+                    if(!jsonObject.has("SENTENCE")){
+                        mDBHelper.insertData1(jsonObject.get("WORD").toString()," ");
+                    }
+                    else mDBHelper.insertData1(jsonObject.get("WORD").toString(), jsonObject.get("SENTENCE").toString());
                 }
                 // Toast.makeText(getApplicationContext(),"Done.",Toast.LENGTH_SHORT).show();
                 return 1;
@@ -696,6 +614,175 @@ public class backup_restore extends AppCompatActivity {
                 e.printStackTrace();
                 //Toast.makeText(getApplicationContext(),"Opps.",Toast.LENGTH_SHORT).show();
                 return 0;
+            }
+        }
+    }
+
+    class MyTask extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            JSONArray jsonArray = new JSONArray();
+            final Cursor cursor = mDBHelper.getAllData();
+
+
+            // looping through all rows and adding to list
+            if (cursor.getCount() != 0) {
+                // show message
+                while (cursor.moveToNext()) {
+
+                    JSONObject word = new JSONObject();
+                    try {
+
+
+
+                        if(!cursor.getString(3).isEmpty() && !cursor.getString(5).isEmpty()
+                                && !cursor.getString(6).isEmpty()){
+                            word.put("ID", Integer.parseInt(cursor.getString(0)));
+                            word.put("WORD", cursor.getString(1));
+                            word.put("MEANINGB", cursor.getString(2));
+                            word.put("MEANINGE", cursor.getString(3));
+                            word.put("SYNONYM", cursor.getString(5));
+                            word.put("ANTONYM", cursor.getString(6));
+                        }
+                        else if(cursor.getString(3).isEmpty()){
+
+                            word.put("ID", Integer.parseInt(cursor.getString(0)));
+                            word.put("WORD", cursor.getString(1));
+                            word.put("MEANINGB", cursor.getString(2));
+                            word.put("MEANINGE", "None");
+                            word.put("SYNONYM", cursor.getString(5));
+                            word.put("ANTONYM", cursor.getString(6));
+
+                        }else if(cursor.getString(5).isEmpty()){
+
+                            word.put("ID", Integer.parseInt(cursor.getString(0)));
+                            word.put("WORD", cursor.getString(1));
+                            word.put("MEANINGB", cursor.getString(2));
+                            word.put("MEANINGE", cursor.getString(3));
+                            word.put("SYNONYM", "None");
+                            word.put("ANTONYM", cursor.getString(6));
+                        }else if(cursor.getString(6).isEmpty()){
+
+                            word.put("ID", Integer.parseInt(cursor.getString(0)));
+                            word.put("WORD", cursor.getString(1));
+                            word.put("MEANINGB", cursor.getString(2));
+                            word.put("MEANINGE", cursor.getString(3));
+                            word.put("SYNONYM", cursor.getString(5));
+                            word.put("ANTONYM", "None");
+                        }
+
+                        //System.out.println(word.toString());
+                    } catch (JSONException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    jsonArray.put(word);
+
+
+
+                }
+
+                File root = android.os.Environment.getExternalStorageDirectory();
+                // http://stackoverflow.com/questions/3551821/android-write-to-sd-card-folder
+                File dir = new File(root.getAbsolutePath() + "/wordstore");
+                dir.mkdirs();
+                File file = new File(dir, "backup.json");
+                try {
+                    FileOutputStream f = new FileOutputStream(file);
+                    PrintWriter pw = new PrintWriter(f);
+                    pw.write(jsonArray.toString());
+                    pw.flush();
+                    pw.close();
+                    f.close();
+                    return true;
+
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    return false;
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return false;
+
+                }
+
+            } else {
+
+                return  false;
+                //showMessage("Error", "Nothing found");
+            }
+        }
+        @Override
+        protected void onPostExecute(Boolean b){
+
+            if(b){
+                Toasty.success(backup_restore.this,"Done",Toast.LENGTH_LONG).show();
+            }else{
+                Toasty.success(backup_restore.this,"Failed.",Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    class MyTask2 extends AsyncTask<Void,Void,Boolean>{
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            JSONArray jsonArray = new JSONArray();
+            final Cursor cursor1 = mDBHelper.getAllData2();
+            jsonArray = new JSONArray();
+            if (cursor1.getCount() != 0) {
+                // show message
+                while (cursor1.moveToNext()) {
+
+                    JSONObject word = new JSONObject();
+                    try {
+                        word.put("ID", Integer.parseInt(cursor1.getString(0)));
+                        word.put("WORD", cursor1.getString(1));
+                        word.put("SENTENCE", cursor1.getString(2));
+
+                    } catch (JSONException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    jsonArray.put(word);
+                }
+
+                File root = android.os.Environment.getExternalStorageDirectory();
+                // http://stackoverflow.com/questions/3551821/android-write-to-sd-card-folder
+                File dir = new File(root.getAbsolutePath() + "/wordstore");
+                dir.mkdirs();
+                File file = new File(dir, "backup_sentences.json");
+                try {
+                    FileOutputStream f = new FileOutputStream(file);
+                    PrintWriter pw = new PrintWriter(f);
+                    pw.write(jsonArray.toString());
+                    pw.flush();
+                    pw.close();
+                    f.close();
+                    return true;
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    return false;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+
+            } else {
+
+
+                return false;
+            }
+
+        }
+        @Override
+        protected void onPostExecute(Boolean b){
+
+            if(b){
+                Toasty.success(backup_restore.this,"Done",Toast.LENGTH_LONG).show();
+            }else{
+                Toasty.success(backup_restore.this,"Failed.",Toast.LENGTH_LONG).show();
             }
         }
     }

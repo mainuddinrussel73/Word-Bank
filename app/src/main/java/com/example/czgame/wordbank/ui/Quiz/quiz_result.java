@@ -3,41 +3,55 @@ package com.example.czgame.wordbank.ui.Quiz;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.PixelFormat;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
-import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.czgame.wordbank.R;
 import com.example.czgame.wordbank.ui.words.MainActivity;
-import com.example.czgame.wordbank.ui.words.WordDetail;
+import com.razerdp.widget.animatedpieview.AnimatedPieView;
+import com.razerdp.widget.animatedpieview.AnimatedPieViewConfig;
+import com.razerdp.widget.animatedpieview.BasePieLegendsView;
+import com.razerdp.widget.animatedpieview.DefaultCirclePieLegendsView;
+import com.razerdp.widget.animatedpieview.DefaultPieLegendsView;
+import com.razerdp.widget.animatedpieview.callback.OnPieLegendBindListener;
+import com.razerdp.widget.animatedpieview.callback.OnPieSelectListener;
+import com.razerdp.widget.animatedpieview.data.IPieInfo;
+import com.razerdp.widget.animatedpieview.data.SimplePieInfo;
 import com.tapadoo.alerter.Alerter;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import lecho.lib.hellocharts.model.PieChartData;
-import lecho.lib.hellocharts.model.SliceValue;
-import lecho.lib.hellocharts.view.PieChartView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 public class quiz_result extends AppCompatActivity {
 
     public static List<String> wordBuck = new ArrayList<>();
     TextView result;
-    ListView listView;
+    TextView mainresult;
+    RecyclerView listView;
+    private TextView desc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,10 +65,13 @@ public class quiz_result extends AppCompatActivity {
         setContentView(R.layout.activity_quiz_result);
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
 
-        PieChartView pieChartView = findViewById(R.id.chart);
-        List<SliceValue> pieData = new ArrayList<>();
-        result = findViewById(R.id.result);
+        AnimatedPieView pieChartView = findViewById(R.id.chart);
+        AnimatedPieViewConfig config = new AnimatedPieViewConfig();
+        desc = findViewById(R.id.tv_desc);
 
+        List<SimplePieInfo> pieData = new ArrayList<>();
+        result = findViewById(R.id.result);
+        mainresult = findViewById(R.id.mainresult);
         float p_correct = 0, p_ignored = 0, p_wrong = 0;
         float total = (quiz_page.correct + quiz_page.wrong + quiz_page.ignored);
         System.out.println(quiz_page.correct + "," + quiz_page.wrong + "," + quiz_page.ignored);
@@ -95,92 +112,57 @@ public class quiz_result extends AppCompatActivity {
 
         System.out.println(wordBuck.size());
 
-        ListAdapter adapter = new ArrayAdapter<String>(this,
-                R.layout.learnlistitem, wordBuck) {
 
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                View view = super.getView(position, convertView, parent);
-
-                TextView textView = view.findViewById(R.id.label);
-                textView.setMaxLines(3);
-
-                /*YOUR CHOICE OF COLOR*/
-                if (MainActivity.isDark)
-                    textView.setTextColor(Color.WHITE);
-                else textView.setTextColor(Color.BLACK);
-
-                return view;
-            }
-        };
-
+        HorizontalAdapter adapter = new HorizontalAdapter(wordBuck);
 
         listView = findViewById(R.id.learnlist);
 
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        listView.setLayoutManager(mLayoutManager);
+        listView.setItemAnimator(new DefaultItemAnimator());
         listView.setAdapter(adapter);
 
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        //listView.setAdapter(adapter);
 
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                TextView textView = view.findViewById(R.id.label);
-                String text = textView.getText().toString();
-
-                int i = 0;
-                for (i = 0; i < MainActivity.contactList.size(); i++) {
-                    if (MainActivity.contactList.get(i).getWORD().equals(text)) {
-                        System.out.println(MainActivity.contactList.get(i).getWORD());
-                        break;
-                    }
-                }
-                System.out.println(i);
-                Intent myIntent = new Intent(view.getContext(), WordDetail.class);
-                myIntent.putExtra("message", MainActivity.contactList.get(i).getWORD());
-                myIntent.putExtra("meaning", MainActivity.contactList.get(i).getMEANINGB());
-                myIntent.putExtra("id", i);
-                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivityForResult(myIntent, 0);
-
-            }
-        });
 
 
         if (quiz_page.correct != 0 && quiz_page.ignored == 0 && quiz_page.wrong == 0) {
-            pieData.add(new SliceValue(p_correct, Color.GREEN).setLabel("Cor"));
+            pieData.add(new SimplePieInfo(p_correct, Color.GREEN,"Cor"));
         }
         if (quiz_page.ignored != 0 && quiz_page.correct == 0 && quiz_page.wrong == 0) {
-            pieData.add(new SliceValue(p_ignored, Color.GRAY).setLabel("Ign"));
+            pieData.add(new SimplePieInfo(p_ignored, Color.GRAY,"Ign"));
         }
         if (quiz_page.wrong != 0 && quiz_page.ignored == 0 && quiz_page.correct == 0) {
-            pieData.add(new SliceValue(p_wrong, Color.RED).setLabel("Wro"));
+            pieData.add(new SimplePieInfo(p_wrong, Color.RED,"Wro"));
         }
         if (quiz_page.ignored != 0 && quiz_page.correct != 0 && quiz_page.wrong == 0) {
-            pieData.add(new SliceValue(p_ignored, Color.GRAY).setLabel("Ign"));
-            pieData.add(new SliceValue(p_correct, Color.GREEN).setLabel("Cor"));
+            pieData.add(new SimplePieInfo(p_ignored, Color.GRAY,"Ign"));
+            pieData.add(new SimplePieInfo(p_correct, Color.GREEN,"Cor"));
         }
         if (quiz_page.ignored != 0 && quiz_page.wrong != 0 && quiz_page.correct == 0) {
-            pieData.add(new SliceValue(p_ignored, Color.GRAY).setLabel("Ign"));
-            pieData.add(new SliceValue(p_wrong, Color.RED).setLabel("Cor"));
+            pieData.add(new SimplePieInfo(p_ignored, Color.GRAY,"Ign"));
+            pieData.add(new SimplePieInfo(p_wrong, Color.RED,"Cor"));
         }
         if (quiz_page.correct != 0 && quiz_page.wrong != 0 && quiz_page.ignored == 0) {
-            pieData.add(new SliceValue(p_correct, Color.GREEN).setLabel("Cor"));
-            pieData.add(new SliceValue(p_wrong, Color.RED).setLabel("Cor"));
+            pieData.add(new SimplePieInfo(p_correct, Color.GREEN,"Cor"));
+            pieData.add(new SimplePieInfo(p_wrong, Color.RED , "Cor"));
         }
         if (quiz_page.correct == 0 && quiz_page.ignored == 0 && quiz_page.wrong == 0) {
-            pieData.add(new SliceValue(0, Color.GREEN).setLabel("Cor"));
-            pieData.add(new SliceValue(100, Color.GRAY).setLabel("Ign"));
-            pieData.add(new SliceValue(0, Color.RED).setLabel("Wro"));
+            pieData.add(new SimplePieInfo(0, Color.GREEN,"Cor"));
+            pieData.add(new SimplePieInfo(100, Color.GRAY,"Ign"));
+            pieData.add(new SimplePieInfo(0, Color.RED,"Wro"));
         }
         if (quiz_page.correct != 0 && quiz_page.ignored != 0 && quiz_page.wrong != 0) {
-            pieData.add(new SliceValue(p_correct, Color.GREEN).setLabel("Cor"));
-            pieData.add(new SliceValue(p_ignored, Color.GRAY).setLabel("Ign"));
-            pieData.add(new SliceValue(p_wrong, Color.RED).setLabel("Wro"));
+            pieData.add(new SimplePieInfo(p_correct, Color.GREEN,"Cor"));
+            pieData.add(new SimplePieInfo(p_ignored, Color.GRAY,"Ign"));
+            pieData.add(new SimplePieInfo(p_wrong, Color.RED,"Wro"));
         }
 
 
-        PieChartData pieChartData = new PieChartData(pieData);
+       // PieChartData pieChartData = new PieChartData(pieData);
         float res = 0;
         if (quiz_page.correct != 0)
             res = (quiz_page.correct / (total)) * 100;
@@ -194,30 +176,73 @@ public class quiz_result extends AppCompatActivity {
         SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs1.getBoolean("isDark", false);
         if (isDark) {
-            result.setBackgroundColor(Color.BLACK);
-            result.setTextColor(Color.rgb(255, 153, 204));
-            pieChartData.setHasCenterCircle(true).setCenterText1("Correct : " + df.format(res) + "%").setCenterText1FontSize(10).setCenterText1Color(Color.WHITE);
+
+            result.setText("Correct : " + df.format(res) + "%");
+                    result.setTextSize(10);
+                    result.setTextColor(Color.WHITE);
             relativeLayout.setBackgroundColor(Color.BLACK);
-            result.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.backgroundborder));
-            //textView.setTextColor(Color.WHITE);
+          //  result.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.backgroundborder));
+            mainresult.setTextColor(Color.WHITE);
             listView.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.list_viewdark));
 
             if (wordBuck.size() != 0) listView.setAdapter(adapter);
         } else {
-            result.setBackgroundColor(Color.WHITE);
-            result.setTextColor(Color.rgb(102, 0, 51));
-            pieChartData.setHasCenterCircle(true).setCenterText1("Correct : " + df.format(res) + "%").setCenterText1FontSize(10).setCenterText1Color(Color.BLACK);
+
+            result.setText("Correct : " + df.format(res) + "%");
+            result.setTextSize(10);
+            result.setTextColor(Color.BLACK);
             relativeLayout.setBackgroundColor(Color.WHITE);
-            result.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.backgroundborder));
-            //textView.setTextColor(Color.BLACK);
+            //result.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.backgroundborder));
+            mainresult.setTextColor(Color.BLACK);
             listView.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.listview_border));
 
             if (wordBuck.size() != 0) listView.setAdapter(adapter);
         }
 
 
-        pieChartView.setPieChartData(pieChartData);
+        mainresult.setText(
+               "High Score : " + prefs.getInt(
+                        "highscore", 0) + "\n"
+                        + "Your Score: " + quiz_page.score + "\n"
+                        + "Corect : " + quiz_page.correct + "\n"
+                        + "Ignored :" + quiz_page.ignored + "\n"
+                        + "Wrong : " + quiz_page.wrong
+    );
+//        pieChartView.setPieChartData(pieChartData);
 
+        config.startAngle(0.9224089f)
+                .addDatas(pieData)
+                /**
+                 * not done below!
+                 */
+                .selectListener(new OnPieSelectListener() {
+                    @Override
+                    public void onSelectPie(@NonNull IPieInfo pieInfo, boolean isFloatUp) {
+
+                    }
+                })
+                .drawText(true)
+                .duration(1200)
+                .textSize(26)
+                .focusAlphaType(AnimatedPieViewConfig.FOCUS_WITH_ALPHA)
+                .textGravity(AnimatedPieViewConfig.ABOVE)
+                .interpolator(new DecelerateInterpolator())
+                .legendsWith(findViewById(R.id.ll_legends), new OnPieLegendBindListener<BasePieLegendsView>() {
+                    @Override
+                    public BasePieLegendsView onCreateLegendView(int position, IPieInfo info) {
+                        return position % 2 == 0 ?
+                                DefaultPieLegendsView.newInstance(quiz_result.this)
+                                : DefaultCirclePieLegendsView.newInstance(quiz_result.this);
+                    }
+
+                    @Override
+                    public boolean onAddView(ViewGroup parent, BasePieLegendsView view) {
+                        return false;
+                    }
+                });
+        pieChartView.applyConfig(config);
+
+        pieChartView.start();
 
         if (prefs.getInt("highscore", 0) > MainActivity.score) {
 
@@ -235,13 +260,9 @@ public class quiz_result extends AppCompatActivity {
         }
 
 
-        result.setText(
-                "High Score : " + prefs.getInt(
-                        "highscore", 0) + "\n"
-                        + "Your Score: " + quiz_page.score + "\n"
-                        + "Corect : " + quiz_page.correct + "\n"
-                        + "Ignored :" + quiz_page.ignored + "\n"
-                        + "Wrong : " + quiz_page.wrong);
+
+
+
 
 
         Button button = findViewById(R.id.goback);
@@ -252,6 +273,7 @@ public class quiz_result extends AppCompatActivity {
                 quiz_page.ignored = 0;
                 quiz_page.correct = 0;
                 quiz_page.wrong = 0;
+                Quiz_confirm.questioncount = 10;
                 Intent myIntent = new Intent(view.getContext(), MainActivity.class);
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(myIntent, 0);
@@ -264,5 +286,29 @@ public class quiz_result extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
+    }
+    private Bitmap resourceToBitmap(int resid) {
+        Drawable drawable = getResources().getDrawable(resid);
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable) drawable).getBitmap();
+        } else {
+            int w = drawable.getIntrinsicWidth();
+            int h = drawable.getIntrinsicHeight();
+            Bitmap.Config config =
+                    drawable.getOpacity() != PixelFormat.OPAQUE ? Bitmap.Config.ARGB_8888
+                            : Bitmap.Config.RGB_565;
+            Bitmap bitmap = Bitmap.createBitmap(w, h, config);
+            Canvas canvas = new Canvas(bitmap);
+            drawable.setBounds(0, 0, w, h);
+            drawable.draw(canvas);
+
+            return bitmap;
+        }
+    }
+
+    private int getColor(String colorStr) {
+        if (TextUtils.isEmpty(colorStr)) return Color.BLACK;
+        if (!colorStr.startsWith("#")) colorStr = "#" + colorStr;
+        return Color.parseColor(colorStr);
     }
 }

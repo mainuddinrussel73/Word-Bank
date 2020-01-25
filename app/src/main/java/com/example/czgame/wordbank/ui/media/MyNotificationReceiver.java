@@ -277,7 +277,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
             //System.out.println(pro);
             final int[] mutedColor = new int[1];
 
-            mp.stop();
+            if(mp!=null)mp.stop();
             mp = new MediaPlayer();
 
             if (position + 1 >= Media_list_activity.ListElementsArrayList.size()) {
@@ -389,7 +389,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
         //System.out.println(pro);
         final int[] mutedColor = new int[1];
 
-        mp.stop();
+        if(mp!=null)mp.stop();
         mp = new MediaPlayer();
 
         if (position - 1 < 0) {

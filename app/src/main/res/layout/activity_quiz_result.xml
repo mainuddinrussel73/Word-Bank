@@ -5,105 +5,115 @@
     android:layout_height="match_parent"
     tools:context="com.example.czgame.wordbank.ui.Quiz.quiz_result"
     android:id="@+id/quiz_res"
-    android:theme="@style/AppTheme.NoActionBar">
+    android:gravity="center"
+    android:orientation="vertical">
 
-
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
     <RelativeLayout
         android:id="@+id/layouts"
         android:layout_width="wrap_content"
         android:layout_height="344dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp">
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:background="@drawable/backgroundborder"
+       >
+
+
+
+
+        <com.razerdp.widget.animatedpieview.AnimatedPieView
+            android:id="@+id/chart"
+            android:layout_width="381dp"
+            android:layout_height="362dp"
+            android:layout_margin="@dimen/activity_horizontal_margin" />
+
+        <org.apmem.tools.layouts.FlowLayout
+            android:id="@+id/ll_legends"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="bottom"
+          />
 
         <TextView
             android:id="@+id/result"
-            android:layout_width="177dp"
-            android:layout_height="190dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="25dp"
-            android:layout_marginLeft="120dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_toEndOf="@+id/chart"
-            android:background="@drawable/backgroundborder"
-            android:paddingLeft="@dimen/alerter_activity_horizontal_margin"
-            android:paddingTop="@dimen/alerter_activity_horizontal_margin"
-            android:paddingRight="@dimen/alerter_activity_horizontal_margin"
-            android:paddingBottom="@dimen/alerter_activity_horizontal_margin"
-            android:text="@string/appbar_scrolling_view_behavior"
-            android:textSize="20dp"
-            android:textStyle="bold|italic">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="25.000%"/>
 
 
-        </TextView>
-
-        <lecho.lib.hellocharts.view.PieChartView
-            android:id="@+id/chart"
-            android:layout_width="170dp"
-            android:layout_height="228dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp" />
 
 
 
     </RelativeLayout>
 
+            <RelativeLayout
+                android:id="@+id/resultview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layouts"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:background="@drawable/backgroundborder">
+                <TextView
+                    android:id="@+id/mainresult"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/activity_horizontal_margin"
+                    android:gravity="center"
+                    android:text="25.000%">
 
-    <ListView
+                </TextView>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/somee"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/resultview">
+    <androidx.recyclerview.widget.RecyclerView
+
         android:id="@+id/learnlist"
-        android:layout_width="391dp"
-        android:layout_height="345dp"
-        android:layout_below="@+id/layouts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="27dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="12dp"
         android:layout_marginRight="10dp"
-        android:layout_marginBottom="110dp"
         android:padding="5dp"
         android:background="@drawable/listview_border">
 
-    </ListView>
+    </androidx.recyclerview.widget.RecyclerView>
+            </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/learnlist"
-        android:layout_marginLeft="150dp"
-        android:layout_marginTop="-65dp"
+        android:layout_below="@+id/somee"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
         >
 
         <Button
             android:id="@+id/goback"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
             android:background="@drawable/buttonshaperound"
-            android:gravity="center"
-            android:paddingLeft="@dimen/alerter_activity_horizontal_margin"
-            android:paddingTop="@dimen/alerter_activity_horizontal_margin"
-            android:paddingRight="@dimen/alerter_activity_horizontal_margin"
-            android:paddingBottom="@dimen/alerter_activity_horizontal_margin"
+
             android:text="GO HOME"
             android:textColor="@android:color/white" />
     </RelativeLayout>
-
-
+        </RelativeLayout>
+    </ScrollView>
 
 
 </RelativeLayout>

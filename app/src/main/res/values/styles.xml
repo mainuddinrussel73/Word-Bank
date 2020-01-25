@@ -8,12 +8,28 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:statusBarColor">@color/colorPrimary</item>
         <item name="searchViewStyle">@style/CitySearchView</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+    <style name="AppThemeDarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#000</item>
+        <item name="colorPrimaryDark">#000</item>
+        <item name="colorAccent">#000</item>
+        <item name="android:statusBarColor">#000</item>
+        <item name="searchViewStyle">@style/CitySearchView</item>
+        <item name="android:windowActionBarOverlay">true</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowActionBarOverlay">true</item>
 
+    </style>
+
+    <style name="WindowAnimationTransition">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+        <item name="android:windowActionBarOverlay">true</item>
     </style>
 
     <style name="LoginTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">

@@ -96,7 +96,7 @@
             android:layout_marginRight="10dp"
             android:gravity="center"
             android:text="Monthly Focus Time : 2019"
-            android:textSize="15sp">
+            android:textSize="14sp">
 
         </TextView>
 

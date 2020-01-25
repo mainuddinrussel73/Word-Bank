@@ -124,7 +124,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/synonyme"
             style="@style/LoginTextInputLayoutStyle"
-            android:layout_width="180dp"
+            android:layout_width="165dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/meaningE"
             android:layout_margin="10dp"
@@ -157,7 +157,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/antonyme"
             style="@style/LoginTextInputLayoutStyle"
-            android:layout_width="170dp"
+            android:layout_width="165dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/meaningE"
             android:layout_margin="10dp"

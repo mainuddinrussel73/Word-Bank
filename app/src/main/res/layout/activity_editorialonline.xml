@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/baselayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.news.Editorialonline"
+   >
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/sssss"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+       >
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/newsoptions"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/sssss"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:background="@drawable/listview_border">
+
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_marginTop="100dp"
+    android:orientation="horizontal">
+    <Button
+        android:id="@+id/prothomalo"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/flickr"
+        android:fontFamily="@font/lobs_star"
+        android:padding="3dp"
+        android:shadowRadius="25"
+        android:text="প্রথম আলো"
+        android:textColor="@color/white"
+        >
+    </Button>
+    <Button
+        android:id="@+id/itterfaq"
+        android:layout_width="90dp"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/flickr"
+        android:fontFamily="@font/lobs_star"
+        android:padding="3dp"
+        android:shadowRadius="25"
+        android:text="ইত্তেফাক"
+        android:textColor="@color/white"
+        >
+    </Button>
+    <Button
+        android:id="@+id/jugantor"
+        android:layout_width="90dp"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/flickr"
+        android:fontFamily="@font/lobs_star"
+        android:padding="3dp"
+        android:shadowRadius="25"
+        android:text="যুগান্তর"
+        android:textColor="@color/white"
+        >
+    </Button>
+</LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="200dp"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/kalerkantho"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/vanusa"
+                android:fontFamily="@font/lobs_star"
+                android:padding="3dp"
+                android:shadowRadius="25"
+                android:text="কালেরকন্ঠ"
+                android:textColor="@color/white"
+                >
+            </Button>
+            <Button
+                android:id="@+id/inquilab"
+                android:layout_width="90dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/vanusa"
+                android:fontFamily="@font/lobs_star"
+                android:padding="3dp"
+                android:shadowRadius="25"
+                android:text="ইনকিলাব"
+                android:textColor="@color/white"
+                >
+            </Button>
+
+            <Button
+                android:id="@+id/janakantho"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/vanusa"
+                android:fontFamily="@font/lobs_star"
+                android:padding="3dp"
+                android:shadowRadius="25"
+                android:text="জনকন্ঠ"
+                android:textColor="@color/white"
+                >
+            </Button>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="300dp"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/nayadiganta"
+                android:layout_width="110dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/vanusa"
+                android:fontFamily="@font/lobs_star"
+                android:padding="3dp"
+                android:shadowRadius="25"
+                android:text="নয়াদিগন্ত"
+                android:textColor="@color/white"
+                >
+            </Button>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="400dp"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/dailystar"
+                android:layout_width="90dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/cool"
+                android:fontFamily="@font/lilita_regular"
+                android:padding="3dp"
+                android:shadowRadius="25"
+                android:text="Daily Star"
+                android:textColor="@color/white"
+                >
+            </Button>
+            <Button
+                android:id="@+id/dailysun"
+                android:layout_width="110dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/cool"
+                android:fontFamily="@font/lilita_regular"
+                android:padding="3dp"
+                android:shadowRadius="25"
+                android:text="Daily Sun"
+                android:textColor="@color/white"
+                >
+            </Button>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="500dp"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/aljazeera"
+                android:layout_width="90dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/quepal"
+                android:fontFamily="@font/lilita_regular"
+                android:padding="3dp"
+                android:shadowRadius="25"
+                android:text="Aljazeera"
+                android:textColor="@color/white"
+                >
+            </Button>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

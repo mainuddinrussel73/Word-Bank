@@ -868,6 +868,7 @@ public class news_details extends AppCompatActivity {
 
 
 
+
         if (isDark) {
 
 
@@ -1064,6 +1065,7 @@ public class news_details extends AppCompatActivity {
                                     Intent myIntent = new Intent(news_details.this, news_update.class);
                                     //String s = view.findViewById(R.id.subtitle).toString();
                                     //String s = (String) parent.getI;
+                                    toolbar.getNavigationIcon().setTint(Color.WHITE);
                                     myIntent.putExtra("title", intent.getStringExtra("title"));
                                     myIntent.putExtra("body", intent.getStringExtra("body"));
                                     myIntent.putExtra("url", intent.getStringExtra("url"));
@@ -1402,9 +1404,11 @@ public class news_details extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
+        toolbar.getNavigationIcon().setTint(Color.WHITE);
         Intent myIntent = new Intent(news_details.getContext(), news_activity.class);
         myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivityForResult(myIntent, 0);
+
     }
 }
 

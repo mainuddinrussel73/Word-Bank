@@ -34,10 +34,14 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.promotodo.TimelineView"
-            android:label="@string/timeline_activity"
+        <activity android:name=".ui.news.Editorialonline"
+            android:label="@string/news_online_title"
             android:theme="@style/AppTheme.NoActionBar"
             ></activity>
+        <activity
+            android:name=".ui.promotodo.TimelineView"
+            android:label="@string/timeline_activity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.promotodo.tree"
             android:label="@string/tree_activity"
@@ -133,13 +137,12 @@
             android:name=".ui.words.add_page"
             android:label="@string/title_activity_addpage"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan|adjustResize"
-            />
+            android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".ui.words.word_details"
             android:label="@string/title_activity_word_details"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan|adjustResize"/>
+            android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".ui.Quiz.quiz_page"
             android:label="@string/title_quiz"

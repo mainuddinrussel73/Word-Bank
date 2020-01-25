@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
@@ -319,13 +321,18 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_promotodo_activity);
 
         FloatingActionButton fab = findViewById(R.id.fab);
 
 
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
 
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
@@ -354,6 +361,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
         }
 
         totaltask.setText("Num of Tasks : " + promotododataList.size());
+        totaltask.setTextColor(Color.RED);
 
         float tasktime = 0;
         for (int i = 0; i < promotododataList.size(); i++) {
@@ -364,7 +372,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
 
         SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         remain.setText("Completed : " + (prefs1.getInt("t", 0) * 0.5) +"h");
-
+        remain.setTextColor(Color.RED);
 
      /*  DBDaily dbDaily = new DBDaily(this);
         //dbDaily.deleteAll();
@@ -458,10 +466,13 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
         RelativeLayout relativeLayout1 = relativeLayout.findViewById(R.id.borderss);
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
+        if(isDark) {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
+        }else {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        }
         if (isDark) {
-            totalhour.setTextColor(Color.WHITE);
-            totaltask.setTextColor(Color.WHITE);
-            remain.setTextColor(Color.WHITE);
+
             mListView.setBackgroundColor(Color.BLACK);
             relativeLayout1.setBackground(ContextCompat.getDrawable(this, R.drawable.list_viewdark));
             additem.setBackgroundColor(Color.BLACK);
@@ -470,9 +481,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
             tfb.setTextColor(Color.WHITE);
             tfb.setHintTextColor(Color.rgb(185, 185, 185));
         } else {
-            totalhour.setTextColor(Color.BLACK);
-            totaltask.setTextColor(Color.BLACK);
-            remain.setTextColor(Color.BLACK);
+
             mListView.setBackgroundColor(Color.WHITE);
             relativeLayout1.setBackground(ContextCompat.getDrawable(this, R.drawable.listview_border));
             additem.setBackgroundColor(Color.WHITE);

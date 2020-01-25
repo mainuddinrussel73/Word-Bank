@@ -46,6 +46,6 @@
     <include layout="@layout/content_music" />
 
 
-        <include layout="@layout/bottem_player" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,6 +33,9 @@ public class news_update extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_news_update);
         final Intent intent = getIntent();
         final EditText title = findViewById(R.id.title2);
@@ -68,6 +73,7 @@ public class news_update extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -76,6 +82,12 @@ public class news_update extends AppCompatActivity {
                 finish();
             }
         });
+
+        if(isDark) {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
+        }else {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        }
 
         mDBHelper = new DBNewsHelper(this);
 

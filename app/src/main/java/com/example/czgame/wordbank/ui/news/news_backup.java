@@ -16,6 +16,8 @@ import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -72,6 +74,9 @@ public class news_backup extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         try {
 
             setContentView(R.layout.activity_news_backup);
@@ -234,6 +239,11 @@ public class news_backup extends AppCompatActivity {
         coordinatorLayout = mainlayout.findViewById(R.id.coordinate_backup);
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
+        if(isDark) {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
+        }else {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        }
         if (isDark) {
             retext.setBackgroundColor(Color.rgb(64, 64, 64));
             retext.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.backgroundborderwhite));
@@ -384,10 +394,10 @@ public class news_backup extends AppCompatActivity {
         }
         return 0;
     }
-    private class MyTask extends AsyncTask<Void, Void, Void> {
+    private class MyTask extends AsyncTask<Void, Void, Boolean> {
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Boolean doInBackground(Void... params) {
 
             ConnectivityManager conMgr =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
@@ -398,16 +408,20 @@ public class news_backup extends AppCompatActivity {
 
                     myRef = database.getReference("news");
                     myRef.setValue(null);
+                    return true;
 
                 }
             }else{
-                Toasty.error(news_backup.this,"No internet connection.",Toast.LENGTH_LONG).show();
+                return false;
             }
-            return null;
+            return false;
         }
 
         @Override
-        protected void onPostExecute(Void c) {
+        protected void onPostExecute(Boolean c) {
+            if(!c){
+                Toasty.error(news_backup.this,"No internet connection.",Toast.LENGTH_LONG).show();
+            }
             new MyTask2().execute();
             // do something with result
         }

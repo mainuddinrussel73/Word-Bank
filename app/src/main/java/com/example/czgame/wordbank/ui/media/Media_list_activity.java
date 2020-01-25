@@ -2,14 +2,15 @@ package com.example.czgame.wordbank.ui.media;
 
 
 import android.Manifest;
-import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -18,26 +19,25 @@ import android.database.MergeCursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.animation.TranslateAnimation;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -63,6 +63,7 @@ import com.lauzy.freedom.library.Lrc;
 import com.lauzy.freedom.library.LrcHelper;
 import com.lauzy.freedom.library.LrcView;
 import com.ohoussein.playpause.PlayPauseView;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -81,11 +82,16 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.palette.graphics.Palette;
+import androidx.renderscript.Allocation;
+import androidx.renderscript.Element;
+import androidx.renderscript.RenderScript;
+import androidx.renderscript.ScriptIntrinsicBlur;
 import es.dmoral.toasty.Toasty;
 import jp.wasabeef.glide.transformations.BlurTransformation;
+import mkaflowski.mediastylepalette.MediaNotificationProcessor;
 
 import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
-import static com.example.czgame.wordbank.ui.media.NotificationService.mOnAudioFocusChangeListener;
+import static com.example.czgame.wordbank.ui.words.MainActivity.isDark;
 
 public class Media_list_activity extends AppCompatActivity  {
 
@@ -108,7 +114,7 @@ public class Media_list_activity extends AppCompatActivity  {
     Button sort;
     Uri uri;
     boolean isUp;
-    LinearLayout myView;
+    public  static  int posit = 0;
     public static  Button nxt,pre,ply;
     SeekBar positionBar;
     SeekBar volumeBar;
@@ -138,44 +144,55 @@ public class Media_list_activity extends AppCompatActivity  {
     public static  Intent serviceIntent;
     Button button, loop;
     private int currentViewMode = 0;
-    private AudioManager mAudioManager;
     public boolean mFocusGranted;
     public boolean mFocusChanged;
-    private AudioFocusChangeListenerImpl mAudioFocusChangeListener;
-
+    public static LrcView mLrcView;
+    SlidingUpPanelLayout myView;
     static final int VIEW_MODE_LISTVIEW = 0;
     static final int VIEW_MODE_GRIDVIEW = 1;
     public  static  WaveVisualizer mVisualizer;
     private Toast mToastToShow;
     private final int MY_PERMISSIONS_RECORD_AUDIO = 1;
-    RelativeLayout add_phone;
     TextView titleS,desS;
     RoundedImageView songI;
     private int requestCode;
     private String[] permissions;
     private int[] grantResults;
+    boolean serviceBound = false;
     ImageButton showlrc;
-    private LrcView mLrcView;
+RelativeLayout add_phone;
+LinearLayout media_base;
+    boolean isShowlrc = false;
+    private NotificationService player;
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            NotificationService.LocalBinder binder = (NotificationService.LocalBinder) service;
+            player = binder.getService();
+            serviceBound = true;
 
-
-    private boolean isAppOnForeground(Context context, String appPackageName) {
-        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager.getRunningAppProcesses();
-        if (appProcesses == null) {
-            //App is closed
-            return false;
+            Toast.makeText(Media_list_activity.this, "Service Bound", Toast.LENGTH_SHORT).show();
         }
-        final String packageName = appPackageName;
-        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
-            if (appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND && appProcess.processName.equals(packageName)) {
-                //                Log.e("app",appPackageName);
-                return true;
-            } else {
-                //App is closed
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            serviceBound = false;
+        }
+    };
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // internet lost alert dialog method call from here...
+            if(intent.getAction()==Constants.ACTION.NEXT_ACTION){
+                nxtsong();
             }
+            else if(intent.getAction()==Constants.ACTION.PREV_ACTION){
+                prevsong();
+            }
+
         }
-        return false;
-    }
+    };
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -206,42 +223,14 @@ public class Media_list_activity extends AppCompatActivity  {
 
             remainingTimeLabel.setText("- " + remainingTime);
             if (toogle1 == false && (remainingTime.equals("0:00"))) {
-                AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                boolean requestGranted = AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioManager.requestAudioFocus(mOnAudioFocusChangeListener, AudioManager.STREAM_MUSIC,
-                        AudioManager.AUDIOFOCUS_GAIN);
 
-                if(requestGranted){
-                    Media_list_activity.this.sendBroadcast(new Intent(Constants.ACTION.NEXT_ACTION));
-                }
-            }
-        }
-    };
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // internet lost alert dialog method call from here...
-            if(intent.getAction()==Constants.ACTION.NEXT_ACTION){
+                Media_list_activity.this.sendBroadcast(new Intent(Constants.ACTION.NEXT_ACTION));
                 nxtsong();
-            }
-            else if(intent.getAction()==Constants.ACTION.PREV_ACTION){
-                prevsong();
-            }
+                System.out.println("next");
 
+            }
         }
     };
-
-    public int getDominantColor(Bitmap bitmap) {
-        List<Palette.Swatch> swatchesTemp = Palette.from(bitmap).generate().getSwatches();
-        List<Palette.Swatch> swatches = new ArrayList<Palette.Swatch>(swatchesTemp);
-        Collections.sort(swatches, new Comparator<Palette.Swatch>() {
-            @Override
-            public int compare(Palette.Swatch swatch1, Palette.Swatch swatch2) {
-                return swatch2.getPopulation() - swatch1.getPopulation();
-            }
-
-        });
-        return swatches.size() > 0 ? swatches.get(0).getRgb() : Color.WHITE;
-    }
 
     private void switchView() {
 
@@ -302,48 +291,7 @@ public class Media_list_activity extends AppCompatActivity  {
         }
     }
 
-    @Override
-    public  void onPause(){
-        if(!mp.isPlaying()){
-            int result = mAudioManager.requestAudioFocus(mAudioFocusChangeListener,
-                    AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
 
-            switch (result) {
-                case AudioManager.AUDIOFOCUS_REQUEST_GRANTED:
-                    mFocusGranted = true;
-                    break;
-                case AudioManager.AUDIOFOCUS_REQUEST_FAILED:
-                    mFocusGranted = false;
-                    break;
-            }
-        }
-
-        String message = "Focus request " + (mFocusGranted ? "granted" : "failed");
-        System.out.println(message);
-        super.onPause();
-    }
-
-    @Override
-    public  void onResume(){
-        if(!mp.isPlaying()){
-            int result = mAudioManager.requestAudioFocus(mAudioFocusChangeListener,
-                    AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-
-            switch (result) {
-                case AudioManager.AUDIOFOCUS_REQUEST_GRANTED:
-                    mFocusGranted = true;
-                    break;
-                case AudioManager.AUDIOFOCUS_REQUEST_FAILED:
-                    mFocusGranted = false;
-                    break;
-            }
-        }
-
-        String message = "Focus request " + (mFocusGranted ? "granted" : "failed");
-        System.out.println(message);
-        super.onResume();
-    }
-    //
 
     public void save(EditText mEditText,String name) {
 
@@ -371,11 +319,35 @@ public class Media_list_activity extends AppCompatActivity  {
                 Toast.LENGTH_LONG).show();
     }
 
+    public int getDominantColor(Bitmap bitmap) {
+
+        MediaNotificationProcessor processor = new MediaNotificationProcessor(this, bitmap); // can use drawable
+
+        int backgroundColor = processor.getBackgroundColor();
+        int primaryTextColor = processor.getPrimaryTextColor();
+        int secondaryTextColor = processor.getSecondaryTextColor();
+
+
+
+        List<Palette.Swatch> swatchesTemp = Palette.from(bitmap).maximumColorCount(32).generate().getSwatches();
+        List<Palette.Swatch> swatches = new ArrayList<Palette.Swatch>(swatchesTemp);
+        Collections.sort(swatches, new Comparator<Palette.Swatch>() {
+            @Override
+            public int compare(Palette.Swatch swatch1, Palette.Swatch swatch2) {
+                return swatch2.getPopulation() - swatch1.getPopulation();
+            }
+
+        });
+        return backgroundColor;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_music);
         View view  = findViewById(R.id.content_music);
@@ -404,6 +376,11 @@ public class Media_list_activity extends AppCompatActivity  {
 
 
 
+        myView = findViewById(R.id.sliding_layout);
+
+
+        add_phone = myView.findViewById(R.id.relativeLayoutMain);
+        media_base = myView.findViewById(R.id.medic_base);
 
 
 
@@ -437,10 +414,14 @@ public class Media_list_activity extends AppCompatActivity  {
 
 
 
-        myView = findViewById(R.id.medic_base);
-        myView.setVisibility(View.INVISIBLE);
-        //showhide = myView.findViewById(R.id.music_hide_show);
-        isUp = false;
+
+
+
+
+
+
+
+
 
         playBtn = myView.findViewById(R.id.playBtn);
         elapsedTimeLabel = myView.findViewById(R.id.elapsedTimeLabel);
@@ -479,7 +460,7 @@ public class Media_list_activity extends AppCompatActivity  {
         Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(ListElementsArrayList.get(position).getImagepath()));
         ContentResolver res = getContentResolver();
         InputStream in;
-        Bitmap bitmap = null;
+        Bitmap bitmap ;
         try {
             in = res.openInputStream(uri);
 
@@ -496,11 +477,39 @@ public class Media_list_activity extends AppCompatActivity  {
         int defaultValue = 0x0000FF;
         int vibrant = getDominantColor(bitmap);
         int muted = palette.getMutedColor(defaultValue);
-        int mutedLight = getComplimentColor(palette.getDominantColor(palette.getDominantColor(defaultValue)));
-        int mutedDark = getComplimentColor(vibrant);
+        int mutedLight = getComplimentColor(bitmap);
+        int mutedDark = getComplimentColor(bitmap);
 
         loop = findViewById(R.id.loops);
         SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+        title = ListElementsArrayList.get(position).getTitle();
+        artist = ListElementsArrayList.get(position).getArtist();
+        album = ListElementsArrayList.get(position).getAlbum();
+
+
+        textView.setText(title);
+        textView1.setText(artist);
+
+
+        titleq = ListElementsArrayList.get(position).getImagepath();
+        sArtworkUri = Uri.parse("content://media/external/audio/albumart");
+
+        uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(titleq));
+        res = getContentResolver();
+
+        try {
+            in = res.openInputStream(uri);
+
+            bitmap = BitmapFactory.decodeStream(in);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            InputStream is = getResources().openRawResource(R.raw.image);
+            bitmap = BitmapFactory.decodeStream(is);
+            bm = bitmap;
+        }
+
 
         int type = prefs1.getInt("cond", 0);
         if (type == 0) {
@@ -517,27 +526,1148 @@ public class Media_list_activity extends AppCompatActivity  {
 
 
 
+
         //Register item lick
 
 
-        add_phone = findViewById(R.id.relativeLayoutMain);
-        if(!mp.isPlaying())
-            add_phone.setVisibility(View.INVISIBLE);
-        else
-            add_phone.setVisibility(View.VISIBLE);
 
-        titleS = add_phone.findViewById(R.id.textViewSongTitle);
+        titleS = myView.findViewById(R.id.textViewSongTitle);
         titleS.setSelected(true);
 
-        desS = add_phone.findViewById(R.id.textViewArtistName);
+        desS = myView.findViewById(R.id.textViewArtistName);
         desS.setSelected(true);
-        songI = add_phone.findViewById(R.id.play_pause);
-        ply = add_phone.findViewById(R.id.buttonPlayAndStop);
-        nxt = add_phone.findViewById(R.id.buttonForward);
-        pre = add_phone.findViewById(R.id.buttonBackward);
+        songI = myView.findViewById(R.id.play_pause);
+        ply = myView.findViewById(R.id.buttonPlayAndStop);
+        nxt = myView.findViewById(R.id.buttonForward);
+        pre = myView.findViewById(R.id.buttonBackward);
 
-        mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-        mAudioFocusChangeListener = new AudioFocusChangeListenerImpl();
+
+
+        if(mp!=null) {
+            if (mp.isPlaying()) {
+                // mLrcView.setVisibility(View.GONE);
+                if (!isUp) {
+
+                    {
+
+                        try {
+                            in = res.openInputStream(uri);
+
+                            bitmap = BitmapFactory.decodeStream(in);
+
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                            InputStream is = getResources().openRawResource(R.raw.image);
+                            bitmap = BitmapFactory.decodeStream(is);
+                        }
+
+
+                        Bitmap finalBitmap1 = bitmap;
+                        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                            @Override
+                            public void onGenerated(Palette palette) {
+                                // Use generated instance
+                                //work with the palette here
+                                int defaultValue = 0x000000;
+                                int vibrant = getDominantColor(finalBitmap1);
+                                int vibrantLight = palette.getLightVibrantColor(defaultValue);
+                                int vibrantDark = palette.getDarkVibrantColor(defaultValue);
+                                int muted = palette.getMutedColor(defaultValue);
+                                int mutedLight = palette.getLightMutedColor(defaultValue);
+                                int mutedDark = getComplimentColor(finalBitmap1);
+
+
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    Window window = getWindow();
+                                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                                    window.setStatusBarColor(vibrant);
+                                    setTitleColor(vibrant);
+                                    getSupportActionBar().setBackgroundDrawable(new ColorDrawable(vibrant));
+                                    Toolbar actionBarToolbar = findViewById(R.id.toolbar);
+                                    if (actionBarToolbar != null)
+                                        actionBarToolbar.setTitleTextColor(mutedDark);
+                                }
+
+                                volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                volumeBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
+                                positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                positionBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
+
+                                remainingTimeLabel.setTextColor(mutedDark);
+                                elapsedTimeLabel.setTextColor(mutedDark);
+                                toolbar.getNavigationIcon().setTint(mutedDark);
+
+                                Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
+                                icon.setTint(mutedDark);
+                                button.setBackground(icon);
+                                mVisualizer.setColor(mutedColor);
+                                SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+                                int type = prefs1.getInt("cond", 0);
+                                if (type == 0) {
+
+                                } else if (type == 1) {
+                                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                                    myIcon3.setTint(mutedDark);
+                                    loop.setBackground(myIcon3);
+                                } else if (type == 2) {
+                                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                                    myIcon3.setTint(mutedDark);
+                                    loop.setBackground(myIcon3);
+                                }
+
+                                play = (mutedDark);
+                                pause = (mutedDark);
+                                playBtn.setColor(play);
+                                Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
+                                Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
+                                Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
+                                Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+
+                                myIcon3.setTint(play);
+                                myIcon.setTint(play);
+                                myIcon1.setTint(play);
+                                myIcon2.setTint(play);
+                                nxtBtn.setBackground(myIcon3);
+                                if (mp.isPlaying()) {
+                                    playBtn.change(false);
+                                    // playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
+                                } else {
+                                    playBtn.change(true);
+                                    // playBtn.changeMode(FloatingMusicActionButton.Mode.PLAY_TO_PAUSE);
+                                }
+                                pauseBtn.setBackground(myIcon);
+                                playBtn.setBackground(myIcon2);
+
+                                playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
+                                Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
+                                Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
+                                Drawable myIcon22 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+                                Drawable myIcon21 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
+                                myIcon33.setTint(play);
+                                myIcon31.setTint(play);
+                                myIcon22.setTint(play);
+                                myIcon21.setTint(play);
+
+                                ply.setBackground(myIcon22);
+                                pre.setBackground(myIcon31);
+                                nxt.setBackground(myIcon33);
+
+
+                                textView.setTextColor(mutedDark);
+                                textView1.setTextColor(mutedDark);
+
+                                titleS.setTextColor(mutedDark);
+                                desS.setTextColor(mutedDark);
+                              //  add_phone.setAlpha(1.0f);
+
+
+                                LinearLayout linearLayout = findViewById(R.id.medic_base);
+
+                                linearLayout.setBackgroundColor(vibrant);
+                                //linearLayout.setAlpha(1.0f);
+
+                                LinearLayout linearLayout1 = findViewById(R.id.medic_base1);
+                                linearLayout1.setBackgroundColor(vibrant);
+
+                            }
+                        });
+
+
+                        image = myView.findViewById(R.id.albumart);
+                        image.setImageBitmap(bitmap);
+                        bm = bitmap;
+                        if(isShowlrc){
+                            BitmapDrawable drawable = (BitmapDrawable) image.getDrawable();
+                            bitmap = drawable.getBitmap();
+                            Bitmap blurred = blurRenderScript(bitmap, 20);//second parametre is radius
+                            image.setImageBitmap(blurred);
+                        }
+                        songI.setImageBitmap(bitmap);
+
+                        media_base.setVisibility(View.VISIBLE);
+
+                        Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+                        myIcon2.setTint(play);
+                        playBtn.setBackground(myIcon2);
+
+                        totalTime = mp.getDuration();
+                        positionBar = myView.findViewById(R.id.positionBar);
+                        vibrant = getDominantColor(bitmap);
+                        mutedDark = getComplimentColor(bitmap);
+                        positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                        positionBar.setMax(totalTime);
+                        positionBar.setProgress(mp.getCurrentPosition());
+
+                        remainingTimeLabel.setTextColor(mutedColor);
+                        elapsedTimeLabel.setTextColor(mutedColor);
+
+                        positionBar.setOnSeekBarChangeListener(
+                                new SeekBar.OnSeekBarChangeListener() {
+                                    @Override
+                                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                        if (fromUser) {
+                                            mp.seekTo(progress);
+                                            positionBar.setProgress(progress);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                                    }
+
+                                    @Override
+                                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                                    }
+                                }
+                        );
+
+
+                        // Volume Bar
+
+                        //volumeBar.setProgress(pro);
+                        volumeBar.setOnSeekBarChangeListener(
+                                new SeekBar.OnSeekBarChangeListener() {
+                                    @Override
+                                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                                        float volumeNum = progress / 100f;
+                                        mp.setVolume(volumeNum, volumeNum);
+                                        pro = progress;
+                                    }
+
+                                    @Override
+                                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                                    }
+
+                                    @Override
+                                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                                    }
+                                }
+                        );
+
+                        // Thread (Update positionBar & timeLabel)
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                while (mp != null) {
+                                    try {
+                                        Message msg = new Message();
+                                        msg.what = mp.getCurrentPosition();
+                                        handler.sendMessage(msg);
+                                        Thread.sleep(1000);
+                                    } catch (InterruptedException e) {
+                                    }
+                                }
+                            }
+                        }).start();
+
+                    }
+
+
+                } else {
+
+                    {
+
+
+
+                        try {
+                            in = res.openInputStream(uri);
+
+                            bitmap = BitmapFactory.decodeStream(in);
+
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                            InputStream is = getResources().openRawResource(R.raw.image);
+                            bitmap = BitmapFactory.decodeStream(is);
+                        }
+
+
+                        Bitmap finalBitmap2 = bitmap;
+                        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                            @Override
+                            public void onGenerated(Palette palette) {
+                                // Use generated instance
+                                //work with the palette here
+                                int defaultValue = 0x000000;
+                                int vibrant = getDominantColor(finalBitmap2);
+                                int vibrantLight = palette.getLightVibrantColor(defaultValue);
+                                int vibrantDark = palette.getDarkVibrantColor(defaultValue);
+                                int muted = palette.getMutedColor(defaultValue);
+                                int mutedLight = palette.getLightMutedColor(defaultValue);
+                                int mutedDark = getComplimentColor(finalBitmap2);
+
+
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    Window window = getWindow();
+                                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                                    window.setStatusBarColor(Color.parseColor("#3a9ebe"));
+                                    setTitleColor(Color.WHITE);
+                                    getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#3a9ebe")));
+                                    Toolbar actionBarToolbar = findViewById(R.id.toolbar);
+                                    if (actionBarToolbar != null)
+                                        actionBarToolbar.setTitleTextColor(Color.WHITE);
+                                }
+
+                                volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                volumeBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
+                                positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                positionBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
+
+                                remainingTimeLabel.setTextColor(mutedDark);
+                                elapsedTimeLabel.setTextColor(mutedDark);
+
+                                // fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
+                                toolbar.getNavigationIcon().setTint(Color.WHITE);
+
+                                Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
+                                icon.setTint(Color.WHITE);
+                                button.setBackground(icon);
+                                mVisualizer.setColor(mutedColor);
+                                SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+                                int type = prefs1.getInt("cond", 0);
+                                if (type == 0) {
+
+                                } else if (type == 1) {
+                                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                                    myIcon3.setTint(mutedDark);
+                                    loop.setBackground(myIcon3);
+                                } else if (type == 2) {
+                                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                                    myIcon3.setTint(mutedDark);
+                                    loop.setBackground(myIcon3);
+                                }
+
+                                if (isClicked) {
+
+                                    Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
+                                    fabtint.setTint(getComplimentColor(finalBitmap2));
+                                    //fab.setBackground(fabtint);
+                                    //fab.setImageResource(R.drawable.ic_expand_more_black_24dp);
+                                    //isClicked = true;
+                                } else {
+
+                                    Drawable fabtint = getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_24dp);
+                                    fabtint.setTint(getComplimentColor(finalBitmap2));
+                                    //fab.setBackground(fabtint);
+                                    //fab.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
+                                    //isClicked = false;
+                                }
+                                // fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Media_list_activity.this,mutedDark)));
+                                //fab.setBackgroundColor(mutedDark);
+                                play = (mutedDark);
+                                pause = (mutedDark);
+                                playBtn.setColor(play);
+                                Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
+                                Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
+                                Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
+                                Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+
+                                myIcon3.setTint(play);
+                                myIcon.setTint(play);
+                                myIcon1.setTint(play);
+                                myIcon2.setTint(play);
+                                nxtBtn.setBackground(myIcon3);
+                                pauseBtn.setBackground(myIcon);
+                                if (mp.isPlaying()) {
+                                    playBtn.change(false);
+                                    // playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
+                                } else {
+                                    playBtn.change(true);
+                                    // playBtn.changeMode(FloatingMusicActionButton.Mode.PLAY_TO_PAUSE);
+                                }
+                                playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
+
+                                Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
+                                Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
+                                Drawable myIcon22 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+                                Drawable myIcon21 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
+                                myIcon33.setTint(play);
+                                myIcon31.setTint(play);
+                                myIcon22.setTint(play);
+                                myIcon21.setTint(play);
+
+                                ply.setBackground(myIcon22);
+                                pre.setBackground(myIcon31);
+                                nxt.setBackground(myIcon33);
+
+
+                                textView.setTextColor(mutedDark);
+                                textView1.setTextColor(mutedDark);
+
+                                titleS.setText(title);
+                                desS.setText(artist);
+                                titleS.setTextColor(mutedDark);
+                                desS.setTextColor(mutedDark);
+
+                               // add_phone.setBackgroundColor(vibrant);
+                                LinearLayout linearLayout = findViewById(R.id.medic_base);
+
+                                linearLayout.setBackgroundColor(vibrant);
+                                LinearLayout linearLayout1 = findViewById(R.id.medic_base1);
+                                linearLayout1.setBackgroundColor(vibrant);
+
+                            }
+                        });
+
+
+                        image = myView.findViewById(R.id.albumart);
+                        image.setImageBitmap(bitmap);
+                        bm = bitmap;
+                        if(isShowlrc){
+                            BitmapDrawable drawable = (BitmapDrawable) image.getDrawable();
+                            bitmap = drawable.getBitmap();
+                            Bitmap blurred = blurRenderScript(bitmap, 20);//second parametre is radius
+                            image.setImageBitmap(blurred);
+                        }
+                        songI.setImageBitmap(bitmap);
+
+
+                        Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+                        myIcon2.setTint(play);
+                        playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
+
+
+                        // Position Bar
+                        totalTime = mp.getDuration();
+                        positionBar = myView.findViewById(R.id.positionBar);
+                        vibrant = getDominantColor(bitmap);
+                        mutedDark = getComplimentColor(bitmap);
+                        positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                        positionBar.setMax(totalTime);
+                        positionBar.setProgress(mp.getCurrentPosition());
+                        remainingTimeLabel.setTextColor(mutedColor);
+                        elapsedTimeLabel.setTextColor(mutedColor);
+                        positionBar.setOnSeekBarChangeListener(
+                                new SeekBar.OnSeekBarChangeListener() {
+                                    @Override
+                                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                        if (fromUser) {
+                                            mp.seekTo(progress);
+                                            positionBar.setProgress(progress);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                                    }
+
+                                    @Override
+                                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                                    }
+                                }
+                        );
+
+
+                        // Volume Bar
+
+                        // volumeBar.setProgress(pro);
+                        volumeBar.setOnSeekBarChangeListener(
+                                new SeekBar.OnSeekBarChangeListener() {
+                                    @Override
+                                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                                        float volumeNum = progress / 100f;
+                                        mp.setVolume(volumeNum, volumeNum);
+                                        pro = progress;
+                                    }
+
+                                    @Override
+                                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                                    }
+
+                                    @Override
+                                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                                    }
+                                }
+                        );
+
+                        // Thread (Update positionBar & timeLabel)
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                while (mp != null) {
+                                    try {
+                                        Message msg = new Message();
+                                        msg.what = mp.getCurrentPosition();
+                                        handler.sendMessage(msg);
+                                        Thread.sleep(1000);
+                                    } catch (InterruptedException e) {
+                                    }
+                                }
+                            }
+                        }).start();
+
+
+                    }
+                }
+            }
+            else if (!mp.isPlaying()) {
+                if (!isUp) {
+
+                    {
+
+
+
+
+                        try {
+                            in = res.openInputStream(uri);
+
+                            bitmap = BitmapFactory.decodeStream(in);
+
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                            InputStream is = getResources().openRawResource(R.raw.image);
+                            bitmap = BitmapFactory.decodeStream(is);
+                        }
+
+
+                        Bitmap finalBitmap3 = bitmap;
+                        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                            @Override
+                            public void onGenerated(Palette palette) {
+                                // Use generated instance
+                                //work with the palette here
+                                int defaultValue = 0x000000;
+                                int vibrant = getDominantColor(finalBitmap3);
+                                int vibrantLight = palette.getLightVibrantColor(defaultValue);
+                                int vibrantDark = palette.getDarkVibrantColor(defaultValue);
+                                int muted = palette.getMutedColor(defaultValue);
+                                int mutedLight = palette.getLightMutedColor(defaultValue);
+                                int mutedDark = getComplimentColor(finalBitmap3);
+
+
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    Window window = getWindow();
+                                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                                    window.setStatusBarColor(vibrant);
+                                    setTitleColor(vibrant);
+                                    getSupportActionBar().setBackgroundDrawable(new ColorDrawable(vibrant));
+                                    Toolbar actionBarToolbar = findViewById(R.id.toolbar);
+                                    if (actionBarToolbar != null)
+                                        actionBarToolbar.setTitleTextColor(mutedDark);
+                                }
+
+                                volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                volumeBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
+                                positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                positionBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
+
+                                remainingTimeLabel.setTextColor(mutedDark);
+                                elapsedTimeLabel.setTextColor(mutedDark);
+
+                                // fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
+
+                                Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
+                                icon.setTint(mutedDark);
+                                button.setBackground(icon);
+                                mVisualizer.setColor(mutedColor);
+                                SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+                                int type = prefs1.getInt("cond", 0);
+                                if (type == 0) {
+
+                                } else if (type == 1) {
+                                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                                    myIcon3.setTint(mutedDark);
+                                    loop.setBackground(myIcon3);
+                                } else if (type == 2) {
+                                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                                    myIcon3.setTint(mutedDark);
+                                    loop.setBackground(myIcon3);
+                                }
+                                if (isClicked) {
+
+                                    Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
+                                    fabtint.setTint(getComplimentColor(finalBitmap3));
+                                    // fab.setBackground(fabtint);
+                                    //fab.setImageResource(R.drawable.ic_expand_more_black_24dp);
+                                    //isClicked = true;
+                                } else {
+
+                                    Drawable fabtint = getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_24dp);
+                                    fabtint.setTint(getComplimentColor(finalBitmap3));
+                                    //fab.setBackground(fabtint);
+                                    //fab.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
+                                    //isClicked = false;
+                                }
+                                // fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Media_list_activity.this,mutedDark)));
+                                //fab.setBackgroundColor(mutedDark);
+                                play = (mutedDark);
+                                pause = (mutedDark);
+                                playBtn.setColor(play);
+                                Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
+                                Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
+                                Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
+                                Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+
+                                myIcon3.setTint(play);
+                                myIcon.setTint(play);
+                                myIcon1.setTint(play);
+                                myIcon2.setTint(play);
+                                nxtBtn.setBackground(myIcon3);
+                                pauseBtn.setBackground(myIcon);
+                                if (mp.isPlaying()) {
+                                    playBtn.change(false);
+                                    // playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
+                                } else {
+                                    playBtn.change(true);
+                                    // playBtn.changeMode(FloatingMusicActionButton.Mode.PLAY_TO_PAUSE);
+                                }
+                                playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
+
+                                Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
+                                Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
+                                Drawable myIcon22 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+                                Drawable myIcon21 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
+                                myIcon33.setTint(play);
+                                myIcon31.setTint(play);
+                                myIcon22.setTint(play);
+                                myIcon21.setTint(play);
+
+                                ply.setBackground(myIcon21);
+                                pre.setBackground(myIcon31);
+                                nxt.setBackground(myIcon33);
+                                //myIcon3.setTint(mutedDark);
+                                //myIcon2.setTint(mutedDark);
+
+                                media_base.setAlpha(1.0f);
+
+                                textView.setTextColor(mutedDark);
+                                textView1.setTextColor(mutedDark);
+                                titleS.setText(title);
+                                desS.setText(artist);
+                                titleS.setTextColor(mutedDark);
+                                desS.setTextColor(mutedDark);
+                            //    add_phone.setBackgroundColor(vibrant);
+                                LinearLayout linearLayout = findViewById(R.id.medic_base);
+
+                                linearLayout.setBackgroundColor(vibrant);
+
+                                LinearLayout linearLayout1 = findViewById(R.id.medic_base1);
+                                linearLayout1.setBackgroundColor(vibrant);
+
+                            }
+                        });
+
+
+                        image = myView.findViewById(R.id.albumart);
+                        image.setImageBitmap(bitmap);
+                        bm = bitmap;
+                        if(isShowlrc){
+                            BitmapDrawable drawable = (BitmapDrawable) image.getDrawable();
+                            bitmap = drawable.getBitmap();
+                            Bitmap blurred = blurRenderScript(bitmap, 20);//second parametre is radius
+                            image.setImageBitmap(blurred);
+                        }
+                        songI.setImageBitmap(bitmap);
+
+                        Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
+                        myIcon2.setTint(play);
+                        playBtn.setBackground(myIcon2);
+                        //myIcon3.setTint(play);
+                        // myIcon2.setTint(play);
+
+
+                        // Position Bar
+                        totalTime = mp.getDuration();
+                        positionBar = myView.findViewById(R.id.positionBar);
+                        vibrant = getDominantColor(bitmap);
+                        mutedDark = getComplimentColor(bitmap);
+                        positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                        positionBar.setMax(totalTime);
+                        positionBar.setProgress(mp.getCurrentPosition());
+                        remainingTimeLabel.setTextColor(mutedColor);
+                        elapsedTimeLabel.setTextColor(mutedColor);
+                        positionBar.setOnSeekBarChangeListener(
+                                new SeekBar.OnSeekBarChangeListener() {
+                                    @Override
+                                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                        if (fromUser) {
+                                            mp.seekTo(progress);
+                                            positionBar.setProgress(progress);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                                    }
+
+                                    @Override
+                                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                                    }
+                                }
+                        );
+
+
+                        // Volume Bar
+
+                        // volumeBar.setProgress(pro);
+                        volumeBar.setOnSeekBarChangeListener(
+                                new SeekBar.OnSeekBarChangeListener() {
+                                    @Override
+                                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                                        float volumeNum = progress / 100f;
+                                        mp.setVolume(volumeNum, volumeNum);
+                                        pro = progress;
+                                    }
+
+                                    @Override
+                                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                                    }
+
+                                    @Override
+                                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                                    }
+                                }
+                        );
+
+                        // Thread (Update positionBar & timeLabel)
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                while (mp != null) {
+                                    try {
+                                        Message msg = new Message();
+                                        msg.what = mp.getCurrentPosition();
+                                        handler.sendMessage(msg);
+                                        Thread.sleep(1000);
+                                    } catch (InterruptedException e) {
+                                    }
+                                }
+                            }
+                        }).start();
+
+                    }
+
+
+                } else {
+
+                    {
+
+
+                        try {
+                            in = res.openInputStream(uri);
+
+                            bitmap = BitmapFactory.decodeStream(in);
+
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                            InputStream is = getResources().openRawResource(R.raw.image);
+                            bitmap = BitmapFactory.decodeStream(is);
+                        }
+
+
+                        Bitmap finalBitmap4 = bitmap;
+                        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
+                            @Override
+                            public void onGenerated(Palette palette) {
+                                // Use generated instance
+                                //work with the palette here
+                                int defaultValue = 0x000000;
+                                int vibrant = getDominantColor(finalBitmap4);
+                                int vibrantLight = palette.getLightVibrantColor(defaultValue);
+                                int vibrantDark = palette.getDarkVibrantColor(defaultValue);
+                                int muted = palette.getMutedColor(defaultValue);
+                                int mutedLight = palette.getLightMutedColor(defaultValue);
+                                int mutedDark = getComplimentColor(finalBitmap4);
+
+
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    Window window = getWindow();
+                                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                                    window.setStatusBarColor(Color.parseColor("#3a9ebe"));
+                                    setTitleColor(Color.WHITE);
+                                    getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#3a9ebe")));
+                                    Toolbar actionBarToolbar = findViewById(R.id.toolbar);
+                                    if (actionBarToolbar != null)
+                                        actionBarToolbar.setTitleTextColor(Color.WHITE);
+                                }
+
+                                volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                volumeBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
+                                positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                                positionBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
+
+                                remainingTimeLabel.setTextColor(mutedDark);
+                                elapsedTimeLabel.setTextColor(mutedDark);
+
+                                // fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
+                                toolbar.getNavigationIcon().setTint(Color.WHITE);
+
+                                Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
+                                icon.setTint(Color.WHITE);
+                                button.setBackground(icon);
+                                mVisualizer.setColor(mutedColor);
+                                SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+                                int type = prefs1.getInt("cond", 0);
+                                if (type == 0) {
+
+                                } else if (type == 1) {
+                                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                                    myIcon3.setTint(mutedDark);
+                                    loop.setBackground(myIcon3);
+                                } else if (type == 2) {
+                                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                                    myIcon3.setTint(mutedDark);
+                                    loop.setBackground(myIcon3);
+                                }
+
+                                if (isClicked) {
+
+                                    Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
+                                    fabtint.setTint(getComplimentColor(finalBitmap4));
+                                } else {
+
+                                    Drawable fabtint = getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_24dp);
+                                    fabtint.setTint(getComplimentColor(finalBitmap4));
+                                }
+
+                                play = (mutedDark);
+                                pause = (mutedDark);
+                                playBtn.setColor(play);
+                                Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
+                                Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
+                                Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
+                                Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+
+                                myIcon3.setTint(play);
+                                myIcon.setTint(play);
+                                myIcon1.setTint(play);
+                                myIcon2.setTint(play);
+                                nxtBtn.setBackground(myIcon3);
+                                pauseBtn.setBackground(myIcon);
+                                if (mp.isPlaying()) {
+                                    playBtn.change(false);
+                                    // playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
+                                } else {
+                                    playBtn.change(true);
+                                    // playBtn.changeMode(FloatingMusicActionButton.Mode.PLAY_TO_PAUSE);
+                                }
+                                playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
+
+                                Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
+                                Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
+                                Drawable myIcon22 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+                                Drawable myIcon21 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
+                                myIcon33.setTint(play);
+                                myIcon31.setTint(play);
+                                myIcon22.setTint(play);
+                                myIcon21.setTint(play);
+
+                                ply.setBackground(myIcon21);
+                                pre.setBackground(myIcon31);
+                                nxt.setBackground(myIcon33);
+
+
+                                textView.setTextColor(mutedDark);
+                                textView1.setTextColor(mutedDark);
+                                titleS.setText(title);
+                                desS.setText(artist);
+                                titleS.setTextColor(mutedDark);
+                                desS.setTextColor(mutedDark);
+                             //   add_phone.setBackgroundColor(vibrant);
+                                LinearLayout linearLayout = findViewById(R.id.medic_base);
+
+                                linearLayout.setBackgroundColor(vibrant);
+
+                                LinearLayout linearLayout1 = findViewById(R.id.medic_base1);
+                                linearLayout1.setBackgroundColor(vibrant);
+                            }
+                        });
+
+
+                        image = myView.findViewById(R.id.albumart);
+                        image.setImageBitmap(bitmap);
+
+                        bm = bitmap;
+                        if(isShowlrc){
+                            BitmapDrawable drawable = (BitmapDrawable) image.getDrawable();
+                            bitmap = drawable.getBitmap();
+                            Bitmap blurred = blurRenderScript(bitmap, 20);//second parametre is radius
+                            image.setImageBitmap(blurred);
+                        }
+                        songI.setImageBitmap(bitmap);
+
+                        Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
+                        myIcon2.setTint(play);
+                        playBtn.setBackground(myIcon2);
+
+
+                        // Position Bar
+                        totalTime = mp.getDuration();
+                        positionBar = myView.findViewById(R.id.positionBar);
+                        vibrant = getDominantColor(bitmap);
+                        mutedDark = getComplimentColor(bitmap);
+                        positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                        positionBar.setMax(totalTime);
+                        positionBar.setProgress(mp.getCurrentPosition());
+                        remainingTimeLabel.setTextColor(mutedColor);
+                        elapsedTimeLabel.setTextColor(mutedColor);
+                        positionBar.setOnSeekBarChangeListener(
+                                new SeekBar.OnSeekBarChangeListener() {
+                                    @Override
+                                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                        if (fromUser) {
+                                            mp.seekTo(progress);
+                                            positionBar.setProgress(progress);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                                    }
+
+                                    @Override
+                                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                                    }
+                                }
+                        );
+
+
+                        // Volume Bar
+
+                        // volumeBar.setProgress(pro);
+                        volumeBar.setOnSeekBarChangeListener(
+                                new SeekBar.OnSeekBarChangeListener() {
+                                    @Override
+                                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                                        float volumeNum = progress / 100f;
+                                        mp.setVolume(volumeNum, volumeNum);
+                                        pro = progress;
+                                    }
+
+                                    @Override
+                                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                                    }
+
+                                    @Override
+                                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                                    }
+                                }
+                        );
+
+                        // Thread (Update positionBar & timeLabel)
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                while (mp != null) {
+                                    try {
+                                        Message msg = new Message();
+                                        msg.what = mp.getCurrentPosition();
+                                        handler.sendMessage(msg);
+                                        Thread.sleep(1000);
+                                    } catch (InterruptedException e) {
+                                    }
+                                }
+                            }
+                        }).start();
+
+
+                    }
+                }
+            }
+
+        }else{
+            startsong();
+        }
+
+        //add_phone.setVisibility(View.VISIBLE);
+
+          //  myView.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+
+        //add_phone.setVisibility(View.VISIBLE);
+        //media_base.setVisibility(View.INVISIBLE);
+
+        add_phone.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               myView.setPanelState(SlidingUpPanelLayout.PanelState.EXPANDED);
+                listView.setEnabled(false);
+
+                gridView.setEnabled(false);
+
+                volumeBar.setEnabled(true);
+                try {
+                    positionBar.setEnabled(true);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+
+                playBtn.setEnabled(true);
+                pauseBtn.setEnabled(true);
+                nxtBtn.setEnabled(true);
+                showlrc.setEnabled(true);
+                if(isShowlrc){
+                    mLrcView.setVisibility(View.VISIBLE);
+
+                    BitmapDrawable drawable = (BitmapDrawable) image.getDrawable();
+                    Bitmap bitmap = drawable.getBitmap();
+                    Bitmap blurred = blurRenderScript(bitmap, 20);//second parametre is radius
+                    image.setImageBitmap(blurred);
+                }else {
+                    mLrcView.setVisibility(View.GONE);
+                }
+
+                //myView.setVisibility(View.VISIBLE);
+               // add_phone.setVisibility(View.INVISIBLE);
+                ply.setEnabled(false);
+                pre.setEnabled(false);
+                nxt.setEnabled(false);
+
+
+
+
+                isUp = false;
+            }
+        });
+
+        final float[] slideold = {0f};
+        media_base.setAlpha(slideold[0]);
+        myView.addPanelSlideListener(new SlidingUpPanelLayout.PanelSlideListener() {
+
+
+
+            @Override
+            public void onPanelSlide(View panel, float slideOffset) {
+                System.out.println("onPanelSlide, offset " + slideOffset);
+                slideold[0] = slideOffset;
+
+
+                    //    add_phone.setAlpha((1.0f-slideold[0]));
+                media_base.setAlpha(slideold[0]);
+                        add_phone.setAlpha(1.0f-slideold[0]);
+
+
+
+            }
+
+            @Override
+            public void onPanelStateChanged(View panel, SlidingUpPanelLayout.PanelState previousState, SlidingUpPanelLayout.PanelState newState) {
+                Log.i(TAG, "onPanelStateChanged " + newState);
+                if(newState.equals(SlidingUpPanelLayout.PanelState.EXPANDED)){
+
+                    listView.setEnabled(false);
+
+                    gridView.setEnabled(false);
+
+                    volumeBar.setEnabled(true);
+                    try {
+                        positionBar.setEnabled(true);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+
+                    playBtn.setEnabled(true);
+                    pauseBtn.setEnabled(true);
+                    nxtBtn.setEnabled(true);
+                    showlrc.setEnabled(true);
+                    if(isShowlrc){
+                        mLrcView.setVisibility(View.VISIBLE);
+
+                        BitmapDrawable drawable = (BitmapDrawable) image.getDrawable();
+                        Bitmap bitmap = drawable.getBitmap();
+                        Bitmap blurred = blurRenderScript(bitmap, 20);//second parametre is radius
+                        image.setImageBitmap(blurred);
+                    }else {
+                        mLrcView.setVisibility(View.GONE);
+                    }
+
+                    //myView.setVisibility(View.VISIBLE);
+                   // add_phone.setVisibility(View.INVISIBLE);
+                    ply.setEnabled(false);
+                    pre.setEnabled(false);
+                    nxt.setEnabled(false);
+
+
+
+
+                    isUp = false;
+
+                    System.out.println("isside expand");
+
+
+                }
+                else if(newState.equals(SlidingUpPanelLayout.PanelState.COLLAPSED)){
+
+
+
+
+                    listView.setEnabled(true);
+                    gridView.setEnabled(true);
+                    //     myView.setEnabled(false);
+                    volumeBar.setEnabled(false);
+                    try {
+                        positionBar.setEnabled(false);
+                    } catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+                    playBtn.setEnabled(false);
+                    pauseBtn.setEnabled(false);
+                    nxtBtn.setEnabled(false);
+                    showlrc.setEnabled(false);
+                    mLrcView.setVisibility(View.INVISIBLE);
+                    if(isShowlrc){
+
+                        BitmapDrawable drawable = (BitmapDrawable) image.getDrawable();
+                        Bitmap bitmap = drawable.getBitmap();
+                        Bitmap blurred = blurRenderScript(bitmap, 20);//second parametre is radius
+                        image.setImageBitmap(blurred);
+                    }
+
+                   // myView.setVisibility(View.GONE);
+                  //  add_phone.setVisibility(View.VISIBLE);
+                    ply.setEnabled(true);
+                    pre.setEnabled(true);
+                    nxt.setEnabled(true);
+
+                    isUp = true;
+
+                    System.out.println("isside collapse");
+                }
+
+
+
+
+            }
+        });
+        //myView.drag(false);
+        myView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        myView.setFadeOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //myView.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+            }
+        });
+
+
+
+
 
 
 
@@ -549,6 +1679,7 @@ public class Media_list_activity extends AppCompatActivity  {
 
         //get the AudioSessionId from your MediaPlayer and pass it to the visualizer
 
+        int finalMutedDark = mutedDark;
         loop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -557,7 +1688,7 @@ public class Media_list_activity extends AppCompatActivity  {
                     if (mp.isPlaying()) {
                         mp.setLooping(true);
                         Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
-                        myIcon3.setTint(mutedDark);
+                        myIcon3.setTint(finalMutedDark);
                         loop.setBackground(myIcon3);
 
                         SharedPreferences.Editor editor = prefs1.edit();
@@ -569,7 +1700,7 @@ public class Media_list_activity extends AppCompatActivity  {
                     if (mp.isPlaying()) {
                         mp.setLooping(false);
                         Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
-                        myIcon3.setTint(mutedDark);
+                        myIcon3.setTint(finalMutedDark);
                         loop.setBackground(myIcon3);
 
                         SharedPreferences.Editor editor = prefs1.edit();
@@ -591,7 +1722,6 @@ public class Media_list_activity extends AppCompatActivity  {
         desS.setText(ListElementsArrayList.get(position).getArtist());
         titleS.setTextColor(mutedDark);
         desS.setTextColor(mutedDark);
-        add_phone.setBackgroundColor(vibrant);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -607,20 +1737,56 @@ public class Media_list_activity extends AppCompatActivity  {
         icon.setTint(mutedDark);
         button.setBackground(icon);
 
-        slideUp1(add_phone);
-        if(mp.isPlaying()){
+       // slideUp1(add_phone);
+        add_phone.setBackgroundColor(play);
+        if(mp!=null){
+            if(mp.isPlaying()){
 
-            Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
-            myIcon3.setTint(mutedDark);
-            ply.setBackground(myIcon3);
-        }else{
-            Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
-            myIcon3.setTint(mutedDark);
-            ply.setBackground(myIcon3);
+                Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+                myIcon3.setTint(mutedDark);
+                ply.setBackground(myIcon3);
+
+            }else{
+                Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
+                myIcon3.setTint(mutedDark);
+                ply.setBackground(myIcon3);
+            }
         }
 
         mLrcView = findViewById(R.id.lrc_view);
+       // mLrcView.setVisibility(View.GONE);
 
+
+        ImageButton enablelrc = myView.findViewById(R.id.enablelrc);
+        Bitmap finalBitmap = bitmap;
+
+        enablelrc.setOnClickListener(new View.OnClickListener() {
+
+            int oo = 0;
+
+            @Override
+            public void onClick(View view) {
+                oo++;
+                if(oo==1){
+                    isShowlrc = true;
+                    mLrcView.setVisibility(View.VISIBLE);
+                    BitmapDrawable drawable = (BitmapDrawable) image.getDrawable();
+                    Bitmap bitmap = drawable.getBitmap();
+                    Bitmap blurred = blurRenderScript(bitmap, 25);//second parametre is radius
+                    image.setImageBitmap(blurred);
+                }else if(oo==2){
+                    oo=0;
+                    isShowlrc = false;
+                    mLrcView.setVisibility(View.INVISIBLE);
+
+
+                    image.setImageBitmap(bm);
+
+                }
+
+
+            }
+        });
 
         if(mp!=null){
             File file = new File(Environment.getExternalStorageDirectory() + "/Lyrics/"
@@ -629,6 +1795,13 @@ public class Media_list_activity extends AppCompatActivity  {
             System.out.println(file);
             List<Lrc> lrcs = LrcHelper.parseLrcFromFile(file);
             mLrcView.setLrcData(lrcs);
+           if(isShowlrc) {mLrcView.setVisibility(View.VISIBLE);
+               BitmapDrawable drawable = (BitmapDrawable) image.getDrawable();
+               Bitmap bitmap1 = drawable.getBitmap();
+               Bitmap blurred = blurRenderScript(bitmap1, 20);//second parametre is radius
+               image.setImageBitmap(blurred);
+           }
+           else mLrcView.setVisibility(View.INVISIBLE);
         }
 
 
@@ -638,7 +1811,12 @@ public class Media_list_activity extends AppCompatActivity  {
         showlrc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(Media_list_activity.this);
+                AlertDialog.Builder alertDialog ;
+                if(isDark){
+                    alertDialog = new AlertDialog.Builder(Media_list_activity.this,R.style.DialogurDark);
+                }else {
+                    alertDialog = new AlertDialog.Builder(Media_list_activity.this,R.style.DialogueLight);
+                }
                 alertDialog.setMessage("Lyrics");
 
                 final EditText input = new EditText(Media_list_activity.this);
@@ -646,7 +1824,15 @@ public class Media_list_activity extends AppCompatActivity  {
                 LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT);
+                lp.setMargins(15,15,15,15);
                 input.setLayoutParams(lp);
+                input.setGravity(android.view.Gravity.TOP|android.view.Gravity.LEFT);
+                if(isDark){
+                input.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.edittextstyledark));
+
+                }else {
+                    input.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.editextstyle));
+                }
                 alertDialog.setView(input);
                 alertDialog.setIcon(R.drawable.common_google_signin_btn_icon_dark);
 
@@ -654,7 +1840,7 @@ public class Media_list_activity extends AppCompatActivity  {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 if(!input.getText().equals("")){
-                                   save(input, Media_list_activity.ListElementsArrayList.get(position).getTitle().toLowerCase().replace(" ","_").concat(".lrc"));
+                                    save(input, Media_list_activity.ListElementsArrayList.get(position).getTitle().toLowerCase().replace(" ","_").concat(".lrc"));
                                 }
                             }
                         });
@@ -673,1008 +1859,7 @@ public class Media_list_activity extends AppCompatActivity  {
 
 
 
-        myView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                //requestAudioPermissions();
-                switch (motionEvent.getActionMasked()) {
-                    case MotionEvent.ACTION_DOWN:
-                        slideDown(myView);
-                        slideUp1(add_phone);
-                        isUp = !isUp;
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        slideUp(myView);
-                        slideDown1(add_phone);
-                        isUp = !isUp;
-                        break;
 
-                    default:
-                        return false;
-                }
-                return true;
-            }
-        });
-
-
-        add_phone.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                System.out.println(pro);
-                //requestAudioPermissions();
-                if (mp.isPlaying()) {
-                    if (!isUp) {
-                        slideUp(myView);
-                        slideDown1(add_phone);
-
-                        {
-
-
-                            title = ListElementsArrayList.get(position).getTitle();
-                            artist = ListElementsArrayList.get(position).getArtist();
-                            album = ListElementsArrayList.get(position).getAlbum();
-
-
-                            textView.setText(title);
-                            textView1.setText(artist);
-                            titleS.setText(title);
-                            desS.setText(artist);
-
-
-                            titleq = ListElementsArrayList.get(position).getImagepath();
-                            Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
-
-                            Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(titleq));
-                            ContentResolver res = getContentResolver();
-                            InputStream in;
-                            bm = null;
-                            try {
-                                in = res.openInputStream(uri);
-
-                                bm = BitmapFactory.decodeStream(in);
-
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                                InputStream is = getResources().openRawResource(R.raw.image);
-                                bm = BitmapFactory.decodeStream(is);
-                            }
-
-
-                            Palette.from(bm).generate(new Palette.PaletteAsyncListener() {
-                                @Override
-                                public void onGenerated(Palette palette) {
-                                    // Use generated instance
-                                    //work with the palette here
-                                    int defaultValue = 0x000000;
-                                    int vibrant = getDominantColor(bm);
-                                    int vibrantLight = palette.getLightVibrantColor(defaultValue);
-                                    int vibrantDark = palette.getDarkVibrantColor(defaultValue);
-                                    int muted = palette.getMutedColor(defaultValue);
-                                    int mutedLight = palette.getLightMutedColor(defaultValue);
-                                    int mutedDark = getComplimentColor(vibrant);
-
-
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                        Window window = getWindow();
-                                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                                        window.setStatusBarColor(vibrant);
-                                        setTitleColor(vibrant);
-                                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(vibrant));
-                                        Toolbar actionBarToolbar = findViewById(R.id.toolbar);
-                                        if (actionBarToolbar != null)
-                                            actionBarToolbar.setTitleTextColor(mutedDark);
-                                    }
-
-                                    volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
-                                    volumeBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
-                                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
-                                    positionBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
-
-                                    remainingTimeLabel.setTextColor(mutedDark);
-                                    elapsedTimeLabel.setTextColor(mutedDark);
-                                    toolbar.getNavigationIcon().setTint(mutedDark);
-
-                                    Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
-                                    icon.setTint(mutedDark);
-                                    button.setBackground(icon);
-                                    mVisualizer.setColor(mutedColor);
-                                    SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
-
-                                    int type = prefs1.getInt("cond", 0);
-                                    if (type == 0) {
-
-                                    } else if (type == 1) {
-                                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
-                                        myIcon3.setTint(mutedDark);
-                                        loop.setBackground(myIcon3);
-                                    } else if (type == 2) {
-                                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
-                                        myIcon3.setTint(mutedDark);
-                                        loop.setBackground(myIcon3);
-                                    }
-
-                                    play = (mutedDark);
-                                    pause = (mutedDark);
-
-                                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
-                                    Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
-                                    Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
-                                    Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
-
-                                    myIcon3.setTint(play);
-                                    myIcon.setTint(play);
-                                    myIcon1.setTint(play);
-                                    myIcon2.setTint(play);
-                                    nxtBtn.setBackground(myIcon3);
-                                    if(mp.isPlaying()) {
-                                        playBtn.change(false);
-                                       // playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
-                                    }else {
-                                        playBtn.change(true);
-                                       // playBtn.changeMode(FloatingMusicActionButton.Mode.PLAY_TO_PAUSE);
-                                    }
-                                    pauseBtn.setBackground(myIcon);
-                                    playBtn.setBackground(myIcon2);
-
-                                    playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
-                                    Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
-                                    Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
-                                    Drawable myIcon22 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
-                                    Drawable myIcon21 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
-                                    myIcon33.setTint(play);
-                                    myIcon31.setTint(play);
-                                    myIcon22.setTint(play);
-                                    myIcon21.setTint(play);
-
-                                    ply.setBackground(myIcon22);
-                                    pre.setBackground(myIcon31);
-                                    nxt.setBackground(myIcon33);
-
-
-                                    textView.setTextColor(mutedDark);
-                                    textView1.setTextColor(mutedDark);
-
-                                    titleS.setTextColor(mutedDark);
-                                    desS.setTextColor(mutedDark);
-                                    add_phone.setBackgroundColor(vibrant);
-
-
-                                    LinearLayout linearLayout = findViewById(R.id.medic_base);
-
-                                    linearLayout.setBackgroundColor(vibrant);
-
-                                }
-                            });
-
-
-                            image = myView.findViewById(R.id.albumart);
-                            image.setImageBitmap(bm);
-                            songI.setImageBitmap(bm);
-
-
-                            Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
-                            myIcon2.setTint(play);
-                            playBtn.setBackground(myIcon2);
-
-                            totalTime = mp.getDuration();
-                            positionBar = myView.findViewById(R.id.positionBar);
-                            int vibrant = getDominantColor(bm);
-                            int mutedDark = getComplimentColor(vibrant);
-                            positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
-                            positionBar.setMax(totalTime);
-                            positionBar.setProgress(mp.getCurrentPosition());
-
-                            remainingTimeLabel.setTextColor(mutedColor);
-                            elapsedTimeLabel.setTextColor(mutedColor);
-
-                            positionBar.setOnSeekBarChangeListener(
-                                    new SeekBar.OnSeekBarChangeListener() {
-                                        @Override
-                                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                                            if (fromUser) {
-                                                mp.seekTo(progress);
-                                                positionBar.setProgress(progress);
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onStartTrackingTouch(SeekBar seekBar) {
-
-                                        }
-
-                                        @Override
-                                        public void onStopTrackingTouch(SeekBar seekBar) {
-
-                                        }
-                                    }
-                            );
-
-
-                            // Volume Bar
-
-                            //volumeBar.setProgress(pro);
-                            volumeBar.setOnSeekBarChangeListener(
-                                    new SeekBar.OnSeekBarChangeListener() {
-                                        @Override
-                                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-                                            float volumeNum = progress / 100f;
-                                            mp.setVolume(volumeNum, volumeNum);
-                                            pro = progress;
-                                        }
-
-                                        @Override
-                                        public void onStartTrackingTouch(SeekBar seekBar) {
-
-                                        }
-
-                                        @Override
-                                        public void onStopTrackingTouch(SeekBar seekBar) {
-
-                                        }
-                                    }
-                            );
-
-                            // Thread (Update positionBar & timeLabel)
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    while (mp != null) {
-                                        try {
-                                            Message msg = new Message();
-                                            msg.what = mp.getCurrentPosition();
-                                            handler.sendMessage(msg);
-                                            Thread.sleep(1000);
-                                        } catch (InterruptedException e) {
-                                        }
-                                    }
-                                }
-                            }).start();
-
-                        }
-
-
-                    }
-                    else {
-                        slideDown(myView);
-                        slideUp1(add_phone);
-
-                        {
-
-
-                            title = ListElementsArrayList.get(position).getTitle();
-                            artist = ListElementsArrayList.get(position).getArtist();
-                            album = ListElementsArrayList.get(position).getAlbum();
-
-
-                            textView.setText(title);
-                            textView1.setText(artist);
-
-
-                            titleq = ListElementsArrayList.get(position).getImagepath();
-                            Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
-
-                            Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(titleq));
-                            ContentResolver res = getContentResolver();
-                            InputStream in;
-                            bm = null;
-                            try {
-                                in = res.openInputStream(uri);
-
-                                bm = BitmapFactory.decodeStream(in);
-
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                                InputStream is = getResources().openRawResource(R.raw.image);
-                                bm = BitmapFactory.decodeStream(is);
-                            }
-
-
-                            Palette.from(bm).generate(new Palette.PaletteAsyncListener() {
-                                @Override
-                                public void onGenerated(Palette palette) {
-                                    // Use generated instance
-                                    //work with the palette here
-                                    int defaultValue = 0x000000;
-                                    int vibrant = getDominantColor(bm);
-                                    int vibrantLight = palette.getLightVibrantColor(defaultValue);
-                                    int vibrantDark = palette.getDarkVibrantColor(defaultValue);
-                                    int muted = palette.getMutedColor(defaultValue);
-                                    int mutedLight = palette.getLightMutedColor(defaultValue);
-                                    int mutedDark = getComplimentColor(vibrant);
-
-
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                        Window window = getWindow();
-                                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                                        window.setStatusBarColor(Color.parseColor("#3a9ebe"));
-                                        setTitleColor(Color.WHITE);
-                                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#3a9ebe")));
-                                        Toolbar actionBarToolbar = findViewById(R.id.toolbar);
-                                        if (actionBarToolbar != null)
-                                            actionBarToolbar.setTitleTextColor(Color.WHITE);
-                                    }
-
-                                    volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
-                                    volumeBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
-                                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
-                                    positionBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
-
-                                    remainingTimeLabel.setTextColor(mutedDark);
-                                    elapsedTimeLabel.setTextColor(mutedDark);
-
-                                    // fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
-                                    toolbar.getNavigationIcon().setTint(Color.WHITE);
-
-                                    Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
-                                    icon.setTint(Color.WHITE);
-                                    button.setBackground(icon);
-                                    mVisualizer.setColor(mutedColor);
-                                    SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
-
-                                    int type = prefs1.getInt("cond", 0);
-                                    if (type == 0) {
-
-                                    } else if (type == 1) {
-                                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
-                                        myIcon3.setTint(mutedDark);
-                                        loop.setBackground(myIcon3);
-                                    } else if (type == 2) {
-                                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
-                                        myIcon3.setTint(mutedDark);
-                                        loop.setBackground(myIcon3);
-                                    }
-
-                                    if (isClicked) {
-
-                                        Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
-                                        fabtint.setTint(getComplimentColor(mutedDark));
-                                        //fab.setBackground(fabtint);
-                                        //fab.setImageResource(R.drawable.ic_expand_more_black_24dp);
-                                        //isClicked = true;
-                                    } else {
-
-                                        Drawable fabtint = getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_24dp);
-                                        fabtint.setTint(getComplimentColor(mutedDark));
-                                        //fab.setBackground(fabtint);
-                                        //fab.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
-                                        //isClicked = false;
-                                    }
-                                    // fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Media_list_activity.this,mutedDark)));
-                                    //fab.setBackgroundColor(mutedDark);
-                                    play = (mutedDark);
-                                    pause = (mutedDark);
-
-                                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
-                                    Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
-                                    Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
-                                    Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
-
-                                    myIcon3.setTint(play);
-                                    myIcon.setTint(play);
-                                    myIcon1.setTint(play);
-                                    myIcon2.setTint(play);
-                                    nxtBtn.setBackground(myIcon3);
-                                    pauseBtn.setBackground(myIcon);
-                                    if(mp.isPlaying()) {
-                                        playBtn.change(false);
-                                        // playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
-                                    }else {
-                                        playBtn.change(true);
-                                        // playBtn.changeMode(FloatingMusicActionButton.Mode.PLAY_TO_PAUSE);
-                                    }
-                                    playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
-
-                                    Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
-                                    Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
-                                    Drawable myIcon22 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
-                                    Drawable myIcon21 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
-                                    myIcon33.setTint(play);
-                                    myIcon31.setTint(play);
-                                    myIcon22.setTint(play);
-                                    myIcon21.setTint(play);
-
-                                    ply.setBackground(myIcon22);
-                                    pre.setBackground(myIcon31);
-                                    nxt.setBackground(myIcon33);
-
-
-                                    textView.setTextColor(mutedDark);
-                                    textView1.setTextColor(mutedDark);
-
-                                    titleS.setText(title);
-                                    desS.setText(artist);
-                                    titleS.setTextColor(mutedDark);
-                                    desS.setTextColor(mutedDark);
-                                    add_phone.setBackgroundColor(vibrant);
-                                    LinearLayout linearLayout = findViewById(R.id.medic_base);
-
-                                    linearLayout.setBackgroundColor(vibrant);
-
-                                }
-                            });
-
-
-                            image = myView.findViewById(R.id.albumart);
-                            image.setImageBitmap(bm);
-                            songI.setImageBitmap(bm);
-
-
-                            Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
-                            myIcon2.setTint(play);
-                            playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
-
-
-                            // Position Bar
-                            totalTime = mp.getDuration();
-                            positionBar = myView.findViewById(R.id.positionBar);
-                            int vibrant = getDominantColor(bm);
-                            int mutedDark = getComplimentColor(vibrant);
-                            positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
-                            positionBar.setMax(totalTime);
-                            positionBar.setProgress(mp.getCurrentPosition());
-                            remainingTimeLabel.setTextColor(mutedColor);
-                            elapsedTimeLabel.setTextColor(mutedColor);
-                            positionBar.setOnSeekBarChangeListener(
-                                    new SeekBar.OnSeekBarChangeListener() {
-                                        @Override
-                                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                                            if (fromUser) {
-                                                mp.seekTo(progress);
-                                                positionBar.setProgress(progress);
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onStartTrackingTouch(SeekBar seekBar) {
-
-                                        }
-
-                                        @Override
-                                        public void onStopTrackingTouch(SeekBar seekBar) {
-
-                                        }
-                                    }
-                            );
-
-
-                            // Volume Bar
-
-                            // volumeBar.setProgress(pro);
-                            volumeBar.setOnSeekBarChangeListener(
-                                    new SeekBar.OnSeekBarChangeListener() {
-                                        @Override
-                                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-                                            float volumeNum = progress / 100f;
-                                            mp.setVolume(volumeNum, volumeNum);
-                                            pro = progress;
-                                        }
-
-                                        @Override
-                                        public void onStartTrackingTouch(SeekBar seekBar) {
-
-                                        }
-
-                                        @Override
-                                        public void onStopTrackingTouch(SeekBar seekBar) {
-
-                                        }
-                                    }
-                            );
-
-                            // Thread (Update positionBar & timeLabel)
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    while (mp != null) {
-                                        try {
-                                            Message msg = new Message();
-                                            msg.what = mp.getCurrentPosition();
-                                            handler.sendMessage(msg);
-                                            Thread.sleep(1000);
-                                        } catch (InterruptedException e) {
-                                        }
-                                    }
-                                }
-                            }).start();
-
-
-                        }
-                    }
-                    isUp = !isUp;
-                }
-                else if (!mp.isPlaying()) {
-                    if (!isUp) {
-                        slideUp(myView);
-                        slideDown1(add_phone);
-
-                        {
-
-
-                            title = ListElementsArrayList.get(position).getTitle();
-                            artist = ListElementsArrayList.get(position).getArtist();
-                            album = ListElementsArrayList.get(position).getAlbum();
-
-
-                            textView.setText(title);
-                            textView1.setText(artist);
-
-                            titleq = ListElementsArrayList.get(position).getImagepath();
-                            Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
-
-                            Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(titleq));
-                            ContentResolver res = getContentResolver();
-                            InputStream in;
-                            bm = null;
-                            try {
-                                in = res.openInputStream(uri);
-
-                                bm = BitmapFactory.decodeStream(in);
-
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                                InputStream is = getResources().openRawResource(R.raw.image);
-                                bm = BitmapFactory.decodeStream(is);
-                            }
-
-
-                            Palette.from(bm).generate(new Palette.PaletteAsyncListener() {
-                                @Override
-                                public void onGenerated(Palette palette) {
-                                    // Use generated instance
-                                    //work with the palette here
-                                    int defaultValue = 0x000000;
-                                    int vibrant = getDominantColor(bm);
-                                    int vibrantLight = palette.getLightVibrantColor(defaultValue);
-                                    int vibrantDark = palette.getDarkVibrantColor(defaultValue);
-                                    int muted = palette.getMutedColor(defaultValue);
-                                    int mutedLight = palette.getLightMutedColor(defaultValue);
-                                    int mutedDark = getComplimentColor(vibrant);
-
-
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                        Window window = getWindow();
-                                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                                        window.setStatusBarColor(vibrant);
-                                        setTitleColor(vibrant);
-                                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(vibrant));
-                                        Toolbar actionBarToolbar = findViewById(R.id.toolbar);
-                                        if (actionBarToolbar != null)
-                                            actionBarToolbar.setTitleTextColor(mutedDark);
-                                    }
-
-                                    volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
-                                    volumeBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
-                                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
-                                    positionBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
-
-                                    remainingTimeLabel.setTextColor(mutedDark);
-                                    elapsedTimeLabel.setTextColor(mutedDark);
-
-                                    // fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
-
-                                    Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
-                                    icon.setTint(mutedDark);
-                                    button.setBackground(icon);
-                                    mVisualizer.setColor(mutedColor);
-                                    SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
-
-                                    int type = prefs1.getInt("cond", 0);
-                                    if (type == 0) {
-
-                                    } else if (type == 1) {
-                                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
-                                        myIcon3.setTint(mutedDark);
-                                        loop.setBackground(myIcon3);
-                                    } else if (type == 2) {
-                                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
-                                        myIcon3.setTint(mutedDark);
-                                        loop.setBackground(myIcon3);
-                                    }
-                                    if (isClicked) {
-
-                                        Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
-                                        fabtint.setTint(getComplimentColor(mutedDark));
-                                        // fab.setBackground(fabtint);
-                                        //fab.setImageResource(R.drawable.ic_expand_more_black_24dp);
-                                        //isClicked = true;
-                                    } else {
-
-                                        Drawable fabtint = getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_24dp);
-                                        fabtint.setTint(getComplimentColor(mutedDark));
-                                        //fab.setBackground(fabtint);
-                                        //fab.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
-                                        //isClicked = false;
-                                    }
-                                    // fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Media_list_activity.this,mutedDark)));
-                                    //fab.setBackgroundColor(mutedDark);
-                                    play = (mutedDark);
-                                    pause = (mutedDark);
-
-                                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
-                                    Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
-                                    Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
-                                    Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
-
-                                    myIcon3.setTint(play);
-                                    myIcon.setTint(play);
-                                    myIcon1.setTint(play);
-                                    myIcon2.setTint(play);
-                                    nxtBtn.setBackground(myIcon3);
-                                    pauseBtn.setBackground(myIcon);
-                                    if(mp.isPlaying()) {
-                                        playBtn.change(false);
-                                        // playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
-                                    }else {
-                                        playBtn.change(true);
-                                        // playBtn.changeMode(FloatingMusicActionButton.Mode.PLAY_TO_PAUSE);
-                                    }
-                                    playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
-
-                                    Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
-                                    Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
-                                    Drawable myIcon22 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
-                                    Drawable myIcon21 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
-                                    myIcon33.setTint(play);
-                                    myIcon31.setTint(play);
-                                    myIcon22.setTint(play);
-                                    myIcon21.setTint(play);
-
-                                    ply.setBackground(myIcon21);
-                                    pre.setBackground(myIcon31);
-                                    nxt.setBackground(myIcon33);
-                                    //myIcon3.setTint(mutedDark);
-                                    //myIcon2.setTint(mutedDark);
-
-
-                                    textView.setTextColor(mutedDark);
-                                    textView1.setTextColor(mutedDark);
-                                    titleS.setText(title);
-                                    desS.setText(artist);
-                                    titleS.setTextColor(mutedDark);
-                                    desS.setTextColor(mutedDark);
-                                    add_phone.setBackgroundColor(vibrant);
-                                    LinearLayout linearLayout = findViewById(R.id.medic_base);
-
-                                    linearLayout.setBackgroundColor(vibrant);
-
-                                }
-                            });
-
-
-                            image = myView.findViewById(R.id.albumart);
-                            image.setImageBitmap(bm);
-                            songI.setImageBitmap(bm);
-
-                            Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
-                            myIcon2.setTint(play);
-                            playBtn.setBackground(myIcon2);
-                            //myIcon3.setTint(play);
-                            // myIcon2.setTint(play);
-
-
-                            // Position Bar
-                            totalTime = mp.getDuration();
-                            positionBar = myView.findViewById(R.id.positionBar);
-                            int vibrant = getDominantColor(bm);
-                            int mutedDark = getComplimentColor(vibrant);
-                            positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
-                            positionBar.setMax(totalTime);
-                            positionBar.setProgress(mp.getCurrentPosition());
-                            remainingTimeLabel.setTextColor(mutedColor);
-                            elapsedTimeLabel.setTextColor(mutedColor);
-                            positionBar.setOnSeekBarChangeListener(
-                                    new SeekBar.OnSeekBarChangeListener() {
-                                        @Override
-                                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                                            if (fromUser) {
-                                                mp.seekTo(progress);
-                                                positionBar.setProgress(progress);
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onStartTrackingTouch(SeekBar seekBar) {
-
-                                        }
-
-                                        @Override
-                                        public void onStopTrackingTouch(SeekBar seekBar) {
-
-                                        }
-                                    }
-                            );
-
-
-                            // Volume Bar
-
-                            // volumeBar.setProgress(pro);
-                            volumeBar.setOnSeekBarChangeListener(
-                                    new SeekBar.OnSeekBarChangeListener() {
-                                        @Override
-                                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-                                            float volumeNum = progress / 100f;
-                                            mp.setVolume(volumeNum, volumeNum);
-                                            pro = progress;
-                                        }
-
-                                        @Override
-                                        public void onStartTrackingTouch(SeekBar seekBar) {
-
-                                        }
-
-                                        @Override
-                                        public void onStopTrackingTouch(SeekBar seekBar) {
-
-                                        }
-                                    }
-                            );
-
-                            // Thread (Update positionBar & timeLabel)
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    while (mp != null) {
-                                        try {
-                                            Message msg = new Message();
-                                            msg.what = mp.getCurrentPosition();
-                                            handler.sendMessage(msg);
-                                            Thread.sleep(1000);
-                                        } catch (InterruptedException e) {
-                                        }
-                                    }
-                                }
-                            }).start();
-
-                        }
-
-
-                    }
-                    else {
-                        slideDown(myView);
-                        slideUp1(add_phone);
-
-                        {
-
-
-                            title = ListElementsArrayList.get(position).getTitle();
-                            artist = ListElementsArrayList.get(position).getArtist();
-                            album = ListElementsArrayList.get(position).getAlbum();
-
-
-                            textView.setText(title);
-                            textView1.setText(artist);
-
-                            titleq = ListElementsArrayList.get(position).getImagepath();
-                            Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
-
-                            Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(titleq));
-                            ContentResolver res = getContentResolver();
-                            InputStream in;
-                            bm = null;
-                            try {
-                                in = res.openInputStream(uri);
-
-                                bm = BitmapFactory.decodeStream(in);
-
-                            } catch (FileNotFoundException e) {
-                                e.printStackTrace();
-                                InputStream is = getResources().openRawResource(R.raw.image);
-                                bm = BitmapFactory.decodeStream(is);
-                            }
-
-
-                            Palette.from(bm).generate(new Palette.PaletteAsyncListener() {
-                                @Override
-                                public void onGenerated(Palette palette) {
-                                    // Use generated instance
-                                    //work with the palette here
-                                    int defaultValue = 0x000000;
-                                    int vibrant = getDominantColor(bm);
-                                    int vibrantLight = palette.getLightVibrantColor(defaultValue);
-                                    int vibrantDark = palette.getDarkVibrantColor(defaultValue);
-                                    int muted = palette.getMutedColor(defaultValue);
-                                    int mutedLight = palette.getLightMutedColor(defaultValue);
-                                    int mutedDark = getComplimentColor(vibrant);
-
-
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                        Window window = getWindow();
-                                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                                        window.setStatusBarColor(Color.parseColor("#3a9ebe"));
-                                        setTitleColor(Color.WHITE);
-                                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor("#3a9ebe")));
-                                        Toolbar actionBarToolbar = findViewById(R.id.toolbar);
-                                        if (actionBarToolbar != null)
-                                            actionBarToolbar.setTitleTextColor(Color.WHITE);
-                                    }
-
-                                    volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
-                                    volumeBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
-                                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
-                                    positionBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
-
-                                    remainingTimeLabel.setTextColor(mutedDark);
-                                    elapsedTimeLabel.setTextColor(mutedDark);
-
-                                    // fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
-                                    toolbar.getNavigationIcon().setTint(Color.WHITE);
-
-                                    Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
-                                    icon.setTint(Color.WHITE);
-                                    button.setBackground(icon);
-                                    mVisualizer.setColor(mutedColor);
-                                    SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
-
-                                    int type = prefs1.getInt("cond", 0);
-                                    if (type == 0) {
-
-                                    } else if (type == 1) {
-                                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
-                                        myIcon3.setTint(mutedDark);
-                                        loop.setBackground(myIcon3);
-                                    } else if (type == 2) {
-                                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
-                                        myIcon3.setTint(mutedDark);
-                                        loop.setBackground(myIcon3);
-                                    }
-
-                                    if (isClicked) {
-
-                                        Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
-                                        fabtint.setTint(getComplimentColor(mutedDark));
-                                    } else {
-
-                                        Drawable fabtint = getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_24dp);
-                                        fabtint.setTint(getComplimentColor(mutedDark));
-                                    }
-
-                                    play = (mutedDark);
-                                    pause = (mutedDark);
-
-                                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
-                                    Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
-                                    Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
-                                    Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
-
-                                    myIcon3.setTint(play);
-                                    myIcon.setTint(play);
-                                    myIcon1.setTint(play);
-                                    myIcon2.setTint(play);
-                                    nxtBtn.setBackground(myIcon3);
-                                    pauseBtn.setBackground(myIcon);
-                                    if(mp.isPlaying()) {
-                                        playBtn.change(false);
-                                        // playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
-                                    }else {
-                                        playBtn.change(true);
-                                        // playBtn.changeMode(FloatingMusicActionButton.Mode.PLAY_TO_PAUSE);
-                                    }
-                                    playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
-
-                                    Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
-                                    Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
-                                    Drawable myIcon22 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
-                                    Drawable myIcon21 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
-                                    myIcon33.setTint(play);
-                                    myIcon31.setTint(play);
-                                    myIcon22.setTint(play);
-                                    myIcon21.setTint(play);
-
-                                    ply.setBackground(myIcon21);
-                                    pre.setBackground(myIcon31);
-                                    nxt.setBackground(myIcon33);
-
-
-                                    textView.setTextColor(mutedDark);
-                                    textView1.setTextColor(mutedDark);
-                                    titleS.setText(title);
-                                    desS.setText(artist);
-                                    titleS.setTextColor(mutedDark);
-                                    desS.setTextColor(mutedDark);
-                                    add_phone.setBackgroundColor(vibrant);
-                                    LinearLayout linearLayout = findViewById(R.id.medic_base);
-
-                                    linearLayout.setBackgroundColor(vibrant);
-
-                                }
-                            });
-
-
-                            image = myView.findViewById(R.id.albumart);
-                            image.setImageBitmap(bm);
-                            songI.setImageBitmap(bm);
-
-                            Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
-                            myIcon2.setTint(play);
-                            playBtn.setBackground(myIcon2);
-
-
-                            // Position Bar
-                            totalTime = mp.getDuration();
-                            positionBar = myView.findViewById(R.id.positionBar);
-                            int vibrant = getDominantColor(bm);
-                            int mutedDark = getComplimentColor(vibrant);
-                            positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
-                            positionBar.setMax(totalTime);
-                            positionBar.setProgress(mp.getCurrentPosition());
-                            remainingTimeLabel.setTextColor(mutedColor);
-                            elapsedTimeLabel.setTextColor(mutedColor);
-                            positionBar.setOnSeekBarChangeListener(
-                                    new SeekBar.OnSeekBarChangeListener() {
-                                        @Override
-                                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                                            if (fromUser) {
-                                                mp.seekTo(progress);
-                                                positionBar.setProgress(progress);
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onStartTrackingTouch(SeekBar seekBar) {
-
-                                        }
-
-                                        @Override
-                                        public void onStopTrackingTouch(SeekBar seekBar) {
-
-                                        }
-                                    }
-                            );
-
-
-                            // Volume Bar
-
-                            // volumeBar.setProgress(pro);
-                            volumeBar.setOnSeekBarChangeListener(
-                                    new SeekBar.OnSeekBarChangeListener() {
-                                        @Override
-                                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-                                            float volumeNum = progress / 100f;
-                                            mp.setVolume(volumeNum, volumeNum);
-                                            pro = progress;
-                                        }
-
-                                        @Override
-                                        public void onStartTrackingTouch(SeekBar seekBar) {
-
-                                        }
-
-                                        @Override
-                                        public void onStopTrackingTouch(SeekBar seekBar) {
-
-                                        }
-                                    }
-                            );
-
-                            // Thread (Update positionBar & timeLabel)
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    while (mp != null) {
-                                        try {
-                                            Message msg = new Message();
-                                            msg.what = mp.getCurrentPosition();
-                                            handler.sendMessage(msg);
-                                            Thread.sleep(1000);
-                                        } catch (InterruptedException e) {
-                                        }
-                                    }
-                                }
-                            }).start();
-
-
-                        }
-                    }
-                    isUp = !isUp;
-                }
-
-
-            }
-        });
 
 
         myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
@@ -1686,37 +1871,46 @@ public class Media_list_activity extends AppCompatActivity  {
 
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
+        if(isDark) {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
+        }else {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        }
+
+
         if (isDark && ListElementsArrayList.size() != 0) {
 
             relativeLayout.setBackgroundColor(Color.BLACK);
-            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.list_viewdark));
+
+
             listView.setAdapter(adapter);
-            listView.setBackgroundColor(Color.BLACK);
+            listView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.list_viewdark));
             gridView.setAdapter(adapterG);
-            gridView.setBackgroundColor(Color.BLACK);
+            gridView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.list_viewdark));
         } else if (!isDark && ListElementsArrayList.size() != 0) {
 
             relativeLayout.setBackgroundColor(Color.WHITE);
-            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.listview_border));
-            listView.setBackgroundColor(Color.WHITE);
-            gridView.setBackgroundColor(Color.WHITE);
+
+
+            listView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.listview_border));
+            gridView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.listview_border));
             listView.setAdapter(adapter);
             gridView.setAdapter(adapterG);
 
         } else if (isDark && ListElementsArrayList.size() == 0) {
 
-            listView.setBackgroundColor(Color.BLACK);
-            gridView.setBackgroundColor(Color.BLACK);
+            listView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.list_viewdark));
+            gridView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.list_viewdark));
             relativeLayout.setBackgroundColor(Color.BLACK);
-            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.list_viewdark));
+
 
         } else if (!isDark && ListElementsArrayList.size() == 0) {
 
 
-            listView.setBackgroundColor(Color.WHITE);
-            gridView.setBackgroundColor(Color.WHITE);
+
+            gridView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.listview_border));
             relativeLayout.setBackgroundColor(Color.WHITE);
-            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.listview_border));
+            listView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.listview_border));
 
 
         }
@@ -1735,17 +1929,13 @@ public class Media_list_activity extends AppCompatActivity  {
                 Media_list_activity.position = position;
 
 
-                mp.stop();
+                if(mp!=null)mp.stop();
                 mp = new MediaPlayer();
 
                 isClicked = true;
 
 
-                if (!isUp) {
 
-
-                    slideUp(myView);
-                    slideDown1(add_phone);
 
 
                     // Media Player
@@ -1790,7 +1980,7 @@ public class Media_list_activity extends AppCompatActivity  {
                             int vibrantDark = palette.getDarkVibrantColor(defaultValue);
                             int muted = palette.getMutedColor(defaultValue);
                             int mutedLight = palette.getLightMutedColor(defaultValue);
-                            int mutedDark = getComplimentColor(vibrant);
+                            int mutedDark = getComplimentColor(bm);
 
                             mutedColor = mutedDark;
 
@@ -1845,13 +2035,13 @@ public class Media_list_activity extends AppCompatActivity  {
                             if (isClicked) {
 
                                 Drawable fabtint = getResources().getDrawable(R.drawable.ic_expand_more_black_24dp);
-                                fabtint.setTint(getComplimentColor(mutedDark));
+                                fabtint.setTint(getComplimentColor(bm));
 
                                 //isClicked = true;
                             } else {
 
                                 Drawable fabtint = getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_24dp);
-                                fabtint.setTint(getComplimentColor(mutedDark));
+                                fabtint.setTint(getComplimentColor(bm));
 
 
                                 //isClicked = false;
@@ -1861,6 +2051,8 @@ public class Media_list_activity extends AppCompatActivity  {
                             //fab.setBackgroundColor(mutedDark);
                             play = (mutedDark);
                             pause = (mutedDark);
+
+
 
                             Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
                             Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
@@ -1874,6 +2066,9 @@ public class Media_list_activity extends AppCompatActivity  {
                             nxtBtn.setBackground(myIcon3);
                             pauseBtn.setBackground(myIcon);
                             playBtn.change(false);
+                            playBtn.setColor(play);
+                            int ব্রজে  = 10;
+                            mLrcView.setIndicatorLineColor(mutedColor);
                             //playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
                             playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
 
@@ -1897,18 +2092,26 @@ public class Media_list_activity extends AppCompatActivity  {
                             desS.setText(artist);
                             titleS.setTextColor(mutedDark);
                             desS.setTextColor(mutedDark);
-                            add_phone.setBackgroundColor(vibrant);
+
 
                             LinearLayout linearLayout = findViewById(R.id.medic_base);
 
                             linearLayout.setBackgroundColor(vibrant);
 
+                            LinearLayout linearLayout1 = findViewById(R.id.medic_base1);
+                            linearLayout1.setBackgroundColor(vibrant);
                         }
                     });
 
 
                     image = myView.findViewById(R.id.albumart);
                     image.setImageBitmap(bm);
+                    if(isShowlrc){
+                        BitmapDrawable drawable = (BitmapDrawable) image.getDrawable();
+                        Bitmap bitmap = drawable.getBitmap();
+                        Bitmap blurred = blurRenderScript(bitmap, 20);//second parametre is radius
+                        image.setImageBitmap(blurred);
+                    }
                     songI.setImageBitmap(bm);
 
                     String[] abspath = getAudioPath(title);
@@ -1942,6 +2145,14 @@ public class Media_list_activity extends AppCompatActivity  {
                     System.out.println(file);
                     List<Lrc> lrcs = LrcHelper.parseLrcFromFile(file);
                     mLrcView.setLrcData(lrcs);
+
+                    if(isShowlrc){ mLrcView.setVisibility(View.VISIBLE);
+                        BitmapDrawable drawable = (BitmapDrawable) image.getDrawable();
+                        Bitmap bitmap = drawable.getBitmap();
+                        Bitmap blurred = blurRenderScript(bitmap, 20);//second parametre is radius
+                        image.setImageBitmap(blurred);
+                    }
+                    else mLrcView.setVisibility(View.INVISIBLE);
 
 
 
@@ -2029,13 +2240,9 @@ public class Media_list_activity extends AppCompatActivity  {
 
                     startService();
                     //myButton.setText("Slide up");
-                } else {
-                    slideUp(myView);
-                    // myButton.setText("Slide down");
-                }
-                isUp = !isUp;
 
-                Toast.makeText(Media_list_activity.this, parent.getAdapter().getItem(position).toString(), Toast.LENGTH_LONG).show();
+
+
 
             }
         });
@@ -2051,280 +2258,291 @@ public class Media_list_activity extends AppCompatActivity  {
                 Media_list_activity.position = position;
 
 
-                mp.stop();
+                if (mp != null) mp.stop();
                 mp = new MediaPlayer();
 
                 isClicked = true;
 
 
-                if (!isUp) {
+                // Media Player
 
 
-                    slideUp(myView);
-                    slideDown1(add_phone);
-
-                    // Media Player
-
-
-                    title = ListElementsArrayList.get(position).getTitle();
-                    artist = ListElementsArrayList.get(position).getArtist();
-                    album = ListElementsArrayList.get(position).getAlbum();
+                title = ListElementsArrayList.get(position).getTitle();
+                artist = ListElementsArrayList.get(position).getArtist();
+                album = ListElementsArrayList.get(position).getAlbum();
 
 
-                    textView.setText(title);
-                    textView1.setText(artist);
+                textView.setText(title);
+                textView1.setText(artist);
 
-                    titleq = ListElementsArrayList.get(position).getImagepath();
-                    Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
+                titleq = ListElementsArrayList.get(position).getImagepath();
+                Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 
-                    Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(titleq));
-                    ContentResolver res = getContentResolver();
-                    InputStream in;
-                    bm = null;
-                    try {
-                        in = res.openInputStream(uri);
+                Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(titleq));
+                ContentResolver res = getContentResolver();
+                InputStream in;
+                bm = null;
+                try {
+                    in = res.openInputStream(uri);
 
-                        bm = BitmapFactory.decodeStream(in);
+                    bm = BitmapFactory.decodeStream(in);
 
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                        InputStream is = getResources().openRawResource(R.raw.image);
-                        bm = BitmapFactory.decodeStream(is);
-                    }
-
-
-                    Palette.from(bm).generate(new Palette.PaletteAsyncListener() {
-                        @Override
-                        public void onGenerated(Palette palette) {
-                            // Use generated instance
-                            //work with the palette here
-                            int defaultValue = 0x000000;
-                            int vibrant = getDominantColor(bm);
-                            int vibrantLight = palette.getLightVibrantColor(defaultValue);
-                            int vibrantDark = palette.getDarkVibrantColor(defaultValue);
-                            int muted = palette.getMutedColor(defaultValue);
-                            int mutedLight = palette.getLightMutedColor(defaultValue);
-                            int mutedDark = getComplimentColor(vibrant);
-
-                            mutedColor = mutedDark;
-
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                Window window = getWindow();
-                                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                                window.setStatusBarColor(vibrant);
-                                setTitleColor(vibrant);
-                                getSupportActionBar().setBackgroundDrawable(new ColorDrawable(vibrant));
-                                Toolbar actionBarToolbar = findViewById(R.id.toolbar);
-                                if (actionBarToolbar != null)
-                                    actionBarToolbar.setTitleTextColor(mutedDark);
-                            }
-                            volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
-                            volumeBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
-                            positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
-                            positionBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
-
-                            remainingTimeLabel.setTextColor(mutedDark);
-                            elapsedTimeLabel.setTextColor(mutedDark);
-
-                            // fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
-                            toolbar.getNavigationIcon().setTint(mutedDark);
-                            Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
-                            icon.setTint(mutedDark);
-                            button.setBackground(icon);
-                            mVisualizer.setColor(mutedColor);
-                            SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
-
-                            int type = prefs1.getInt("cond", 0);
-                            if (type == 0) {
-
-                            } else if (type == 1) {
-                                Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
-                                myIcon3.setTint(mutedDark);
-                                loop.setBackground(myIcon3);
-                            } else if (type == 2) {
-                                Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
-                                myIcon3.setTint(mutedDark);
-                                loop.setBackground(myIcon3);
-                            }
-
-
-
-                            // fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Media_list_activity.this,mutedDark)));
-                            //fab.setBackgroundColor(mutedDark);
-                            play = (mutedDark);
-                            pause = (mutedDark);
-
-                            Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
-                            Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
-                            Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
-                            Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
-
-                            myIcon3.setTint(play);
-                            myIcon.setTint(play);
-                            myIcon1.setTint(play);
-                            myIcon2.setTint(play);
-                            nxtBtn.setBackground(myIcon3);
-                            pauseBtn.setBackground(myIcon);
-                            playBtn.change(false);
-                            //playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
-                            playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
-
-                            Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
-                            Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
-                            myIcon33.setTint(play);
-                            myIcon31.setTint(play);
-                            ply.setBackground(myIcon2);
-                            pre.setBackground(myIcon31);
-                            nxt.setBackground(myIcon33);
-
-                            //myIcon3.setTint(mutedDark);
-                            //myIcon2.setTint(mutedDark);
-
-
-                            textView.setTextColor(mutedDark);
-                            textView1.setTextColor(mutedDark);
-                            titleS.setText(title);
-                            desS.setText(artist);
-                            titleS.setTextColor(mutedDark);
-                            desS.setTextColor(mutedDark);
-                            add_phone.setBackgroundColor(vibrant);
-                            LinearLayout linearLayout = findViewById(R.id.medic_base);
-
-                            linearLayout.setBackgroundColor(vibrant);
-
-                        }
-                    });
-
-
-                    image = myView.findViewById(R.id.albumart);
-                    image.setImageBitmap(bm);
-                    songI.setImageBitmap(bm);
-
-
-                    String[] abspath = getAudioPath(title);
-
-                    try {
-                        if (!mp.isPlaying()) {
-                            mp.setDataSource(abspath[0]);
-                            mp.prepare();
-
-
-                        } else {
-
-
-                        }
-                    } catch (Exception e) {
-
-                        System.out.println(e.getMessage());
-                    }
-
-
-                    //   if(! other.equals("yes") ) {
-                    mp.setLooping(false);
-                    mp.seekTo(0);
-
-                    mp.start();
-
-                    File file = new File(Environment.getExternalStorageDirectory() + "/Lyrics/"
-                            +Media_list_activity.ListElementsArrayList.get(position).getTitle().toLowerCase().replace(" ","_").concat(".lrc"));
-
-                    System.out.println(file);
-                    List<Lrc> lrcs = LrcHelper.parseLrcFromFile(file);
-                    mLrcView.setLrcData(lrcs);
-
-
-                    Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
-                    myIcon2.setTint(play);
-                    playBtn.setBackground(myIcon2);
-                    //myIcon3.setTint(play);
-                    // myIcon2.setTint(play);
-                    mp.setVolume(2.5f, 2.5f);
-                    totalTime = mp.getDuration();
-                    requestAudioPermissions();
-                    // Position Bar
-                    positionBar = myView.findViewById(R.id.positionBar);
-                    positionBar.setMax(totalTime);
-                    positionBar.setOnSeekBarChangeListener(
-                            new SeekBar.OnSeekBarChangeListener() {
-                                @Override
-                                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                                    if (fromUser) {
-                                        mp.seekTo(progress);
-                                        positionBar.setProgress(progress);
-                                        //pro = progress;
-                                    }
-                                }
-
-                                @Override
-                                public void onStartTrackingTouch(SeekBar seekBar) {
-
-                                }
-
-                                @Override
-                                public void onStopTrackingTouch(SeekBar seekBar) {
-
-                                }
-                            }
-                    );
-
-
-                    // Volume Bar
-                    //  volumeBar.setProgress(pro);
-                    volumeBar.setOnSeekBarChangeListener(
-                            new SeekBar.OnSeekBarChangeListener() {
-                                @Override
-                                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-                                    float volumeNum = progress / 100f;
-                                    mp.setVolume(volumeNum, volumeNum);
-                                    pro = progress;
-                                    System.out.println("PROGRESS" + pro);
-                                }
-
-                                @Override
-                                public void onStartTrackingTouch(SeekBar seekBar) {
-
-                                }
-
-                                @Override
-                                public void onStopTrackingTouch(SeekBar seekBar) {
-
-                                }
-                            }
-                    );
-
-                    // Thread (Update positionBar & timeLabel)
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            while (mp != null) {
-                                try {
-                                    Message msg = new Message();
-                                    msg.what = mp.getCurrentPosition();
-                                    handler.sendMessage(msg);
-                                    Thread.sleep(1000);
-                                } catch (InterruptedException e) {
-                                }
-                            }
-                        }
-                    }).start();
-
-                    startService();
-                    //myButton.setText("Slide up");
-                } else {
-                    slideUp(myView);
-                    // myButton.setText("Slide down");
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    InputStream is = getResources().openRawResource(R.raw.image);
+                    bm = BitmapFactory.decodeStream(is);
                 }
-                isUp = !isUp;
 
-                Toast.makeText(Media_list_activity.this, parent.getAdapter().getItem(position).toString(), Toast.LENGTH_LONG).show();
 
+                Palette.from(bm).maximumColorCount(32).generate(new Palette.PaletteAsyncListener() {
+                    @Override
+                    public void onGenerated(Palette palette) {
+                        // Use generated instance
+                        //work with the palette here
+                        int defaultValue = 0x000000;
+                        int vibrant = getDominantColor(bm);
+                        int vibrantLight = palette.getLightVibrantColor(defaultValue);
+                        int vibrantDark = palette.getDarkVibrantColor(defaultValue);
+                        int muted = palette.getMutedColor(defaultValue);
+                        int mutedLight = palette.getLightMutedColor(defaultValue);
+                        int mutedDark = getComplimentColor(bm);
+
+                        mutedColor = mutedDark;
+
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            Window window = getWindow();
+                            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                            window.setStatusBarColor(vibrant);
+                            setTitleColor(vibrant);
+                            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(vibrant));
+                            Toolbar actionBarToolbar = findViewById(R.id.toolbar);
+                            if (actionBarToolbar != null)
+                                actionBarToolbar.setTitleTextColor(mutedDark);
+                        }
+                        volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                        volumeBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
+                        positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                        positionBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
+
+                        remainingTimeLabel.setTextColor(mutedDark);
+                        elapsedTimeLabel.setTextColor(mutedDark);
+
+                        // fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
+                        toolbar.getNavigationIcon().setTint(mutedDark);
+                        Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
+                        icon.setTint(mutedDark);
+                        button.setBackground(icon);
+                        mVisualizer.setColor(mutedColor);
+                        SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+                        int type = prefs1.getInt("cond", 0);
+                        if (type == 0) {
+
+                        } else if (type == 1) {
+                            Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                            myIcon3.setTint(mutedDark);
+                            loop.setBackground(myIcon3);
+                        } else if (type == 2) {
+                            Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                            myIcon3.setTint(mutedDark);
+                            loop.setBackground(myIcon3);
+                        }
+
+
+                        // fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Media_list_activity.this,mutedDark)));
+                        //fab.setBackgroundColor(mutedDark);
+                        play = (mutedDark);
+                        pause = (mutedDark);
+                        playBtn.setColor(play);
+                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
+                        Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
+                        Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
+                        Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+
+                        myIcon3.setTint(play);
+                        myIcon.setTint(play);
+                        myIcon1.setTint(play);
+                        myIcon2.setTint(play);
+                        nxtBtn.setBackground(myIcon3);
+                        pauseBtn.setBackground(myIcon);
+                        playBtn.change(false);
+                        //playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
+                        playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
+
+                        Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
+                        Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
+                        myIcon33.setTint(play);
+                        myIcon31.setTint(play);
+                        ply.setBackground(myIcon2);
+                        pre.setBackground(myIcon31);
+                        nxt.setBackground(myIcon33);
+
+                        //myIcon3.setTint(mutedDark);
+                        //myIcon2.setTint(mutedDark);
+
+                        mLrcView.setIndicatorTextColor(play);
+                        mLrcView.setCurrentIndicateLineTextColor(play);
+                        //mLrcView.setLrcTextColor(play);
+                        Drawable myIcons1 = getResources().getDrawable(R.drawable.play);
+                        myIcons1.setTint(play);
+                        mLrcView.setPlayDrawable(myIcons1);
+
+                        textView.setTextColor(mutedDark);
+                        textView1.setTextColor(mutedDark);
+                        titleS.setText(title);
+                        desS.setText(artist);
+                        titleS.setTextColor(mutedDark);
+                        desS.setTextColor(mutedDark);
+
+                        LinearLayout linearLayout = findViewById(R.id.medic_base);
+
+                        LinearLayout linearLayout1 = findViewById(R.id.medic_base1);
+                        linearLayout1.setBackgroundColor(vibrant);
+
+                        linearLayout.setBackgroundColor(vibrant);
+
+
+                    }
+                });
+
+
+                image = myView.findViewById(R.id.albumart);
+                image.setImageBitmap(bm);
+                if (isShowlrc) {
+                    BitmapDrawable drawable = (BitmapDrawable) image.getDrawable();
+                    Bitmap bitmap = drawable.getBitmap();
+                    Bitmap blurred = blurRenderScript(bitmap, 20);//second parametre is radius
+                    image.setImageBitmap(blurred);
+                }
+                songI.setImageBitmap(bm);
+
+
+                String[] abspath = getAudioPath(title);
+
+                try {
+                    if (!mp.isPlaying()) {
+                        mp.setDataSource(abspath[0]);
+                        mp.prepare();
+
+
+                    } else {
+
+
+                    }
+                } catch (Exception e) {
+
+                    System.out.println(e.getMessage());
+                }
+
+
+                //   if(! other.equals("yes") ) {
+                mp.setLooping(false);
+                mp.seekTo(0);
+
+                mp.start();
+
+                File file = new File(Environment.getExternalStorageDirectory() + "/Lyrics/"
+                        + Media_list_activity.ListElementsArrayList.get(position).getTitle().toLowerCase().replace(" ", "_").concat(".lrc"));
+
+                System.out.println(file);
+                List<Lrc> lrcs = LrcHelper.parseLrcFromFile(file);
+                mLrcView.setLrcData(lrcs);
+                if (isShowlrc) {
+                    mLrcView.setVisibility(View.VISIBLE);
+                    BitmapDrawable drawable = (BitmapDrawable) image.getDrawable();
+                    Bitmap bitmap = drawable.getBitmap();
+                    Bitmap blurred = blurRenderScript(bitmap, 20);//second parametre is radius
+                    image.setImageBitmap(blurred);
+                } else mLrcView.setVisibility(View.INVISIBLE);
+
+                Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+                myIcon2.setTint(play);
+                playBtn.setBackground(myIcon2);
+                //myIcon3.setTint(play);
+                // myIcon2.setTint(play);
+                mp.setVolume(2.5f, 2.5f);
+                totalTime = mp.getDuration();
+                requestAudioPermissions();
+                // Position Bar
+                positionBar = myView.findViewById(R.id.positionBar);
+                positionBar.setMax(totalTime);
+                positionBar.setOnSeekBarChangeListener(
+                        new SeekBar.OnSeekBarChangeListener() {
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                                if (fromUser) {
+                                    mp.seekTo(progress);
+                                    positionBar.setProgress(progress);
+                                    //pro = progress;
+                                }
+                            }
+
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
+
+                            }
+
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+
+                            }
+                        }
+                );
+
+
+                // Volume Bar
+                //  volumeBar.setProgress(pro);
+                volumeBar.setOnSeekBarChangeListener(
+                        new SeekBar.OnSeekBarChangeListener() {
+                            @Override
+                            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                                float volumeNum = progress / 100f;
+                                mp.setVolume(volumeNum, volumeNum);
+                                pro = progress;
+                                System.out.println("PROGRESS" + pro);
+                            }
+
+                            @Override
+                            public void onStartTrackingTouch(SeekBar seekBar) {
+
+                            }
+
+                            @Override
+                            public void onStopTrackingTouch(SeekBar seekBar) {
+
+                            }
+                        }
+                );
+
+                // Thread (Update positionBar & timeLabel)
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        while (mp != null) {
+                            try {
+                                Message msg = new Message();
+                                msg.what = mp.getCurrentPosition();
+                                handler.sendMessage(msg);
+                                Thread.sleep(1000);
+                            } catch (InterruptedException e) {
+                            }
+                        }
+                    }
+                }).start();
+
+                startService();
+                //myButton.setText("Slide up");
             }
+
+
+
         });
 
 
         nxt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                isShowlrc = false;
                 nxtsong();
 
             }
@@ -2332,7 +2550,7 @@ public class Media_list_activity extends AppCompatActivity  {
         nxtBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                isShowlrc = false;
                 nxtsong();
                 //myButton.setText("Slide up");
 
@@ -2344,6 +2562,7 @@ public class Media_list_activity extends AppCompatActivity  {
         pre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                isShowlrc = false;
                 prevsong();
             }
         });
@@ -2352,7 +2571,7 @@ public class Media_list_activity extends AppCompatActivity  {
             public void onClick(View view) {
                 // startService(view);
                 //startService(view);
-
+                isShowlrc = false;
 
                 prevsong();
                 //myButton.setText("Slide up");
@@ -2463,56 +2682,72 @@ public class Media_list_activity extends AppCompatActivity  {
         //
         // registerReceiver(broadcastReceiver, new IntentFilter("Prev"));
     }
+
     public void play(){
 
-        if (!mp.isPlaying()) {
-            // Stopping
-            mp.start();
-            mLrcView.resume();
-            playBtn.change(false);
-            //playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
-            // playBtn.setBackgroundResource(R.drawable.ic_pause_black_24dp);
-            ply.setBackgroundResource(R.drawable.ic_pause_black_24dp);
-            Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
-            myIcon3.setTint(play);
+        if (!serviceBound) {
+            startService();
 
-            NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
-            NotificationService.notification.setCustomContentView(NotificationService.notificationView);
+        } else {
+            //Service is active
+            //Send media with BroadcastReceiver
+            if(mp==null){
+                startsong();
+            }
+            else if (!mp.isPlaying()) {
+                // Stopping
+                mp.start();
+                mLrcView.resume();
+                playBtn.change(false);
+                playBtn.setColor(play);
+                //playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
+                // playBtn.setBackgroundResource(R.drawable.ic_pause_black_24dp);
+                ply.setBackgroundResource(R.drawable.ic_pause_black_24dp);
+                Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+                myIcon3.setTint(play);
 
-            NotificationService.notificationView1.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
-            NotificationService.notification.setCustomContentView(NotificationService.notificationView1);
-            // NotificationService.notificationView.setTextViewText(R.id.status_bar_track_name, "pllll");
-            NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
+                NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
+                NotificationService.notification.setCustomContentView(NotificationService.notificationView);
+
+                NotificationService.notificationView1.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
+                NotificationService.notification.setCustomContentView(NotificationService.notificationView1);
+                // NotificationService.notificationView.setTextViewText(R.id.status_bar_track_name, "pllll");
+                NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
 
 
-        } else{
-            // Playing
-            mp.pause();
-            playBtn.change(true);
-           // playBtn.changeMode(FloatingMusicActionButton.Mode.PLAY_TO_PAUSE);
-            //playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
-            ply.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
-            Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
-            myIcon2.setTint(play);
+            } else{
+                // Playing
+                mp.pause();
+                playBtn.change(true);
+                playBtn.setColor(play);
+                // playBtn.changeMode(FloatingMusicActionButton.Mode.PLAY_TO_PAUSE);
+                //playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
+                ply.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
+                Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
+                myIcon2.setTint(play);
 
-            NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
-            NotificationService.notification.setCustomContentView(NotificationService.notificationView);
+                NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
+                NotificationService.notification.setCustomContentView(NotificationService.notificationView);
 
-            NotificationService.notificationView1.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
-            NotificationService.notification.setCustomContentView(NotificationService.notificationView1);
+                NotificationService.notificationView1.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
+                NotificationService.notification.setCustomContentView(NotificationService.notificationView1);
 
-            // NotificationService.notificationView.setTextViewText(R.id.status_bar_track_name, "pllll");
-            NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
+                // NotificationService.notificationView.setTextViewText(R.id.status_bar_track_name, "pllll");
+                NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
 
+            }
         }
 
+
     }
+
     public void pause(){
 
         if (mp.isPlaying()) {
             // Stopping
             mp.pause();
             playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
+            playBtn.setColor(play);
             Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
             myIcon2.setTint(play);
             mLrcView.pause();
@@ -2520,6 +2755,7 @@ public class Media_list_activity extends AppCompatActivity  {
 
         } else{
             // Playing
+            playBtn.setColor(play);
             // mp.pause();
 
 
@@ -2528,31 +2764,15 @@ public class Media_list_activity extends AppCompatActivity  {
 
     }
 
-    public void nxtsong() {
+    public void startsong() {
 
         // startService(view);
         System.out.println(pro);
 
-        // startService(view);
-        if (mp.isPlaying()) {
-            Audio audio = getNest();
-            title = audio.getTitle();
-            titleq = audio.getImagepath();
 
-        } else {
-            Audio audio = getNest();
-            title = audio.getTitle();
-            titleq = audio.getImagepath();
-        }
-
-
-        mp.stop();
+        if(mp!=null) mp.stop();
         mp = new MediaPlayer();
 
-        if (position + 1 >= Media_list_activity.ListElementsArrayList.size()) {
-            Media_list_activity.position = -1;
-        }
-        Media_list_activity.position++;
         {
 
             // playBtn = (Button) findViewById(R.id.playBtn);
@@ -2603,7 +2823,7 @@ public class Media_list_activity extends AppCompatActivity  {
                     int vibrantDark = palette.getDarkVibrantColor(defaultValue);
                     int muted = palette.getMutedColor(defaultValue);
                     int mutedLight = palette.getLightMutedColor(defaultValue);
-                    int mutedDark = getComplimentColor(vibrant);
+                    int mutedDark = getComplimentColor(bm);
                     mutedColor = mutedDark;
 
 
@@ -2625,7 +2845,7 @@ public class Media_list_activity extends AppCompatActivity  {
                     play = (mutedDark);
                     pause = (mutedDark);
                     // fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Media_list_activity.this,mutedDark)));
-
+                    playBtn.setColor(play);
                     volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
                     volumeBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
                     positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
@@ -2672,7 +2892,7 @@ public class Media_list_activity extends AppCompatActivity  {
                     nxtBtn.setBackground(myIcon3);
                     pauseBtn.setBackground(myIcon);
                     playBtn.change(false);
-                   // playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
+                    // playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
                     playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
 
                     Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
@@ -2688,10 +2908,14 @@ public class Media_list_activity extends AppCompatActivity  {
                     titleS.setTextColor(mutedColor);
                     desS.setTextColor(mutedColor);
 
-                    add_phone.setBackgroundColor(vibrant);
+                   // add_phone.setBackgroundColor(vibrant);
                     LinearLayout linearLayout = findViewById(R.id.medic_base);
 
                     linearLayout.setBackgroundColor(vibrant);
+
+
+                    LinearLayout linearLayout1 = findViewById(R.id.medic_base1);
+                    linearLayout1.setBackgroundColor(vibrant);
 
                 }
             });
@@ -2699,6 +2923,12 @@ public class Media_list_activity extends AppCompatActivity  {
 
             image = myView.findViewById(R.id.albumart);
             image.setImageBitmap(bm);
+            if(isShowlrc){
+                BitmapDrawable drawable = (BitmapDrawable) image.getDrawable();
+                Bitmap bitmap = drawable.getBitmap();
+                Bitmap blurred = blurRenderScript(bitmap, 20);//second parametre is radius
+                image.setImageBitmap(blurred);
+            }
             songI.setImageBitmap(bm);
 
             String[] abspath = getAudioPath(title);
@@ -2720,7 +2950,7 @@ public class Media_list_activity extends AppCompatActivity  {
 
             //   if(! other.equals("yes") ) {
             mp.setLooping(false);
-            mp.seekTo(0);
+            mp.seekTo(posit);
 
             mp.start();
 
@@ -2730,6 +2960,13 @@ public class Media_list_activity extends AppCompatActivity  {
             System.out.println(file);
             List<Lrc> lrcs = LrcHelper.parseLrcFromFile(file);
             mLrcView.setLrcData(lrcs);
+            if(isShowlrc){ mLrcView.setVisibility(View.VISIBLE);
+                BitmapDrawable drawable = (BitmapDrawable) image.getDrawable();
+                Bitmap bitmap = drawable.getBitmap();
+                Bitmap blurred = blurRenderScript(bitmap, 20);//second parametre is radius
+                image.setImageBitmap(blurred);
+            }
+            else mLrcView.setVisibility(View.INVISIBLE);
 
             Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
             myIcon2.setTint(play);
@@ -2813,30 +3050,26 @@ public class Media_list_activity extends AppCompatActivity  {
 
     }
 
-    public void prevsong() {
-        System.out.println(pro);
+    public void nxtsong() {
 
         // startService(view);
-        if (mp.isPlaying()) {
-            Audio audio = getNest();
-            title = audio.getTitle();
-            titleq = audio.getImagepath();
+        System.out.println(pro);
 
-        } else {
-            Audio audio = getNest();
-            title = audio.getTitle();
-            titleq = audio.getImagepath();
-        }
 
-        mp.stop();
+        if(mp!=null) mp.stop();
         mp = new MediaPlayer();
 
-        if (position - 1 < 0) {
-            position = ListElementsArrayList.size();
+        if (position + 1 >= Media_list_activity.ListElementsArrayList.size()) {
+            Media_list_activity.position = -1;
         }
-        position--;
-
+        Media_list_activity.position++;
         {
+
+            // playBtn = (Button) findViewById(R.id.playBtn);
+            // elapsedTimeLabel = (TextView) findViewById(R.id.elapsedTimeLabel);
+            //  remainingTimeLabel = (TextView) findViewById(R.id.remainingTimeLabel);
+
+            // Media Player
 
 
             title = ListElementsArrayList.get(position).getTitle();
@@ -2874,20 +3107,18 @@ public class Media_list_activity extends AppCompatActivity  {
                 public void onGenerated(Palette palette) {
                     // Use generated instance
                     //work with the palette here
-                    int defaultValue = 0x0000FF;
+                    int defaultValue = 0x000000;
                     int vibrant = getDominantColor(bm);
                     int vibrantLight = palette.getLightVibrantColor(defaultValue);
-                    int vibrantDark = palette.getDarkVibrantColor(vibrant);
+                    int vibrantDark = palette.getDarkVibrantColor(defaultValue);
                     int muted = palette.getMutedColor(defaultValue);
                     int mutedLight = palette.getLightMutedColor(defaultValue);
-                    int mutedDark = getComplimentColor(vibrant);
-
+                    int mutedDark = getComplimentColor(bm);
                     mutedColor = mutedDark;
+
 
                     if (vibrant == 0) {
                         mutedDark = palette.getDarkVibrantColor(vibrant);
-                        // vibrant++;
-
                     }
 
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -2899,15 +3130,12 @@ public class Media_list_activity extends AppCompatActivity  {
                         Toolbar actionBarToolbar = findViewById(R.id.toolbar);
                         if (actionBarToolbar != null)
                             actionBarToolbar.setTitleTextColor(mutedDark);
-
                     }
-
 
                     play = (mutedDark);
                     pause = (mutedDark);
-
-                    //fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Media_list_activity.this,mutedDark)));
-
+                    // fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Media_list_activity.this,mutedDark)));
+                    playBtn.setColor(play);
                     volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
                     volumeBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
                     positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
@@ -2916,13 +3144,13 @@ public class Media_list_activity extends AppCompatActivity  {
                     remainingTimeLabel.setTextColor(mutedColor);
                     elapsedTimeLabel.setTextColor(mutedColor);
 
-                    //fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
+                    //  fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
                     toolbar.getNavigationIcon().setTint(mutedDark);
-
 
                     Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
                     icon.setTint(mutedDark);
                     button.setBackground(icon);
+
                     mVisualizer.setColor(mutedColor);
                     SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
 
@@ -2941,6 +3169,7 @@ public class Media_list_activity extends AppCompatActivity  {
 
 
 
+
                     Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
                     Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
                     Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
@@ -2953,7 +3182,7 @@ public class Media_list_activity extends AppCompatActivity  {
                     nxtBtn.setBackground(myIcon3);
                     pauseBtn.setBackground(myIcon);
                     playBtn.change(false);
-                  //  playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
+                    // playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
                     playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
 
                     Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
@@ -2968,17 +3197,25 @@ public class Media_list_activity extends AppCompatActivity  {
                     textView1.setTextColor(mutedDark);
                     titleS.setTextColor(mutedColor);
                     desS.setTextColor(mutedColor);
-                    add_phone.setBackgroundColor(vibrant);
+
+                   // add_phone.setBackgroundColor(vibrant);
                     LinearLayout linearLayout = findViewById(R.id.medic_base);
 
                     linearLayout.setBackgroundColor(vibrant);
-
+                    LinearLayout linearLayout1 = findViewById(R.id.medic_base1);
+                    linearLayout1.setBackgroundColor(vibrant);
                 }
             });
 
 
             image = myView.findViewById(R.id.albumart);
             image.setImageBitmap(bm);
+            if(isShowlrc){
+                BitmapDrawable drawable = (BitmapDrawable) image.getDrawable();
+                Bitmap bitmap = drawable.getBitmap();
+                Bitmap blurred = blurRenderScript(bitmap, 20);//second parametre is radius
+                image.setImageBitmap(blurred);
+            }
             songI.setImageBitmap(bm);
 
             String[] abspath = getAudioPath(title);
@@ -3010,14 +3247,20 @@ public class Media_list_activity extends AppCompatActivity  {
             System.out.println(file);
             List<Lrc> lrcs = LrcHelper.parseLrcFromFile(file);
             mLrcView.setLrcData(lrcs);
+            if(isShowlrc){ mLrcView.setVisibility(View.VISIBLE);
+                BitmapDrawable drawable = (BitmapDrawable) image.getDrawable();
+                Bitmap bitmap = drawable.getBitmap();
+                Bitmap blurred = blurRenderScript(bitmap, 20);//second parametre is radius
+                image.setImageBitmap(blurred);
+            }
+            else mLrcView.setVisibility(View.INVISIBLE);
 
             Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
             myIcon2.setTint(play);
             playBtn.setBackground(myIcon2);
-            // playBtn.setBackgroundColor(play);
+            // myIcon3.setTint(play);
             mp.setVolume(2.5f, 2.5f);
             totalTime = mp.getDuration();
-
             requestAudioPermissions();
             // Position Bar
             positionBar = myView.findViewById(R.id.positionBar);
@@ -3053,6 +3296,7 @@ public class Media_list_activity extends AppCompatActivity  {
                     new SeekBar.OnSeekBarChangeListener() {
                         @Override
                         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                            System.out.println("peogress" + pro);
                             float volumeNum = progress / 100f;
                             mp.setVolume(volumeNum, volumeNum);
                             pro = progress;
@@ -3224,98 +3468,8 @@ public class Media_list_activity extends AppCompatActivity  {
         }
     }
 
-    public void slideUp(View view) {
-        view.setVisibility(View.VISIBLE);
-        TranslateAnimation animate = new TranslateAnimation(
-                0,                 // fromXDelta
-                0,                 // toXDelta
-                view.getHeight(),  // fromYDelta
-                0);                // toYDelta
-        animate.setDuration(500);
-        animate.setFillAfter(true);
-        view.startAnimation(animate);
-
-        listView.setEnabled(false);
-        gridView.setEnabled(false);
-        myView.setEnabled(true);
-        volumeBar.setEnabled(true);
-        try {
-            positionBar.setEnabled(true);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-
-        playBtn.setEnabled(true);
-        pauseBtn.setEnabled(true);
-        nxtBtn.setEnabled(true);
-        showlrc.setEnabled(true);
-        mLrcView.setVisibility(View.VISIBLE);
 
 
-    }
-
-    // slide the view from its current position to below itself
-    public void slideDown(View view) {
-        TranslateAnimation animate = new TranslateAnimation(
-                0,                 // fromXDelta
-                0,                 // toXDelta
-                0,                 // fromYDelta
-                view.getHeight()); // toYDelta
-        animate.setDuration(500);
-        animate.setFillAfter(true);
-        view.startAnimation(animate);
-        listView.setEnabled(true);
-        gridView.setEnabled(true);
-        myView.setEnabled(false);
-        volumeBar.setEnabled(false);
-        try {
-            positionBar.setEnabled(false);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        playBtn.setEnabled(false);
-        pauseBtn.setEnabled(false);
-        nxtBtn.setEnabled(false);
-        showlrc.setEnabled(false);
-        mLrcView.setVisibility(View.INVISIBLE);
-
-    }
-
-    public void slideUp1(View view) {
-        view.setVisibility(View.VISIBLE);
-        TranslateAnimation animate = new TranslateAnimation(
-                0,                 // fromXDelta
-                0,                 // toXDelta
-                view.getHeight(),  // fromYDelta
-                0);                // toYDelta
-        animate.setDuration(500);
-        animate.setFillAfter(true);
-        view.startAnimation(animate);
-        add_phone.setEnabled(true);
-        ply.setEnabled(true);
-        pre.setEnabled(true);
-        nxt.setEnabled(true);
-
-
-
-    }
-
-    // slide the view from its current position to below itself
-    public void slideDown1(View view) {
-        TranslateAnimation animate = new TranslateAnimation(
-                0,                 // fromXDelta
-                0,                 // toXDelta
-                0,                 // fromYDelta
-                view.getHeight()); // toYDelta
-        animate.setDuration(500);
-        animate.setFillAfter(true);
-        view.startAnimation(animate);
-        add_phone.setEnabled(false);
-        ply.setEnabled(false);
-        pre.setEnabled(false);
-        nxt.setEnabled(false);
-
-    }
 
     public String createTimeLabel(int time) {
         String timeLabel = "";
@@ -3365,11 +3519,293 @@ public class Media_list_activity extends AppCompatActivity  {
         return mAudioPath;
     }
 
-    public void startService() {
-        serviceIntent.setAction(Constants.ACTION.STARTFOREGROUND_ACTION);
-        serviceIntent.putExtra("p", (position));
-        startService(serviceIntent);
+    public void prevsong() {
+        System.out.println(pro);
+
+        // startService(view);
+
+
+        if(mp!=null)mp.stop();
+        mp = new MediaPlayer();
+
+        if (position - 1 < 0) {
+            position = ListElementsArrayList.size();
+        }
+        position--;
+
+        {
+
+
+            title = ListElementsArrayList.get(position).getTitle();
+            artist = ListElementsArrayList.get(position).getArtist();
+            album = ListElementsArrayList.get(position).getAlbum();
+
+
+            textView.setText(title);
+            textView1.setText(artist);
+
+            titleS.setText(title);
+            desS.setText(artist);
+
+            titleq = ListElementsArrayList.get(position).getImagepath();
+            Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
+
+            Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(titleq));
+            ContentResolver res = getContentResolver();
+            InputStream in;
+            bm = null;
+            try {
+                in = res.openInputStream(uri);
+
+                bm = BitmapFactory.decodeStream(in);
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                InputStream is = getResources().openRawResource(R.raw.image);
+                bm = BitmapFactory.decodeStream(is);
+            }
+
+
+            Palette.from(bm).generate(new Palette.PaletteAsyncListener() {
+                @Override
+                public void onGenerated(Palette palette) {
+                    // Use generated instance
+                    //work with the palette here
+                    int defaultValue = 0x0000FF;
+                    int vibrant = getDominantColor(bm);
+                    int vibrantLight = palette.getLightVibrantColor(defaultValue);
+                    int vibrantDark = palette.getDarkVibrantColor(vibrant);
+                    int muted = palette.getMutedColor(defaultValue);
+                    int mutedLight = palette.getLightMutedColor(defaultValue);
+                    int mutedDark = getComplimentColor(bm);
+
+                    mutedColor = mutedDark;
+
+                    if (vibrant == 0) {
+                        mutedDark = palette.getDarkVibrantColor(vibrant);
+                        // vibrant++;
+
+                    }
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        Window window = getWindow();
+                        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                        window.setStatusBarColor(vibrant);
+                        setTitleColor(vibrant);
+                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(vibrant));
+                        Toolbar actionBarToolbar = findViewById(R.id.toolbar);
+                        if (actionBarToolbar != null)
+                            actionBarToolbar.setTitleTextColor(mutedDark);
+
+                    }
+
+
+                    play = (mutedDark);
+                    pause = (mutedDark);
+                    playBtn.setColor(play);
+                    //fab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Media_list_activity.this,mutedDark)));
+
+                    volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                    volumeBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
+                    positionBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
+                    positionBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
+
+                    remainingTimeLabel.setTextColor(mutedColor);
+                    elapsedTimeLabel.setTextColor(mutedColor);
+
+                    //fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
+                    toolbar.getNavigationIcon().setTint(mutedDark);
+
+
+                    Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
+                    icon.setTint(mutedDark);
+                    button.setBackground(icon);
+                    mVisualizer.setColor(mutedColor);
+                    SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
+                    int type = prefs1.getInt("cond", 0);
+                    if (type == 0) {
+
+                    } else if (type == 1) {
+                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                        myIcon3.setTint(mutedDark);
+                        loop.setBackground(myIcon3);
+                    } else if (type == 2) {
+                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                        myIcon3.setTint(mutedDark);
+                        loop.setBackground(myIcon3);
+                    }
+
+
+
+                    Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
+                    Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
+                    Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
+                    Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+
+                    myIcon3.setTint(play);
+                    myIcon.setTint(play);
+                    myIcon1.setTint(play);
+                    myIcon2.setTint(play);
+                    nxtBtn.setBackground(myIcon3);
+                    pauseBtn.setBackground(myIcon);
+                    playBtn.change(false);
+                    //  playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
+                    playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
+
+                    Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
+                    Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
+                    myIcon33.setTint(play);
+                    myIcon31.setTint(play);
+                    ply.setBackground(myIcon2);
+                    pre.setBackground(myIcon31);
+                    nxt.setBackground(myIcon33);
+
+                    textView.setTextColor(mutedDark);
+                    textView1.setTextColor(mutedDark);
+                    titleS.setTextColor(mutedColor);
+                    desS.setTextColor(mutedColor);
+                   // add_phone.setBackgroundColor(vibrant);
+                    LinearLayout linearLayout = findViewById(R.id.medic_base);
+
+                    linearLayout.setBackgroundColor(vibrant);
+
+                    LinearLayout linearLayout1 = findViewById(R.id.medic_base1);
+                    linearLayout1.setBackgroundColor(vibrant);
+
+                }
+            });
+
+
+            image = myView.findViewById(R.id.albumart);
+            image.setImageBitmap(bm);
+            if(isShowlrc){
+                BitmapDrawable drawable = (BitmapDrawable) image.getDrawable();
+                Bitmap bitmap = drawable.getBitmap();
+                Bitmap blurred = blurRenderScript(bitmap, 20);//second parametre is radius
+                image.setImageBitmap(blurred);
+            }
+            songI.setImageBitmap(bm);
+
+            String[] abspath = getAudioPath(title);
+
+            try {
+                if (!mp.isPlaying()) {
+                    mp.setDataSource(abspath[0]);
+                    mp.prepare();
+
+                } else {
+
+
+                }
+            } catch (Exception e) {
+
+                System.out.println(e.getMessage());
+            }
+
+
+            //   if(! other.equals("yes") ) {
+            mp.setLooping(false);
+            mp.seekTo(0);
+
+            mp.start();
+
+            File file = new File(Environment.getExternalStorageDirectory() + "/Lyrics/"
+                    +Media_list_activity.ListElementsArrayList.get(position).getTitle().toLowerCase().replace(" ","_").concat(".lrc"));
+
+            System.out.println(file);
+            List<Lrc> lrcs = LrcHelper.parseLrcFromFile(file);
+            mLrcView.setLrcData(lrcs);
+
+            if(isShowlrc){ mLrcView.setVisibility(View.VISIBLE);
+                BitmapDrawable drawable = (BitmapDrawable) image.getDrawable();
+                Bitmap bitmap = drawable.getBitmap();
+                Bitmap blurred = blurRenderScript(bitmap, 20);//second parametre is radius
+                image.setImageBitmap(blurred);
+            }
+            else mLrcView.setVisibility(View.INVISIBLE);
+            Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+            myIcon2.setTint(play);
+            playBtn.setBackground(myIcon2);
+            // playBtn.setBackgroundColor(play);
+            mp.setVolume(2.5f, 2.5f);
+            totalTime = mp.getDuration();
+
+            requestAudioPermissions();
+            // Position Bar
+            positionBar = myView.findViewById(R.id.positionBar);
+
+            positionBar.setMax(totalTime);
+            positionBar.setOnSeekBarChangeListener(
+                    new SeekBar.OnSeekBarChangeListener() {
+                        @Override
+                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                            if (fromUser) {
+                                mp.seekTo(progress);
+                                positionBar.setProgress(progress);
+                            }
+                        }
+
+                        @Override
+                        public void onStartTrackingTouch(SeekBar seekBar) {
+
+                        }
+
+                        @Override
+                        public void onStopTrackingTouch(SeekBar seekBar) {
+
+                        }
+                    }
+            );
+
+
+            // Volume Bar
+            //volumeBar = (SeekBar) myView.findViewById(R.id.volumeBar);
+            // volumeBar.setProgress(pro);
+            volumeBar.setOnSeekBarChangeListener(
+                    new SeekBar.OnSeekBarChangeListener() {
+                        @Override
+                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                            float volumeNum = progress / 100f;
+                            mp.setVolume(volumeNum, volumeNum);
+                            pro = progress;
+                        }
+
+                        @Override
+                        public void onStartTrackingTouch(SeekBar seekBar) {
+
+                        }
+
+                        @Override
+                        public void onStopTrackingTouch(SeekBar seekBar) {
+
+                        }
+                    }
+            );
+
+            // Thread (Update positionBar & timeLabel)
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (mp != null) {
+                        try {
+                            Message msg = new Message();
+                            msg.what = mp.getCurrentPosition();
+                            handler.sendMessage(msg);
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                        }
+                    }
+                }
+            }).start();
+
+            startService();
+            //myButton.setText("Slide up");
+        }
+
+
     }
+
 
     public void stopService() {
         serviceIntent.setClass(Media_list_activity.this, NotificationService.class);
@@ -3381,60 +3817,25 @@ public class Media_list_activity extends AppCompatActivity  {
         return Media_list_activity.ListElementsArrayList.get((position + 1) % Media_list_activity.ListElementsArrayList.size());
     }
 
-    public int getComplimentColor(int color) {
+    public void startService() {
+        serviceIntent.setAction(Constants.ACTION.STARTFOREGROUND_ACTION);
+        serviceIntent.putExtra("p", (position));
+        startService(serviceIntent);
+        bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    public int getComplimentColor(Bitmap bitmap) {
+
+        MediaNotificationProcessor processor = new MediaNotificationProcessor(this, bitmap); // can use drawable
+
+        int backgroundColor = processor.getBackgroundColor();
+        int primaryTextColor = processor.getPrimaryTextColor();
+        int secondaryTextColor = processor.getSecondaryTextColor();
+
+
         // get existing colors
-        int alpha = Color.alpha(color);
-        int red = Color.red(color);
-        int blue = Color.blue(color);
-        int green = Color.green(color);
 
-        // find compliments
-        red = (~red) & 0xff;
-        blue = (~blue) & 0xff;
-        green = (~green) & 0xff;
-
-        return Color.argb(alpha, red, green, blue);
-    }
-
-
-
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
-        mAudioManager.abandonAudioFocus(mAudioFocusChangeListener);
-
-        if (mVisualizer != null)
-            mVisualizer.release();
-
-    }
-
-    class AudioFocusChangeListenerImpl implements AudioManager.OnAudioFocusChangeListener {
-
-        @Override
-        public void onAudioFocusChange(int focusChange) {
-            mFocusChanged = true;
-            Log.i(TAG, "Focus changed");
-
-            switch (focusChange) {
-                case AudioManager.AUDIOFOCUS_GAIN:
-                    Log.i(TAG, "AUDIOFOCUS_GAIN");
-                    play();
-                    break;
-                case AudioManager.AUDIOFOCUS_LOSS:
-                    Log.i(TAG, "AUDIOFOCUS_LOSS");
-                    pause();
-                    break;
-                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                    Log.i(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
-                    pause();
-                    break;
-                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                    Log.i(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
-                    break;
-            }
-        }
+        return primaryTextColor;
     }
 
     @Override
@@ -3454,12 +3855,79 @@ public class Media_list_activity extends AppCompatActivity  {
         // fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
         toolbar.getNavigationIcon().setTint(Color.WHITE);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
-        mAudioManager.abandonAudioFocus(mAudioFocusChangeListener);
         Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
         icon.setTint(Color.WHITE);
         button.setBackground(icon);
         super.onBackPressed();
     }
 
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver);
+
+
+        if (mVisualizer != null)
+            mVisualizer.release();
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putBoolean("ServiceState", serviceBound);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        serviceBound = savedInstanceState.getBoolean("ServiceState");
+    }
+
+    private Bitmap blurRenderScript(Bitmap smallBitmap, int radius) {
+
+        try {
+            smallBitmap = RGB565toARGB888(smallBitmap);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        Bitmap bitmap = Bitmap.createBitmap(
+                smallBitmap.getWidth(), smallBitmap.getHeight(),
+                Bitmap.Config.ARGB_8888);
+
+        RenderScript renderScript = RenderScript.create(context);
+
+        Allocation blurInput = Allocation.createFromBitmap(renderScript, smallBitmap);
+        Allocation blurOutput = Allocation.createFromBitmap(renderScript, bitmap);
+
+        ScriptIntrinsicBlur blur = ScriptIntrinsicBlur.create(renderScript,
+                Element.U8_4(renderScript));
+        blur.setInput(blurInput);
+        blur.setRadius(radius); // radius must be 0 < r <= 25
+        blur.forEach(blurOutput);
+
+        blurOutput.copyTo(bitmap);
+        renderScript.destroy();
+
+        return bitmap;
+
+    }
+    private Bitmap RGB565toARGB888(Bitmap img) throws Exception {
+        int numPixels = img.getWidth() * img.getHeight();
+        int[] pixels = new int[numPixels];
+
+        //Get JPEG pixels.  Each int is the color values for one pixel.
+        img.getPixels(pixels, 0, img.getWidth(), 0, 0, img.getWidth(), img.getHeight());
+
+        //Create a Bitmap of the appropriate format.
+        Bitmap result = Bitmap.createBitmap(img.getWidth(), img.getHeight(), Bitmap.Config.ARGB_8888);
+
+        //Set RGB pixels.
+        result.setPixels(pixels, 0, result.getWidth(), 0, 0, result.getWidth(), result.getHeight());
+        return result;
+    }
 }
 

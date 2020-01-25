@@ -1,7 +1,11 @@
 package com.example.czgame.wordbank.ui.words;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.example.czgame.wordbank.R;
 import com.example.czgame.wordbank.ui.words.ui.main.SectionsPagerAdapter;
@@ -16,6 +20,9 @@ public class WordDetail extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_word_detail);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -29,7 +36,20 @@ public class WordDetail extends AppCompatActivity {
             }
         });
 
+        SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+        boolean isDark = prefs.getBoolean("isDark", false);
+        if(isDark) {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
+        }else {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        }
+
         TabLayout tabLayout = findViewById(R.id.tabs);
+        if(isDark) {
+            tabLayout.setBackgroundColor(getResources().getColor(R.color.black));
+        }else {
+            tabLayout.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        }
         tabLayout.addTab(tabLayout.newTab().setText("Word Section"));
         tabLayout.addTab(tabLayout.newTab().setText("Sentences"));
 

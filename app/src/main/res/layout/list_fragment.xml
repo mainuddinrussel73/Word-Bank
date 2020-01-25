@@ -27,7 +27,7 @@
 
         android:scrollbarStyle="outsideOverlay"
         android:fastScrollEnabled="true"
-        android:dividerHeight="10dp"
+        android:dividerHeight="0dp"
         >
 
 

@@ -22,10 +22,8 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 import androidx.core.content.ContextCompat;
 import cdflynn.android.library.checkview.CheckView;
@@ -33,7 +31,7 @@ import cdflynn.android.library.checkview.CheckView;
 public class News_adapter extends BaseAdapter {
 
     private final Activity context;
-    List<News> newsList;
+   // List<News> newsList;
     TextView titleText, body;
     CheckView mCheckView;
 
@@ -42,8 +40,8 @@ public class News_adapter extends BaseAdapter {
     public News_adapter(Activity context) {
 
         this.context = context;
-        this.newsList = new ArrayList<News>();
-        this.newsList.addAll(news_activity.newsList);
+      //  this.newsList = new ArrayList<News>();
+        //this.newsList.addAll(news_activity.newsList);
 
 
     }
@@ -90,37 +88,41 @@ public class News_adapter extends BaseAdapter {
 
 
 
+        if (news_activity.newsList.get(position).getURL().isEmpty()) {
+            imageView.setImageResource(R.drawable.news);
+        } else{
+            Picasso.with(context)
+                    .load(news_activity.newsList.get(position).getURL())
+                    .networkPolicy(NetworkPolicy.OFFLINE)
+                    .into(imageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError() {
+                            //Try again online if cache failed
+                            Picasso.with(context)
+                                    .load(news_activity.newsList.get(position).getURL())
+                                    .error(R.drawable.news)
+                                    .into(imageView, new Callback() {
+                                        @Override
+                                        public void onSuccess() {
+
+                                        }
+
+                                        @Override
+                                        public void onError() {
+                                            Log.v("Picasso","Could not fetch image");
+                                        }
+                                    });
+                        }
+                    });
+        }
 
 
 
-        Picasso.with(context)
-                .load(newsList.get(position).getURL())
-                .networkPolicy(NetworkPolicy.OFFLINE)
-                .into(imageView, new Callback() {
-                    @Override
-                    public void onSuccess() {
-
-                    }
-
-                    @Override
-                    public void onError() {
-                        //Try again online if cache failed
-                        Picasso.with(context)
-                                .load(newsList.get(position).getURL())
-                                .error(R.drawable.news)
-                                .into(imageView, new Callback() {
-                                    @Override
-                                    public void onSuccess() {
-
-                                    }
-
-                                    @Override
-                                    public void onError() {
-                                        Log.v("Picasso","Could not fetch image");
-                                    }
-                                });
-                    }
-                });
 
         //LinearLayout listitem = rowView.findViewById(R.id.list_item);
 
@@ -157,9 +159,9 @@ public class News_adapter extends BaseAdapter {
         news_activity.newsList.clear();
         // System.out.println(this.contactList.size());
         if (charText.length() == 0) {
-            news_activity.newsList.addAll(this.newsList);
+            news_activity.newsList.addAll(news_activity.newsList);
         } else {
-            for (News wp : this.newsList) {
+            for (News wp : news_activity.newsList) {
                 if (wp.getTITLE().toLowerCase().contains(charText)) {
                     news_activity.newsList.add(wp);
                 }

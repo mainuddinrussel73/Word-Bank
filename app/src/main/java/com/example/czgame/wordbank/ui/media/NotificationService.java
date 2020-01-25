@@ -11,17 +11,21 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.MergeCursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
-import android.media.RingtoneManager;
+import android.media.MediaPlayer;
+import android.media.session.MediaSession;
 import android.net.Uri;
+import android.os.Binder;
 import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
+import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -29,24 +33,25 @@ import com.example.czgame.wordbank.R;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
-import androidx.palette.graphics.Palette;
 import es.dmoral.toasty.Toasty;
+import mkaflowski.mediastylepalette.MediaNotificationProcessor;
 
+import static com.example.czgame.wordbank.ui.media.Media_list_activity.mLrcView;
 import static com.example.czgame.wordbank.ui.media.Media_list_activity.mVisualizer;
 import static com.example.czgame.wordbank.ui.media.Media_list_activity.mp;
-import static com.tobiasrohloff.view.NestedScrollWebView.TAG;
+import static com.example.czgame.wordbank.ui.media.Media_list_activity.playBtn;
+import static com.example.czgame.wordbank.ui.media.Media_list_activity.posit;
 
-public class NotificationService extends Service {
+public class NotificationService extends Service implements MediaPlayer.OnCompletionListener,
+        MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnSeekCompleteListener,
+        MediaPlayer.OnInfoListener, MediaPlayer.OnBufferingUpdateListener,
+        AudioManager.OnAudioFocusChangeListener {
 
     public static RemoteViews notificationView;
     public static RemoteViews notificationView1;
@@ -61,36 +66,49 @@ public class NotificationService extends Service {
     public static Intent yesReceive = new Intent();
     public static Intent noReceive = new Intent();
     public static Intent nxReceive = new Intent();
+    // Binder given to clients
+    private final IBinder iBinder = new LocalBinder();
     private final String LOG_TAG = "NotificationService";
     public static final String COUNTDOWN_BR = "com.example.czgame.wordgame.music_br";
     AudioManager am = null;
     String title;
     String artist;
     String album;
-    public static AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener;
     public static Intent bi = new Intent(COUNTDOWN_BR);
-    public static AudioManager mAudioManager;
     public static Timer mTimer = null;    //timer handling
     int p;
     Notification status;
-
-    public static int getDominantColor(Bitmap bitmap) {
-        List<Palette.Swatch> swatchesTemp = Palette.from(bitmap).generate().getSwatches();
-        List<Palette.Swatch> swatches = new ArrayList<Palette.Swatch>(swatchesTemp);
-        Collections.sort(swatches, new Comparator<Palette.Swatch>() {
-            @Override
-            public int compare(Palette.Swatch swatch1, Palette.Swatch swatch2) {
-                return swatch2.getPopulation() - swatch1.getPopulation();
-            }
-        });
-        return swatches.size() > 0 ? swatches.get(0).getRgb() : Color.WHITE;
-    }
-
+    private AudioManager audioManager;
 
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return iBinder;
     }
+    public  int getDominantColor(Bitmap bitmap) {
+        MediaNotificationProcessor processor = new MediaNotificationProcessor(NotificationService.this, bitmap); // can use drawable
+
+        int backgroundColor = processor.getBackgroundColor();
+        int primaryTextColor = processor.getPrimaryTextColor();
+        int secondaryTextColor = processor.getSecondaryTextColor();
+
+        return  backgroundColor;
+    }
+
+
+    private boolean requestAudioFocus() {
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+        //Focus gained
+        return result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED;
+        //Could not gain focus
+    }
+
+    private boolean removeAudioFocus() {
+        return AudioManager.AUDIOFOCUS_REQUEST_GRANTED ==
+                audioManager.abandonAudioFocus(this);
+    }
+
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -103,48 +121,25 @@ public class NotificationService extends Service {
         if (intent.getAction().equals(Constants.ACTION.STARTFOREGROUND_ACTION)) {
             try {
                 p = intent.getIntExtra("p", 0);
+
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
 
                     // implementation reference
 
+                    if (requestAudioFocus() == false) {
+                        //Could not gain focus
+                        stopSelf();
+                    }
                     bi.setClass(NotificationService.this, MyNotificationReceiver.class);
                     startMyOwnForeground();
 
 
                 }
 
-                mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                mOnAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
-                    @Override
-                    public void onAudioFocusChange(int focusChange) {
-                        switch (focusChange) {
-                            case AudioManager.AUDIOFOCUS_GAIN:
-                                Log.i(TAG, "AUDIOFOCUS_GAIN");
-                                bi.setAction(MyNotificationReceiver.AUDIOFOCUS_GAIN);
-                                sendBroadcast(bi);
-                                break;
-                            case AudioManager.AUDIOFOCUS_LOSS:
-                                Log.i(TAG, "AUDIOFOCUS_LOSS");
-                                mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
-                                bi.setAction(MyNotificationReceiver.AUDIOFOCUS_LOSS);
-                                sendBroadcast(bi);
-                                break;
-                            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
-                                Log.i(TAG, "AUDIOFOCUS_LOSS_TRANSIENT");
-                                bi.setAction(MyNotificationReceiver.AUDIOFOCUS_LOSS_TRANSIENT);
-                                sendBroadcast(bi);
-                                break;
-                            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                                Log.i(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK");
-                                break;
-                        }
-                    }
-                };
-
                 System.out.println(p);
 
-                AsynchTaskTimer();
+              //  AsynchTaskTimer();
 
             } catch (Exception e) {
                 System.out.println(e.getMessage());
@@ -163,12 +158,12 @@ public class NotificationService extends Service {
             // implementation reference
 
             startMyOwnForeground();
-            AsynchTaskTimer();
+            //AsynchTaskTimer();
 
             Toasty.success(this, "Clicked Previous", Toast.LENGTH_SHORT).show();
             Log.i("ok", "Clicked Previous");
         } else if (intent.getAction().equals(Constants.ACTION.PLAY_ACTION)) {
-            AsynchTaskTimer();
+          //  AsynchTaskTimer();
             Toast.makeText(this, "Clicked Play", Toast.LENGTH_SHORT).show();
             Log.i("ok", "Clicked Play");
         } else if (intent.getAction().equals(Constants.ACTION.NEXT_ACTION)) {
@@ -179,12 +174,12 @@ public class NotificationService extends Service {
 
 
             startMyOwnForeground();
-            AsynchTaskTimer();
+           // AsynchTaskTimer();
             Toasty.success(this, "Clicked Next", Toast.LENGTH_SHORT).show();
             Log.i("ok", "Clicked Next");
         }else if (intent.getAction().equals(Constants.ACTION.AUDIOFOCUS_LOSS)) {
 
-            AsynchTaskTimer();
+            //AsynchTaskTimer();
             Log.i("ok", "Clicked Gain");
         } else if (intent.getAction().equals(
                 Constants.ACTION.STOPFOREGROUND_ACTION)) {
@@ -208,45 +203,6 @@ public class NotificationService extends Service {
     }
 
 
-    private void showActionButtonsNotification() {
-
-
-        Notification.Builder notif;
-        NotificationManager nm;
-        notif = new Notification.Builder(getApplicationContext());
-        notif.setSmallIcon(R.mipmap.ic_launcher);
-        notif.setContentTitle("Hi there!");
-        notif.setContentText("This is even more text.");
-        Uri path = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        notif.setSound(path);
-        nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        Intent yesReceive = new Intent();
-        yesReceive.setClass(NotificationService.this, MyNotificationReceiver.class);
-        yesReceive.setAction(MyNotificationReceiver.RESUME_ACTION);
-        PendingIntent pendingIntentYes = PendingIntent.getBroadcast(this, MyNotificationReceiver.REQUEST_CODE_NOTIFICATION, yesReceive, PendingIntent.FLAG_UPDATE_CURRENT);
-        notif.addAction(R.drawable.play, "resume", pendingIntentYes);
-
-
-        Intent yesReceive2 = new Intent();
-        yesReceive2.setClass(NotificationService.this, MyNotificationReceiver.class);
-        yesReceive2.setAction(MyNotificationReceiver.STOP_ACTION);
-        PendingIntent pendingIntentYes2 = PendingIntent.getBroadcast(this, MyNotificationReceiver.REQUEST_CODE_NOTIFICATION, yesReceive2, PendingIntent.FLAG_UPDATE_CURRENT);
-        notif.addAction(R.drawable.stop, "stop", pendingIntentYes2);
-
-
-        Intent maybeReceive2 = new Intent();
-        maybeReceive2.setClass(NotificationService.this, MyNotificationReceiver.class);
-        maybeReceive2.setAction(MyNotificationReceiver.CANCEL_ACTION);
-        PendingIntent pendingIntentMaybe2 = PendingIntent.getBroadcast(this, MyNotificationReceiver.REQUEST_CODE_NOTIFICATION, maybeReceive2, PendingIntent.FLAG_UPDATE_CURRENT);
-        notif.addAction(R.drawable.ic_cancel_black_24dp, "cancel", pendingIntentMaybe2);
-
-
-        assert nm != null;
-        nm.notify(MyNotificationReceiver.REQUEST_CODE, notif.getNotification());
-
-
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void Stopfunc() {
@@ -306,12 +262,16 @@ public class NotificationService extends Service {
 
         if (!Media_list_activity.mp.isPlaying()) {
 
+
+
             notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
             notificationView1.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
 
 
         } else if (Media_list_activity.mp.isPlaying()) {
 
+            Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+            myIcon2.setTint(getComplimentColor(bm));
             notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
             notificationView1.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
 
@@ -353,14 +313,21 @@ public class NotificationService extends Service {
         notificationView.setInt(R.id.status_bar_track_name, "setBackgroundColor", getDominantColor(bm));
         notificationView.setInt(R.id.status_bar_artist_name, "setBackgroundColor", getDominantColor(bm));
         notificationView.setInt(R.id.status_bar_album_name, "setBackgroundColor", getDominantColor(bm));
+
+
+        notificationView.setInt(R.id.status_bar_prev, "setColorFilter", getComplimentColor(bm));
         notificationView.setInt(R.id.status_bar_prev, "setBackgroundColor", getDominantColor(bm));
+
+        notificationView.setInt(R.id.status_bar_next, "setColorFilter", getComplimentColor(bm));
         notificationView.setInt(R.id.status_bar_next, "setBackgroundColor", getDominantColor(bm));
+
+        notificationView.setInt(R.id.status_bar_play, "setColorFilter", getComplimentColor(bm));
         notificationView.setInt(R.id.status_bar_play, "setBackgroundColor", getDominantColor(bm));
 
 
-        notificationView.setTextColor(R.id.status_bar_track_name, getComplimentColor(getDominantColor(bm)));
-        notificationView.setTextColor(R.id.status_bar_artist_name, getComplimentColor(getDominantColor(bm)));
-        notificationView.setTextColor(R.id.status_bar_album_name, getComplimentColor(getDominantColor(bm)));
+        notificationView.setTextColor(R.id.status_bar_track_name, getComplimentColor(bm));
+        notificationView.setTextColor(R.id.status_bar_artist_name, getComplimentColor(bm));
+        notificationView.setTextColor(R.id.status_bar_album_name, getComplimentColor((bm)));
 
 
         notificationView1.setOnClickPendingIntent(R.id.status_bar_next, pendingIntentNx);
@@ -369,11 +336,18 @@ public class NotificationService extends Service {
         notificationView1.setInt(R.id.area, "setBackgroundColor", getDominantColor(bm));
         notificationView1.setInt(R.id.status_bar_track_name, "setBackgroundColor", getDominantColor(bm));
         notificationView1.setInt(R.id.status_bar_artist_name, "setBackgroundColor", getDominantColor(bm));
-        notificationView1.setInt(R.id.status_bar_next, "setBackgroundColor", getDominantColor(bm));
+
+        notificationView1.setInt(R.id.status_bar_prev, "setColorFilter", getComplimentColor(bm));
         notificationView1.setInt(R.id.status_bar_prev, "setBackgroundColor", getDominantColor(bm));
+
+        notificationView1.setInt(R.id.status_bar_next, "setColorFilter", getComplimentColor(bm));
+        notificationView1.setInt(R.id.status_bar_next, "setBackgroundColor", getDominantColor(bm));
+
+        notificationView1.setInt(R.id.status_bar_play, "setColorFilter", getComplimentColor(bm));
         notificationView1.setInt(R.id.status_bar_play, "setBackgroundColor", getDominantColor(bm));
-        notificationView1.setTextColor(R.id.status_bar_track_name, getComplimentColor(getDominantColor(bm)));
-        notificationView1.setTextColor(R.id.status_bar_artist_name, getComplimentColor(getDominantColor(bm)));
+
+        notificationView1.setTextColor(R.id.status_bar_track_name, getComplimentColor(bm));
+        notificationView1.setTextColor(R.id.status_bar_artist_name, getComplimentColor(bm));
 
 
         Intent toggle = new Intent();
@@ -393,6 +367,9 @@ public class NotificationService extends Service {
 //        notificationBuilder.setLargeIcon(R.mipmap.ic_launcher);
         notificationBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
 
+        final MediaSession mediaSession = new MediaSession(this, "debug tag");
+
+      //  notification.setColor(getComplimentColor(bm));
         notification = notificationBuilder.setOngoing(true)
                 .setSmallIcon(R.drawable.ic_launcher_background)
                 .setContentTitle("App is running in background")
@@ -405,140 +382,24 @@ public class NotificationService extends Service {
                 .setCustomBigContentView(notificationView);
         notification.setCustomContentView(notificationView);
         notification.setCustomContentView(notificationView1);
+        notification.setStyle(new androidx.media.app.NotificationCompat.MediaStyle());
         startForeground(2, notification.build());
 
 
     }
 
-    private void showNotification() {
-// Using RemoteViews to bind custom layouts into Notification
-        RemoteViews views = new RemoteViews(getPackageName(),
-                R.layout.status_bar);
-        RemoteViews bigViews = new RemoteViews(getPackageName(),
-                R.layout.status_bar_expanded);
 
-// showing default album image
-        views.setViewVisibility(R.id.status_bar_icon, View.VISIBLE);
-        views.setViewVisibility(R.id.status_bar_album_art, View.GONE);
-        bigViews.setImageViewBitmap(R.id.status_bar_album_art,
-                Constants.getDefaultAlbumArt(this));
-
-        Intent notificationIntent = new Intent(this, MediaActivity.class);
-        notificationIntent.setAction(Constants.ACTION.MAIN_ACTION);
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-                notificationIntent, 0);
-
-        Intent previousIntent = new Intent(this, NotificationService.class);
-        previousIntent.setAction(Constants.ACTION.PREV_ACTION);
-        PendingIntent ppreviousIntent = PendingIntent.getService(this, 0,
-                previousIntent, 0);
-
-        Intent playIntent = new Intent(this, NotificationService.class);
-        playIntent.setAction(Constants.ACTION.PLAY_ACTION);
-        PendingIntent pplayIntent = PendingIntent.getService(this, 0,
-                playIntent, 0);
-
-        Intent nextIntent = new Intent(this, NotificationService.class);
-        nextIntent.setAction(Constants.ACTION.NEXT_ACTION);
-        PendingIntent pnextIntent = PendingIntent.getService(this, 0,
-                nextIntent, 0);
-
-        Intent closeIntent = new Intent(this, NotificationService.class);
-        closeIntent.setAction(Constants.ACTION.STOPFOREGROUND_ACTION);
-        PendingIntent pcloseIntent = PendingIntent.getService(this, 0,
-                closeIntent, 0);
-
-        views.setOnClickPendingIntent(R.id.status_bar_play, pplayIntent);
-        bigViews.setOnClickPendingIntent(R.id.status_bar_play, pplayIntent);
-
-        views.setOnClickPendingIntent(R.id.status_bar_next, pnextIntent);
-        bigViews.setOnClickPendingIntent(R.id.status_bar_next, pnextIntent);
-
-        views.setOnClickPendingIntent(R.id.status_bar_prev, ppreviousIntent);
-        bigViews.setOnClickPendingIntent(R.id.status_bar_prev, ppreviousIntent);
-
-        views.setOnClickPendingIntent(R.id.status_bar_collapse, pcloseIntent);
-        bigViews.setOnClickPendingIntent(R.id.status_bar_collapse, pcloseIntent);
-
-        views.setImageViewResource(R.id.status_bar_play,
-                R.drawable.ic_pause_black_24dp);
-        bigViews.setImageViewResource(R.id.status_bar_play,
-                R.drawable.ic_pause_black_24dp);
-
-        views.setTextViewText(R.id.status_bar_track_name, "Song Title");
-        bigViews.setTextViewText(R.id.status_bar_track_name, "Song Title");
-
-        views.setTextViewText(R.id.status_bar_artist_name, "Artist Name");
-        bigViews.setTextViewText(R.id.status_bar_artist_name, "Artist Name");
-
-        bigViews.setTextViewText(R.id.status_bar_album_name, "Album Name");
-
-        status = new Notification.Builder(this).build();
-        status.contentView = views;
-        status.bigContentView = bigViews;
-        status.flags = Notification.FLAG_ONGOING_EVENT;
-        status.icon = R.drawable.ic_launcher_background;
-        status.contentIntent = pendingIntent;
-        startForeground(Constants.NOTIFICATION_ID.FOREGROUND_SERVICE, status);
-    }
-
-    public int getComplimentColor(int color) {
+    public int getComplimentColor(Bitmap bitmap) {
         // get existing colors
-        int alpha = Color.alpha(color);
-        int red = Color.red(color);
-        int blue = Color.blue(color);
-        int green = Color.green(color);
+        MediaNotificationProcessor processor = new MediaNotificationProcessor(this, bitmap); // can use drawable
 
-        // find compliments
-        red = (~red) & 0xff;
-        blue = (~blue) & 0xff;
-        green = (~green) & 0xff;
+        int backgroundColor = processor.getBackgroundColor();
+        int primaryTextColor = processor.getPrimaryTextColor();
+        int secondaryTextColor = processor.getSecondaryTextColor();
 
-        return Color.argb(alpha, red, green, blue);
+        return primaryTextColor;
     }
 
-    public  void AsynchTaskTimer() {
-        final Handler handler = new Handler();
-
-        TimerTask timertask = new TimerTask() {
-            @Override
-            public void run() {
-                handler.post(new Runnable() {
-                    public void run() {
-                        try {
-
-
-                           if(!isAppRunning()) {
-
-                               AudioManager audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-                               boolean requestGranted = AudioManager.AUDIOFOCUS_REQUEST_GRANTED == audioManager.requestAudioFocus(mOnAudioFocusChangeListener, AudioManager.STREAM_MUSIC,
-                                       AudioManager.AUDIOFOCUS_GAIN);
-                               if(requestGranted){
-                                   // you now has the audio focus
-                                   mTimer.cancel();
-                               }else{
-
-                               }
-
-
-
-
-                           }
-
-
-                            Log.d("service is ","running");
-                        } catch (Exception e) {
-                            // TODO Auto-generated catch block
-                        }
-                    }
-                });
-            }
-        };
-        mTimer = new Timer(); //This is new
-        mTimer.schedule(timertask, 0, 1000); // execute in every 15sec
-    }
 
     public  boolean isAppRunning() {
         ActivityManager m = (ActivityManager) this.getSystemService( ACTIVITY_SERVICE );
@@ -576,5 +437,145 @@ public class NotificationService extends Service {
         super.onDestroy();
         mTimer.cancel();
 
+    }
+
+    @Override
+    public void onAudioFocusChange(int focusChange) {
+
+
+                switch (focusChange) {
+                    case AudioManager.AUDIOFOCUS_GAIN:
+                        // resume playback
+                        if (mp == null) ;
+                        else if (!mp.isPlaying()) mp.start();
+                        mp.setVolume(1.0f, 1.0f);
+                        break;
+                    case AudioManager.AUDIOFOCUS_LOSS:
+                        // Lost focus for an unbounded amount of time: stop playback and release media player
+                        if (mp.isPlaying()) {
+                            posit = mp.getCurrentPosition();
+                            mp.stop();
+
+                            //Service is active
+                            //Send media with BroadcastReceiver
+
+
+                                // Stopping
+                                mLrcView.resume();
+                                playBtn.change(false);
+
+                                NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
+                                NotificationService.notification.setCustomContentView(NotificationService.notificationView);
+
+                                NotificationService.notificationView1.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
+                                NotificationService.notification.setCustomContentView(NotificationService.notificationView1);
+                                // NotificationService.notificationView.setTextViewText(R.id.status_bar_track_name, "pllll");
+                                NotificationService.manager.notify(2, NotificationService.notificationBuilder.build());
+
+
+
+                        }
+
+                        mp.release();
+                        mp = null;
+
+                        break;
+                    case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                        // Lost focus for a short time, but we have to stop
+                        // playback. We don't release the media player because playback
+                        // is likely to resume
+                        if (mp.isPlaying()) mp.pause();
+                        break;
+                    case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                        // Lost focus for a short time, but it's ok to keep playing
+                        // at an attenuated level
+                        if (mp.isPlaying()) mp.setVolume(0.1f, 0.1f);
+                        break;
+                }
+
+
+    }
+
+    @Override
+    public void onBufferingUpdate(MediaPlayer mediaPlayer, int i) {
+
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mediaPlayer) {
+
+    }
+
+    @Override
+    public boolean onError(MediaPlayer mediaPlayer, int what, int extra) {
+        switch (what) {
+            case MediaPlayer.MEDIA_ERROR_NOT_VALID_FOR_PROGRESSIVE_PLAYBACK:
+                Log.d("MediaPlayer Error", "MEDIA ERROR NOT VALID FOR PROGRESSIVE PLAYBACK " + extra);
+                break;
+            case MediaPlayer.MEDIA_ERROR_SERVER_DIED:
+                Log.d("MediaPlayer Error", "MEDIA ERROR SERVER DIED " + extra);
+                break;
+            case MediaPlayer.MEDIA_ERROR_UNKNOWN:
+                Log.d("MediaPlayer Error", "MEDIA ERROR UNKNOWN " + extra);
+                break;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onInfo(MediaPlayer mediaPlayer, int i, int i1) {
+        return false;
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mediaPlayer) {
+        mediaPlayer.start();
+    }
+
+    @Override
+    public void onSeekComplete(MediaPlayer mediaPlayer) {
+
+    }
+
+    private String[] getAudioPath(Context context, String songTitle) {
+
+        final Cursor mInternalCursor = context.getContentResolver().query(
+                MediaStore.Audio.Media.INTERNAL_CONTENT_URI,
+                new String[]{MediaStore.Audio.Media.DISPLAY_NAME, MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DATA},
+                MediaStore.Audio.Media.TITLE + "=?",
+                new String[]{songTitle},
+                "LOWER(" + MediaStore.Audio.Media.TITLE + ") ASC");
+
+        final Cursor mExternalCursor = context.getContentResolver().query(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                new String[]{MediaStore.Audio.Media.DISPLAY_NAME, MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DATA},
+                MediaStore.Audio.Media.TITLE + "=?",
+                new String[]{songTitle},
+                "LOWER(" + MediaStore.Audio.Media.TITLE + ") ASC");
+
+        Cursor[] cursors = {mInternalCursor, mExternalCursor};
+        final MergeCursor mMergeCursor = new MergeCursor(cursors);
+
+        int count = mMergeCursor.getCount();
+
+        String[] songs = new String[count];
+        String[] mAudioPath = new String[count];
+        int i = 0;
+        if (mMergeCursor.moveToFirst()) {
+            do {
+                songs[i] = mMergeCursor.getString(mMergeCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE));
+                mAudioPath[i] = mMergeCursor.getString(mMergeCursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
+                i++;
+            } while (mMergeCursor.moveToNext());
+        }
+
+        mMergeCursor.close();
+        return mAudioPath;
+    }
+
+    public class LocalBinder extends Binder {
+        public NotificationService getService() {
+            return NotificationService.this;
+        }
     }
 }

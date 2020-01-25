@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/medic_base"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/material_white"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/quizcard"
+        android:layout_width="350dp"
+        android:layout_height="280dp"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginTop="15dp"
+        android:elevation="25dp"
+        app:cardCornerRadius="20dp"
+        app:cardPreventCornerOverlap="false">
+
+        <ImageView
+            android:id="@+id/albumart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/download"
+
+            />
+
+        <com.lauzy.freedom.library.LrcView
+            android:id="@+id/lrc_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:currentIndicateLrcColor="@color/colorAccent"
+            app:indicatorTextColor="@android:color/holo_orange_dark"
+            app:isLrcCurrentTextBold="true"
+            app:isLrcIndicatorTextBold="true"
+            app:lrcCurrentTextColor="@color/colorAccent"
+            app:lrcLineSpaceSize="10dp"
+            app:lrcTextSize="20sp"
+            app:noLrcTextColor="@color/colorTransparent"
+            app:playIcon="@drawable/play"
+            />
+        <ImageButton
+            android:id="@+id/showlrc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/colorTransparent"
+            android:src="@drawable/ic_keyboard_arrow_up_black_24dp"
+            >
+
+
+        </ImageButton>
+
+        <com.gauravk.audiovisualizer.visualizer.WaveVisualizer
+            xmlns:custom="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/blast"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            custom:avColor="@color/av_light_blue"
+            custom:avDensity="0.175"
+            custom:avSpeed="normal"
+            custom:avType="fill"/>
+
+
+    </androidx.cardview.widget.CardView>
+
+    <SeekBar
+        android:id="@+id/positionBar"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:indeterminate="false"
+        android:max="100"
+        android:maxHeight="5dp"
+        android:minHeight="5dp"
+        android:progress="50"
+        android:progressDrawable="@drawable/seekbardraw"
+        android:progressTint="#DF0974"
+        android:thumbTint="#DF0974"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/loops"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/ic_loop"/>
+        <TextView
+            android:id="@+id/elapsedTimeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="0:11"/>
+        <TextView
+            android:id="@+id/remainingTimeLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="198dp"
+            android:text="-1:49"/>
+
+        <ImageButton
+            android:id="@+id/enablelrc"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/l"
+            ></ImageButton>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content">
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/prevBtn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="14dp"
+            android:layout_marginTop="18dp"
+            android:background="@drawable/ic_prev_fill"/>
+
+
+        <com.ohoussein.playpause.PlayPauseView
+            android:id="@+id/playBtn"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="59dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:foreground="?android:selectableItemBackground"
+            app:fill_color="#e1e1e1"
+            app:pause_bg="#00a2ed"
+            app:play_bg="#001eff" />
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/nxtBtn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="52dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/ic_next_fill"
+            android:paddingTop="5dp"/>
+
+
+
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_volume_mute_black_24dp"/>
+        <SeekBar
+            android:id="@+id/volumeBar"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:indeterminate="false"
+            android:max="100"
+            android:maxHeight="4dp"
+            android:minHeight="4dp"
+            android:progress="50"
+            android:progressDrawable="@drawable/seekbardraw"
+            android:progressTint="#DF0974"
+            android:thumbTint="#DF0974"/>
+        <ImageView
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:src="@drawable/ic_volume_up_black_24dp"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        >
+
+        <TextView
+            android:id="@+id/song_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:ellipsize="marquee"
+            android:fontFamily="@font/lilita_regular"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine = "true"
+            android:text="Wild Dreams"
+            android:textAlignment="center"
+            android:textColor="#DF0974"
+            android:textSize="30dp"
+            >
+        </TextView>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        >
+        <TextView
+            android:id="@+id/song_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:ellipsize="marquee"
+            android:fontFamily="@font/lilita_regular"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine = "true"
+            android:text="Tailor Swift : 1989"
+            android:textAlignment="center"
+            android:textColor="#DF0974"
+
+            android:textSize="15dp"
+            >
+        </TextView>
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
