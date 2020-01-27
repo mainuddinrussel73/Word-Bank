@@ -8,8 +8,9 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
+        android:id="@+id/lllll"
         android:layout_width="377dp"
-        android:layout_height="72dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_marginStart="20dp"
@@ -17,109 +18,151 @@
         android:layout_marginTop="10dp"
         android:layout_marginEnd="20dp"
         android:layout_marginRight="18dp"
-        android:background="@drawable/backgroundborder"
         android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingTop="5dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="5dp">
 
+        android:background="@drawable/card_background"
+
+        android:gravity="center_horizontal"
+       android:padding="25dp">
+
+        <RelativeLayout
+            android:id="@+id/text3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp">
         <TextView
             android:id="@+id/totaltask"
             android:layout_width="110dp"
-            android:layout_height="58dp"
+            android:layout_height="68dp"
             android:background="@drawable/backgroundborder"
-            android:paddingLeft="10dp"
-            android:paddingTop="10dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="10dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="5dp"
             android:text="gvhgvh,jh,jhb"
             android:textColor="@color/red"
             android:textStyle="bold"
             android:fontFamily="@font/lobs_star"
-            android:textSize="13dp">
+            android:textSize="10dp">
 
         </TextView>
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/totalhour"
-            android:layout_width="80dp"
-            android:layout_height="57dp"
-            android:layout_marginLeft="6dp"
-            android:background="@drawable/backgroundborder"
-            android:paddingLeft="10dp"
-            android:paddingTop="10dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="10dp"
-            android:text="gvhgvh,jh,jhb"
-            android:textColor="@color/red"
-            android:textStyle="bold"
-            android:fontFamily="@font/lobs_star"
-            android:textSize="13dp">
+        <RelativeLayout
+            android:id="@+id/text1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp">
+            <TextView
+                android:id="@+id/totalhour"
+                android:layout_width="80dp"
+                android:layout_height="68dp"
+                android:background="@drawable/backgroundborder"
+                android:ems="2"
+                android:fontFamily="@font/lobs_star"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="5dp"
+                android:text="gvhgvh,jh,jhb"
+                android:textColor="@color/red"
+                android:textSize="10dp"
+                android:textStyle="bold">
 
-        </TextView>
+            </TextView>
+        </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/text2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            >
         <TextView
             android:id="@+id/taskremain"
-            android:layout_width="99dp"
-            android:layout_height="57dp"
-            android:layout_marginLeft="6dp"
+            android:layout_width="110dp"
+            android:layout_height="68dp"
             android:background="@drawable/backgroundborder"
-            android:paddingLeft="10dp"
-            android:paddingTop="10dp"
-            android:paddingRight="10dp"
-            android:paddingBottom="10dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:paddingRight="5dp"
+            android:paddingBottom="5dp"
             android:text="completed h"
             android:textColor="@color/red"
             android:textStyle="bold"
             android:fontFamily="@font/lobs_star"
-            android:textSize="13dp">
+            android:textSize="10dp">
 
         </TextView>
+        </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/textlayout"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="77dp"
         android:layout_marginLeft="23dp"
+        android:layout_marginTop="105dp"
         android:layout_marginRight="23dp"
-        android:layout_marginTop="90dp"
+        android:background="@drawable/card_background"
         android:orientation="horizontal"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:background="@drawable/backgroundborder">
+        android:paddingRight="10dp">
 
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
+            >
 
-        <studio.carbonylgroup.textfieldboxes.ExtendedEditText
-            android:id="@+id/text_field_boxes2"
-            android:layout_width="250dp"
-            android:layout_gravity="left|center"
-            android:layout_height="50dp"
-            android:hint="Task"
-            android:imeOptions="actionNext"
-            android:inputType="text"
-            android:maxLines="1"
+            <studio.carbonylgroup.textfieldboxes.ExtendedEditText
+                android:id="@+id/text_field_boxes2"
+                android:layout_width="220dp"
+                android:layout_height="50dp"
+                android:layout_gravity="left|center"
 
-            android:text=""
-            android:textSize="15dp"
-            app:prefix="$ " />
+                android:layout_margin="3dp"
 
-        <ImageButton
-            android:id="@+id/dark_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:paddingBottom="5dp"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:paddingTop="5dp"
-            android:src="@drawable/fab_add"
-            android:background="@drawable/buttonshaperound" />
+                android:hint="Task"
+                android:imeOptions="actionNext"
+                android:inputType="text"
+                android:maxLines="1"
+
+                android:textSize="15dp"
+                app:prefix="$ " />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            >
+
+            <ImageButton
+                android:id="@+id/dark_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+
+                android:layout_marginBottom="5dp"
+
+                android:background="@drawable/buttonshaperound"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="5dp"
+                android:src="@drawable/fab_add" />
+        </RelativeLayout>
+
 
     </LinearLayout>
 
@@ -129,28 +172,26 @@
         android:id="@+id/borderss"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/listview_border"
+        android:layout_marginTop="180dp"
         android:layout_marginLeft="@dimen/activity_vertical_margin"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginRight="@dimen/activity_vertical_margin"
-        android:layout_marginTop="160dp"
+        android:background="@drawable/card_background"
         >
         <com.yydcdut.sdlv.SlideAndDragListView
             android:id="@+id/lv_edit"
             android:layout_width="match_parent"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_height="550dp"
+            android:layout_marginLeft="8dp"
             android:layout_marginBottom="@dimen/alerter_activity_horizontal_margin"
             android:background="?android:selectableItemBackground"
-            android:layout_height="580dp"
+            android:layout_marginRight="8dp"
             android:divider="@null"
             android:dividerHeight="0dp"
             android:layout_marginTop="@dimen/alerter_activity_horizontal_margin"
             android:listSelector="@drawable/list_selector"
 
-            android:paddingLeft="8dip"
-            android:paddingRight="8dip"
-            android:paddingTop="8dip"
+
             >
         </com.yydcdut.sdlv.SlideAndDragListView>
 

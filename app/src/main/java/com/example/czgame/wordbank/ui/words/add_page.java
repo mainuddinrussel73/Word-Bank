@@ -91,6 +91,7 @@ public class add_page extends AppCompatActivity {
         done = findViewById(R.id.done);
         load = findViewById(R.id.loadonline);
         final RelativeLayout additem = findViewById(R.id.add_item);
+        RelativeLayout wordg = findViewById(R.id.wordsec);
 
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
@@ -107,6 +108,7 @@ public class add_page extends AppCompatActivity {
             word.setTextColor(Color.WHITE);
             w.setDefaultHintTextColor( ColorStateList.valueOf(ContextCompat.getColor(this, R.color.divider)));
 
+            wordg.setBackground(ContextCompat.getDrawable(this,R.drawable.card_background_dark));
             meaningb.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
             meaningb.setHintTextColor(Color.rgb(185, 185, 185));
             meaningb.setTextColor(Color.WHITE);
@@ -133,6 +135,7 @@ public class add_page extends AppCompatActivity {
             word.setTextColor(Color.BLACK);
             w.setDefaultHintTextColor( ColorStateList.valueOf(ContextCompat.getColor(this, R.color.darkgray)));
 
+            wordg.setBackground(ContextCompat.getDrawable(this,R.drawable.card_background));
             meaningb.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
             meaningb.setHintTextColor(Color.BLACK);
             meaningb.setTextColor(Color.BLACK);

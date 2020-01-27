@@ -8,6 +8,7 @@
 
 
     <RelativeLayout
+        android:id="@+id/ooo"
         android:layout_width="wrap_content"
         android:layout_height="391dp"
         android:layout_above="@+id/uuuu"
@@ -15,7 +16,7 @@
         android:layout_marginTop="14dp"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/backgroundborder">
+        android:background="@drawable/card_background">
 
 
         <TextView
@@ -31,7 +32,7 @@
             android:layout_marginRight="15dp"
             android:gravity="center"
             android:text="Weekly Focus Time : "
-            android:textSize="15sp">
+            android:textSize="13sp">
 
         </TextView>
 
@@ -81,7 +82,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="14dp"
-        android:background="@drawable/backgroundborder">
+        android:background="@drawable/card_background">
 
         <TextView
             android:id="@+id/monthly"
@@ -96,7 +97,7 @@
             android:layout_marginRight="10dp"
             android:gravity="center"
             android:text="Monthly Focus Time : 2019"
-            android:textSize="14sp">
+            android:textSize="12sp">
 
         </TextView>
 

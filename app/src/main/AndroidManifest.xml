@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BROADCAST_PACKAGE_REPLACED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -34,6 +35,28 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <activity android:name=".ui.alertme.AlarmMe"
+            android:label="@string/news_online_title"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity android:name=".ui.alertme.AlarmNotification"
+            android:label="@string/news_online_title"
+            android:theme="@style/AppTheme.NoActionBar"
+            >
+        </activity>
+        <activity android:name=".ui.alertme.EditAlarm"
+            android:label="@string/news_online_title"
+            android:theme="@style/AppTheme.NoActionBar"
+            >
+        </activity>
+
+        <receiver
+            android:name=".ui.alertme.AlarmReceiver"
+            android:process=":remote" />
+
+
+
         <activity android:name=".ui.news.Editorialonline"
             android:label="@string/news_online_title"
             android:theme="@style/AppTheme.NoActionBar"

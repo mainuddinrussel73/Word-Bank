@@ -27,6 +27,7 @@
         android:id="@+id/wordsec"
         android:layout_height="wrap_content"
         android:layout_below="@+id/topbar"
+        android:background="@drawable/card_background"
         android:orientation="vertical">
 
         <com.google.android.material.textfield.TextInputLayout

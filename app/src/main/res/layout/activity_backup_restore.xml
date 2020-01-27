@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.czgame.wordbank.ui.words.backup_restore"
-    android:id="@+id/coordinate_backup">
+    android:id="@+id/coordinate_backup"
+    android:background="@color/cardview_light_background"
+    android:theme="@style/AppTheme.NoActionBar"
+    tools:context="com.example.czgame.wordbank.ui.news.news_backup">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/barrrr"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -21,8 +24,15 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/barrrr"
+        >
+        <include layout="@layout/content_news_backup_restore" />
+    </RelativeLayout>
 
-    <include layout="@layout/content_backup_restore" />
+
 
 
     <ProgressBar
@@ -36,4 +46,4 @@
         android:max="100" />
 
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</RelativeLayout>

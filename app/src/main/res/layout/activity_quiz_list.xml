@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     android:id="@+id/relative_quiz">
 
 
@@ -10,34 +9,20 @@
 
         android:id="@+id/quiz_question"
 
-        android:layout_width="248dp"
-
+        android:layout_width="228dp"
         android:layout_height="97dp"
-
-        android:layout_alignParentStart="true"
-
-        android:layout_alignParentLeft="true"
-
         android:layout_alignParentTop="true"
-
         android:layout_marginStart="15dp"
-
         android:layout_marginLeft="15dp"
-
-        android:layout_marginTop="34dp"
-
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginRight="10dp"
-
-        android:paddingLeft="@dimen/padd"
         android:scrollbars="vertical"
-
         android:text="What is the meaning of the word    sjdfasdf  ?"
-
+       android:background="@drawable/card_background"
+        android:gravity="center"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="20sp"
-
-
+        android:textSize="15sp"
         android:textStyle="bold|italic" />
 
     <ScrollView
@@ -47,14 +32,12 @@
         android:layout_alignLeft="@+id/quiz_question"
         android:layout_alignParentEnd="true"
         android:layout_alignStart="@+id/quiz_question"
-
         android:layout_below="@+id/quiz_question"
-
         android:layout_marginEnd="15dp"
         android:layout_marginRight="30dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/listview_border"
-        android:paddingLeft="5dp">
+        android:layout_marginTop="10dp"
+        android:background="@drawable/card_background"
+        >
 
         <RadioGroup
 
@@ -63,13 +46,13 @@
             android:layout_width="match_parent"
 
             android:layout_height="wrap_content"
+            android:paddingTop="25dp"
+            android:paddingBottom="25dp"
 
-            android:paddingRight="5dp"
+
             android:layout_marginTop="5dp"
             android:layout_marginBottom="35dp"
-
-            android:paddingTop="5dp"
-            android:paddingBottom="15dp">
+            >
 
 
             <RadioButton
@@ -79,19 +62,9 @@
                 android:layout_width="match_parent"
 
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-
                 android:background="@drawable/card_background"
-
                 android:button="@drawable/radio_btn"
-
-                android:paddingBottom="@dimen/padd"
-
-                android:paddingLeft="20dp"
-                android:paddingTop="@dimen/padd"
                 android:text="@string/app_name"
-
-
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="15sp" />
 
@@ -101,17 +74,10 @@
                 android:id="@+id/radio1"
 
                 android:layout_width="match_parent"
-
                 android:layout_height="wrap_content"
-
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/card_background"
                 android:button="@drawable/radio_btn"
-
-                android:paddingBottom="@dimen/padd"
-
-                android:paddingLeft="20dp"
-                android:paddingTop="@dimen/padd"
                 android:text="@string/app_name"
 
                 android:textColor="@color/colorPrimaryDark"
@@ -123,16 +89,8 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-
                 android:background="@drawable/card_background"
-
                 android:button="@drawable/radio_btn"
-
-                android:paddingBottom="@dimen/padd"
-
-                android:paddingLeft="20dp"
-                android:paddingTop="@dimen/padd"
                 android:text="@string/app_name"
 
                 android:textColor="@color/colorPrimaryDark"
@@ -143,17 +101,10 @@
             <RadioButton
 
                 android:id="@+id/radio3"
-
                 android:layout_width="match_parent"
-
                 android:layout_height="wrap_content"
                 android:background="@drawable/card_background"
                 android:button="@drawable/radio_btn"
-
-                android:paddingBottom="@dimen/padd"
-                android:paddingLeft="20dp"
-                android:paddingTop="@dimen/padd"
-
                 android:text="@string/app_name"
 
                 android:textColor="@color/colorPrimaryDark"
@@ -230,22 +181,17 @@
     <TextView
         android:id="@+id/scores"
         android:layout_width="100dp"
-        android:layout_height="77dp"
-        android:layout_alignParentTop="true"
+        android:layout_height="97dp"
         android:layout_alignParentEnd="true"
         android:layout_marginLeft="290dp"
-        android:layout_marginTop="29dp"
-
-        android:layout_marginEnd="21dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="30dp"
 
         android:layout_marginRight="5dp"
-
-        android:layout_marginBottom="100dp"
-        android:background="@drawable/backgroundborder"
-        android:paddingLeft="10dp"
-        android:paddingTop="8dp"
+        android:background="@drawable/card_background_selector"
+       android:gravity="center"
         android:text="@string/Score"
-        android:textColor="@color/cardview_dark_background"
+        android:textColor="@color/black"
         android:textSize="14dp" />
 
     <TextView
@@ -253,19 +199,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/scrollButtons"
-
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="77dp"
-        android:layout_marginEnd="13dp"
-        android:layout_marginRight="35dp"
-        android:paddingLeft="60dp"
-        android:background="@drawable/backgroundborder"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/card_background"
+        android:gravity="center"
         android:text="@string/Time"
         android:textColor="@color/cardview_dark_background"
-        android:textSize="20dp" />
+        android:textSize="15dp" />
 
 </RelativeLayout>

@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/appbarlayout"
+        android:background="@drawable/card_background"
         android:layout_marginTop="10dp">
 
         <com.google.android.material.textfield.TextInputLayout
@@ -124,12 +125,12 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/synonyme"
             style="@style/LoginTextInputLayoutStyle"
-            android:layout_width="165dp"
+            android:layout_width="155dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/meaningE"
             android:layout_margin="10dp"
             android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
-            android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
+
             android:inputType="textMultiLine"
             android:overScrollMode="always"
             android:scrollbarStyle="insideInset"
@@ -157,7 +158,7 @@
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/antonyme"
             style="@style/LoginTextInputLayoutStyle"
-            android:layout_width="165dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/meaningE"
             android:layout_margin="10dp"
@@ -169,7 +170,7 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/antonyme1"
-                android:layout_width="match_parent"
+                android:layout_width="155dp"
                 android:layout_height="90dp"
                 android:layout_marginTop="20dp"
                 android:gravity="top|left"

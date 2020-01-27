@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:showIn="@layout/activity_timeline_view"
-    android:layout_margin="15dp"
-    android:background="@drawable/listview_border"
+    android:layout_margin="8dp"
+    android:background="@drawable/card_background"
     >
 
 

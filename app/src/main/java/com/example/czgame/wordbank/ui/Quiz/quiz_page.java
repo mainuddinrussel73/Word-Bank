@@ -85,7 +85,7 @@ public class quiz_page extends AppCompatActivity {
 
 
         double randomDouble = Math.random();
-        randomDouble = randomDouble * 3 + 0;
+        randomDouble = randomDouble * 4 + 0;
         int randomInt = (int) randomDouble;
 
         while (word.isEmpty()) {
@@ -142,10 +142,13 @@ public class quiz_page extends AppCompatActivity {
         boolean isDark = prefs.getBoolean("isDark", false);
         ScrollView scrollView = findViewById(R.id.scrollButtons);
         if (isDark) {
-            textView.setBackgroundColor(Color.BLACK);
+
             scoress.setTextColor(Color.WHITE);
             textView.setTextColor(Color.WHITE);
             timer.setTextColor(Color.WHITE);
+            timer.setBackground(ContextCompat.getDrawable(this,R.drawable.card_background_dark));
+            scoress.setBackground(ContextCompat.getDrawable(this,R.drawable.card_background_dark));
+            textView.setBackground(ContextCompat.getDrawable(this,R.drawable.card_background_dark));
             for (int i = 0; i < radioGroup.getChildCount(); i++) {
 
 
@@ -153,9 +156,11 @@ public class quiz_page extends AppCompatActivity {
                 radioGroup.getChildAt(i).setBackground(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
             }
             relativeLayout.setBackgroundColor(Color.BLACK);
-            scrollView.setBackground(ContextCompat.getDrawable(this, R.drawable.list_viewdark));
+            scrollView.setBackground(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
         } else {
-            textView.setBackgroundColor(Color.WHITE);
+            timer.setBackground(ContextCompat.getDrawable(this,R.drawable.card_background));
+            scoress.setBackground(ContextCompat.getDrawable(this,R.drawable.card_background));
+            textView.setBackground(ContextCompat.getDrawable(this,R.drawable.card_background));
             scoress.setTextColor(Color.BLACK);
             textView.setTextColor(Color.BLACK);
             timer.setTextColor(Color.BLACK);
@@ -166,7 +171,7 @@ public class quiz_page extends AppCompatActivity {
                 radioGroup.getChildAt(i).setBackground(ContextCompat.getDrawable(this, R.drawable.card_background));
             }
             relativeLayout.setBackgroundColor(Color.WHITE);
-            scrollView.setBackground(ContextCompat.getDrawable(this, R.drawable.listview_border));
+            scrollView.setBackground(ContextCompat.getDrawable(this, R.drawable.card_background));
         }
 
         Button button2 = findViewById(R.id.endquiz);

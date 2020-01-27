@@ -44,6 +44,7 @@ import android.widget.Toast;
 import com.example.czgame.wordbank.R;
 import com.example.czgame.wordbank.root.WalkThrough;
 import com.example.czgame.wordbank.ui.Quiz.Quiz_confirm;
+import com.example.czgame.wordbank.ui.alertme.AlarmMe;
 import com.example.czgame.wordbank.ui.backup_scheudle.daily_service;
 import com.example.czgame.wordbank.ui.backup_scheudle.receive_back;
 import com.example.czgame.wordbank.ui.media.Media_list_activity;
@@ -533,7 +534,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
             navigationView1.setItemTextColor(ColorStateList.valueOf(Color.WHITE));
-            linearLayout1.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.list_viewdark));
+            linearLayout1.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
             if (contactList.size() != 0) list.setAdapter(adapter);
 
         } else {
@@ -541,7 +542,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navigationView1.setBackgroundColor(Color.WHITE);
             navigationView1.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
             // linearLayout.setBackgroundColor(Color.WHITE);
-            linearLayout1.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.listview_border));
+            linearLayout1.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background));
 
             if (contactList.size() != 0) list.setAdapter(adapter);
         }
@@ -819,7 +820,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } catch (Exception e) {
                 e.getMessage();
             }
-        }else if (id == R.id.tasktime) {
+        } else if (id == R.id.alarmme) {
+            try {
+                Intent myIntent = new Intent(MainActivity.this, AlarmMe.class);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivityForResult(myIntent, 0);
+            } catch (Exception e) {
+                e.getMessage();
+            }
+        }
+        else if (id == R.id.tasktime) {
             try {
                 Intent myIntent = new Intent(MainActivity.this, TimelineView.class);
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -855,7 +865,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         // linearLayout.setBackgroundColor(Color.BLACK);
                         navigationView.setBackgroundColor(Color.BLACK);
                         navigationView.setItemTextColor(ColorStateList.valueOf(Color.WHITE));
-                        linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.list_viewdark));
+                        linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.card_background_dark));
                         list.setAdapter(adapter);
 
                         Intent myIntent = new Intent(MainActivity.this, MainActivity.class);
@@ -887,7 +897,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         navigationView.setBackgroundColor(Color.WHITE);
                         navigationView.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
                         // linearLayout.setBackgroundColor(Color.WHITE);
-                        linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.listview_border));
+                        linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.card_background));
                         list.setAdapter(adapter);
 
                         Intent myIntent = new Intent(MainActivity.this, MainActivity.class);
@@ -921,7 +931,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         // linearLayout.setBackgroundColor(Color.BLACK);
                         navigationView.setBackgroundColor(Color.BLACK);
                         navigationView.setItemTextColor(ColorStateList.valueOf(Color.WHITE));
-                        linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.list_viewdark));
+                        linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.card_background_dark));
 
 
                         Intent myIntent = new Intent(MainActivity.this, MainActivity.class);
@@ -954,7 +964,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         //navigationView.setItemTextColor();
                         navigationView.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
                         // linearLayout.setBackgroundColor(Color.WHITE);
-                        linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.listview_border));
+                        linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.card_background));
 
                         Intent myIntent = new Intent(MainActivity.this, MainActivity.class);
                         myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

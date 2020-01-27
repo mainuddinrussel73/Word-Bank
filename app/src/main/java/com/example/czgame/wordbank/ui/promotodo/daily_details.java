@@ -193,6 +193,8 @@ public class daily_details extends AppCompatActivity {
         boolean isDark = prefs.getBoolean("isDark", false);
 
         RelativeLayout relativeLayout = findViewById(R.id.dailylayout);
+        RelativeLayout ooo = findViewById(R.id.ooo);
+        RelativeLayout uuu = findViewById(R.id.uuuu);
         if (isDark) {
             mChart.setBackgroundColor(Color.BLACK);
             mChart.getXAxis().setTextColor(Color.WHITE);
@@ -203,6 +205,8 @@ public class daily_details extends AppCompatActivity {
             barChart.getLegend().setTextColor(Color.WHITE);
             barChart.setBackgroundColor(Color.BLACK);
             relativeLayout.setBackgroundColor(Color.BLACK);
+            ooo.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.card_background_dark));
+            uuu.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.card_background_dark));
         } else {
             mChart.setBackgroundColor(Color.WHITE);
             mChart.getXAxis().setTextColor(Color.BLACK);
@@ -213,6 +217,8 @@ public class daily_details extends AppCompatActivity {
             barChart.getLegend().setTextColor(Color.BLACK);
             barChart.setBackgroundColor(Color.WHITE);
             relativeLayout.setBackgroundColor(Color.WHITE);
+            ooo.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.card_background));
+            uuu.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.card_background));
         }
 
 

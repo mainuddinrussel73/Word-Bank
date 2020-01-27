@@ -4,22 +4,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.czgame.wordbank.ui.Quiz.quiz_result"
-    android:id="@+id/quiz_res"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:id="@+id/quiz_res">
 
-    <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+
+
     <RelativeLayout
         android:id="@+id/layouts"
         android:layout_width="wrap_content"
-        android:layout_height="344dp"
+        android:layout_height="324dp"
         android:layout_margin="@dimen/activity_horizontal_margin"
-        android:background="@drawable/backgroundborder"
+        android:background="@drawable/card_background"
        >
 
 
@@ -27,8 +21,9 @@
 
         <com.razerdp.widget.animatedpieview.AnimatedPieView
             android:id="@+id/chart"
-            android:layout_width="381dp"
-            android:layout_height="362dp"
+            android:layout_width="301dp"
+            android:layout_height="302dp"
+            android:layout_centerHorizontal="true"
             android:layout_margin="@dimen/activity_horizontal_margin" />
 
         <org.apmem.tools.layouts.FlowLayout
@@ -51,47 +46,40 @@
 
     </RelativeLayout>
 
-            <RelativeLayout
+    <RelativeLayout
                 android:id="@+id/resultview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/layouts"
                 android:layout_margin="@dimen/activity_horizontal_margin"
-                android:background="@drawable/backgroundborder">
+                android:background="@drawable/card_background">
                 <TextView
                     android:id="@+id/mainresult"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_margin="@dimen/activity_horizontal_margin"
                     android:gravity="center"
-                    android:text="25.000%">
+                    android:text="Scores">
 
                 </TextView>
-            </RelativeLayout>
+    </RelativeLayout>
 
-            <RelativeLayout
+    <RelativeLayout
                 android:id="@+id/somee"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@+id/resultview">
-    <androidx.recyclerview.widget.RecyclerView
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/resultview"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin">
+                <androidx.recyclerview.widget.RecyclerView
 
-        android:id="@+id/learnlist"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+                    android:id="@+id/learnlist"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/card_background"
+                    android:padding="5dp">
 
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginRight="10dp"
-        android:padding="5dp"
-        android:background="@drawable/listview_border">
-
-    </androidx.recyclerview.widget.RecyclerView>
+                </androidx.recyclerview.widget.RecyclerView>
             </RelativeLayout>
 
     <RelativeLayout
@@ -112,8 +100,8 @@
             android:text="GO HOME"
             android:textColor="@android:color/white" />
     </RelativeLayout>
-        </RelativeLayout>
-    </ScrollView>
+
+
 
 
 </RelativeLayout>

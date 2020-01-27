@@ -22,6 +22,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <RelativeLayout
+        android:id="@+id/multi"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -31,7 +32,7 @@
         android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
         android:layout_marginStart="18dp"
         android:layout_marginTop="100dp"
-        android:background="@drawable/backgroundborder">
+        android:background="@drawable/card_background">
 
         <TextView
             android:id="@+id/option1"
@@ -102,6 +103,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/match"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -112,7 +114,7 @@
         android:layout_marginStart="18dp"
         android:layout_marginTop="300dp"
         android:gravity="center"
-        android:background="@drawable/backgroundborder">
+        android:background="@drawable/card_background">
 
         <TextView
             android:id="@+id/option2"

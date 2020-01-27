@@ -141,7 +141,7 @@ public class TabFragment2 extends Fragment {
             }
 
         LinearLayout additem = getActivity().findViewById(R.id.sen_frag);
-        LinearLayout linearLayout = getActivity().findViewById(R.id.listview);
+        LinearLayout listfragg = getActivity().findViewById(R.id.textlayout);
         SharedPreferences prefs = getActivity().getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
 
@@ -150,15 +150,15 @@ public class TabFragment2 extends Fragment {
 
             if (isDark && sentenceList.size() != 0) {
 
-                        linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.drawable.listview_border));
-                list.setBackgroundColor(Color.BLACK);
+                list.setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.drawable.card_background_dark));
                         list.setAdapter(adapter);
             }
             else if (isDark && sentenceList.size() == 0) {
 
-                list.setBackgroundColor(Color.BLACK);
-                linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.drawable.listview_border));
+
+                list.setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.drawable.card_background_dark));
             }
+            listfragg.setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.drawable.card_background_dark));
             extendedEditText.setBackgroundColor(Color.BLACK);
             extendedEditText.setTextColor(Color.WHITE);
             extendedEditText.setHintTextColor(Color.rgb(185, 185, 185));
@@ -168,17 +168,18 @@ public class TabFragment2 extends Fragment {
             if (!isDark && sentenceList.size() != 0) {
 
 
-                linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.drawable.list_viewdark));
-                list.setBackgroundColor(Color.WHITE);
+
+                list.setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.drawable.card_background));
                 list.setAdapter(adapter);
 
             } else if (!isDark && sentenceList.size() == 0) {
 
-                list.setBackgroundColor(Color.WHITE);
-                linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.drawable.list_viewdark));
+                list.setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.drawable.card_background));
+
 
 
             }
+            listfragg.setBackgroundDrawable(ContextCompat.getDrawable(getContext(), R.drawable.card_background));
             extendedEditText.setBackgroundColor(Color.WHITE);
             extendedEditText.setTextColor(Color.BLACK);
             extendedEditText.setHintTextColor(Color.BLACK);

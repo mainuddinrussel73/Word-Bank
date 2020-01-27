@@ -8,15 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.czgame.wordbank.R;
-import com.example.czgame.wordbank.ui.words.MainActivity;
-import com.example.czgame.wordbank.ui.words.word;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import androidx.core.content.ContextCompat;
 
 public class Senadapter extends BaseAdapter {
 
@@ -64,7 +65,7 @@ public class Senadapter extends BaseAdapter {
         titleText.setText(TabFragment2.sentenceList.get(position).getSENTENCE());
         number.setText(Integer.toString(TabFragment2.sentenceList.get(position).getID()));
 
-        //LinearLayout listitem = rowView.findViewById(R.id.list_item);
+        LinearLayout listitem = rowView.findViewById(R.id.list_item);
 
 
         SharedPreferences prefs = context.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
@@ -78,11 +79,14 @@ public class Senadapter extends BaseAdapter {
             titleText.setTextColor(Color.WHITE);
             number.setTextColor(Color.WHITE);
 
+            listitem.setBackground(ContextCompat.getDrawable(context,R.drawable.card_background_dark));
+
 
         } else {
 
             titleText.setTextColor(Color.BLACK);
             number.setTextColor(Color.BLACK);
+            listitem.setBackground(ContextCompat.getDrawable(context,R.drawable.card_background));
         }
 
 

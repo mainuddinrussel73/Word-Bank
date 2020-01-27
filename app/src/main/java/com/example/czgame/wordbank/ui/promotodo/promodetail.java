@@ -607,6 +607,9 @@ public class promodetail extends AppCompatActivity {
         TextView place1 = findViewById(R.id.place1);
         TextView texts = findViewById(R.id.texts);
 
+        RelativeLayout main_view = findViewById(R.id.maindd);
+
+
         //SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         isDark = prefs.getBoolean("isDark", false);
         if (isDark) {
@@ -618,12 +621,13 @@ public class promodetail extends AppCompatActivity {
 
             texts.setTextColor(Color.WHITE);
             texts.setHintTextColor(Color.rgb(185, 185, 185));
-            texts.setBackgroundDrawable(ContextCompat.getDrawable(promodetail.this, R.drawable.backgroundborder));
+            relativeLayout1.setBackgroundDrawable(ContextCompat.getDrawable(promodetail.this, R.drawable.card_background_dark));
 
             shownoise.setTextColor(Color.WHITE);
-
+            main_view.setBackground(ContextCompat.getDrawable(promodetail.this, R.drawable.card_background_dark));
             //fab1.setBackgroundColor(Color.RED);
-            spinner.setBackgroundColor(Color.rgb(64, 64, 64));
+            spinner.setBackgroundColor(Color.rgb(31,39,41));
+            spinner.setTextColor(Color.WHITE);
             // spinner1.setBackgroundColor(Color.rgb(64,64,64));
             // edittext.setTextColor(Color.WHITE);
             //edittext.setBackground(ContextCompat.getDrawable(this, R.drawable.backgroundborder));
@@ -644,14 +648,16 @@ public class promodetail extends AppCompatActivity {
 
             texts.setTextColor(Color.BLACK);
             texts.setHintTextColor(Color.BLACK);
-            texts.setBackgroundDrawable(ContextCompat.getDrawable(promodetail.this, R.drawable.backgroundborder));
+            relativeLayout1.setBackgroundDrawable(ContextCompat.getDrawable(promodetail.this, R.drawable.card_background));
 
             shownoise.setTextColor(Color.BLACK);
+            main_view.setBackground(ContextCompat.getDrawable(promodetail.this, R.drawable.card_background));
             // mListView.setBackgroundColor(Color.WHITE);
             // relativeLayout1.setBackground(ContextCompat.getDrawable(this, R.drawable.listview_border));
             additem.setBackgroundColor(Color.WHITE);
             //fab1.setBackgroundColor(Color.RED);
-            spinner.setBackgroundColor(Color.rgb(185, 185, 185));
+            spinner.setBackgroundColor(Color.WHITE);
+            spinner.setTextColor(Color.BLACK);
             //spinner1.setBackgroundColor(Color.rgb(185,185,185));
             // edittext.setHintTextColor(Color.BLACK);
             text_field_boxes2.setTextColor(Color.BLACK);

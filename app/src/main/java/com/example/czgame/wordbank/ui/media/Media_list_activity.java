@@ -1829,9 +1829,11 @@ LinearLayout media_base;
                 input.setGravity(android.view.Gravity.TOP|android.view.Gravity.LEFT);
                 if(isDark){
                 input.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.edittextstyledark));
+                input.setTextColor(Color.WHITE);
 
                 }else {
                     input.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.editextstyle));
+                    input.setTextColor(Color.BLACK);
                 }
                 alertDialog.setView(input);
                 alertDialog.setIcon(R.drawable.common_google_signin_btn_icon_dark);
@@ -1884,23 +1886,23 @@ LinearLayout media_base;
 
 
             listView.setAdapter(adapter);
-            listView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.list_viewdark));
+            listView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
             gridView.setAdapter(adapterG);
-            gridView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.list_viewdark));
+            gridView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
         } else if (!isDark && ListElementsArrayList.size() != 0) {
 
             relativeLayout.setBackgroundColor(Color.WHITE);
 
 
-            listView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.listview_border));
-            gridView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.listview_border));
+            listView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
+            gridView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
             listView.setAdapter(adapter);
             gridView.setAdapter(adapterG);
 
         } else if (isDark && ListElementsArrayList.size() == 0) {
 
-            listView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.list_viewdark));
-            gridView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.list_viewdark));
+            listView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
+            gridView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
             relativeLayout.setBackgroundColor(Color.BLACK);
 
 
@@ -1908,9 +1910,9 @@ LinearLayout media_base;
 
 
 
-            gridView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.listview_border));
+            gridView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
             relativeLayout.setBackgroundColor(Color.WHITE);
-            listView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.listview_border));
+            listView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
 
 
         }

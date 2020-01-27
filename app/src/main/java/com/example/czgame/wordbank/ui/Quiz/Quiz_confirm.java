@@ -27,6 +27,7 @@ import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import es.dmoral.toasty.Toasty;
 
 public class Quiz_confirm extends AppCompatActivity {
@@ -129,6 +130,7 @@ public class Quiz_confirm extends AppCompatActivity {
 
         mScaleAnimation = AnimationUtils.loadAnimation(this, R.anim.scale_animation);
 
+
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
         if(isDark) {
@@ -138,15 +140,25 @@ public class Quiz_confirm extends AppCompatActivity {
         }
         TextView opt1 = findViewById(R.id.option1);
         TextView opt2 = findViewById(R.id.option2);
+        RelativeLayout match = findViewById(R.id.match);
+        RelativeLayout multi = findViewById(R.id.multi);
         if (isDark) {
             relativeLayout.setBackgroundColor(Color.BLACK);
             opt1.setTextColor(Color.WHITE);
             opt2.setTextColor(Color.WHITE);
+            spinner.setBackgroundColor(Color.rgb(31,39,41));
+            spinner.setTextColor(Color.WHITE);
+            match.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.card_background_dark));
+            multi.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.card_background_dark));
 
         } else {
             relativeLayout.setBackgroundColor(Color.WHITE);
             opt1.setTextColor(Color.BLACK);
             opt2.setTextColor(Color.BLACK);
+            spinner.setBackgroundColor(Color.WHITE);
+            spinner.setTextColor(Color.BLACK);
+            match.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.card_background));
+            multi.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.card_background));
         }
 
         Button button = findViewById(R.id.strtquiz);

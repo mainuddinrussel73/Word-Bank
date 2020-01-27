@@ -464,7 +464,10 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
         final LinearLayout additem = findViewById(R.id.promotodo_activity);
         RelativeLayout relativeLayout = findViewById(R.id.main_view);
         RelativeLayout relativeLayout1 = relativeLayout.findViewById(R.id.borderss);
+        LinearLayout linearLayout = findViewById(R.id.textlayout);
+        LinearLayout llll = findViewById(R.id.lllll);
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+
         boolean isDark = prefs.getBoolean("isDark", false);
         if(isDark) {
             toolbar.setBackgroundColor(getResources().getColor(R.color.black));
@@ -474,16 +477,21 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
         if (isDark) {
 
             mListView.setBackgroundColor(Color.BLACK);
-            relativeLayout1.setBackground(ContextCompat.getDrawable(this, R.drawable.list_viewdark));
+            relativeLayout1.setBackground(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
             additem.setBackgroundColor(Color.BLACK);
             relativeLayout.setBackgroundColor(Color.BLACK);
+            linearLayout.setBackground(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
+
+            llll.setBackground(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
             tfb.setBackgroundColor(Color.BLACK);
             tfb.setTextColor(Color.WHITE);
             tfb.setHintTextColor(Color.rgb(185, 185, 185));
         } else {
 
             mListView.setBackgroundColor(Color.WHITE);
-            relativeLayout1.setBackground(ContextCompat.getDrawable(this, R.drawable.listview_border));
+            relativeLayout1.setBackground(ContextCompat.getDrawable(this, R.drawable.card_background));
+            linearLayout.setBackground(ContextCompat.getDrawable(this, R.drawable.card_background));
+            llll.setBackground(ContextCompat.getDrawable(this, R.drawable.card_background));
             additem.setBackgroundColor(Color.WHITE);
             relativeLayout.setBackgroundColor(Color.WHITE);
             tfb.setBackgroundColor(Color.WHITE);

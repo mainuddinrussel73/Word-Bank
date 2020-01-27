@@ -177,11 +177,11 @@ public class Editorialonline extends AppCompatActivity {
         if(isDark) {
             baselayout.setBackgroundColor(Color.BLACK);
             toolbar.setBackgroundColor(getResources().getColor(R.color.black));
-            relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.list_viewdark));
+            relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
         }else {
             baselayout.setBackgroundColor(Color.WHITE);
             toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-            relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.listview_border));
+            relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
         }
     }
 }

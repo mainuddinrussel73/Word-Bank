@@ -289,14 +289,14 @@ public class news_activity extends AppCompatActivity {
             ConstraintLayout constraintLayout = findViewById(R.id.content_newsre);
             LinearLayout linearLayout = findViewById(R.id.newslistview);
             constraintLayout.setBackgroundColor(Color.BLACK);
-            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.list_viewdark));
+            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
             list.setAdapter(adapter);
         } else if (!isDark && newsList.size() != 0) {
 
             ConstraintLayout constraintLayout = findViewById(R.id.content_newsre);
             LinearLayout linearLayout = findViewById(R.id.newslistview);
             constraintLayout.setBackgroundColor(Color.WHITE);
-            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.listview_border));
+            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
             list.setAdapter(adapter);
 
         } else if (isDark && newsList.size() == 0) {
@@ -305,14 +305,14 @@ public class news_activity extends AppCompatActivity {
             LinearLayout linearLayout = findViewById(R.id.newslistview);
 
             constraintLayout.setBackgroundColor(Color.BLACK);
-            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.list_viewdark));
+            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
 
         } else if (!isDark && newsList.size() == 0) {
             ConstraintLayout constraintLayout = findViewById(R.id.content_newsre);
             LinearLayout linearLayout = findViewById(R.id.newslistview);
 
             constraintLayout.setBackgroundColor(Color.WHITE);
-            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.listview_border));
+            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
 
 
         }

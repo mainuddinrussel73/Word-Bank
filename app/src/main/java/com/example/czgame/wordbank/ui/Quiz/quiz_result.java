@@ -148,7 +148,7 @@ public class quiz_result extends AppCompatActivity {
         }
         if (quiz_page.correct != 0 && quiz_page.wrong != 0 && quiz_page.ignored == 0) {
             pieData.add(new SimplePieInfo(p_correct, Color.GREEN,"Cor"));
-            pieData.add(new SimplePieInfo(p_wrong, Color.RED , "Cor"));
+            pieData.add(new SimplePieInfo(p_wrong, Color.RED , "Wro"));
         }
         if (quiz_page.correct == 0 && quiz_page.ignored == 0 && quiz_page.wrong == 0) {
             pieData.add(new SimplePieInfo(0, Color.GREEN,"Cor"));
@@ -173,6 +173,10 @@ public class quiz_result extends AppCompatActivity {
 
 
         RelativeLayout relativeLayout = findViewById(R.id.quiz_res);
+        RelativeLayout layouts = findViewById(R.id.layouts);
+        RelativeLayout resultview = findViewById(R.id.resultview);
+
+
         SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs1.getBoolean("isDark", false);
         if (isDark) {
@@ -183,7 +187,9 @@ public class quiz_result extends AppCompatActivity {
             relativeLayout.setBackgroundColor(Color.BLACK);
           //  result.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.backgroundborder));
             mainresult.setTextColor(Color.WHITE);
-            listView.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.list_viewdark));
+            listView.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
+            layouts.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
+            resultview.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
 
             if (wordBuck.size() != 0) listView.setAdapter(adapter);
         } else {
@@ -194,7 +200,9 @@ public class quiz_result extends AppCompatActivity {
             relativeLayout.setBackgroundColor(Color.WHITE);
             //result.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.backgroundborder));
             mainresult.setTextColor(Color.BLACK);
-            listView.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.listview_border));
+            listView.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background));
+            layouts.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background));
+            resultview.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background));
 
             if (wordBuck.size() != 0) listView.setAdapter(adapter);
         }

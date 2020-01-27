@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
@@ -78,7 +78,7 @@ public class MyListAdapter extends BaseAdapter implements SectionIndexer {
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.list_item, null, true);
 
-        LinearLayout listitm = rowView.findViewById(R.id.list_item);
+        RelativeLayout listitm = rowView.findViewById(R.id.list_item);
         TextView titleText = rowView.findViewById(R.id.title);
         TextView number = rowView.findViewById(R.id.num);
 

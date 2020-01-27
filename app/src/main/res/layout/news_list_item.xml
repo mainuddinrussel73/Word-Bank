@@ -43,18 +43,19 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="right"
+            android:layout_marginRight="9dp"
             app:checkView_strokeColor="@color/green"
             app:checkView_strokeWidth="5dp"/>
 
         <TextView
             android:id="@+id/news_title"
-            android:layout_width="306dp"
+            android:layout_width="296dp"
             android:layout_height="26dp"
-            android:layout_marginLeft="1dp"
             android:ellipsize="end"
             android:fontFamily="sans-serif-medium"
             android:maxLines="1"
             android:text="Medium Text"
+            android:layout_margin="5dp"
 
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/background_dark"

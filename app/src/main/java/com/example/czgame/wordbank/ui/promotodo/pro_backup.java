@@ -342,12 +342,12 @@ public class pro_backup extends AppCompatActivity {
         }
         if (isDark) {
             retext.setBackgroundColor(Color.rgb(64, 64, 64));
-            retext.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.backgroundborderwhite));
+            retext.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.backgroundborder));
 
             //coordinatorLayout.setBackgroundColor(Color.BLACK);
             //mainlayout.setBackgroundColor(Color.BLACK);
-            mainlayout.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.backgroundborderwhite));
-            coordinatorLayout.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.backgroundborderwhite));
+            mainlayout.setBackgroundColor(Color.BLACK);
+            coordinatorLayout.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
             retext.setHintTextColor(Color.rgb(185, 185, 185));
             retext.setTextColor(Color.WHITE);
         } else {
@@ -356,8 +356,8 @@ public class pro_backup extends AppCompatActivity {
 
             //coordinatorLayout.setBackgroundColor(Color.WHITE);
             //mainlayout.setBackgroundColor(Color.WHITE);
-            mainlayout.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.backgroundborder));
-            coordinatorLayout.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.backgroundborder));
+            mainlayout.setBackgroundColor(Color.WHITE);
+            coordinatorLayout.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background));
             retext.setHintTextColor(Color.rgb(64, 64, 64));
             retext.setTextColor(Color.BLACK);
         }

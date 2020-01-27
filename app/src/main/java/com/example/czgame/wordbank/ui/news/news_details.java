@@ -883,9 +883,9 @@ public class news_details extends AppCompatActivity {
             });
 
             additem.setBackgroundColor(Color.BLACK);
-            news_details.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
+            news_details.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
             news_details.setTextColor(Color.WHITE);
-            relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
+            relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
 
         } else {
 
@@ -900,9 +900,9 @@ public class news_details extends AppCompatActivity {
                 }
             });
             additem.setBackgroundColor(Color.WHITE);
-            news_details.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
+            news_details.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background));
             news_details.setTextColor(Color.BLACK);
-            relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.editextstyle));
+            relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background));
         }
 
 

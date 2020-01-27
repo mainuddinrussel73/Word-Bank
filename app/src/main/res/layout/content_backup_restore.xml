@@ -3,25 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.czgame.wordbank.ui.words.backup_restore"
-    tools:showIn="@layout/activity_backup_restore"
     android:id="@+id/coordinate"
-    android:layout_marginTop="10dp">
+    tools:showIn="@layout/activity_backup_restore"
+    tools:context="com.example.czgame.wordbank.ui.news.news_backup">
 
     <RelativeLayout
         android:id="@+id/coordinate_backup"
-        android:layout_width="350dp"
-        android:layout_height="530dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginEnd="31dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="80dp"
-        android:background="@drawable/backgroundborder"
-        tools:layout_editor_absoluteX="30dp"
-        tools:layout_editor_absoluteY="28dp">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:background="@drawable/card_background"
+        >
 
 
         <EditText
@@ -35,6 +27,7 @@
             android:layout_marginEnd="26dp"
             android:layout_marginLeft="10dp"
             android:layout_marginStart="24dp"
+            android:paddingLeft="5dp"
             android:layout_marginTop="126dp"
             android:background="@drawable/backgroundborder"
             android:hint="@string/File">

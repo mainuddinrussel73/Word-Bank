@@ -9,7 +9,7 @@
     android:layout_marginRight="@dimen/activity_vertical_margin"
     android:layout_marginTop="@dimen/activity_vertical_margin"
     android:id="@+id/newslistview"
-    android:background="@drawable/listview_border">
+    android:background="@drawable/card_background">
 
 
     <com.facebook.shimmer.ShimmerFrameLayout
