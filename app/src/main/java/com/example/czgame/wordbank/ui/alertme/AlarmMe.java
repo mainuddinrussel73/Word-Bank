@@ -14,6 +14,7 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 
 import com.example.czgame.wordbank.R;
 
@@ -97,7 +98,7 @@ public class AlarmMe extends AppCompatActivity
         boolean isDark = prefs.getBoolean("isDark", false);
 
         LinearLayout laybase = findViewById(R.id.laybase);
-
+        RelativeLayout lidtb = findViewById(R.id.alarm_list_r);
 
         if(isDark) {
             toolbar.setBackgroundColor(getResources().getColor(R.color.black));
@@ -107,24 +108,28 @@ public class AlarmMe extends AppCompatActivity
         if (isDark && mAlarmListAdapter.getCount() != 0) {
 
             laybase.setBackgroundColor(Color.BLACK);
-            mAlarmList.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
+            lidtb.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
+            mAlarmList.setBackgroundColor(Color.BLACK);
             mAlarmList.setAdapter(mAlarmListAdapter);
         } else if (!isDark && mAlarmListAdapter.getCount()!= 0) {
 
             laybase.setBackgroundColor(Color.WHITE);
-            mAlarmList.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
+            lidtb.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
+            mAlarmList.setBackgroundColor(Color.WHITE);
             mAlarmList.setAdapter(mAlarmListAdapter);
 
         } else if (isDark && mAlarmListAdapter.getCount() == 0) {
 
 
             laybase.setBackgroundColor(Color.BLACK);
-            mAlarmList.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
+            lidtb.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
+            mAlarmList.setBackgroundColor(Color.BLACK);
 
         } else if (!isDark && mAlarmListAdapter.getCount() == 0) {
 
             laybase.setBackgroundColor(Color.WHITE);
-            mAlarmList.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
+            lidtb.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
+            mAlarmList.setBackgroundColor(Color.WHITE);
 
 
         }

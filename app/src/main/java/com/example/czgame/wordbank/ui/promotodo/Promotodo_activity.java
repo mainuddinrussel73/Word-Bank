@@ -196,7 +196,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
             RelativeLayout listitm = rowView.findViewById(R.id.layout_item_edit);
             if (isDark) {
                 cvh.imgLogo2.setImageDrawable(Utils.getDrawable(rowView.getContext(), R.drawable.ic_keyboard_arrow_left_white_24dp));
-                cvh.txtName.setTextColor(Color.WHITE);
+                cvh.txtName.setTextColor(getResources().getColor(R.color.av_dark_blue));
                 listitm.setBackgroundDrawable(ContextCompat.getDrawable(rowView.getContext(), R.drawable.card_background_dark));
                 LocalDate parsedDate = LocalDate.now(); //Parse date from String
                 LocalDate parsedDate1 = LocalDate.parse(item.getDue_date()); //Parse date from String
@@ -223,7 +223,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
                 }
             } else {
                 cvh.imgLogo2.setImageDrawable(Utils.getDrawable(rowView.getContext(), R.drawable.ic_keyboard_arrow_left_black_24dp));
-                cvh.txtName.setTextColor(Color.BLACK);
+                cvh.txtName.setTextColor(getResources().getColor(R.color.av_dark_blue));
                 listitm.setBackgroundDrawable(ContextCompat.getDrawable(rowView.getContext(), R.drawable.card_background));
                 LocalDate parsedDate = LocalDate.now(); //Parse date from String
                 LocalDate parsedDate1 = LocalDate.parse(item.getDue_date()); //Parse date from String

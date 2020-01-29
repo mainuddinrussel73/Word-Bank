@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    android:layout_margin="15dp"
+    android:orientation="horizontal"
+    >
 
 
 
@@ -15,7 +17,7 @@
         android:paddingBottom="15dp"
         android:paddingRight="15dp"
         android:id="@+id/list_item"
-        android:background="@drawable/backgroundborder"
+        android:background="@drawable/card_background"
         android:descendantFocusability="afterDescendants"
         >
 
@@ -28,16 +30,19 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:layout_marginLeft="1dp"
             android:textSize="15dp"
+            android:layout_margin="15dp"
             android:textColor="@android:color/background_dark"
 
             />
 
         <TextView
             android:id="@+id/num"
-            android:layout_width="80dp"
-            android:layout_height="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-            android:layout_marginLeft="300dp"
+            android:layout_gravity="right"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
             android:text="Medium Text"
             android:textSize="12dp"
             android:textAppearance="?android:attr/textAppearanceListItemSmall"

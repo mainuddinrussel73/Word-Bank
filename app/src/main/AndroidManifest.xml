@@ -37,16 +37,16 @@
         android:theme="@style/AppTheme">
 
         <activity android:name=".ui.alertme.AlarmMe"
-            android:label="@string/news_online_title"
+            android:label="@string/Alert"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity android:name=".ui.alertme.AlarmNotification"
-            android:label="@string/news_online_title"
+            android:label="@string/alert_notifi"
             android:theme="@style/AppTheme.NoActionBar"
             >
         </activity>
         <activity android:name=".ui.alertme.EditAlarm"
-            android:label="@string/news_online_title"
+            android:label="@string/edit"
             android:theme="@style/AppTheme.NoActionBar"
             >
         </activity>

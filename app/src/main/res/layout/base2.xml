@@ -16,6 +16,7 @@
         android:layout_marginTop="25dp"
         android:elevation="25dp"
         app:cardCornerRadius="20dp"
+        android:weightSum="4"
         app:cardPreventCornerOverlap="false">
 
         <ImageView
@@ -59,7 +60,9 @@
             xmlns:custom="http://schemas.android.com/apk/res-auto"
             android:id="@+id/blast"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="150dp"
+            android:layout_gravity="bottom"
+           android:layout_weight="2"
             custom:avColor="@color/av_light_blue"
             custom:avDensity="0.175"
             custom:avSpeed="normal"
@@ -138,9 +141,7 @@
             android:layout_marginBottom="8dp"
             android:clickable="true"
             android:foreground="?android:selectableItemBackground"
-            app:fill_color="#e1e1e1"
-            app:pause_bg="#00a2ed"
-            app:play_bg="#001eff" />
+            />
 
 
         <androidx.appcompat.widget.AppCompatButton

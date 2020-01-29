@@ -175,7 +175,7 @@ public class Quiz_match extends Activity {
             public void onItemClick(AdapterView<?> arg0, View v, int arg2, long arg3) {
                 if (lv.getChildAt(arg2).isEnabled()) {
                     float x1 = v.getX();
-                    float y1 = 60 + v.getHeight() / 2 + v.getY();
+                    float y1 = 42 + v.getHeight() / 2 + v.getY();
                     a = arg2;
                     draw.addSourcePoint(x1, y1);
                     //lv.getChildAt(a).setEnabled(false);
@@ -186,7 +186,7 @@ public class Quiz_match extends Activity {
                                 lv.getChildAt(a).setEnabled(false);
                                 lv2.getChildAt(arg2).setEnabled(false);
                                 float x2 = ll.getWidth() + v.getX();
-                                float y2 = 60 + v.getHeight() / 2 + v.getY();
+                                float y2 = 42 + v.getHeight() / 2 + v.getY();
                                 b = arg2;
                                 draw.addDestinationPoint(x2, y2);
                                 v.setBackground(ContextCompat.getDrawable(Quiz_match.this, R.drawable.card_background_green));
@@ -248,9 +248,9 @@ public class Quiz_match extends Activity {
         if (isDark) {
             relativeLayout.setBackgroundColor(Color.BLACK);
             relativeLayoutq.setBackgroundColor(Color.BLACK);
-            linearLayout.setBackgroundColor(Color.BLACK);
-            lv.setBackgroundDrawable(ContextCompat.getDrawable(Quiz_match.this, R.drawable.card_background_dark));
-            lv2.setBackgroundDrawable(ContextCompat.getDrawable(Quiz_match.this, R.drawable.card_background_dark));
+            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(Quiz_match.this, R.drawable.card_background_dark));
+            lv.setBackgroundColor(Color.BLACK);
+            lv2.setBackgroundColor(Color.BLACK);
             lv.setAdapter(listadapter);
             lv2.setAdapter(listadapter2);
             scoress.setTextColor(Color.WHITE);
@@ -260,9 +260,9 @@ public class Quiz_match extends Activity {
         } else {
             relativeLayout.setBackgroundColor(Color.WHITE);
             relativeLayoutq.setBackgroundColor(Color.WHITE);
-            linearLayout.setBackgroundColor(Color.WHITE);
-            lv.setBackgroundDrawable(ContextCompat.getDrawable(Quiz_match.this, R.drawable.card_background));
-            lv2.setBackgroundDrawable(ContextCompat.getDrawable(Quiz_match.this, R.drawable.card_background));
+            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(Quiz_match.this, R.drawable.card_background));
+            lv.setBackgroundColor(Color.WHITE);
+            lv2.setBackgroundColor(Color.WHITE);
             lv.setAdapter(listadapter);
             lv2.setAdapter(listadapter2);
             scoress.setTextColor(Color.BLACK);

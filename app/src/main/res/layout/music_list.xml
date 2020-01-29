@@ -4,17 +4,26 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
+    android:layout_margin="@dimen/activity_horizontal_margin"
     android:id="@+id/listview"
+    android:background="@drawable/card_background"
     tools:showIn="@layout/content_music"
 
     >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+
+
     <ListView
         android:id="@+id/listviews"
-        android:layout_margin="4dp"
         android:layout_width="match_parent"
-        android:background="@drawable/card_background"
+
         android:layout_height="match_parent"
         android:fastScrollAlwaysVisible="false"
         android:dividerHeight="0dp"
@@ -23,7 +32,7 @@
 
         android:scrollbarStyle="outsideOverlay"
 
-        android:visibility="gone"
+
 
 
 
@@ -40,8 +49,6 @@
         android:id="@+id/gridviews"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="4dp"
-        android:background="@drawable/card_background"
         android:fastScrollAlwaysVisible="false"
         android:dividerHeight="0dp"
         android:divider="@null"
@@ -49,9 +56,7 @@
 android:columnWidth="110dp"
         android:horizontalSpacing="0dp"
         android:scrollbarStyle="outsideOverlay"
-        android:paddingTop="100dp"
         android:gravity="center|bottom"
-        android:paddingBottom="100dp"
         android:numColumns="3"
         android:stretchMode="spacingWidth"
         android:verticalSpacing="0dp"
@@ -66,5 +71,7 @@ android:columnWidth="110dp"
 
 
     </GridView>
+
+    </LinearLayout>
 
 </LinearLayout>

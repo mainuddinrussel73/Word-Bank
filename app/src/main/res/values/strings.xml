@@ -95,4 +95,7 @@
     <string name="timeline_activity">TimeLine Of Tasks</string>
     <string name="kllklkl">kllklkl</string>
     <string name="alartme">Alart</string>
+    <string name="Alert">Alert List</string>
+    <string name="alert_notifi">Alert Notification</string>
+    <string name="edit">Alert Edit</string>
 </resources>

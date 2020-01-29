@@ -1886,23 +1886,26 @@ LinearLayout media_base;
 
 
             listView.setAdapter(adapter);
-            listView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
+            listView.setBackgroundColor(Color.BLACK);
             gridView.setAdapter(adapterG);
-            gridView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
+            gridView.setBackgroundColor(Color.BLACK);
+            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
         } else if (!isDark && ListElementsArrayList.size() != 0) {
 
             relativeLayout.setBackgroundColor(Color.WHITE);
 
 
-            listView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
-            gridView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
+            listView.setBackgroundColor(Color.WHITE);
+            gridView.setBackgroundColor(Color.WHITE);
             listView.setAdapter(adapter);
             gridView.setAdapter(adapterG);
+            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
 
         } else if (isDark && ListElementsArrayList.size() == 0) {
 
-            listView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
-            gridView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
+            listView.setBackgroundColor(Color.BLACK);
+            gridView.setBackgroundColor(Color.BLACK);
+            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
             relativeLayout.setBackgroundColor(Color.BLACK);
 
 
@@ -1910,9 +1913,11 @@ LinearLayout media_base;
 
 
 
-            gridView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
+            listView.setBackgroundColor(Color.WHITE);
+            gridView.setBackgroundColor(Color.WHITE);
             relativeLayout.setBackgroundColor(Color.WHITE);
-            listView.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
+            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
+
 
 
         }
@@ -2592,6 +2597,7 @@ LinearLayout media_base;
             public void onClick(View view) {
                 play();
             }
+
         });
 
 
@@ -2702,6 +2708,7 @@ LinearLayout media_base;
                 mLrcView.resume();
                 playBtn.change(false);
                 playBtn.setColor(play);
+                playBtn.setBackground(ContextCompat.getDrawable(this,R.drawable.ic_pause_black_24dp));
                 //playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
                 // playBtn.setBackgroundResource(R.drawable.ic_pause_black_24dp);
                 ply.setBackgroundResource(R.drawable.ic_pause_black_24dp);
@@ -2722,6 +2729,7 @@ LinearLayout media_base;
                 mp.pause();
                 playBtn.change(true);
                 playBtn.setColor(play);
+                playBtn.setBackground(ContextCompat.getDrawable(this,R.drawable.ic_play_arrow_black_24dp));
                 // playBtn.changeMode(FloatingMusicActionButton.Mode.PLAY_TO_PAUSE);
                 //playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
                 ply.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);

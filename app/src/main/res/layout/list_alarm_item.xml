@@ -4,12 +4,13 @@
     android:layout_height="wrap_content"
     android:background="@drawable/card_background"
     android:orientation="vertical"
-    android:padding="4dip">
+    android:layout_margin="15dp"
+    android:padding="15dp">
 
     <TextView
        android:id="@+id/item_title"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:text="@string/appbar_scrolling_view_behavior"
         android:textSize="15dip"
@@ -18,7 +19,7 @@
     <TextView
         android:id="@+id/item_details"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
+        android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:text="@string/appbar_scrolling_view_behavior"
         android:textColor="@color/black"

@@ -12,6 +12,7 @@
     android:layout_height="wrap_content"
     android:text="Medium Text"
     android:textStyle="bold"
+    android:padding="15dp"
     android:maxLines="2"
     android:textSize="14dp"
     android:textAppearance="?android:attr/textAppearanceMedium"

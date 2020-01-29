@@ -68,22 +68,26 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="150dp"
         android:layout_marginBottom="150dp"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:background="@drawable/card_background"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
         android:gravity="center_horizontal">
 
         <ListView
             android:id="@+id/text_list"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
+            android:layout_marginLeft="74dp"
             android:layout_marginTop="@dimen/alerter_activity_horizontal_margin"
             android:layout_marginBottom="@dimen/alerter_activity_horizontal_margin"
-            android:background="@drawable/card_background"
             android:divider="@android:color/transparent"
             android:dividerHeight="10.0sp" />
 
         <LinearLayout
             android:id="@+id/draw_line"
-            android:layout_width="70dp"
+            android:layout_width="40dp"
             android:layout_height="600dp"
             android:orientation="horizontal">
 
@@ -95,9 +99,8 @@
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/alerter_activity_horizontal_margin"
-            android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
+            android:layout_marginRight="74dp"
             android:layout_marginBottom="@dimen/alerter_activity_horizontal_margin"
-            android:background="@drawable/card_background"
             android:divider="@android:color/transparent"
             android:dividerHeight="10.0sp" />
 
