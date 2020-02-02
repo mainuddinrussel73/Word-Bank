@@ -20,16 +20,18 @@
         android:id="@+id/txt_item_edit"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/slv_item_height"
-        android:paddingLeft="60dp"
+        android:fontFamily="@font/lobs_star"
         android:paddingTop="20dp"
         android:layout_marginBottom="20dp"
         android:alpha="0.87"
         android:gravity="left|top"
         android:lines="1"
+        android:paddingLeft="50dp"
         android:textColor="@android:color/black"
         android:text="kaha"
         android:maxLines="1"
-        android:textSize="15sp"/>
+        android:textSize="18sp"
+        android:textStyle="bold"/>
 
     <ImageView
         android:id="@+id/img_item_edit2"

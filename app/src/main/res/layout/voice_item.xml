@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/card_background"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_horizontal_margin">
+        <TextView
+            android:id="@+id/subjectListViewShapeId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:fontFamily="@font/typer_roboto_light_italic"
+            android:maxLines="1"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:text="Subject"
+            android:textColor="@color/material_blue900"
+            android:textSize="15dp"
+            />
+
+       <ImageView
+           android:id="@+id/descriptionListtViewShapeId"
+           android:layout_width="50dp"
+           android:layout_height="30dp"
+           android:layout_gravity="center"
+           android:src="@drawable/ic_waver"
+           >
+
+       </ImageView>
+
+        <TextView
+            android:id="@+id/dateListViewShapeId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:text="Date"
+            android:textColor="@color/red"
+            android:textSize="8dp"/>
+    </LinearLayout>
+
+    <!--<ImageView
+        android:id="@+id/imageId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="24dp"
+        android:src="@drawable/next"
+        android:layout_alignParentRight="true" />-->
+
+</RelativeLayout>

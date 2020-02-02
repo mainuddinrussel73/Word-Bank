@@ -198,7 +198,10 @@ public class news_details extends AppCompatActivity {
         Display display = getWindowManager().getDefaultDisplay();
         int width = display.getWidth();
 
-        String dataq = "<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" /></head>";
+        String dataq = "<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" />" +
+                "<style type=\\\"text/css\\\">@font-face {font-family: MyFont;src: url(\\\"file:///android_asset/font/belgrano.ttf\\\")}" +
+                "body {font-family: MyFont;font-size: medium;text-align: justify;}</style>" +
+                "</head>";
         dataq = dataq + "<body>" + html + "</body></html>";
 
         String stringToAdd = "width=\"100%\" ";
@@ -302,7 +305,10 @@ public class news_details extends AppCompatActivity {
         Display display = getWindowManager().getDefaultDisplay();
         int width = display.getWidth();
 
-        String dataq = "<html><head><meta name=\"viewport\"\"content=\"width="+width+" height="+width+ ", initial-scale=1 \" /></head>";
+        String dataq = "<html><head><meta name=\"viewport\"\"content=\"width="+width+" height="+width+ ", initial-scale=1 \" />" +
+                "<style type=\\\"text/css\\\">@font-face {font-family: MyFont;src: url(\\\"file:///android_asset/font/belgrano.ttf\\\")}" +
+                "body {font-family: MyFont;font-size: medium;text-align: justify;}</style>" +
+                "</head>";
         dataq = dataq + "<body>"+ html +"</body></html>";
 
         String stringToAdd = "width=\"100%\" ";
@@ -385,7 +391,10 @@ public class news_details extends AppCompatActivity {
                     Display display = getWindowManager().getDefaultDisplay();
                     int width = display.getWidth();
 
-                    String dataq = "<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" /></head>";
+                    String dataq = "<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" />" +
+                            "<style type=\\\"text/css\\\">@font-face {font-family: MyFont;src: url(\\\"file:///android_asset/font/belgrano.ttf\\\")}" +
+                            "body {font-family: MyFont;font-size: medium;text-align: justify;}</style>" +
+                            "</head>";
                     dataq = dataq + "<body>"+html+"</body></html>";
 
                     String stringToAdd = "width=\"100%\" ";
@@ -458,7 +467,10 @@ public class news_details extends AppCompatActivity {
             Display display = getWindowManager().getDefaultDisplay();
             int width = display.getWidth();
 
-            String dataq = "<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" /></head>";
+            String dataq = "<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" />" +
+                    "<style type=\\\"text/css\\\">@font-face {font-family: MyFont;src: url(\\\"file:///android_asset/font/belgrano.ttf\\\")}" +
+                    "body {font-family: MyFont;font-size: medium;text-align: justify;}</style>" +
+                    "</head>";
             dataq = dataq + "<body>"+html+"</body></html>";
 
             String stringToAdd = "width=\"100%\" ";
@@ -552,7 +564,10 @@ public class news_details extends AppCompatActivity {
             Display display = getWindowManager().getDefaultDisplay();
             int width = display.getWidth();
 
-            String dataq = "<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" /></head>";
+            String dataq = "<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" />" +
+                    "<style type=\\\"text/css\\\">@font-face {font-family: MyFont;src: url(\\\"file:///android_asset/font/belgrano.ttf\\\")}" +
+                    "body {font-family: MyFont;font-size: medium;text-align: justify;}</style>" +
+                    "</head>";
             dataq = dataq + "<body>"+html+"</body></html>";
 
             String stringToAdd = "width=\"100%\" ";
@@ -1359,7 +1374,10 @@ public class news_details extends AppCompatActivity {
             Display display = getWindowManager().getDefaultDisplay();
             int width = display.getWidth();
 
-            String dataq = "<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" /></head>";
+            String dataq = "<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" />" +
+                    "<style type=\\\"text/css\\\">@font-face {font-family: MyFont;src: url(\\\"file:///android_asset/font/belgrano.ttf\\\")}" +
+                    "body {font-family: MyFont;font-size: medium;text-align: justify;}</style>" +
+                    "</head>";
             dataq = dataq + "<body>"+html+"</body></html>";
 
             String stringToAdd = "width=\"100%\" ";

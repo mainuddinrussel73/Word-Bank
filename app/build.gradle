@@ -129,6 +129,8 @@ dependencies {
     implementation 'com.github.massoudss:waveformSeekBar:1.1.4'
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
     implementation 'rongi.rotate-layout:rotate-layout:3.0.0'
+    implementation  'com.github.massoudss:waveformSeekBar:1.1.4'
+    implementation 'com.github.Armen101:AudioRecordView:1.0.2'
 
 
 }

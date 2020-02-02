@@ -98,4 +98,10 @@
     <string name="Alert">Alert List</string>
     <string name="alert_notifi">Alert Notification</string>
     <string name="edit">Alert Edit</string>
+    <string name="dairy">Daily Log</string>
+    <string name="add_dairy">Add Log</string>
+    <string name="update_log">Update Log</string>
+    <string name="diary">Daily Log</string>
+    <string name="dairy_voice">Voice Log</string>
+    <string name="dairy_voice_up">Update Voice Note</string>
 </resources>

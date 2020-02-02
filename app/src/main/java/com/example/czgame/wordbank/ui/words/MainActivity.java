@@ -47,6 +47,7 @@ import com.example.czgame.wordbank.ui.Quiz.Quiz_confirm;
 import com.example.czgame.wordbank.ui.alertme.AlarmMe;
 import com.example.czgame.wordbank.ui.backup_scheudle.daily_service;
 import com.example.czgame.wordbank.ui.backup_scheudle.receive_back;
+import com.example.czgame.wordbank.ui.diary.DiaryMain;
 import com.example.czgame.wordbank.ui.media.Media_list_activity;
 import com.example.czgame.wordbank.ui.news.Editorialonline;
 import com.example.czgame.wordbank.ui.news.add_news;
@@ -823,6 +824,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.alarmme) {
             try {
                 Intent myIntent = new Intent(MainActivity.this, AlarmMe.class);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivityForResult(myIntent, 0);
+            } catch (Exception e) {
+                e.getMessage();
+            }
+        } else if (id == R.id.dairy) {
+            try {
+                Intent myIntent = new Intent(MainActivity.this, DiaryMain.class);
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(myIntent, 0);
             } catch (Exception e) {

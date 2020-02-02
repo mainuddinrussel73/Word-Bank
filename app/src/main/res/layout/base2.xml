@@ -71,40 +71,51 @@
 
     </androidx.cardview.widget.CardView>
 
-    <SeekBar
-        android:id="@+id/positionBar"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:indeterminate="false"
-        android:max="100"
-        android:maxHeight="5dp"
-        android:minHeight="5dp"
-        android:progress="50"
-        android:progressDrawable="@drawable/seekbardraw"
-        android:progressTint="#DF0974"
-        android:thumbTint="#DF0974"/>
 
-    <LinearLayout
+
+
+        <com.masoudss.lib.WaveformSeekBar
+            android:id="@+id/waveformSeekBar"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            app:wave_background_color="#F7CCBD"
+            app:wave_corner_radius="2dp"
+            app:wave_gap="1dp"
+            app:wave_gravity="center"
+            app:wave_min_height="2dp"
+            app:wave_progress_color="@color/colorPrimary"
+            app:wave_width="1dp"/>
+
+
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin">
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/loops"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginLeft="15dp"
+            android:layout_alignParentLeft="true"
+            android:drawableTint="@color/black"
             android:background="@drawable/ic_loop"/>
         <TextView
             android:id="@+id/elapsedTimeLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="55dp"
             android:text="0:11"/>
         <TextView
             android:id="@+id/remainingTimeLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="198dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="55dp"
             android:text="-1:49"/>
 
         <ImageButton
@@ -114,10 +125,11 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/l"
+            android:layout_alignParentRight="true"
             ></ImageButton>
-    </LinearLayout>
+    </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="300dp"
         android:layout_height="wrap_content">
 
@@ -127,18 +139,20 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="14dp"
-            android:layout_marginTop="18dp"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="10dp"
             android:background="@drawable/ic_prev_fill"/>
 
 
         <com.ohoussein.playpause.PlayPauseView
             android:id="@+id/playBtn"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_gravity="center"
             android:layout_marginLeft="59dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="8dp"
+            android:layout_centerHorizontal="true"
             android:clickable="true"
             android:foreground="?android:selectableItemBackground"
             />
@@ -148,16 +162,16 @@
             android:id="@+id/nxtBtn"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="52dp"
-            android:layout_marginTop="20dp"
+          android:layout_alignParentRight="true"
+            android:layout_marginTop="10dp"
             android:background="@drawable/ic_next_fill"
-            android:paddingTop="5dp"/>
+            android:layout_marginRight="14dp" />
 
 
 
 
 
-    </LinearLayout>
+    </RelativeLayout>
 
 
     <LinearLayout
@@ -210,7 +224,7 @@
             android:text="Wild Dreams"
             android:textAlignment="center"
             android:textColor="#DF0974"
-            android:textSize="30dp"
+            android:textSize="20dp"
             >
         </TextView>
     </LinearLayout>
@@ -237,7 +251,7 @@
             android:textAlignment="center"
             android:textColor="#DF0974"
 
-            android:textSize="15dp"
+            android:textSize="10dp"
             >
         </TextView>
 

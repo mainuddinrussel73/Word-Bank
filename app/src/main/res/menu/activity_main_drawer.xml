@@ -54,6 +54,11 @@
                 android:id="@+id/tasktime"
                 android:icon="@drawable/ic_timeline"
                 android:title="@string/timeline_activity" />
+
+            <item
+                android:id="@+id/dairy"
+                android:icon="@drawable/ic_diary"
+                android:title="@string/diary" />
         </group>
 
     </menu>
@@ -69,6 +74,7 @@
                     android:id="@+id/alarmme"
                     android:icon="@drawable/ic_alarmme"
                     android:title="@string/alartme" />
+
                 <item
                     android:id="@+id/pro_back"
                     android:icon="@drawable/ic_settings_backup_restore_black"

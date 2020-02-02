@@ -6,4 +6,10 @@
         <attr name="blurRadius" format="integer" />
         <attr name="fps" format="integer" />
     </declare-styleable>
+
+    <declare-styleable name="ProductionProgressItemView">
+        <attr name="progressTitle" format="string"/>
+        <attr name="progressV" format="string"/>
+        <attr name="progressPercent" format="integer"/>
+    </declare-styleable>
 </resources>

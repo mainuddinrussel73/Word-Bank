@@ -15,7 +15,8 @@
         android:gravity="center"
         android:padding="8dip"
         android:text="..."
-        android:textColor="@color/material_white"
+
+        android:textColor="@color/red"
         android:textSize="32dip"
         android:textStyle="bold" />
 

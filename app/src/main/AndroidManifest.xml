@@ -34,7 +34,37 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
+        android:largeHeap="true"
         android:theme="@style/AppTheme">
+
+
+        <activity android:name=".ui.diary.AddDataVoice"
+            android:label="@string/dairy_voice"
+            android:theme="@style/AppTheme.NoActionBar"
+            >
+
+        </activity>
+
+        <activity android:name=".ui.diary.UpdateDiary_voice"
+            android:label="@string/dairy_voice_up"
+            android:theme="@style/AppTheme.NoActionBar"
+            >
+
+        </activity>
+
+        <activity
+            android:name=".ui.diary.DiaryMain"
+            android:label="@string/dairy"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".ui.diary.AddData"
+            android:label="@string/add_dairy"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.diary.UpdateDiary"
+            android:label="@string/update_log"
+            android:theme="@style/AppTheme.NoActionBar"
+            />
 
         <activity android:name=".ui.alertme.AlarmMe"
             android:label="@string/Alert"

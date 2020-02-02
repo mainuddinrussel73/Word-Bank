@@ -22,6 +22,7 @@
             android:paddingBottom="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:layout_margin="@dimen/text_margin"
+            android:fontFamily="@font/belgrano"
             android:text="@string/large_text"
             />
 
