@@ -134,6 +134,7 @@ public class UpdateDiary_voice  extends AppCompatActivity {
 
         RelativeLayout laybase = findViewById(R.id.dialogId);
         RelativeLayout lidtb = findViewById(R.id.two);
+        RelativeLayout lidtb1 = findViewById(R.id.lay2);
 
         if (isDark) {
 
@@ -146,6 +147,7 @@ public class UpdateDiary_voice  extends AppCompatActivity {
 
 
             lidtb.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
+            lidtb1.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
         } else if (!isDark) {
 
             laybase.setBackgroundColor(Color.WHITE);
@@ -157,6 +159,7 @@ public class UpdateDiary_voice  extends AppCompatActivity {
 
 
             lidtb.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
+            lidtb1.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
 
         }
 

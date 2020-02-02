@@ -112,7 +112,7 @@ public class AddDataVoice extends AppCompatActivity {
             subjectEt.setTextColor(Color.WHITE);
 
             s.setDefaultHintTextColor( ColorStateList.valueOf(ContextCompat.getColor(this, R.color.divider)));
-
+            audioRecordView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
 
 
             lidtb.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
@@ -124,7 +124,7 @@ public class AddDataVoice extends AppCompatActivity {
 
             s.setDefaultHintTextColor( ColorStateList.valueOf(ContextCompat.getColor(this, R.color.darkgray)));
 
-
+            audioRecordView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
 
             lidtb.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
 
