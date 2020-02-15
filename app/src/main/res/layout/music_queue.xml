@@ -1,0 +1,42 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/activity_horizontal_margin"
+    android:background="@drawable/card_background_dark">
+
+
+    <RelativeLayout
+        android:id="@+id/inner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:background="@color/black"
+        android:padding="@dimen/activity_horizontal_margin">
+
+        <ListView
+            android:id="@+id/gridviews"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:fastScrollAlwaysVisible="false"
+            android:fastScrollEnabled="true"
+            android:horizontalSpacing="0dp"
+            android:scrollbarStyle="outsideOverlay"
+            android:stretchMode="spacingWidth"
+
+
+
+
+
+            >
+
+
+
+        </ListView>
+    </RelativeLayout>
+
+
+</RelativeLayout>

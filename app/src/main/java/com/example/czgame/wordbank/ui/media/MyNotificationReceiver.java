@@ -7,6 +7,7 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.MergeCursor;
 import android.graphics.Bitmap;
@@ -14,6 +15,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
@@ -32,9 +34,13 @@ import androidx.palette.graphics.Palette;
 import es.dmoral.toasty.Toasty;
 
 import static android.content.Context.ACTIVITY_SERVICE;
-import static com.example.czgame.wordbank.ui.media.Media_list_activity.mp;
-import static com.example.czgame.wordbank.ui.media.Media_list_activity.position;
-import static com.example.czgame.wordbank.ui.media.Media_list_activity.serviceIntent;
+import static com.example.czgame.wordbank.ui.media.fragment_music_list.ListElementsArrayList;
+import static com.example.czgame.wordbank.ui.media.fragment_music_list.mp;
+import static com.example.czgame.wordbank.ui.media.fragment_music_list.playBtn;
+import static com.example.czgame.wordbank.ui.media.fragment_music_list.ply;
+import static com.example.czgame.wordbank.ui.media.fragment_music_list.position;
+import static com.example.czgame.wordbank.ui.media.fragment_music_list.prefm;
+import static com.example.czgame.wordbank.ui.media.fragment_music_list.serviceIntent;
 
 public class MyNotificationReceiver extends BroadcastReceiver {
     public static final String RESUME_ACTION = "RESUME_ACTION";
@@ -46,11 +52,9 @@ public class MyNotificationReceiver extends BroadcastReceiver {
     public static final String AUDIOFOCUS_LOSS_TRANSIENT = "AUDIOFOCUS_LOSS_TRANSIENT";
     public static int REQUEST_CODE_NOTIFICATION = 1212;
     public static int REQUEST_CODE = 10;
-    Media_list_activity mediaListActivity  ;
+    //Media_list_activity mediaListActivity  ;
 
-    public void setMainActivityHandler(Media_list_activity main) {
-        mediaListActivity = main;
-    }
+
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -77,8 +81,8 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
 
                         //Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_pause_black_24dp);
-                        Media_list_activity.playBtn.change(false);
-                        Media_list_activity.ply.setBackgroundResource(R.drawable.ic_pause_black_24dp);
+                        playBtn.change(false);
+                        ply.setBackgroundResource(R.drawable.ic_pause_black_24dp);
 
                         NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
                         NotificationService.notification.setCustomContentView(NotificationService.notificationView);
@@ -92,8 +96,8 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                     } else {
                         mp.pause();
                        // Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
-                        Media_list_activity.playBtn.change(true);
-                        Media_list_activity.ply.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
+                        playBtn.change(true);
+                        ply.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
 
                         NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
                         NotificationService.notification.setCustomContentView(NotificationService.notificationView);
@@ -150,9 +154,14 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                     Log.d("topActivity", "CURRENT Activity ::" + taskInfo.get(0).topActivity.getClassName());
 
                     try {
-                        if(!taskInfo.get(0).topActivity.getClassName().equals("com.example.czgame.wordbank.ui.media.Media_list_activity")){
+                        if(!taskInfo.get(0).topActivity.getClassName().equals("com.example.czgame.wordbank.ui.media.music_base") && isAppOnForeground(context,"com.example.czgame.wordbank.ui.media")){
+                            context.sendBroadcast(new Intent(Constants.ACTION.PREV_ACTION));
+                        }else if(!taskInfo.get(0).topActivity.getClassName().equals("com.example.czgame.wordbank.ui.media.music_base") && !isAppOnForeground(context,"com.example.czgame.wordbank.ui.media")){
+
                             prevsong(context);
-                        }else {
+
+                        }
+                        else {
                             System.out.println(position);
                             context.sendBroadcast(new Intent(Constants.ACTION.PREV_ACTION));
 
@@ -180,10 +189,19 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                     List<ActivityManager.RunningTaskInfo> taskInfo1 = am1.getRunningTasks(1);
                     Log.d("topActivity", "CURRENT Activity ::" + taskInfo1.get(0).topActivity.getClassName());
 
+                    System.out.println( taskInfo1.get(0).topActivity.getClassName());
+
                     try {
-                        if(!taskInfo1.get(0).topActivity.getClassName().equals("com.example.czgame.wordbank.ui.media.Media_list_activity")){
+                        if(!taskInfo1.get(0).topActivity.getClassName().equals("com.example.czgame.wordbank.ui.media.music_base") && isAppOnForeground(context,"com.example.czgame.wordbank.ui.media")){
+                            context.sendBroadcast(new Intent(Constants.ACTION.NEXT_ACTION));
+                            System.out.println("here");
+
+                        }else if(!taskInfo1.get(0).topActivity.getClassName().equals("com.example.czgame.wordbank.ui.media.music_base") && !isAppOnForeground(context,"com.example.czgame.wordbank.ui.media")){
+
                             nxtsong(context);
-                        }else {
+                        }
+
+                        else {
                             System.out.println(position);
                             context.sendBroadcast(new Intent(Constants.ACTION.NEXT_ACTION));
 
@@ -213,7 +231,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
 
                     }
-                    Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_pause_black_24dp);
+                     playBtn.setBackgroundResource(R.drawable.ic_pause_black_24dp);
 
                     NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_pause_black_24dp);
                     NotificationService.notification.setCustomContentView(NotificationService.notificationView);
@@ -241,7 +259,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
 
 
 
-                    Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
+                     playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
 
                     NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
                     NotificationService.notification.setCustomContentView(NotificationService.notificationView);
@@ -255,7 +273,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                     break;
                 case AUDIOFOCUS_LOSS_TRANSIENT:
                     mp.pause();
-                    Media_list_activity.playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
+                     playBtn.setBackgroundResource(R.drawable.ic_play_arrow_black_24dp);
 
                     NotificationService.notificationView.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
                     NotificationService.notification.setCustomContentView(NotificationService.notificationView);
@@ -280,10 +298,15 @@ public class MyNotificationReceiver extends BroadcastReceiver {
             if(mp!=null)mp.stop();
             mp = new MediaPlayer();
 
-            if (position + 1 >= Media_list_activity.ListElementsArrayList.size()) {
+            if (position + 1 >=  ListElementsArrayList.size()) {
                 position = -1;
             }
             position++;
+
+        PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = prefm.edit();
+        editor.putInt("positionnow",position);
+        editor.commit();
             {
 
                 // playBtn = (Button) findViewById(R.id.playBtn);
@@ -293,12 +316,12 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                 // Media Player
 
 
-                String title = Media_list_activity.ListElementsArrayList.get(position).getTitle();
-                String artist = Media_list_activity.ListElementsArrayList.get(position).getArtist();
-                String album = Media_list_activity.ListElementsArrayList.get(position).getAlbum();
+                String title =  ListElementsArrayList.get(position).getTitle();
+                String artist =  ListElementsArrayList.get(position).getArtist();
+                String album =  ListElementsArrayList.get(position).getAlbum();
 
 
-                String titleq = Media_list_activity.ListElementsArrayList.get(position).getImagepath();
+                String titleq =  ListElementsArrayList.get(position).getImagepath();
                 Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 
                 Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(titleq));
@@ -393,9 +416,15 @@ public class MyNotificationReceiver extends BroadcastReceiver {
         mp = new MediaPlayer();
 
         if (position - 1 < 0) {
-            position = Media_list_activity.ListElementsArrayList.size();
+            position =  ListElementsArrayList.size();
         }
         position--;
+
+        PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = prefm.edit();
+        editor.putInt("positionnow",position);
+        editor.commit();
+
         {
 
             // playBtn = (Button) findViewById(R.id.playBtn);
@@ -405,12 +434,12 @@ public class MyNotificationReceiver extends BroadcastReceiver {
             // Media Player
 
 
-            String title = Media_list_activity.ListElementsArrayList.get(position).getTitle();
-            String artist = Media_list_activity.ListElementsArrayList.get(position).getArtist();
-            String album = Media_list_activity.ListElementsArrayList.get(position).getAlbum();
+            String title =  ListElementsArrayList.get(position).getTitle();
+            String artist =  ListElementsArrayList.get(position).getArtist();
+            String album =  ListElementsArrayList.get(position).getAlbum();
 
 
-            String titleq = Media_list_activity.ListElementsArrayList.get(position).getImagepath();
+            String titleq =  ListElementsArrayList.get(position).getImagepath();
             Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 
             Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(titleq));
@@ -587,6 +616,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
         // App is killed
         return n != 1;// App is in background or foreground
     }
+
 
 
 }

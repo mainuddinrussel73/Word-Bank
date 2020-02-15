@@ -136,6 +136,11 @@ public class UpdateDiary_voice  extends AppCompatActivity {
         RelativeLayout lidtb = findViewById(R.id.two);
         RelativeLayout lidtb1 = findViewById(R.id.lay2);
 
+        if(isDark) {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
+        }else {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        }
         if (isDark) {
 
             laybase.setBackgroundColor(Color.BLACK);

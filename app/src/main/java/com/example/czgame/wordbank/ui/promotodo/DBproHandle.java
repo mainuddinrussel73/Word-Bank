@@ -239,6 +239,32 @@ public class DBproHandle extends SQLiteOpenHelper {
         return true;
     }
 
+    public boolean updateTitle(String title, String title2) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db1 = this.getReadableDatabase();
+        String id = "1";
+        try {
+            Cursor re = db1.rawQuery("SELECT * FROM promotodo_table WHERE TITLE = ?; ", new String[]{title});
+            if (re.moveToFirst()) {
+                do {
+                    System.out.println(re.getString(0));
+                    id = re.getString(0);
+                } while (re.moveToNext());
+            }
+
+            re.close();
+            // System.out.println(re.getString(0));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(ID, id);
+        contentValues.put(TITLE, title2);
+        db.update(TABLE_NAME, contentValues, "ID = ?", new String[]{id});
+        return true;
+    }
+
+
     public boolean updatID(String title, int num) {
         SQLiteDatabase db = this.getWritableDatabase();
         SQLiteDatabase db1 = this.getReadableDatabase();

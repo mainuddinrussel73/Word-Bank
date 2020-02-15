@@ -97,6 +97,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginBottom="150dp"
+        android:background="@drawable/card_background_dark"
         android:padding="@dimen/activity_horizontal_margin"
         >
 
@@ -106,12 +107,12 @@
             android:layout_height="match_parent"
             app:chunkAlignTo="center"
             app:chunkColor="@color/colorAccent"
-            android:background="@drawable/card_background_dark"
             app:chunkMaxHeight="148dp"
             app:chunkMinHeight="2dp"
             app:chunkRoundedCorners="true"
             app:chunkSoftTransition="true"
             app:chunkSpace="1dp"
+            android:padding="25dp"
             app:chunkWidth="2dp"/>
 
     </RelativeLayout>

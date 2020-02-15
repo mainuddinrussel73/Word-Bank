@@ -33,7 +33,7 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/layoutbase"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -41,97 +41,117 @@
             android:layout_margin="@dimen/activity_horizontal_margin"
             android:background="@drawable/card_background_dark"
             android:orientation="vertical"
-            android:padding="35dp">
+            android:padding="@dimen/activity_horizontal_margin">
 
             <TextView
+                android:id="@+id/textbx"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
                 android:text="Title"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/lobs_star"
                 android:textColor="@color/red"
-                android:textSize="15dp"/>
+                android:textSize="25dp"/>
 
             <EditText
+                android:layout_height="wrap_content"
                 android:id="@+id/title"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_below="@+id/textbx"
                 android:layout_margin="15dp"
                 android:background="@drawable/backgroundborder"
-                android:paddingLeft="3dp"
-                android:paddingTop="-3dp"
+                android:maxLines="20"
+                android:paddingLeft="13dp"
+                android:paddingTop="13dp"
+                android:paddingRight="3dp"
+                android:paddingBottom="3dp"
                 android:text="@string/timeline_activity"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 />
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/sss"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
+                android:layout_below="@+id/title"
                 android:orientation="horizontal"
-                android:paddingTop="8sp">
+
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:padding="@dimen/activity_horizontal_margin">
 
                 <CheckBox
                     android:id="@+id/alarm_checkbox"
-                    android:layout_width="0sp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_alignParentLeft="true"
                     android:text="Alarm" />
 
                 <Spinner
                     android:id="@+id/occurence_spinner"
-                    android:layout_width="0sp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_alignParentRight="true"
                     android:entries="@array/occurence"
                     android:spinnerMode="dropdown" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/fff"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
+                android:layout_width="match_parent"
                 android:orientation="horizontal"
-                android:paddingTop="8sp">
+                android:layout_below="@+id/sss"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:padding="@dimen/activity_horizontal_margin">
 
                 <Button
                     android:id="@+id/date_button"
-                    android:layout_width="0sp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_alignParentLeft="true"
                     android:layout_margin="5dp"
-                    android:layout_weight="2"
+                    android:paddingLeft="35dp"
+                    android:paddingRight="35dp"
                     android:background="@drawable/buttonshaperound"
                     android:onClick="onDateClick"
+                    android:text="Date Pick"
                     android:textColor="@color/white"/>
 
                 <Button
                     android:id="@+id/time_button"
-                    android:layout_width="0sp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="5dp"
-                    android:layout_weight="1"
+                    android:layout_alignParentRight="true"
+                    android:text="Time Pick"
                     android:background="@drawable/buttonshaperound"
                     android:onClick="onTimeClick"
                     android:textColor="@color/white"/>
 
-            </LinearLayout>
+            </RelativeLayout>
 
 
-            <LinearLayout
+
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/activity_horizontal_margin"
-                android:orientation="horizontal">
+               android:layout_below="@+id/fff"
+                android:layout_marginTop="300dp"
+                android:padding="@dimen/activity_horizontal_margin">
             <Button
                 android:id="@+id/done"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:layout_marginEnd="15dp"
+               android:layout_alignParentLeft="true"
                 android:background="@drawable/buttonshaperound"
                 android:onClick="onDoneClick"
                 android:text="Done"
+                android:layout_margin="@dimen/activity_horizontal_margin"
                 android:textColor="@color/white"
                 />
 
@@ -142,14 +162,16 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_marginStart="120dp"
+                android:layout_alignParentRight="true"
                 android:background="@drawable/buttonshaperound"
                 android:onClick="onCancelClick"
+                android:layout_margin="@dimen/activity_horizontal_margin"
                 android:text="Cancel"
                 android:textColor="@color/white"/>
 
-            </LinearLayout>
+            </RelativeLayout>
 
-        </LinearLayout>
+        </RelativeLayout>
 
 
 

@@ -13,22 +13,19 @@
     tools:context=".ui.diary.DiaryMain"
     tools:showIn="@layout/activity_diary">
 
-    <GridView
-
+    <com.etsy.android.grid.StaggeredGridView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/ListviewId"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scrollbarStyle="outsideOverlay"
         android:background="@color/white"
         android:divider="@null"
 
-
+        app:column_count="2"
         android:dividerHeight="0dp"
         android:fastScrollEnabled="true"
-        android:numColumns="2"
-        android:scrollbarStyle="outsideOverlay"
-
-        >
-
-    </GridView>
+        app:item_margin="8dp" />
 
 </RelativeLayout>

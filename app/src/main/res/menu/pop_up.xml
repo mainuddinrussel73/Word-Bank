@@ -17,4 +17,8 @@
         android:id="@+id/five"
         android:title="View Switch"/>
 
+    <item
+        android:id="@+id/six"
+        android:title="Theme Change"/>
+
 </menu>

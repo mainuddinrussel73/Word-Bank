@@ -9,7 +9,10 @@
         <item name="android:statusBarColor">@color/colorPrimary</item>
         <item name="searchViewStyle">@style/CitySearchView</item>
         <item name="android:windowActionBarOverlay">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
+
     <style name="AppThemeDarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">#000</item>
         <item name="colorPrimaryDark">#000</item>
@@ -17,6 +20,8 @@
         <item name="android:statusBarColor">#000</item>
         <item name="searchViewStyle">@style/CitySearchView</item>
         <item name="android:windowActionBarOverlay">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -179,5 +184,9 @@
         <item name="android:windowBackground">@drawable/splash_background</item>
     </style>
 
+    <style name="TabButtonTextStyle" parent="android:Widget.Button">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@drawable/tab_button_text_selector</item>
+    </style>
 
 </resources>

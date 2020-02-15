@@ -2,6 +2,7 @@ package com.example.czgame.wordbank.ui.diary;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
@@ -13,6 +14,8 @@ import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -72,6 +75,10 @@ public class AddDataVoice extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_add_voice);
 
         subjectEt = findViewById(R.id.subjectEditTextId1);
@@ -105,6 +112,13 @@ public class AddDataVoice extends AppCompatActivity {
         RelativeLayout laybase = findViewById(R.id.dialogId);
         RelativeLayout lidtb = findViewById(R.id.two);
 
+        RelativeLayout lay2 = findViewById(R.id.lay2);
+
+        if(isDark) {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
+        }else {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        }
         if (isDark) {
 
             laybase.setBackgroundColor(Color.BLACK);
@@ -112,7 +126,7 @@ public class AddDataVoice extends AppCompatActivity {
             subjectEt.setTextColor(Color.WHITE);
 
             s.setDefaultHintTextColor( ColorStateList.valueOf(ContextCompat.getColor(this, R.color.divider)));
-            audioRecordView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
+            lay2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
 
 
             lidtb.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
@@ -124,7 +138,7 @@ public class AddDataVoice extends AppCompatActivity {
 
             s.setDefaultHintTextColor( ColorStateList.valueOf(ContextCompat.getColor(this, R.color.darkgray)));
 
-            audioRecordView.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
+            lay2.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
 
             lidtb.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
 
@@ -215,6 +229,11 @@ public class AddDataVoice extends AppCompatActivity {
             else {
                 Toasty.success(getApplicationContext(), "Data not added", Toast.LENGTH_SHORT).show();
             }
+
+            Intent intent = new Intent(AddDataVoice.this,DiaryMain.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            finish();
+            startActivity(intent);
         }
     }
 

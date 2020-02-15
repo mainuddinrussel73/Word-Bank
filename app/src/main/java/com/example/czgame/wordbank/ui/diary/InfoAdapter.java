@@ -1,10 +1,13 @@
 package com.example.czgame.wordbank.ui.diary;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -17,7 +20,11 @@ import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.ContextCompat;
+
+import static com.example.czgame.wordbank.ui.diary.DiaryMain.arrayList;
+import static com.example.czgame.wordbank.ui.diary.DiaryMain.db;
 
 public class InfoAdapter extends ArrayAdapter<Info> {
     public static final int TYPE_ODD = 0;
@@ -39,11 +46,15 @@ public class InfoAdapter extends ArrayAdapter<Info> {
 
     @Override
     public int getItemViewType(int position) {
-        System.out.println(ItemList.get(position).getType());
-        if( ItemList.get(position).getDescription().trim().isEmpty() == true){
-            type = 1;
-        }else{
-            type = 0;
+       //System.out.println(ItemList.size());
+
+        //int p = position%ItemList.size();
+        if(position>=0) {
+            if (ItemList.get(position % ItemList.size()).getDescription().trim().isEmpty() == true) {
+                type = 1;
+            } else {
+                type = 0;
+            }
         }
         return type;
     }
@@ -70,12 +81,83 @@ public class InfoAdapter extends ArrayAdapter<Info> {
         }
 
         if(typeb == TYPE_EVEN){
-            Info item = ItemList.get(position);
+            Info item = ItemList.get(position%ItemList.size());
 
             //finding listview shape component
             TextView subject = view.findViewById(R.id.subjectListViewShapeId);
             TextView date = view.findViewById(R.id.dateListViewShapeId);
             ImageView description = view.findViewById(R.id.descriptionListtViewShapeId);
+
+            //ImageButton delete = view.findViewById(R.id.textsave);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(arrayList.get(position%ItemList.size()).getDescription().trim().isEmpty()==false){
+                        Intent intent = new Intent(context,UpdateDiary.class);
+                        intent.putExtra("subject",arrayList.get(position%ItemList.size()).getSubject());
+                        intent.putExtra("description",arrayList.get(position%ItemList.size()).getDescription());
+                        intent.putExtra("listId",arrayList.get(position%ItemList.size()).getId());
+                        context.startActivity(intent);
+                    }else{
+                        Intent intent = new Intent(context,UpdateDiary_voice.class);
+                        intent.putExtra("subject",arrayList.get(position%ItemList.size()).getSubject());
+                        intent.putExtra("medialink",arrayList.get(position%ItemList.size()).getMedialink());
+                        intent.putExtra("listId",arrayList.get(position%ItemList.size()).getId());
+                        context.startActivity(intent);
+                    }
+                }
+            });
+
+
+            view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    System.out.println("long click");
+
+                    // TODO Auto-generated method stub
+                    // System.out.println(position);
+                    String pos = item.getId();
+                    // Toast.makeText(getContext(),pos+"",Toast.LENGTH_SHORT).show();
+
+                    Context wrapper = new ContextThemeWrapper(context, R.style.YOURSTYLE1);
+                    SharedPreferences prefs = context.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+                    boolean isDark = prefs.getBoolean("isDark", false);
+                    if (isDark) {
+                        wrapper = new ContextThemeWrapper(context, R.style.YOURSTYLE);
+
+                    } else {
+                        wrapper = new ContextThemeWrapper(context, R.style.YOURSTYLE1);
+                    }
+
+                    PopupMenu popup = new PopupMenu(wrapper, view);
+                    popup.getMenuInflater().inflate(R.menu.popup_delete, popup.getMenu());
+                    //
+                    popup.show();
+
+
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if(item.getTitle().equals("Delete")){
+                                db.delete((pos));
+                                arrayList.remove((pos));
+                                ItemList.remove(pos);
+                                notifyDataSetInvalidated();
+                                Intent intent = new Intent(context,DiaryMain.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                //context.finish();
+                                context.startActivity(intent);
+                            }
+                            return true;
+                        }
+                    });
+
+
+                    return true;
+                }
+            });
             //return super.getView(position, convertView, parent);
 
             SharedPreferences prefs = context.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
@@ -116,13 +198,84 @@ public class InfoAdapter extends ArrayAdapter<Info> {
             date.setText(item.getDateTime());
         }
         if(typeb == TYPE_ODD){
-            Info item = ItemList.get(position);
+            Info item = ItemList.get(position%ItemList.size());
 
             //finding listview shape component
             TextView subject = view.findViewById(R.id.subjectListViewShapeId);
             TextView date = view.findViewById(R.id.dateListViewShapeId);
             TextView description = view.findViewById(R.id.descriptionListtViewShapeId);
             //return super.getView(position, convertView, parent);
+
+         //   ImageButton delete = view.findViewById(R.id.textsave);
+
+
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(arrayList.get(position%ItemList.size()).getDescription().trim().isEmpty()==false){
+                        Intent intent = new Intent(context,UpdateDiary.class);
+                        intent.putExtra("subject",arrayList.get(position%ItemList.size()).getSubject());
+                        intent.putExtra("description",arrayList.get(position%ItemList.size()).getDescription());
+                        intent.putExtra("listId",arrayList.get(position%ItemList.size()).getId());
+                        context.startActivity(intent);
+                    }else{
+                        Intent intent = new Intent(context,UpdateDiary_voice.class);
+                        intent.putExtra("subject",arrayList.get(position%ItemList.size()).getSubject());
+                        intent.putExtra("medialink",arrayList.get(position%ItemList.size()).getMedialink());
+                        intent.putExtra("listId",arrayList.get(position%ItemList.size()).getId());
+                        context.startActivity(intent);
+                    }
+                }
+            });
+
+            view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    System.out.println("long click");
+
+                    // TODO Auto-generated method stub
+                    // System.out.println(position);
+                    String pos = item.getId();
+                    // Toast.makeText(getContext(),pos+"",Toast.LENGTH_SHORT).show();
+
+                    Context wrapper = new ContextThemeWrapper(context, R.style.YOURSTYLE1);
+                    SharedPreferences prefs = context.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+                    boolean isDark = prefs.getBoolean("isDark", false);
+                    if (isDark) {
+                        wrapper = new ContextThemeWrapper(context, R.style.YOURSTYLE);
+
+                    } else {
+                        wrapper = new ContextThemeWrapper(context, R.style.YOURSTYLE1);
+                    }
+
+                    PopupMenu popup = new PopupMenu(wrapper, view);
+                    popup.getMenuInflater().inflate(R.menu.popup_delete, popup.getMenu());
+                    //
+                    popup.show();
+
+
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            if(item.getTitle().equals("Delete")){
+                                db.delete((pos));
+                                arrayList.remove((pos));
+                                ItemList.remove(pos);
+                                Intent intent = new Intent(context,DiaryMain.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                //context.finish();
+                                context.startActivity(intent);
+                            }
+                            return true;
+                        }
+                    });
+
+
+                    return true;
+                }
+            });
 
             SharedPreferences prefs = context.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
             boolean isDark = prefs.getBoolean("isDark", false);
@@ -152,7 +305,6 @@ public class InfoAdapter extends ArrayAdapter<Info> {
             date.setText(item.getDateTime());
             description.setText(item.getDescription());
         }
-
 
 
 

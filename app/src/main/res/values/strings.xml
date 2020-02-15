@@ -104,4 +104,8 @@
     <string name="diary">Daily Log</string>
     <string name="dairy_voice">Voice Log</string>
     <string name="dairy_voice_up">Update Voice Note</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_detail_album">detail_album</string>
 </resources>

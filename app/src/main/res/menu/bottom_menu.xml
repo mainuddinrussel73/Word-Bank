@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_button1"
+        android:icon="@drawable/ic_queue_music_black_24dp"
+        android:iconTint="@color/uou"
+        android:title="Home" />
+
+    <item
+        android:id="@+id/menu_button2"
+        android:icon="@drawable/ic_artist"
+        android:iconTint="@color/uou"
+        android:title="Artists" />
+
+    <item
+        android:id="@+id/menu_button3"
+        android:icon="@drawable/ic_queue_play_next_black_24dp"
+        android:iconTint="@color/uou"
+        android:title="Play Queue" />
+
+</menu>

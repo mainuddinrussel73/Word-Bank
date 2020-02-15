@@ -41,14 +41,18 @@
             android:imeOptions="actionNext"
             android:inputType="text"
             android:maxLines="1"
-            android:fontFamily="@font/typer_roboto_light_italic"
-            android:hint="Task"
             android:text="hjbhjbjbhjb"
+            android:enabled="true"
             android:textColor="@color/red"
-            android:textSize="25dp"
             android:textStyle="bold"
-            android:enabled="false"
+            android:fontFamily="@font/belgrano"
+            android:hint="Task"
+            android:textSize="25dp"
+            app:prefixTextColor="@color/material_brown300"
             app:prefix=" Task : " />
+
+
+
 
 
 
@@ -56,11 +60,36 @@
 
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/btns"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textlayout"
+        android:layout_alignParentRight="true">
+
+        <ImageButton
+            android:id="@+id/textsave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@color/green"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:src="@drawable/ic_check_white_24dp"
+            >
+
+        </ImageButton>
+
+
+    </LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginTop="100dp"
+        android:id="@+id/lay2"
 
+        android:layout_below="@+id/btns"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
         android:layout_marginRight="@dimen/alerter_activity_horizontal_margin">
 
@@ -200,7 +229,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginTop="180dp"
+        android:id="@+id/lay4"
+
+        android:layout_below="@+id/lay2"
+        android:layout_marginTop="10dp"
 
         android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
         android:layout_marginRight="@dimen/alerter_activity_horizontal_margin">
@@ -249,8 +281,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_marginTop="260dp"
+        android:id="@+id/lay3"
 
+        android:layout_below="@+id/lay4"
+        android:layout_marginTop="10dp"
         android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
         android:layout_marginRight="@dimen/alerter_activity_horizontal_margin">
 
@@ -291,7 +325,8 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
-        android:layout_marginTop="340dp"
+        android:layout_below="@+id/lay3"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
         android:layout_marginBottom="15dp"
         >

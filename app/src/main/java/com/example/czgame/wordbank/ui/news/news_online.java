@@ -1134,7 +1134,8 @@ public class news_online extends AppCompatActivity {
                                 Display display = getWindowManager().getDefaultDisplay();
                                 int width = display.getWidth();
 
-                                String dataq = "<html><head><meta name=\"viewport\"\"content=\"width="+width+" height="+width+ ", initial-scale=1 \" /></head>";
+                                String dataq = "<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" />" +
+                                        "</head>";
                                 dataq = dataq + "<body>"+ newsList.get(position).BODY +"</body></html>";
 
                                 String stringToAdd = "width=\"100%\" ";

@@ -198,9 +198,7 @@ public class news_details extends AppCompatActivity {
         Display display = getWindowManager().getDefaultDisplay();
         int width = display.getWidth();
 
-        String dataq = "<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" />" +
-                "<style type=\\\"text/css\\\">@font-face {font-family: MyFont;src: url(\\\"file:///android_asset/font/belgrano.ttf\\\")}" +
-                "body {font-family: MyFont;font-size: medium;text-align: justify;}</style>" +
+        String dataq ="<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" />" +
                 "</head>";
         dataq = dataq + "<body>" + html + "</body></html>";
 
@@ -282,7 +280,7 @@ public class news_details extends AppCompatActivity {
         StringBuilder builder = new StringBuilder(html);
         builder.replace( start-2,start+1,selectedText);
         html = builder.toString();
-       // html = html.replace("@i#", " ");
+        // html = html.replace("@i#", " ");
 
 
         //Spannable wordToSpan2 = new SpannableStringBuilder(news_details.getText());
@@ -392,8 +390,6 @@ public class news_details extends AppCompatActivity {
                     int width = display.getWidth();
 
                     String dataq = "<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" />" +
-                            "<style type=\\\"text/css\\\">@font-face {font-family: MyFont;src: url(\\\"file:///android_asset/font/belgrano.ttf\\\")}" +
-                            "body {font-family: MyFont;font-size: medium;text-align: justify;}</style>" +
                             "</head>";
                     dataq = dataq + "<body>"+html+"</body></html>";
 
@@ -468,8 +464,6 @@ public class news_details extends AppCompatActivity {
             int width = display.getWidth();
 
             String dataq = "<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" />" +
-                    "<style type=\\\"text/css\\\">@font-face {font-family: MyFont;src: url(\\\"file:///android_asset/font/belgrano.ttf\\\")}" +
-                    "body {font-family: MyFont;font-size: medium;text-align: justify;}</style>" +
                     "</head>";
             dataq = dataq + "<body>"+html+"</body></html>";
 
@@ -564,9 +558,7 @@ public class news_details extends AppCompatActivity {
             Display display = getWindowManager().getDefaultDisplay();
             int width = display.getWidth();
 
-            String dataq = "<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" />" +
-                    "<style type=\\\"text/css\\\">@font-face {font-family: MyFont;src: url(\\\"file:///android_asset/font/belgrano.ttf\\\")}" +
-                    "body {font-family: MyFont;font-size: medium;text-align: justify;}</style>" +
+            String dataq ="<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" />" +
                     "</head>";
             dataq = dataq + "<body>"+html+"</body></html>";
 
@@ -717,7 +709,7 @@ public class news_details extends AppCompatActivity {
 
 
         try {
-           // progressBar.setVisibility(View.VISIBLE);
+            // progressBar.setVisibility(View.VISIBLE);
 
             RetrieveFeedTask asyncTask = new RetrieveFeedTask();
             String s = intent.getStringExtra("body");
@@ -1375,7 +1367,7 @@ public class news_details extends AppCompatActivity {
             int width = display.getWidth();
 
             String dataq = "<html><head><meta name=\"viewport\"\"content=\"width=" + width + " height=" + width + ", initial-scale=1 \" />" +
-                    "<style type=\\\"text/css\\\">@font-face {font-family: MyFont;src: url(\\\"file:///android_asset/font/belgrano.ttf\\\")}" +
+                    "<style type=\"text/css\">@font-face {font-family: MyFont;src: url(\"file:///android_asset/font/belgrano.ttf\")}" +
                     "body {font-family: MyFont;font-size: medium;text-align: justify;}</style>" +
                     "</head>";
             dataq = dataq + "<body>"+html+"</body></html>";

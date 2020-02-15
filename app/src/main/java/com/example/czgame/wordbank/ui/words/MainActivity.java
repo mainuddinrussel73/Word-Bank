@@ -48,7 +48,7 @@ import com.example.czgame.wordbank.ui.alertme.AlarmMe;
 import com.example.czgame.wordbank.ui.backup_scheudle.daily_service;
 import com.example.czgame.wordbank.ui.backup_scheudle.receive_back;
 import com.example.czgame.wordbank.ui.diary.DiaryMain;
-import com.example.czgame.wordbank.ui.media.Media_list_activity;
+import com.example.czgame.wordbank.ui.media.music_base;
 import com.example.czgame.wordbank.ui.news.Editorialonline;
 import com.example.czgame.wordbank.ui.news.add_news;
 import com.example.czgame.wordbank.ui.news.news_activity;
@@ -578,7 +578,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         shortcutManager.addDynamicShortcuts(Arrays.asList(shortcutInfo1));
 
 
-        Intent intent4 = new Intent(this, Media_list_activity.class);
+        Intent intent4 = new Intent(this, music_base.class);
 
         intent4.putExtra("size", size);
         intent4.setAction(Intent.ACTION_VIEW);
@@ -796,14 +796,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }, hour, minute, true);//Yes 24 hour time
             mTimePicker.setTitle("Select Time To Auto Backup.");
             mTimePicker.show();
-        } else if (id == R.id.music) {
-            try {
-                Intent myIntent = new Intent(MainActivity.this, Media_list_activity.class);
-                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivityForResult(myIntent, 0);
-            } catch (Exception e) {
-                e.getMessage();
-            }
         }
         else if (id == R.id.news_online) {
             try {
@@ -841,6 +833,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         else if (id == R.id.tasktime) {
             try {
                 Intent myIntent = new Intent(MainActivity.this, TimelineView.class);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivityForResult(myIntent, 0);
+            } catch (Exception e) {
+                e.getMessage();
+            }
+        }
+        else if (id == R.id.music_base) {
+            try {
+                Intent myIntent = new Intent(MainActivity.this, music_base.class);
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(myIntent, 0);
             } catch (Exception e) {

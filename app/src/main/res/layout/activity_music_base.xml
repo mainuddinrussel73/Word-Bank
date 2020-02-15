@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.media.music_base">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_music"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@null">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/material_white"
+            app:titleTextColor="@color/uou"
+           >
+
+
+
+
+            <Button
+                android:id="@+id/sortsong"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="right"
+                android:background="@drawable/ic_sort_black_24dp"
+                android:backgroundTint="@color/uou"
+                />
+
+        </androidx.appcompat.widget.Toolbar>
+
+
+
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+    <com.sothree.slidinguppanel.SlidingUpPanelLayout
+        android:id="@+id/sliding_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottomTabLayout"
+        android:layout_alignTop="@+id/app_bar_music"
+        android:gravity="bottom">
+
+        <include
+            layout="@layout/music_base_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </include>
+
+        <include
+            layout="@layout/music_slidingpannel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            >
+
+        </include>
+
+    </com.sothree.slidinguppanel.SlidingUpPanelLayout>
+
+    <com.stfalcon.bottomtablayout.BottomTabLayout
+        android:id="@+id/bottomTabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorAccent" />
+
+</RelativeLayout>

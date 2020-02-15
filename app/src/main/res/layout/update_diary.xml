@@ -22,12 +22,17 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/appbarlayout">
+
+
     <!-- This dialog activity for updating information -->
 <RelativeLayout
     android:id="@+id/two"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_below="@+id/appbarlayout"
     android:background="@drawable/card_background_dark">
 
     <RelativeLayout
@@ -81,7 +86,7 @@
     <RelativeLayout
         android:id="@+id/lay2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/lay1"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
         android:layout_marginTop="10dp"
@@ -94,7 +99,7 @@
             android:id="@+id/descriptionEditTextIdUpdate"
             style="@style/LoginTextInputLayoutStyle"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/titlelay"
             android:layout_margin="10dp"
             android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
@@ -107,7 +112,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/descriptionEditTextIdUpdate1"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:fontFamily="@font/lobs_star"
                 android:gravity="top|left"
@@ -125,9 +130,20 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+
     </RelativeLayout>
 
 
+    <ImageButton
+        android:id="@+id/warn"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_below="@+id/lay2"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="-170dp"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:background="@drawable/ic_info"
+        ></ImageButton>
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -149,9 +165,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:background="@drawable/buttonshaperound"
-                android:drawableStart="@drawable/ic_share_black_24dp"
-                android:drawableLeft="@drawable/ic_share_black_24dp"
-                android:paddingLeft="30dp" />
+                android:padding="5dp"
+                android:text="Correction"
+                android:textColor="@color/material_white" />
 
 
             <Button
@@ -182,5 +198,5 @@
 </RelativeLayout>
 
 
-
+    </ScrollView>
 </RelativeLayout>

@@ -1,0 +1,82 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/list_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/card_background_dark"
+
+    android:orientation="horizontal"
+
+    android:padding="15dip"
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp">
+
+    <!--  ListRow Left sied Thumbnail image -->
+    <androidx.cardview.widget.CardView android:id="@+id/thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="5dip"
+        android:layout_marginBottom="8dip"
+        android:padding="3dp"
+        app:cardCornerRadius="5dp">
+
+        <com.github.siyamed.shapeimageview.RoundedImageView
+            android:id="@+id/play_pause"
+            android:layout_width="50dip"
+            android:layout_height="50dip"
+            android:src="@drawable/image"/>
+
+    </androidx.cardview.widget.CardView>
+
+    <!-- Title Of Song-->
+    <TextView
+        android:id="@+id/title5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/thumbnail"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:ellipsize="end"
+        android:maxLength="20"
+        android:maxLines="1"
+        android:text="Rihanna Love the way lie"
+        android:textColor="@color/per54black"
+        android:textSize="15dip"
+        android:textStyle="bold"
+        android:typeface="sans"/>
+
+    <!-- Artist Name -->
+    <TextView
+        android:id="@+id/title6"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title5"
+        android:layout_marginTop="1dip"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:ellipsize="end"
+        android:maxLength="15"
+        android:maxLines="1"
+        android:text="Just gona stand there and ..."
+        android:textColor="@color/darkgray"
+        android:textSize="10dip" />
+
+    <!-- Rightend Duration -->
+    <TextView
+        android:id="@+id/duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/title6"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dip"
+        android:gravity="right"
+        android:text="5:45"
+        android:textColor="#10bcc9"
+        android:textSize="10dip"
+        android:textStyle="bold"/>
+
+
+    <!-- Rightend Arrow -->
+
+</RelativeLayout>

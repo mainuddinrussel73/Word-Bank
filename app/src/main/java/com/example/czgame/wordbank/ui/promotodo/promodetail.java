@@ -28,6 +28,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -88,6 +89,7 @@ public class promodetail extends AppCompatActivity {
     private CountDownTimer cdTimer;
     private long total = 1800000;
     private StorageReference mStorageRef;
+    ImageButton saveTitle,cancelTitle;
 
     public static Bitmap textAsBitmap(String text, float textSize, int textColor) {
         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -220,6 +222,35 @@ public class promodetail extends AppCompatActivity {
 
         //prefs = this.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         text_field_boxes2.setText(currenttask.getTitle());
+        //cancelTitle = findViewById(R.id.textcancel);
+        saveTitle = findViewById(R.id.textsave);
+
+
+
+
+
+
+
+        saveTitle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!text_field_boxes2.getText().toString().trim().equals(
+                        Promotodo_activity.promotododataList.get(curr).getTitle())){
+                    Promotodo_activity.mDBHelper.updateTitle(currenttask.getTitle(), text_field_boxes2.getText().toString().trim());
+                    Promotodo_activity.promotododataList.get(curr).setTitle(text_field_boxes2.getText().toString().trim());
+
+                    Toasty.success(promodetail.this,"Done Update.",Toast.LENGTH_LONG).show();
+
+
+                }else{
+
+                }
+            }
+        });
+
+
+
+
 
         System.out.println("item   " + Promotodo_activity.promotododataList.get(curr).getTitle() + "<>" + Promotodo_activity.promotododataList.get(curr).getNum_of_promotodo());
         if (currenttask.getNum_of_promotodo() == 1) {
@@ -636,8 +667,7 @@ public class promodetail extends AppCompatActivity {
             textView.setTextColor(Color.WHITE);
             textViewss.setTextColor(Color.WHITE);
             //titletask.setTextColor(Color.WHITE);
-            text_field_boxes2.setPrefixTextColor(Color.WHITE);
-            text_field_boxes2.setTextColor(Color.WHITE);
+          //  text_field_boxes2.setPrefixTextColor(Color.WHITE);
             text_field_boxes2.setHintTextColor(Color.rgb(185, 185, 185));
             // tfb.setBackgroundColor(Color.BLACK);
             // tfb.setTextColor(Color.WHITE);
@@ -660,10 +690,9 @@ public class promodetail extends AppCompatActivity {
             spinner.setTextColor(Color.BLACK);
             //spinner1.setBackgroundColor(Color.rgb(185,185,185));
             // edittext.setHintTextColor(Color.BLACK);
-            text_field_boxes2.setTextColor(Color.BLACK);
             //edittext.setBackground(ContextCompat.getDrawable(this, R.drawable.backgroundborder));
             text_field_boxes2.setHintTextColor(Color.rgb(64, 64, 64));
-            text_field_boxes2.setPrefixTextColor(Color.BLACK);
+            //text_field_boxes2.setPrefixTextColor(Color.BLACK);
             textView.setTextColor(Color.BLACK);
             textViewss.setTextColor(Color.BLACK);
             // edittext.setTextColor(Color.BLACK);

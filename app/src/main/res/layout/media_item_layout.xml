@@ -1,7 +1,7 @@
 <RelativeLayout android:id="@+id/list_item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/card_background"
+    android:background="@drawable/card_background_dark"
     android:paddingLeft="5dp"
     android:paddingRight="5dp"
 
@@ -71,10 +71,23 @@
     android:layout_alignTop="@id/title6"
     android:gravity="right"
     android:text="5:45"
-    android:layout_marginRight="5dip"
+    android:layout_marginRight="25dip"
     android:textSize="10dip"
     android:textColor="#10bcc9"
     android:textStyle="bold"/>
+
+    <ImageButton
+        android:id="@+id/options"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignRight="@+id/duration"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:backgroundTint="@color/colorTransparent"
+        android:src="@drawable/ic_more_vert_black_24dp"
+       >
+
+    </ImageButton>
 
 <!-- Rightend Arrow -->
 

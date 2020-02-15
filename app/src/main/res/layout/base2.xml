@@ -19,6 +19,9 @@
         android:weightSum="4"
         app:cardPreventCornerOverlap="false">
 
+
+
+
         <ImageView
             android:id="@+id/albumart"
             android:layout_width="match_parent"
@@ -31,15 +34,17 @@
 
             />
 
+
+
         <com.lauzy.freedom.library.LrcView
             android:id="@+id/lrc_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:currentIndicateLrcColor="@color/colorAccent"
+            app:currentIndicateLrcColor="@color/uou"
             app:indicatorTextColor="@android:color/holo_orange_dark"
             app:isLrcCurrentTextBold="true"
             app:isLrcIndicatorTextBold="true"
-            app:lrcCurrentTextColor="@color/colorAccent"
+            app:lrcCurrentTextColor="@color/uou"
             app:lrcLineSpaceSize="10dp"
             app:lrcTextSize="20sp"
             app:noLrcTextColor="@color/colorTransparent"
@@ -51,6 +56,8 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/colorTransparent"
             android:src="@drawable/ic_keyboard_arrow_up_black_24dp"
+            android:layout_gravity="bottom|right"
+            android:foregroundTint="@color/link"
             >
 
 
@@ -97,8 +104,8 @@
         android:layout_margin="@dimen/activity_horizontal_margin">
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/loops"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginLeft="15dp"
             android:layout_alignParentLeft="true"
             android:drawableTint="@color/black"
@@ -124,7 +131,9 @@
             android:layout_height="20dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
+            android:layout_marginRight="15dp"
             android:background="@drawable/l"
+            android:backgroundTint="@color/green"
             android:layout_alignParentRight="true"
             ></ImageButton>
     </RelativeLayout>

@@ -20,7 +20,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -179,7 +178,7 @@ public class EditAlarm extends AppCompatActivity
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
 
-        LinearLayout laybase = findViewById(R.id.layoutbase);
+        RelativeLayout laybase = findViewById(R.id.layoutbase);
         RelativeLayout lll = findViewById(R.id.llll);
 
 

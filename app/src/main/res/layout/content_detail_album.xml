@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ui.media.detail_album"
+
+    tools:showIn="@layout/activity_detail_album">
+    <RelativeLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:background="@drawable/card_background">
+
+        <ListView
+            android:id="@+id/listviews"
+            android:layout_width="match_parent"
+
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:fastScrollAlwaysVisible="false"
+
+            android:fastScrollEnabled="true"
+            android:scrollbarStyle="outsideOverlay"
+
+
+
+
+
+
+
+            >
+
+
+
+        </ListView>
+    </RelativeLayout>
+
+
+
+</androidx.core.widget.NestedScrollView>

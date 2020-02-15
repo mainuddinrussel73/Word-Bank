@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/medic_base1"
     android:layout_width="wrap_content"
+    android:background="@color/material_white"
     android:layout_height="wrap_content">
 
 
@@ -46,7 +47,7 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:text="Song Name - [details]"
-            android:textColor="@android:color/black"
+            android:textColor="#DF0974"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -65,7 +66,7 @@
             android:scrollHorizontally="true"
             android:singleLine = "true"
             android:text="Singer Name"
-            android:textColor="@android:color/black"
+            android:textColor="#DF0974"
             android:textSize="12sp" />
 
 
@@ -77,6 +78,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="8dp"
+            android:backgroundTint="#DF0974"
             android:background="@drawable/ic_next_fill"
             android:gravity="center"
             />
@@ -88,6 +90,7 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="8dp"
             android:layout_toStartOf="@id/buttonForward"
+            android:backgroundTint="#DF0974"
             android:background="@drawable/ic_play_arrow_black_24dp"
             android:gravity="center"
             />
@@ -98,6 +101,7 @@
             android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:layout_marginEnd="8dp"
+            android:backgroundTint="#DF0974"
             android:layout_toStartOf="@id/buttonPlayAndStop"
             android:background="@drawable/ic_prev_fill"
             android:gravity="center"

@@ -22,6 +22,7 @@ import java.util.Date;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import es.dmoral.toasty.Toasty;
 
 public class AddData  extends AppCompatActivity {
 
@@ -74,6 +75,11 @@ public class AddData  extends AppCompatActivity {
         RelativeLayout laybase = findViewById(R.id.dialogId);
         RelativeLayout lidtb = findViewById(R.id.two);
 
+        if(isDark) {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
+        }else {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+        }
         if (isDark) {
 
             laybase.setBackgroundColor(Color.BLACK);
@@ -144,7 +150,7 @@ public class AddData  extends AppCompatActivity {
         String d = (String) android.text.format.DateFormat.format("dd/MM/yyyy  hh:mm: a",date);
 
         if(subjectEt.getText().length() == 0){
-            Toast.makeText(getApplicationContext(),"You didn't add any subject",Toast.LENGTH_SHORT).show();
+            Toasty.success(getApplicationContext(),"You didn't add any subject",Toast.LENGTH_SHORT).show();
         }
         else{
             l = mydb.insertData(subjectEt.getText().toString(),
@@ -153,10 +159,10 @@ public class AddData  extends AppCompatActivity {
         }
 
         if(l>=0){
-            Toast.makeText(getApplicationContext(),"Data added",Toast.LENGTH_SHORT).show();
+            Toasty.success(getApplicationContext(), "Data added", Toast.LENGTH_SHORT).show();
         }
         else {
-            Toast.makeText(getApplicationContext(), "Data not added", Toast.LENGTH_SHORT).show();
+            Toasty.success(getApplicationContext(), "Data not added", Toast.LENGTH_SHORT).show();
         }
     }
     public void backToMain()

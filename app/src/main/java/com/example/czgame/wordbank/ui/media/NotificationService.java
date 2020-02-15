@@ -42,11 +42,14 @@ import androidx.core.app.NotificationCompat;
 import es.dmoral.toasty.Toasty;
 import mkaflowski.mediastylepalette.MediaNotificationProcessor;
 
-import static com.example.czgame.wordbank.ui.media.Media_list_activity.mLrcView;
-import static com.example.czgame.wordbank.ui.media.Media_list_activity.mVisualizer;
-import static com.example.czgame.wordbank.ui.media.Media_list_activity.mp;
-import static com.example.czgame.wordbank.ui.media.Media_list_activity.playBtn;
-import static com.example.czgame.wordbank.ui.media.Media_list_activity.posit;
+import static com.example.czgame.wordbank.ui.media.fragment_music_list.ListElementsArrayList;
+import static com.example.czgame.wordbank.ui.media.fragment_music_list.mLrcView;
+import static com.example.czgame.wordbank.ui.media.fragment_music_list.mVisualizer;
+import static com.example.czgame.wordbank.ui.media.fragment_music_list.mp;
+import static com.example.czgame.wordbank.ui.media.fragment_music_list.playBtn;
+import static com.example.czgame.wordbank.ui.media.fragment_music_list.posit;
+import static com.example.czgame.wordbank.ui.media.fragment_music_list.prefm;
+
 
 public class NotificationService extends Service implements MediaPlayer.OnCompletionListener,
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener, MediaPlayer.OnSeekCompleteListener,
@@ -175,7 +178,7 @@ public class NotificationService extends Service implements MediaPlayer.OnComple
 
             startMyOwnForeground();
            // AsynchTaskTimer();
-            Toasty.success(this, "Clicked Next", Toast.LENGTH_SHORT).show();
+            Toasty.success(this, "CliNcked Next", Toast.LENGTH_SHORT).show();
             Log.i("ok", "Clicked Next");
         }else if (intent.getAction().equals(Constants.ACTION.AUDIOFOCUS_LOSS)) {
 
@@ -232,7 +235,9 @@ public class NotificationService extends Service implements MediaPlayer.OnComple
         Bitmap bm;
         Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 
-        Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(Media_list_activity.ListElementsArrayList.get((p)).getImagepath()));
+        int choice = prefm.getInt("queue",0);
+        Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(ListElementsArrayList.get((p)).getImagepath()));
+
         ContentResolver res = this.getContentResolver();
         InputStream in;
         bm = null;
@@ -249,18 +254,18 @@ public class NotificationService extends Service implements MediaPlayer.OnComple
 
 
         notificationView1 = new RemoteViews(getPackageName(), R.layout.status_bar);
-        notificationView1.setTextViewText(R.id.status_bar_track_name, Media_list_activity.ListElementsArrayList.get((p)).getTitle());
-        notificationView1.setTextViewText(R.id.status_bar_artist_name, Media_list_activity.ListElementsArrayList.get((p)).getArtist());
+        notificationView1.setTextViewText(R.id.status_bar_track_name, ListElementsArrayList.get((p)).getTitle());
+        notificationView1.setTextViewText(R.id.status_bar_artist_name, ListElementsArrayList.get((p)).getArtist());
         notificationView1.setImageViewBitmap(R.id.status_bar_album_art, bm);
 
         notificationView = new RemoteViews(getPackageName(), R.layout.status_bar_expanded);
-        notificationView.setTextViewText(R.id.status_bar_track_name, Media_list_activity.ListElementsArrayList.get((p)).getTitle());
-        notificationView.setTextViewText(R.id.status_bar_artist_name, Media_list_activity.ListElementsArrayList.get((p)).getArtist());
-        notificationView.setTextViewText(R.id.status_bar_album_name, Media_list_activity.ListElementsArrayList.get((p)).getArtist());
+        notificationView.setTextViewText(R.id.status_bar_track_name, ListElementsArrayList.get((p)).getTitle());
+        notificationView.setTextViewText(R.id.status_bar_artist_name, ListElementsArrayList.get((p)).getArtist());
+        notificationView.setTextViewText(R.id.status_bar_album_name, ListElementsArrayList.get((p)).getArtist());
         notificationView.setImageViewBitmap(R.id.status_bar_album_art, bm);
 
 
-        if (!Media_list_activity.mp.isPlaying()) {
+        if (!mp.isPlaying()) {
 
 
 
@@ -268,7 +273,7 @@ public class NotificationService extends Service implements MediaPlayer.OnComple
             notificationView1.setImageViewResource(R.id.status_bar_play, R.drawable.ic_play_arrow_black_24dp);
 
 
-        } else if (Media_list_activity.mp.isPlaying()) {
+        } else if (mp.isPlaying()) {
 
             Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
             myIcon2.setTint(getComplimentColor(bm));
