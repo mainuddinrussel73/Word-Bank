@@ -1,0 +1,33 @@
+<androidx.cardview.widget.CardView xmlns:android = "http://schemas.android.com/apk/res/android"
+    xmlns:card_view = "http://schemas.android.com/apk/res-auto"
+    android:id = "@+id/card_view"
+    android:layout_width = "match_parent"
+    android:layout_height = "200dp"
+    android:layout_margin = "10dp"
+    card_view:cardCornerRadius = "4dp">
+    <LinearLayout
+        android:id = "@+id/parent"
+        android:layout_width = "match_parent"
+        android:layout_height = "match_parent"
+        android:layout_gravity = "center"
+        android:background="@drawable/card_background"
+        android:gravity = "center"
+        android:orientation = "vertical">
+        <TextView
+            android:id = "@+id/meaningB"
+            android:layout_width = "wrap_content"
+            android:layout_height = "wrap_content"
+            android:gravity = "center"
+            android:maxLines="3"
+            android:textColor = "#FFF"
+            android:textSize = "25sp" />
+        <TextView
+            android:id = "@+id/meaningE"
+            android:layout_width = "wrap_content"
+            android:layout_height = "wrap_content"
+            android:gravity = "center"
+            android:maxLines="3"
+            android:textColor = "#FFF"
+            android:textSize = "25sp" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

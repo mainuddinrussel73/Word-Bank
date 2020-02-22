@@ -24,6 +24,7 @@ public class Constants {
         String MAIN_ACTION = "com.example.mainuddin.myapplication34.action.main";
         String INIT_ACTION = "com.example.mainuddin.myapplication34.action.init";
         String PREV_ACTION = "com.example.mainuddin.myapplication34.action.prev";
+        String LOAD_ACTION = "com.example.mainuddin.myapplication34.action.load";
         String RESUME_ACTION = "com.example.mainuddin.myapplication34.action.resume";
         String PLAY_ACTION = "com.example.mainuddin.myapplication34.action.play";
         String NEXT_ACTION = "com.example.mainuddin.myapplication34.action.next";

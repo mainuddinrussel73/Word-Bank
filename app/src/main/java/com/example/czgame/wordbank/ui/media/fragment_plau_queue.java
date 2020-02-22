@@ -1,16 +1,12 @@
 package com.example.czgame.wordbank.ui.media;
 
-import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.MergeCursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -25,8 +21,6 @@ import android.widget.RelativeLayout;
 
 import com.example.czgame.wordbank.R;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -38,8 +32,11 @@ import androidx.fragment.app.Fragment;
 import androidx.palette.graphics.Palette;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.example.czgame.wordbank.ui.media.fragment_music_list.ListElementsArrayList;
-import static com.example.czgame.wordbank.ui.media.fragment_music_list.mp;
+import static com.example.czgame.wordbank.ui.media.fragment_music_list.isShowlrc;
+import static com.example.czgame.wordbank.ui.media.fragment_music_list.nxt;
+import static com.example.czgame.wordbank.ui.media.fragment_music_list.nxtBtn;
+import static com.example.czgame.wordbank.ui.media.fragment_music_list.pauseBtn;
+import static com.example.czgame.wordbank.ui.media.fragment_music_list.pre;
 import static com.example.czgame.wordbank.ui.media.fragment_music_list.prefm;
 
 
@@ -51,7 +48,7 @@ import static com.example.czgame.wordbank.ui.media.fragment_music_list.prefm;
  * Use the {@link fragment_plau_queue#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class fragment_plau_queue extends Fragment implements music_base.OnBackPressedListener{
+public class fragment_plau_queue extends Fragment implements music_base.OnBackPressedListener,Adapter_queue.EventListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -125,7 +122,7 @@ public class fragment_plau_queue extends Fragment implements music_base.OnBackPr
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                load(i);
+                loadsong(i);
 
             }
         });
@@ -179,6 +176,61 @@ public class fragment_plau_queue extends Fragment implements music_base.OnBackPr
 
 
         }
+        nxt.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                isShowlrc = false;
+                try {
+                    System.out.println("nxr");
+                    getContext().sendBroadcast(new Intent(Constants.ACTION.NEXT_ACTION));
+                }catch (Exception e){
+
+                }
+
+            }
+        });
+        nxtBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isShowlrc = false;
+                try {
+                    System.out.println("nxr");
+                    getContext().sendBroadcast(new Intent(Constants.ACTION.NEXT_ACTION));
+                }catch (Exception e){
+
+                }
+
+            }
+        });
+        pre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                isShowlrc = false;
+                try {
+                    getContext().sendBroadcast(new Intent(Constants.ACTION.PREV_ACTION));
+                }catch (Exception e){
+
+                }
+
+            }
+        });
+        pauseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // startService(view);
+                //startService(view);
+                isShowlrc = false;
+
+                try {
+                    getContext().sendBroadcast(new Intent(Constants.ACTION.PREV_ACTION));
+                }catch (Exception e){
+
+                }
+
+                //myButton.setText("Slide up");
+
+            }
+        });
+
 
 
     }
@@ -195,132 +247,16 @@ public class fragment_plau_queue extends Fragment implements music_base.OnBackPr
        // getContext().unregisterReceiver(broadcastReceiver);
 
     }
-
-    public  void  load(int position){
+    @Override
+    public  void  loadsong(int position){
         //System.out.println(pro);
-        final int[] mutedColor = new int[1];
-
-        if(mp!=null)mp.stop();
-        mp = new MediaPlayer();
-
-        System.out.println(position);
-
-        String title1 = playqueue.get(position).getTitle();
-        for (int i = 0; i <ListElementsArrayList.size() ; i++) {
-            System.out.println(i+",,,,,,"+position);
-            if(ListElementsArrayList.get(i).getTitle().equals(title1)){
-                position = i;
-            }
-        }
-
+        System.out.println("event");
         PreferenceManager.getDefaultSharedPreferences(getContext());
         SharedPreferences.Editor editor = prefm.edit();
         editor.putInt("positionnow",position);
         editor.commit();
 
-
-        PreferenceManager.getDefaultSharedPreferences(getContext());
-        SharedPreferences.Editor editor1 = prefm.edit();
-        editor1.putInt("queue",1);
-        editor1.commit();
-        {
-
-            // playBtn = (Button) findViewById(R.id.playBtn);
-            // elapsedTimeLabel = (TextView) findViewById(R.id.elapsedTimeLabel);
-            //  remainingTimeLabel = (TextView) findViewById(R.id.remainingTimeLabel);
-
-            // Media Player
-
-
-            String title =  ListElementsArrayList.get(position).getTitle();
-            String artist =  ListElementsArrayList.get(position).getArtist();
-            String album =  ListElementsArrayList.get(position).getAlbum();
-
-
-            String titleq =   ListElementsArrayList.get(position).getImagepath();
-            Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
-
-            Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(titleq));
-            ContentResolver res = getContext().getContentResolver();
-            InputStream in;
-            Bitmap bm = null;
-            try {
-                in = res.openInputStream(uri);
-
-                bm = BitmapFactory.decodeStream(in);
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                InputStream is = getContext().getResources().openRawResource(R.raw.image);
-                bm = BitmapFactory.decodeStream(is);
-            }
-
-
-            Bitmap finalBm = bm;
-            Palette.from(bm).generate(new Palette.PaletteAsyncListener() {
-                @Override
-                public void onGenerated(Palette palette) {
-                    // Use generated instance
-                    //work with the palette here
-                    int defaultValue = 0x000000;
-                    int vibrant = getDominantColor(finalBm);
-                    int vibrantLight = palette.getLightVibrantColor(defaultValue);
-                    int vibrantDark = palette.getDarkVibrantColor(defaultValue);
-                    int muted = palette.getMutedColor(defaultValue);
-                    int mutedLight = palette.getLightMutedColor(defaultValue);
-                    int mutedDark = getComplimentColor(vibrant);
-                    mutedColor[0] = mutedDark;
-
-                    PreferenceManager.getDefaultSharedPreferences(getContext());
-                    SharedPreferences.Editor editor = prefm.edit();
-                    editor.putInt("vibrant",vibrant);
-                    editor.putInt("muted",mutedDark);
-                    editor.commit();
-
-                    if (vibrant == 0) {
-                        mutedDark = palette.getDarkVibrantColor(vibrant);
-                    }
-
-
-                }
-            });
-
-
-            String[] abspath = getAudioPath(getContext(), title);
-
-            try {
-                if (!mp.isPlaying()) {
-                    mp.setDataSource(abspath[0]);
-                    mp.prepare();
-
-                } else {
-
-
-                }
-            } catch (Exception e) {
-
-                System.out.println(e.getMessage());
-            }
-
-
-            //   if(! other.equals("yes") ) {
-            mp.setLooping(false);
-            mp.seekTo(0);
-
-            mp.start();
-
-            mp.setVolume(2.5f, 2.5f);
-
-
-
-            Intent intenta = new Intent(getContext(), NotificationService.class);
-
-            intenta.putExtra("p", position);
-            intenta.setClass(getContext(), NotificationService.class);
-            intenta.setAction(Constants.ACTION.NEXT_ACTION);
-            getContext().startService(intenta);
-
-        }
+        getContext().sendBroadcast(new Intent(Constants.ACTION.LOAD_ACTION));
     }
 
     private String[] getAudioPath(Context context, String songTitle) {
@@ -386,6 +322,9 @@ public class fragment_plau_queue extends Fragment implements music_base.OnBackPr
         });
         return swatches.size() > 0 ? swatches.get(0).getRgb() : Color.WHITE;
     }
+
+
+
 
     /**
      * This interface must be implemented by activities that contain this

@@ -25,8 +25,6 @@
             android:fastScrollEnabled="true"
             android:horizontalSpacing="0dp"
             android:scrollbarStyle="outsideOverlay"
-            android:stretchMode="spacingWidth"
-
 
 
 

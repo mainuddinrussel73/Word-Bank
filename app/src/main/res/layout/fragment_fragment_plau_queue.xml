@@ -4,15 +4,18 @@
     android:id="@+id/_rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
+    android:background="@color/white"
     tools:context=".ui.media.fragment_plau_queue">
 
     <RelativeLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:background="@drawable/card_background_dark"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:background="@drawable/card_background"
         >
 
 
@@ -21,14 +24,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="@dimen/activity_horizontal_margin"
-            android:background="@color/black"
+            android:background="@color/white"
             android:padding="@dimen/activity_horizontal_margin">
 
             <ListView
                 android:id="@+id/gridviews"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/black"
+                android:background="@color/white"
                 android:divider="@null"
                 android:dividerHeight="0dp"
                 android:fastScrollAlwaysVisible="false"

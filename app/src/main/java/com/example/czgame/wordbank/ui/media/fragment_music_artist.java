@@ -38,6 +38,7 @@ public class fragment_music_artist extends Fragment implements music_base.OnBack
     private String mParam1;
     private String mParam2;
 
+    private final int MY_PERMISSIONS_RECORD_AUDIO = 1;
     public fragment_music_artist() {
         // Required empty public constructor
     }
@@ -68,6 +69,7 @@ public class fragment_music_artist extends Fragment implements music_base.OnBack
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

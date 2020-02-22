@@ -10,6 +10,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/app_bar_music"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <androidx.appcompat.widget.Toolbar
@@ -23,15 +24,11 @@
 
     <RelativeLayout
         android:id="@+id/multi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginEnd="18dp"
-        android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
-        android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@+id/app_bar_music"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+
         android:background="@drawable/card_background">
 
         <TextView
@@ -104,24 +101,19 @@
 
     <RelativeLayout
         android:id="@+id/match"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginEnd="18dp"
-        android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
-        android:layout_marginRight="@dimen/alerter_activity_horizontal_margin"
-        android:layout_marginStart="18dp"
-        android:layout_marginTop="300dp"
-        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@+id/multi"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/activity_horizontal_margin"
         android:background="@drawable/card_background">
 
         <TextView
             android:id="@+id/option2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="15dp"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/activity_horizontal_margin"
             android:text="Matching Words And Meanings : "
             android:textSize="15sp">
 
@@ -131,15 +123,48 @@
             android:id="@+id/strtquizmatch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginStart="71dp"
-            android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
-            android:layout_marginTop="76dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="55dp"
 
-            android:layout_marginBottom="50dp"
             android:padding="5dp"
             android:text="Start !"
+            android:textColor="@android:color/white"
+            android:textSize="30sp">
+
+        </com.google.android.material.button.MaterialButton>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/spell"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@+id/match"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:background="@drawable/card_background">
+
+        <TextView
+            android:id="@+id/option3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:text="Spelling Words : "
+            android:textSize="15sp">
+
+        </TextView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/spelling"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
+            android:padding="5dp"
+            android:text="Start !"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="55dp"
+            android:layout_marginBottom="55dp"
             android:textColor="@android:color/white"
             android:textSize="30sp">
 

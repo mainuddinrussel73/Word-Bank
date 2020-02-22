@@ -34,16 +34,17 @@ import androidx.palette.graphics.Palette;
 import es.dmoral.toasty.Toasty;
 
 import static android.content.Context.ACTIVITY_SERVICE;
-import static com.example.czgame.wordbank.ui.media.fragment_music_list.ListElementsArrayList;
 import static com.example.czgame.wordbank.ui.media.fragment_music_list.mp;
 import static com.example.czgame.wordbank.ui.media.fragment_music_list.playBtn;
 import static com.example.czgame.wordbank.ui.media.fragment_music_list.ply;
 import static com.example.czgame.wordbank.ui.media.fragment_music_list.position;
 import static com.example.czgame.wordbank.ui.media.fragment_music_list.prefm;
 import static com.example.czgame.wordbank.ui.media.fragment_music_list.serviceIntent;
+import static com.example.czgame.wordbank.ui.media.fragment_plau_queue.playqueue;
 
 public class MyNotificationReceiver extends BroadcastReceiver {
     public static final String RESUME_ACTION = "RESUME_ACTION";
+    public static final String LOAD_ACTION = "LOAD_ACTION";
     public static final String STOP_ACTION = "STOP_ACTION";
     public static final String CANCEL_ACTION = "CANCEL_ACTION";
     public static final String NEXT_ACTION = "NEXT_ACTION";
@@ -111,6 +112,12 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                     }
 
 // you resume action
+                    break;
+
+                case LOAD_ACTION:
+                    System.out.println("ok");
+                    context.sendBroadcast(new Intent(Constants.ACTION.LOAD_ACTION));
+
                     break;
                 case STOP_ACTION:
 
@@ -298,7 +305,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
             if(mp!=null)mp.stop();
             mp = new MediaPlayer();
 
-            if (position + 1 >=  ListElementsArrayList.size()) {
+            if (position + 1 >=  playqueue.size()) {
                 position = -1;
             }
             position++;
@@ -316,12 +323,12 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                 // Media Player
 
 
-                String title =  ListElementsArrayList.get(position).getTitle();
-                String artist =  ListElementsArrayList.get(position).getArtist();
-                String album =  ListElementsArrayList.get(position).getAlbum();
+                String title =  playqueue.get(position).getTitle();
+                String artist =  playqueue.get(position).getArtist();
+                String album =  playqueue.get(position).getAlbum();
 
 
-                String titleq =  ListElementsArrayList.get(position).getImagepath();
+                String titleq =  playqueue.get(position).getImagepath();
                 Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 
                 Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(titleq));
@@ -416,7 +423,7 @@ public class MyNotificationReceiver extends BroadcastReceiver {
         mp = new MediaPlayer();
 
         if (position - 1 < 0) {
-            position =  ListElementsArrayList.size();
+            position =  playqueue.size();
         }
         position--;
 
@@ -434,12 +441,12 @@ public class MyNotificationReceiver extends BroadcastReceiver {
             // Media Player
 
 
-            String title =  ListElementsArrayList.get(position).getTitle();
-            String artist =  ListElementsArrayList.get(position).getArtist();
-            String album =  ListElementsArrayList.get(position).getAlbum();
+            String title =  playqueue.get(position).getTitle();
+            String artist =  playqueue.get(position).getArtist();
+            String album =  playqueue.get(position).getAlbum();
 
 
-            String titleq =  ListElementsArrayList.get(position).getImagepath();
+            String titleq =  playqueue.get(position).getImagepath();
             Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 
             Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(titleq));

@@ -36,8 +36,8 @@ android {
         exclude "lib/mips/librsjni.so"
     }
     configurations {
-        all*.exclude group:'android.support.v4.app' , module: 'kryo-2.21.jar'
-        all*.exclude group:'android.support.v4.accessibilityservice'  , module: 'kryo-2.21.jar'
+        all*.exclude group: 'android.support.v4.app', module: 'kryo-2.21.jar'
+        all*.exclude group: 'android.support.v4.accessibilityservice', module: 'kryo-2.21.jar'
     }
 
 
@@ -151,19 +151,16 @@ dependencies {
     implementation 'com.yinglan.shadowimageview:shadowimageview:1.0.4'
     implementation 'com.github.stfalcon:bottomtablayout:0.3'
 
-    compile (group: 'org.languagetool', name: 'languagetool-core', version: '4.8') {
+    compile(group: 'org.languagetool', name: 'languagetool-core', version: '4.8') {
 
         exclude group: 'com.intellij', module: 'annotations'
 
     }
-    compile (group: 'org.languagetool', name: 'language-en', version: '4.8'){
+    compile(group: 'org.languagetool', name: 'language-en', version: '4.8') {
         exclude group: 'com.intellij', module: 'annotations'
     }
     compile group: 'com.esotericsoftware.kryo', name: 'kryo', version: '2.22'
-    implementation files('libs/suggester-1.1.2.jar')
-    implementation files('libs/english.jar')
-
-
+    compile 'com.github.arimorty:floatingsearchview:2.0.3'
 
 
 }

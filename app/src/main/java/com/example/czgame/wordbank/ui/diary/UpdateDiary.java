@@ -1,5 +1,6 @@
 package com.example.czgame.wordbank.ui.diary;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,18 +9,22 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextPaint;
 import android.text.format.DateFormat;
 import android.text.method.ScrollingMovementMethod;
-import android.text.style.UnderlineSpan;
+import android.text.style.CharacterStyle;
+import android.text.style.UpdateAppearance;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -31,12 +36,6 @@ import android.widget.Toast;
 import com.example.czgame.wordbank.R;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
-import com.softcorporation.suggester.BasicSuggester;
-import com.softcorporation.suggester.Suggestion;
-import com.softcorporation.suggester.dictionary.BasicDictionary;
-import com.softcorporation.suggester.tools.SpellCheck;
-import com.softcorporation.suggester.util.SpellCheckConfiguration;
-import com.softcorporation.suggester.util.SuggesterException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,11 +43,13 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
@@ -58,11 +59,14 @@ class words{
 
     String word;
     int position;
+    int length;
 
-    public words(String word, int position) {
+    public words(String word, int position,int length) {
         this.word = word;
         this.position = position;
+        this.length = length;
     }
+
     public words() {
 
     }
@@ -72,8 +76,11 @@ class words{
         return "words{" +
                 "word='" + word + '\'' +
                 ", position=" + position +
+                ", length=" + length +
                 '}';
     }
+
+
 }
 
 public class UpdateDiary  extends AppCompatActivity {
@@ -81,11 +88,14 @@ public class UpdateDiary  extends AppCompatActivity {
     TextInputLayout s;
     TextInputEditText descriptionEt;
     TextInputLayout d;
-    Button cancelBt,updateBt,shareBtOnUpdate;
+    Button updateBt,shareBtOnUpdate,advance;
     SqliteDatabase dbUpdate;
     List<words> suggs = new ArrayList<>();
+    List<words> suggs1 = new ArrayList<>();
     String suggestions = "";
     ImageButton warn;
+    WebView mWebView;
+    @SuppressLint("JavascriptInterface")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,9 +115,9 @@ public class UpdateDiary  extends AppCompatActivity {
         d = findViewById(R.id.descriptionEditTextIdUpdate);
 
 
-        cancelBt = findViewById(R.id.cacelButtonIdUpdate);
         updateBt = findViewById(R.id.saveButtonIdUpdate);
         shareBtOnUpdate = findViewById(R.id.shareButtonIdUpdate);
+        advance = findViewById(R.id.advance);
 
         Intent intent = getIntent();
         Bundle bundle = getIntent().getExtras();
@@ -118,6 +128,55 @@ public class UpdateDiary  extends AppCompatActivity {
 
         subjectEt.setText(sub);
         descriptionEt.setText(des);
+
+
+
+        String s1 = "<!DOCTYPE html>\n" +
+                "<html>\n" +
+                "<head>\n" +
+                "    <script src='https://www.scribens.com/scribens-integration.js'></script>\n" +
+                "    <style>\n" +
+                "  div{\n" +
+                "  display:inline-block;\n" +
+                "  position:relative;\n" +
+                "}\n" +
+                "\n" +
+                "\n" +
+                "button {\n" +
+                "\tbackground-color:#44c767;\n" +
+                "\tborder-radius:28px;\n" +
+                "\tborder:1px solid #18ab29;\n" +
+                "\tdisplay:inline-block;\n" +
+                "\tcursor:pointer;\n" +
+                "\tcolor:#ffffff;\n" +
+                "\tfont-family:Arial;\n" +
+                "    \n" +
+                "      position:absolute;\n" +
+                "  bottom:10px;\n" +
+                "  right:10px;\n" +
+                "  \n" +
+                "\tfont-size:7px;\n" +
+                "\tpadding:6px 10px;\n" +
+                "\ttext-decoration:none;\n" +
+                "\ttext-shadow:0px 1px 0px #2f6627;\n" +
+                "}\n" +
+                "\n" +
+                "        \n" +
+                "textarea{\n" +
+                "  display:block;\n" +
+                "}\n" +
+                "    </style>\n" +
+                "</head>\n" +
+                "<body>\n" +
+                "\n" +
+                "\n" +
+                "<div>\n" +
+                "    <button id='ok' onclick=\"Scribens.Check('id1')\">Check</button>\n" +
+                "    <textarea cols=\"20\" rows=\"5\" id='id1'>" + descriptionEt.getText().toString().trim() +
+                "</textarea>\n" +
+                "</div>\n" +
+                "</body>\n" +
+                "</html>";
 
 
         warn = findViewById(R.id.warn);
@@ -190,15 +249,10 @@ public class UpdateDiary  extends AppCompatActivity {
 
 
 
+
             }
         });
 
-        cancelBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
 
         //for updating database data
         updateBt.setOnClickListener(new View.OnClickListener() {
@@ -244,6 +298,17 @@ public class UpdateDiary  extends AppCompatActivity {
         });
 
 
+
+
+        advance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                new TheTaskAdvance(descriptionEt.getText().toString()).execute();
+
+            }
+        });
+
     }
 
     //this method to clearing top activity and starting new activity
@@ -254,67 +319,192 @@ public class UpdateDiary  extends AppCompatActivity {
         finish();
         startActivity(intent);
     }
-    public  String check(String s) throws SuggesterException {
-        String command;
-        String prevCommand = "";
-        String word;
-        String prevWord = "";
-        SpellCheck spellCheck = null;
 
-        String workingDir = "/Users/macbookair/Downloads/MyApplication34/app/libs/";
-        String inputFileName = workingDir + "english.jar";
-        //  File inFile = new File(workingDir + "input.txt");
-        BasicDictionary dictionary = new BasicDictionary(inputFileName);
-        SpellCheckConfiguration configuration = new SpellCheckConfiguration(
-                "app/spellCheck.config");
-        BasicSuggester suggester = new BasicSuggester(configuration);
-        suggester.attach(dictionary);
-        String text = s;
-        System.out.println(text);
-        spellCheck = new SpellCheck(configuration);
-        spellCheck.setSuggester(suggester);
-        spellCheck.setSuggestionLimit(5);
-
-        while (true)
-        {
-            ArrayList suggestions = null;
-            spellCheck.setText(text);
-            spellCheck.check();
-            if (spellCheck.hasMisspelt()) {
-
-                String misspeltWord = spellCheck.getMisspelt();
-                String misspeltText = spellCheck.getMisspeltText(5, "<b>", "</b>", 5);
-                System.out.println("Misspelt text: " + misspeltText);
-                System.out.println("Misspelt word: " + misspeltWord);
-                suggestions = spellCheck.getSuggestions();
-                System.out.println("Suggestions: ");
-                if(suggestions.size()==0){
-                    break;
-                }
-                for (int j = 0; j < suggestions.size(); j++) {
-                    Suggestion suggestion = (Suggestion) suggestions.get(j);
-                    //System.out.println(j + ": " + suggestion.word);
-                    text = text.replace(misspeltWord,suggestion.word);
-                //    suggs.add(suggestion.word);
-
-                }
-            }if (!spellCheck.hasMisspelt()) break;
-
-        }
-        return text;
-
-    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
     public void setHighLightedText(EditText editText) {
-        Spannable WordtoSpan = new SpannableString(editText.getText());
+        String s = editText.getText().toString();
+        Spannable WordtoSpan = new SpannableString(s);
         for (int i = 0; i < suggs.size(); i++) {
 
 
-          // if(i==0) {
-               // System.out.println(suggs.get(i));
-                WordtoSpan.setSpan(new UnderlineSpan(), suggs.get(i).position, suggs.get(i).position + suggs.get(i).word.length() - 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+             System.out.println(suggs.get(i).toString());
+
+            // if(i==0) {
+            // System.out.println(suggs.get(i));
+            if(suggs.get(i).position + suggs.get(i).word.length()>=s.length()){
+                WordtoSpan.setSpan(new ColoredUnderlineSpan(Color.MAGENTA), suggs.get(i).position, suggs.get(i).position + suggs.get(i).word.length()-1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }else{
+                WordtoSpan.setSpan(new ColoredUnderlineSpan(Color.MAGENTA), suggs.get(i).position, suggs.get(i).position + suggs.get(i).word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+
             //}
         }
         editText.setText(WordtoSpan, TextView.BufferType.SPANNABLE);
+
+    }
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void setHighLightedText1(EditText editText) {
+        String s = editText.getText().toString();
+        Spannable WordtoSpan = new SpannableString(s);
+        for (int i = 0; i < suggs1.size(); i++) {
+
+
+            System.out.println(suggs1.get(i).toString());
+
+            // if(i==0) {
+            // System.out.println(suggs.get(i));
+            WordtoSpan.setSpan(new ColoredUnderlineSpan(Color.RED), suggs1.get(i).position,  suggs1.get(i).length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            //}
+        }
+        editText.setText(WordtoSpan, TextView.BufferType.SPANNABLE);
+
+    }
+    final class ColoredUnderlineSpan extends CharacterStyle
+            implements UpdateAppearance {
+        private final int mColor;
+
+        public ColoredUnderlineSpan(final int color) {
+            mColor = color;
+        }
+
+        @Override
+        public void updateDrawState(final TextPaint tp) {
+            try {
+                final Method method = TextPaint.class.getMethod("setUnderlineText",
+                        Integer.TYPE,
+                        Float.TYPE);
+                method.invoke(tp, mColor, 8.0f);
+            } catch (final Exception e) {
+                tp.setUnderlineText(true);
+            }
+        }
+    }
+
+    class TheTaskAdvance extends AsyncTask<Void,String,String>
+    {
+        String text;
+        String ou = "";
+
+        TheTaskAdvance(String text){
+            this.text = text;
+        }
+
+        @Override
+        protected String doInBackground(Void... arg0) {
+            // TODO Auto-generated method stub
+            String kb = "https://services.gingersoftware.com/Ginger/correct/jsonSecured/GingerTheTextFull?" +
+                    "callback=jQuery172015406464511272344_1490987331365&apiKey=GingerWebSite&lang=US&clientVersion=2.0&text="+ text +"&_=1490987518060&fbclid=IwAR2FdbEaWXHDm_0w0VYz5GxjZ_-SgAd1ht6nMJNk1SdHLQADw14KMKL2Dwo";
+            String json = "";
+            try {
+                json  = Jsoup.connect(kb).ignoreContentType(true).execute().body();
+                // System.out.println(json);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            // System.out.println(connection.request());
+
+            return json;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            // TODO Auto-generated method stub
+
+            super.onPostExecute(result);
+
+            try {
+
+                //System.out.println(result);
+                result  = result.replace("jQuery172015406464511272344_1490987331365(", "");
+                result  = result.replace(");", "");
+                JSONObject jsnobject = new JSONObject(result);
+                //System.out.println(jsnobject);
+                JSONArray jsonArray = jsnobject.getJSONArray("Corrections");
+                //System.out.println(jsonArray);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    //System.out.println("Mistake :" + (i+1));
+                   ou += "Mistake :" + (i + 1) + "\n";
+                    JSONObject explrObject = jsonArray.getJSONObject(i);
+                    JSONArray jsonArray1 = explrObject.getJSONArray("Suggestions");
+                    words  words= new words();
+                    ou += "Suggestions  :" + "\n {";
+                    for (int j = 0; j < jsonArray1.length(); j++) {
+                        // System.out.println("Suggestions  :" + (j+1));
+
+                        //  System.out.println(jsonArray1.get(j).toString());
+                         ou += "\n";
+                        JSONObject json = jsonArray1.getJSONObject(j);
+                        Iterator<String> keys = json.keys();
+
+                        while (keys.hasNext()) {
+                            String key = keys.next();
+                            //  System.out.println("Key :" + key + "  Value :" + json.get(key));
+                            if(key.equals("Text")){
+                                ou+= "\n Text  : " + json.get(key) + "\n";
+                                words.word = json.get(key).toString();
+                                System.out.println(words.toString());
+                            }
+
+                        }
+
+                    }
+
+                    ou += "\n}";
+                    JSONObject json = jsonArray.getJSONObject(i);
+                    Iterator<String> keys = json.keys();
+
+                    while (keys.hasNext()) {
+                        String key = keys.next();
+                        // System.out.println("Key :" + key + "  Value :" + json.get(key));
+                        if(key.equals("From")){
+                            ou+= "\n Start at : " + json.get(key);
+                            words.position = json.getInt(key);
+                        }
+                        if(key.equals("To")){
+                            ou+= "\n End at : " + json.get(key);
+                            words.length = json.getInt(key);
+                        }
+
+                    }
+
+
+                    System.out.println(words.toString());
+
+
+                    // System.out.println("\n\n");
+                    ou += "\n\n";
+
+                   suggs1.add(words);
+
+                }
+
+
+                suggestions+=ou;
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            if(!suggs.isEmpty()) {
+                warn.setVisibility(View.VISIBLE);
+                warn.setBackgroundTintList(ContextCompat.getColorStateList(UpdateDiary.this, R.color.red));
+            }else{
+                warn.setVisibility(View.VISIBLE);
+                warn.setBackgroundTintList(ContextCompat.getColorStateList(UpdateDiary.this, R.color.green));
+            }
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                setHighLightedText1(descriptionEt);
+            }
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            // TODO Auto-generated method stub
+            super.onPreExecute();
+        }
 
     }
 
@@ -331,6 +521,7 @@ public class UpdateDiary  extends AppCompatActivity {
         protected String doInBackground(Void... arg0) {
             // TODO Auto-generated method stub
             String kb = "https://languagetool.org/api/v2/check?language=en-US&text=".concat(text);
+
             String json = "";
             try {
                 json  = Jsoup.connect(kb).ignoreContentType(true).execute().body();
@@ -362,16 +553,16 @@ public class UpdateDiary  extends AppCompatActivity {
                     words  words= new words();
                     ou += "Suggestions  :" + "\n {";
                     for (int j = 0; j < jsonArray1.length(); j++) {
-                       // System.out.println("Suggestions  :" + (j+1));
+                        // System.out.println("Suggestions  :" + (j+1));
 
-                      //  System.out.println(jsonArray1.get(j).toString());
-                       // ou += new String(jsonArray1.get(j).toString()+"\n");
+                        //  System.out.println(jsonArray1.get(j).toString());
+                        // ou += new String(jsonArray1.get(j).toString()+"\n");
                         JSONObject json = jsonArray1.getJSONObject(j);
                         Iterator<String> keys = json.keys();
 
                         while (keys.hasNext()) {
                             String key = keys.next();
-                          //  System.out.println("Key :" + key + "  Value :" + json.get(key));
+                            //  System.out.println("Key :" + key + "  Value :" + json.get(key));
                             if(key.equals("value")){
                                 ou+= "\n Values  : " + json.get(key) + "\n";
                                 words.word = json.get(key).toString();
@@ -386,28 +577,29 @@ public class UpdateDiary  extends AppCompatActivity {
 
                     while (keys.hasNext()) {
                         String key = keys.next();
-                       // System.out.println("Key :" + key + "  Value :" + json.get(key));
+                        // System.out.println("Key :" + key + "  Value :" + json.get(key));
                         if(key.equals("offset")){
                             ou+= "\n Start at : " + json.get(key);
                             words.position = json.getInt(key);
                         }
                         if(key.equals("length")){
                             ou+= "\n End at : " + json.get(key);
+                            words.length = json.getInt(key);
                         }
 
                     }
 
 
-                        JSONObject jsnobjecta = jsonArray.getJSONObject(i);
-                        JSONObject jsonArraya = jsnobjecta.getJSONObject("rule");
-                        System.out.println(jsonArraya.toString());
-                        ou+= "\n Error type : " + jsonArraya.get("description");
-                        System.out.println(jsonArraya.get("description"));
+                    JSONObject jsnobjecta = jsonArray.getJSONObject(i);
+                    JSONObject jsonArraya = jsnobjecta.getJSONObject("rule");
+                    //System.out.println(jsonArraya.toString());
+                    ou+= "\n Error type : " + jsonArraya.get("description");
+                    //System.out.println(jsonArraya.get("description"));
 
 
 
 
-                   // System.out.println("\n\n");
+                    // System.out.println("\n\n");
                     ou += "\n\n";
 
                     suggs.add(words);
@@ -419,11 +611,17 @@ public class UpdateDiary  extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-            warn.setVisibility(View.VISIBLE);
+            if(!suggs.isEmpty()) {
+                warn.setVisibility(View.VISIBLE);
+                warn.setBackgroundTintList(ContextCompat.getColorStateList(UpdateDiary.this, R.color.red));
+            }else{
+                warn.setVisibility(View.VISIBLE);
+                warn.setBackgroundTintList(ContextCompat.getColorStateList(UpdateDiary.this, R.color.green));
+            }
 
-            setHighLightedText(descriptionEt);
-
-
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                setHighLightedText(descriptionEt);
+            }
 
 
         }
@@ -435,4 +633,6 @@ public class UpdateDiary  extends AppCompatActivity {
         }
 
     }
+
+
 }

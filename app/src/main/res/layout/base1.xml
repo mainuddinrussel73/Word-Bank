@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/medic_base1"
     android:layout_width="wrap_content"
-    android:background="@color/material_white"
+    android:background="@color/material_black"
     android:layout_height="wrap_content">
 
 
@@ -28,8 +28,8 @@
 
             <com.github.siyamed.shapeimageview.RoundedImageView
                 android:id="@+id/play_pause"
-                android:layout_width="60dip"
-                android:layout_height="60dip"
+                android:layout_width="40dip"
+                android:layout_height="40dip"
                 android:src="@drawable/image"/>
 
         </androidx.cardview.widget.CardView>
@@ -48,7 +48,7 @@
             android:singleLine="true"
             android:text="Song Name - [details]"
             android:textColor="#DF0974"
-            android:textSize="12sp"
+            android:textSize="10sp"
             android:textStyle="bold" />
 
         <TextView
@@ -67,14 +67,14 @@
             android:singleLine = "true"
             android:text="Singer Name"
             android:textColor="#DF0974"
-            android:textSize="12sp" />
+            android:textSize="10sp" />
 
 
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonForward"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="8dp"
@@ -85,8 +85,8 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonPlayAndStop"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:layout_marginEnd="8dp"
             android:layout_toStartOf="@id/buttonForward"
@@ -97,8 +97,8 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/buttonBackward"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_centerVertical="true"
             android:layout_marginEnd="8dp"
             android:backgroundTint="#DF0974"

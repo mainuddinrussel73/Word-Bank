@@ -36,10 +36,11 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.Quiz.quiz_spelling"></activity>
         <activity
             android:name=".ui.media.detail_album"
             android:label="@string/title_activity_detail_album"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.media.music_base"
             android:label="@string/music"
@@ -213,6 +214,7 @@
                 <action android:name="STOP_ACTION" />
                 <action android:name="CANCEL_ACTION" />
                 <action android:name="NEXT_ACTION" />
+                <action android:name="LOAD_ACTION" />
                 <action android:name="AUDIOFOCUS_GAIN" />
                 <action android:name="AUDIOFOCUS_LOSS" />
                 <action android:name="AUDIOFOCUS_LOSS_TRANSIENT" />

@@ -31,8 +31,7 @@ public class Adapter_queue  extends BaseAdapter {
 
     private final Activity context;
     List<Audio> contactList;
-    ImageView titleText;
-    TextView tt, tt1, duration;
+
 
     public Adapter_queue(Activity context) {
 
@@ -40,6 +39,70 @@ public class Adapter_queue  extends BaseAdapter {
         this.contactList = new ArrayList<Audio>();
         this.contactList.addAll(playqueue);
 
+
+    }
+
+    public View getView(int position, View view, ViewGroup parent) {
+
+        ViewHolder holder = null;
+
+        if(view == null){
+
+            LayoutInflater inflater = context.getLayoutInflater();
+            view = inflater.inflate(R.layout.queue_music_item, null, true);
+
+
+            holder = new ViewHolder();
+            holder.titleText = view.findViewById(R.id.play_pause);
+            holder.tt = view.findViewById(R.id.title5);
+            holder.tt1 = view.findViewById(R.id.title6);
+            holder.duration = view.findViewById(R.id.duration); // duration
+            holder.listitem = view.findViewById(R.id.list_item);
+            holder.listitm = view.findViewById(R.id.list_item);
+            view.setTag(holder);
+
+        }else{
+            holder = (ViewHolder)view.getTag();
+        }
+
+        holder.tt.setText(( playqueue.get(position).getTitle()));
+        holder.tt1.setText(( playqueue.get(position).getArtist()));
+        long num = Long.parseLong( playqueue.get(position).getDuration());
+        String s = String.format("%02d:%02d",
+                TimeUnit.MILLISECONDS.toMinutes(num),
+                TimeUnit.MILLISECONDS.toSeconds(num) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(num))
+        );
+        holder.duration.setText(s);
+
+        Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
+        Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(playqueue.get(position).getImagepath()));
+
+        //in.close();
+        RequestOptions options = new RequestOptions()
+                .centerCrop()
+                .placeholder(R.drawable.image)
+                .error(R.drawable.image);
+        Glide.with(context).load(uri).apply(options).into(holder.titleText);
+
+        SharedPreferences prefs = context.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+        boolean isDark = prefs.getBoolean("isDark", false);
+
+        if (isDark) {
+            //System.out.println("klklkl");
+            holder.listitem.setBackgroundColor(Color.BLACK);
+            holder.tt.setTextColor(context.getResources().getColor(R.color.per50white));
+            holder.tt1.setTextColor(context.getResources().getColor(R.color.material_white));
+            holder.listitm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background_dark));
+        } else {
+            holder.listitem.setBackgroundColor(Color.WHITE);
+            // tt.setTextColor(Color.BLACK);
+            holder.tt.setTextColor(context.getResources().getColor(R.color.per54black));
+            holder.tt1.setTextColor(context.getResources().getColor(R.color.darkgray));
+            holder.listitm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background));
+        }
+
+        return view;
 
     }
 
@@ -65,69 +128,10 @@ public class Adapter_queue  extends BaseAdapter {
         return i;
     }
 
-    public View getView(int position, View view, ViewGroup parent) {
+    // private final Integer[] imgid;
+    public interface EventListener {
 
-        LayoutInflater inflater = context.getLayoutInflater();
-        View rowView = inflater.inflate(R.layout.queue_music_item, null, true);
-        RelativeLayout listitm = rowView.findViewById(R.id.list_item);
-        titleText = rowView.findViewById(R.id.play_pause);
-        tt = rowView.findViewById(R.id.title5);
-        tt1 = rowView.findViewById(R.id.title6);
-        long num = Long.parseLong( playqueue.get(position).getDuration());
-        duration = rowView.findViewById(R.id.duration); // duration
-
-        tt.setText(( playqueue.get(position).getTitle()));
-        tt1.setText(( playqueue.get(position).getArtist()));
-        String s = String.format("%02d:%02d",
-                TimeUnit.MILLISECONDS.toMinutes(num),
-                TimeUnit.MILLISECONDS.toSeconds(num) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(num))
-        );
-        duration.setText(s);
-
-
-        Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
-        Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(playqueue.get(position).getImagepath()));
-
-        //in.close();
-        RequestOptions options = new RequestOptions()
-                .centerCrop()
-                .placeholder(R.drawable.image)
-                .error(R.drawable.image);
-        Glide.with(context).load(uri).apply(options).into(titleText);
-
-
-
-        RelativeLayout listitem = rowView.findViewById(R.id.list_item);
-
-        SharedPreferences prefs = context.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
-        boolean isDark = prefs.getBoolean("isDark", false);
-
-        if (isDark) {
-
-            //System.out.println("klklkl");
-            listitem.setBackgroundColor(Color.BLACK);
-
-
-            tt.setTextColor(context.getResources().getColor(R.color.per50white));
-
-            tt1.setTextColor(context.getResources().getColor(R.color.material_white));
-
-            listitm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background_dark));
-
-        } else {
-
-
-            listitem.setBackgroundColor(Color.WHITE);
-            // tt.setTextColor(Color.BLACK);
-            tt.setTextColor(context.getResources().getColor(R.color.per54black));
-
-            tt1.setTextColor(context.getResources().getColor(R.color.darkgray));
-            listitm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background));
-        }
-
-
-        return rowView;
+        void loadsong(int position);
 
     }
 
@@ -146,9 +150,11 @@ public class Adapter_queue  extends BaseAdapter {
         return Color.argb(alpha, red, green, blue);
     }
 
-    // private final Integer[] imgid;
-    public interface EventListener {
-        void loadsong(int position);
+    static class ViewHolder {
+        ImageView titleText;
+        TextView tt, tt1, duration;
+        RelativeLayout listitem;
+        RelativeLayout listitm;
     }
 
 

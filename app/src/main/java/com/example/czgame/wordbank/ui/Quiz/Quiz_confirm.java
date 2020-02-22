@@ -142,23 +142,29 @@ public class Quiz_confirm extends AppCompatActivity {
         TextView opt2 = findViewById(R.id.option2);
         RelativeLayout match = findViewById(R.id.match);
         RelativeLayout multi = findViewById(R.id.multi);
+        TextView opt3 = findViewById(R.id.option3);
+        RelativeLayout spell = findViewById(R.id.spell);
         if (isDark) {
             relativeLayout.setBackgroundColor(Color.BLACK);
             opt1.setTextColor(Color.WHITE);
             opt2.setTextColor(Color.WHITE);
+            opt3.setTextColor(Color.WHITE);
             spinner.setBackgroundColor(Color.rgb(31,39,41));
             spinner.setTextColor(Color.WHITE);
             match.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.card_background_dark));
             multi.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.card_background_dark));
+            spell.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.card_background_dark));
 
         } else {
             relativeLayout.setBackgroundColor(Color.WHITE);
             opt1.setTextColor(Color.BLACK);
             opt2.setTextColor(Color.BLACK);
+            opt3.setTextColor(Color.BLACK);
             spinner.setBackgroundColor(Color.WHITE);
             spinner.setTextColor(Color.BLACK);
             match.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.card_background));
             multi.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.card_background));
+            spell.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.card_background));
         }
 
         Button button = findViewById(R.id.strtquiz);
@@ -187,6 +193,23 @@ public class Quiz_confirm extends AppCompatActivity {
                     //SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
                     // MainActivity.score = prefs.getInt("highscore", 0);
                     Intent myIntent = new Intent(Quiz_confirm.this, Quiz_match.class);
+                    myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivityForResult(myIntent, 1);
+                } else {
+                    Toasty.error(Quiz_confirm.this, "Sorry Collect more then 4 words.", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        Button button3 = findViewById(R.id.spelling);
+        button3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                button3.startAnimation(mScaleAnimation);
+                if (contactList.size() >= 2) {
+                    //SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+                    // MainActivity.score = prefs.getInt("highscore", 0);
+                    Intent myIntent = new Intent(Quiz_confirm.this, quiz_spelling.class);
                     myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivityForResult(myIntent, 1);
                 } else {

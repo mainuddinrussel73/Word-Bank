@@ -1,6 +1,7 @@
 package com.example.czgame.wordbank.ui.media;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -62,11 +63,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.czgame.wordbank.R;
-import com.gauravk.audiovisualizer.visualizer.WaveVisualizer;
+import com.example.czgame.wordbank.utill.Lrc;
+import com.example.czgame.wordbank.utill.LrcHelper;
+import com.example.czgame.wordbank.utill.LrcView;
 import com.github.siyamed.shapeimageview.RoundedImageView;
-import com.lauzy.freedom.library.Lrc;
-import com.lauzy.freedom.library.LrcHelper;
-import com.lauzy.freedom.library.LrcView;
 import com.masoudss.lib.SeekBarOnProgressChanged;
 import com.masoudss.lib.WaveformSeekBar;
 import com.ohoussein.playpause.PlayPauseView;
@@ -110,6 +110,8 @@ import static android.content.Context.MODE_PRIVATE;
 import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
 import static com.example.czgame.wordbank.ui.media.fragment_plau_queue.playqueue;
 import static com.example.czgame.wordbank.ui.media.music_base.bottomTabLayout;
+import static com.example.czgame.wordbank.ui.media.music_base.mVisualizer;
+import static com.example.czgame.wordbank.ui.media.music_base.toolbar;
 import static com.example.czgame.wordbank.ui.words.MainActivity.isDark;
 
 public class fragment_music_list extends Fragment implements music_base.OnBackPressedListener,Audiolist_adapter.EventListener,Audiogrid_adapter.EventListener{
@@ -132,15 +134,15 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
    // Toolbar toolbar;
     public static  Intent serviceIntent;
     public static LrcView mLrcView;
-    public  static WaveVisualizer mVisualizer;
     public  static  boolean isShowlrc = false;
     public  static  boolean theme_changed = false;
     public  static  SharedPreferences prefm ;
     private final int MY_PERMISSIONS_RECORD_AUDIO = 1;
-    public Bitmap bm;
+    public  static Bitmap bm;
     public boolean mFocusGranted;
     public boolean mFocusChanged;
     Context context;
+    public  static  SeekBar volumeBar;
     Audiogrid_adapter adapterG;
     Audiolist_adapter adapter;
     ContentResolver contentResolver;
@@ -148,64 +150,38 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
     Button sort;
     Uri uri;
     boolean isUp;
-    SeekBar volumeBar;
-    WaveformSeekBar waveformSeekBar;
-    TextView elapsedTimeLabel;
-    TextView remainingTimeLabel;
+    public  static  WaveformSeekBar waveformSeekBar;
+    public  static  TextView elapsedTimeLabel;
+    public  static  TextView remainingTimeLabel;
+    public  static TextView textView;
     int pro = 0;
     int pro1 = 0;
-    TextView textView;
-    TextView textView1;
-    String artist;
-    String album;
-    String titleq;
-    int play, pause;
+    public  static TextView textView1;
+    public  static String artist;
+    public  static String album;
+    public  static String titleq;
+    public  static int play, pause;
+    public  static  Drawable myIcon;
     Button showhide;
-    Drawable myIcon;
-    Drawable myIcon1;
-    Drawable myIcon2;
-    Drawable myIcon3;
-    int mutedColor;
-    boolean toogle1 = true;
+    public  static Drawable myIcon1;
+    public  static Drawable myIcon2;
+    public  static Drawable myIcon3;
+    public  static  int mutedColor;
+    public  static  boolean toogle1 = true;
+    public  static  Button  loop;
     MediaController mediaController;
-    Button  loop;
-    SlidingUpPanelLayout myView;
-    TextView titleS,desS;
-    RoundedImageView songI;
-    boolean serviceBound = false;
-    ImageButton showlrc;
+    public static SlidingUpPanelLayout myView;
+    public  static TextView titleS,desS;
+    public static RoundedImageView songI;
+    public static ImageButton showlrc;
+    public  static  int vibran = 0;
+    public  static  int muted;
     RelativeLayout add_phone;
     LinearLayout media_base;
-    int vibran = 0;
-    int muted;
+    public  static String title;
+    public   boolean serviceBound = false;
     ImageButton enablelrc;
-        private String title;
-        private int color;
-    private ListView listView;
-    private GridView gridView;
-    private int currentViewMode = 0;
-    private Toast mToastToShow;
-    private int requestCode;
-    private String[] permissions;
-    private int[] grantResults;
-    private NotificationService player;
-    private ServiceConnection serviceConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            // We've bound to LocalService, cast the IBinder and get LocalService instance
-            NotificationService.LocalBinder binder = (NotificationService.LocalBinder) service;
-            player = binder.getService();
-            serviceBound = true;
-
-            //Toast.makeText(Media_list_activity.this, "Service Bound", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            serviceBound = false;
-        }
-    };
-    private Handler handler = new Handler() {
+    public Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
 
@@ -214,8 +190,15 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
             int currentPosition = msg.what;
             // Update positionBar.
             ///positionBar.setProgress(currentPosition);
-            Integer p = (100*currentPosition)/mp.getDuration();
-            waveformSeekBar.setProgress(p);
+            try {
+                Integer p = (100 * currentPosition) / mp.getDuration();
+                waveformSeekBar.setProgress(p);
+            }catch (Exception e){
+
+            }
+
+           // mVisualizer.animate();
+          //  mVisualizer.show();
 
             // Update Labels.
             String elapsedTime = createTimeLabel(currentPosition);
@@ -250,12 +233,39 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
             }
         }
     };
+        private int color;
+    private ListView listView;
+    private GridView gridView;
+    private int currentViewMode = 0;
+    private Toast mToastToShow;
+    private int requestCode;
+    private String[] permissions;
+    private int[] grantResults;
+    private NotificationService player;
+    private ServiceConnection serviceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            NotificationService.LocalBinder binder = (NotificationService.LocalBinder) service;
+            player = binder.getService();
+            serviceBound = true;
+
+            //Toast.makeText(Media_list_activity.this, "Service Bound", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            serviceBound = false;
+        }
+    };
+    Activity activity;
     public   BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             // internet lost alert dialog method call from here...
             if(intent.getAction()==Constants.ACTION.NEXT_ACTION){
                 try{
+                    System.out.println("nxtsong");
                 nxtsong();}catch (Exception e){
                     System.out.println(e.getMessage());
                 }
@@ -267,6 +277,15 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                 try{
                     prevsong();}catch (Exception e){}
             }
+            else if(intent.getAction()==Constants.ACTION.LOAD_ACTION){
+
+                try{
+                    position = prefm.getInt("positionnow",0);
+                    System.out.println("get"+position);
+                    startsong();
+
+                }catch (Exception e){}
+            }
 
         }
     };
@@ -276,6 +295,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
         public static fragment_music_list newInstance(int param1, String param2) {
             fragment_music_list fragment = new fragment_music_list();
+
             Bundle args = new Bundle();
             args.putInt(ARG_COLOR, param1);
             args.putString(ARG_TITLE, param2);
@@ -294,6 +314,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
             getContext().registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION.NEXT_ACTION));
             getContext().registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION.PREV_ACTION));
+            getContext().registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION.LOAD_ACTION));
         }
 
     private void switchView() {
@@ -323,7 +344,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
         }
     }
 
-    private void requestAudioPermissions() {
+    public  void requestAudioPermissions() {
         if (ContextCompat.checkSelfPermission(context,
                 Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -499,9 +520,9 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                 prefm = PreferenceManager.getDefaultSharedPreferences(context);
                 position = prefm.getInt("positionnow", 0);
 
-                title = ListElementsArrayList.get(position).getTitle();
-                artist = ListElementsArrayList.get(position).getArtist();
-                album = ListElementsArrayList.get(position).getAlbum();
+                title = playqueue.get(position).getTitle();
+                artist = playqueue.get(position).getArtist();
+                album = playqueue.get(position).getAlbum();
 
 
                 textView.setText(title);
@@ -510,7 +531,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                 titleS.setText(title);
                 desS.setText(artist);
 
-                titleq = ListElementsArrayList.get(position).getImagepath();
+                titleq = playqueue.get(position).getImagepath();
                 Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 
                 Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(titleq));
@@ -575,20 +596,20 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                         if (type == 0) {
 
                         } else if (type == 1) {
-                            Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                            Drawable myIcon3 = context.getResources().getDrawable(R.drawable.ic_loop);
                             myIcon3.setTint(mutedDark);
                             loop.setBackground(myIcon3);
                         } else if (type == 2) {
-                            Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                            Drawable myIcon3 = context.getResources().getDrawable(R.drawable.ic_unloop);
                             myIcon3.setTint(mutedDark);
                             loop.setBackground(myIcon3);
                         }
 
 
-                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
-                        Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
-                        Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
-                        Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+                        Drawable myIcon3 = context.getResources().getDrawable(R.drawable.ic_next_fill);
+                        Drawable myIcon  =  context.getResources().getDrawable(R.drawable.ic_prev_fill);
+                        Drawable myIcon1 = context.getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
+                        Drawable myIcon2 = context.getResources().getDrawable(R.drawable.ic_pause_black_24dp);
 
                         myIcon3.setTint(play);
                         myIcon.setTint(play);
@@ -600,8 +621,8 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                         // playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
                         playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
 
-                        Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
-                        Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
+                        Drawable myIcon33 = context.getResources().getDrawable(R.drawable.ic_next_fill);
+                        Drawable myIcon31 = context.getResources().getDrawable(R.drawable.ic_prev_fill);
                         myIcon33.setTint(play);
                         myIcon31.setTint(play);
                         ply.setBackground(myIcon2);
@@ -614,7 +635,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
                         waveformSeekBar.setWaveProgressColor(mutedDark);
                         // add_phone.setBackgroundColor(vibrant);
-                        LinearLayout linearLayout = getActivity().findViewById(R.id.medic_base);
+                        LinearLayout linearLayout = activity.findViewById(R.id.medic_base);
 
                         linearLayout.setBackgroundColor(vibrant);
 
@@ -624,7 +645,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
                         ImageButton enablelrc = myView.findViewById(R.id.enablelrc);
                         enablelrc.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
-                        Drawable myIcon3o = getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_24dp);
+                        Drawable myIcon3o = context.getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_24dp);
                         myIcon3o.setTint(mutedDark);
                         showlrc.setBackground(myIcon3o);
 
@@ -669,7 +690,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                 mp.start();
 
                 File file = new File(Environment.getExternalStorageDirectory() + "/Lyrics/"
-                        + ListElementsArrayList.get(position).getTitle().toLowerCase().replace(" ", "_").concat(".lrc"));
+                        + playqueue.get(position).getTitle().toLowerCase().replace(" ", "_").concat(".lrc"));
 
                 System.out.println(file);
                 List<Lrc> lrcs = LrcHelper.parseLrcFromFile(file);
@@ -771,15 +792,15 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                 prefm = PreferenceManager.getDefaultSharedPreferences(context);
                 position = prefm.getInt("positionnow", 0);
 
-                title = ListElementsArrayList.get(position).getTitle();
-                artist = ListElementsArrayList.get(position).getArtist();
-                album = ListElementsArrayList.get(position).getAlbum();
+                title = playqueue.get(position).getTitle();
+                artist = playqueue.get(position).getArtist();
+                album = playqueue.get(position).getAlbum();
 
 
                 textView.setText(title);
                 textView1.setText(artist);
 
-                titleq = ListElementsArrayList.get(position).getImagepath();
+                titleq = playqueue.get(position).getImagepath();
                 Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 
                 Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(titleq));
@@ -837,11 +858,11 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                         if (type == 0) {
 
                         } else if (type == 1) {
-                            Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                            Drawable myIcon3 = context.getResources().getDrawable(R.drawable.ic_loop);
                             myIcon3.setTint(mutedDark);
                             loop.setBackground(myIcon3);
                         } else if (type == 2) {
-                            Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                            Drawable myIcon3 = context.getResources().getDrawable(R.drawable.ic_unloop);
                             myIcon3.setTint(mutedDark);
                             loop.setBackground(myIcon3);
                         }
@@ -852,10 +873,10 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                         play = (Color.parseColor("#DF0974"));
                         pause = (Color.parseColor("#DF0974"));
                         playBtn.setColor(play);
-                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
-                        Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
-                        Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
-                        Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+                        Drawable myIcon3 = context.getResources().getDrawable(R.drawable.ic_next_fill);
+                        Drawable myIcon = context.getResources().getDrawable(R.drawable.ic_prev_fill);
+                        Drawable myIcon1 = context.getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
+                        Drawable myIcon2 = context.getResources().getDrawable(R.drawable.ic_pause_black_24dp);
 
                         myIcon3.setTint(play);
                         myIcon.setTint(play);
@@ -867,8 +888,8 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                         //playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
                         playBtn.setBackgroundTintList(ColorStateList.valueOf(play));
 
-                        Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
-                        Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
+                        Drawable myIcon33 = context.getResources().getDrawable(R.drawable.ic_next_fill);
+                        Drawable myIcon31 = context.getResources().getDrawable(R.drawable.ic_prev_fill);
                         myIcon33.setTint(play);
                         myIcon31.setTint(play);
                         ply.setBackground(myIcon2);
@@ -880,8 +901,9 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
                         mLrcView.setIndicatorTextColor(play);
                         mLrcView.setCurrentIndicateLineTextColor(play);
+                        mLrcView.setlrcCurrentTextColor(play);
                         //mLrcView.setLrcTextColor(play);
-                        Drawable myIcons1 = getResources().getDrawable(R.drawable.play);
+                        Drawable myIcons1 = context.getResources().getDrawable(R.drawable.play);
                         myIcons1.setTint(play);
                         mLrcView.setPlayDrawable(myIcons1);
 
@@ -953,7 +975,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                 mp.start();
 
                 File file = new File(Environment.getExternalStorageDirectory() + "/Lyrics/"
-                        + ListElementsArrayList.get(position).getTitle().toLowerCase().replace(" ", "_").concat(".lrc"));
+                        + playqueue.get(position).getTitle().toLowerCase().replace(" ", "_").concat(".lrc"));
 
                 System.out.println(file);
                 List<Lrc> lrcs = LrcHelper.parseLrcFromFile(file);
@@ -1053,9 +1075,9 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
 
             position = prefm.getInt("positionnow",0);
-            int choice = prefm.getInt("queue",0);
 
-            if(choice==1){
+            System.out.println(position);
+
                 if (position + 1 >= playqueue.size()) {
                     position = -1;
                 }
@@ -1064,16 +1086,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                 SharedPreferences.Editor editor = prefm.edit();
                 editor.putInt("positionnow",position);
                 editor.commit();
-            }else{
-                if (position + 1 >= ListElementsArrayList.size()) {
-                    position = -1;
-                }
-                position++;
-                prefm = PreferenceManager.getDefaultSharedPreferences(context);
-                SharedPreferences.Editor editor = prefm.edit();
-                editor.putInt("positionnow",position);
-                editor.commit();
-            }
+
 
 
             {
@@ -1084,17 +1097,12 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
                 // Media Player
 
-                if(choice==1){
+
                     title = playqueue.get(position).getTitle();
                     artist = playqueue.get(position).getArtist();
                     album = playqueue.get(position).getAlbum();
 
-                }else{
-                    title = ListElementsArrayList.get(position).getTitle();
-                    artist = ListElementsArrayList.get(position).getArtist();
-                    album = ListElementsArrayList.get(position).getAlbum();
 
-                }
 
 
 
@@ -1103,13 +1111,10 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
                 titleS.setText(title);
                 desS.setText(artist);
-                if(choice==1){
+
                     titleq = playqueue.get(position).getImagepath();
 
-                }else{
-                    titleq = ListElementsArrayList.get(position).getImagepath();
 
-                }
 
 
                 Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
@@ -1125,7 +1130,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
-                    InputStream is = getResources().openRawResource(R.raw.image);
+                    InputStream is = context.getResources().openRawResource(R.raw.image);
                     bm = BitmapFactory.decodeStream(is);
                 }
 
@@ -1176,7 +1181,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
                         } else if (type == 1) {
                             try {
-                                Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                                Drawable myIcon3 = context.getResources().getDrawable(R.drawable.ic_loop);
                                 myIcon3.setTint(mutedDark);
                                 loop.setBackground(myIcon3);
                             }catch (Exception e){
@@ -1184,7 +1189,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                             }
                         } else if (type == 2) {
                             try {
-                                Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                                Drawable myIcon3 = context.getResources().getDrawable(R.drawable.ic_unloop);
                                 myIcon3.setTint(mutedDark);
                                 loop.setBackground(myIcon3);
                             }catch (Exception e){
@@ -1193,10 +1198,10 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                         }
 
 
-                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
-                        Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
-                        Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
-                        Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+                        Drawable myIcon3 = context.getResources().getDrawable(R.drawable.ic_next_fill);
+                        Drawable myIcon = context.getResources().getDrawable(R.drawable.ic_prev_fill);
+                        Drawable myIcon1 = context.getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
+                        Drawable myIcon2 = context.getResources().getDrawable(R.drawable.ic_pause_black_24dp);
 
                         myIcon3.setTint(play);
                         myIcon.setTint(play);
@@ -1208,8 +1213,8 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                         // playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
                         playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
 
-                        Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
-                        Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
+                        Drawable myIcon33 = context.getResources().getDrawable(R.drawable.ic_next_fill);
+                        Drawable myIcon31 = context.getResources().getDrawable(R.drawable.ic_prev_fill);
                         myIcon33.setTint(play);
                         myIcon31.setTint(play);
                         ply.setBackground(myIcon2);
@@ -1220,7 +1225,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                         textView1.setTextColor(mutedDark);
                         waveformSeekBar.setWaveProgressColor(mutedDark);
                         // add_phone.setBackgroundColor(vibrant);
-                        LinearLayout linearLayout = getActivity().findViewById(R.id.medic_base);
+                        LinearLayout linearLayout = activity.findViewById(R.id.medic_base);
 
                         linearLayout.setBackgroundColor(vibrant);
 
@@ -1229,7 +1234,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
                         ImageButton enablelrc = myView.findViewById(R.id.enablelrc);
                         enablelrc.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
-                        Drawable myIcon3o = getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_24dp);
+                        Drawable myIcon3o = context.getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_24dp);
                         myIcon3o.setTint(mutedDark);
                         showlrc.setBackground(myIcon3o);
 
@@ -1272,15 +1277,11 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
                 mp.start();
                 File file;
-                if(choice==1){
-                     file = new File(Environment.getExternalStorageDirectory() + "/Lyrics/"
+
+                file = new File(Environment.getExternalStorageDirectory() + "/Lyrics/"
                             + playqueue.get(position).getTitle().toLowerCase().replace(" ", "_").concat(".lrc"));
 
-                }else{
-                     file = new File(Environment.getExternalStorageDirectory() + "/Lyrics/"
-                            + ListElementsArrayList.get(position).getTitle().toLowerCase().replace(" ", "_").concat(".lrc"));
 
-                }
 
 
 
@@ -1378,7 +1379,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                 position = prefm.getInt("positionnow",0);
                 int choice = prefm.getInt("queue",0);
 
-                if(choice==1){
+
                     if (position + 1 >= playqueue.size()) {
                         position = -1;
                     }
@@ -1387,42 +1388,26 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                     SharedPreferences.Editor editor = prefm.edit();
                     editor.putInt("positionnow",position);
                     editor.commit();
-                }else{
-                    if (position + 1 >= ListElementsArrayList.size()) {
-                        position = -1;
-                    }
-                    position++;
-                    PreferenceManager.getDefaultSharedPreferences(context);
-                    SharedPreferences.Editor editor = prefm.edit();
-                    editor.putInt("positionnow",position);
-                    editor.commit();
-                }
 
                 isClicked = true;
 
 
                 // Media Player
 
-                if(choice==1){
+
                     title = playqueue.get(position).getTitle();
                     artist = playqueue.get(position).getArtist();
                     album = playqueue.get(position).getAlbum();
-                }else{
-                    title = ListElementsArrayList.get(position).getTitle();
-                    artist = ListElementsArrayList.get(position).getArtist();
-                    album = ListElementsArrayList.get(position).getAlbum();
-                }
+
 
 
 
                 textView.setText(title);
                 textView1.setText(artist);
 
-                if(choice==1){
+
                     titleq = playqueue.get(position).getImagepath();
-                }else{
-                    titleq = ListElementsArrayList.get(position).getImagepath();
-                }
+
 
                 Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 
@@ -1437,7 +1422,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
-                    InputStream is = getResources().openRawResource(R.raw.image);
+                    InputStream is = context.getResources().openRawResource(R.raw.image);
                     bm = BitmapFactory.decodeStream(is);
                 }
 
@@ -1479,7 +1464,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
                         } else if (type == 1) {
                             try {
-                                Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                                Drawable myIcon3 = context.getResources().getDrawable(R.drawable.ic_loop);
                                 myIcon3.setTint(mutedDark);
                                 loop.setBackground(myIcon3);
                             }catch (Exception e){
@@ -1487,7 +1472,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                             }
                         } else if (type == 2) {
                             try {
-                                Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                                Drawable myIcon3 = context.getResources().getDrawable(R.drawable.ic_unloop);
                                 myIcon3.setTint(mutedDark);
                                 loop.setBackground(myIcon3);
                             }catch (Exception e){
@@ -1501,10 +1486,10 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                         play = (Color.parseColor("#DF0974"));
                         pause = (Color.parseColor("#DF0974"));
                         playBtn.setColor(play);
-                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
-                        Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
-                        Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
-                        Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+                        Drawable myIcon3 = context.getResources().getDrawable(R.drawable.ic_next_fill);
+                        Drawable myIcon = context.getResources().getDrawable(R.drawable.ic_prev_fill);
+                        Drawable myIcon1 = context.getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
+                        Drawable myIcon2 = context.getResources().getDrawable(R.drawable.ic_pause_black_24dp);
 
                         myIcon3.setTint(play);
                         myIcon.setTint(play);
@@ -1516,8 +1501,8 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                         //playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
                         playBtn.setBackgroundTintList(ColorStateList.valueOf(play));
 
-                        Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
-                        Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
+                        Drawable myIcon33 = context.getResources().getDrawable(R.drawable.ic_next_fill);
+                        Drawable myIcon31 = context.getResources().getDrawable(R.drawable.ic_prev_fill);
                         myIcon33.setTint(play);
                         myIcon31.setTint(play);
                         ply.setBackground(myIcon2);
@@ -1527,10 +1512,12 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                         myIcon3.setTint(mutedDark);
                         myIcon2.setTint(mutedDark);
 
-                        mLrcView.setIndicatorTextColor(play);
-                        mLrcView.setCurrentIndicateLineTextColor(play);
+                    mLrcView.setIndicatorTextColor(play);
+                    mLrcView.setCurrentIndicateLineTextColor(play);
+                    mLrcView.setlrcCurrentTextColor(play);
+
                         //mLrcView.setLrcTextColor(play);
-                        Drawable myIcons1 = getResources().getDrawable(R.drawable.play);
+                        Drawable myIcons1 = context.getResources().getDrawable(R.drawable.play);
                         myIcons1.setTint(play);
                         mLrcView.setPlayDrawable(myIcons1);
 
@@ -1545,7 +1532,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                         waveformSeekBar.setWaveProgressColor(mutedDark);
                         waveformSeekBar.setWaveBackgroundColor(Color.parseColor("#F7CCBD"));
 
-                        LinearLayout linearLayout = getActivity().findViewById(R.id.medic_base);
+                        LinearLayout linearLayout = activity.findViewById(R.id.medic_base);
 
 
                         linearLayout.setBackgroundColor(vibrant);
@@ -1554,7 +1541,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
                         ImageButton enablelrc = myView.findViewById(R.id.enablelrc);
                         enablelrc.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
-                        Drawable myIcon3o = getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_24dp);
+                        Drawable myIcon3o = context.getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_24dp);
                         myIcon3o.setTint(mutedDark);
                         showlrc.setBackground(myIcon3o);
 
@@ -1601,13 +1588,10 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                 mp.start();
 
                 File file;
-                if(choice==1){
+
                      file = new File(Environment.getExternalStorageDirectory() + "/Lyrics/"
                             + playqueue.get(position).getTitle().toLowerCase().replace(" ", "_").concat(".lrc"));
-                }else{
-                     file = new File(Environment.getExternalStorageDirectory() + "/Lyrics/"
-                            + ListElementsArrayList.get(position).getTitle().toLowerCase().replace(" ", "_").concat(".lrc"));
-                }
+
 
 
                 System.out.println(file);
@@ -1621,7 +1605,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                     image.setImageBitmap(blurred);
                 } else mLrcView.setVisibility(View.INVISIBLE);
 
-                Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+                Drawable myIcon2 = context.getResources().getDrawable(R.drawable.ic_pause_black_24dp);
                 myIcon2.setTint(play);
                 playBtn.setBackground(myIcon2);
                 myIcon3.setTint(play);
@@ -1763,6 +1747,110 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
         }
     }
 
+    public void GetAllMediaMp3Files1() {
+
+        contentResolver = context.getContentResolver();
+
+
+        uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+
+        cursor = contentResolver.query(
+                uri, // Uri
+                null,
+                null,
+                null,
+                null
+        );
+
+        if (cursor == null) {
+
+            Toast.makeText(context, "Something Went Wrong.", Toast.LENGTH_LONG);
+
+        } else if (!cursor.moveToFirst()) {
+
+            Toast.makeText(context, "No Music Found on SD Card.", Toast.LENGTH_LONG);
+
+        } else {
+
+            int Title = cursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
+            int album = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM);
+            int albumId = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID);
+            int artist = cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
+            int date = cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED);
+            int duration = cursor.getColumnIndex(MediaStore.Audio.Media.DURATION);
+
+            do {
+
+                // You can also get the Song ID using cursor.getLong(id).
+                //long SongID = cursor.getLong(id);
+
+                Audio audio = new Audio();
+                String SongTitle = cursor.getString(Title);
+                String SongAlbum = cursor.getString(album);
+                String SongArtist = cursor.getString(artist);
+                String SongDate = cursor.getString(date);
+                String SongDuration = cursor.getString(duration);
+
+                String albumid = cursor.getString(albumId);
+
+                //path = cursor1.getString(cursor1.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ART));
+                audio.setTitle(SongTitle);
+                audio.setAlbum(SongAlbum);
+                audio.setArtist(SongArtist);
+                audio.setData(SongDate);
+                audio.setImagepath(albumid);
+                audio.setDuration(SongDuration);
+
+
+                // Adding Media File Names to ListElementsArrayList.
+                playqueue.add(audio);
+
+
+            } while (cursor.moveToNext());
+
+
+
+            List<Audio> audioList = new ArrayList<>();
+
+            prefm = PreferenceManager.getDefaultSharedPreferences(context);
+            for (int i = 0; i < playqueue.size(); i++) {
+                if(playqueue.get(i).getTitle().trim().equals(ListElementsArrayList.get(prefm.getInt("positionnow",position)).getTitle().trim())){
+                    prefm = PreferenceManager.getDefaultSharedPreferences(context);
+                    SharedPreferences.Editor editor = prefm.edit();
+                    editor.putInt("positionnow",i);
+                    editor.commit();
+                }
+            }
+
+            audioList.add(playqueue.get(prefm.getInt("positionnow",position)));
+            Collections.shuffle(playqueue);
+            for (int i = 0; i < playqueue.size() ; i++) {
+                if(!playqueue.get(i).getTitle().trim().equals(audioList.get(0).getTitle().trim())){
+                    audioList.add(playqueue.get(i));
+                }
+            }
+
+            playqueue.clear();
+            playqueue.addAll(audioList);
+
+
+
+            PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor editor = prefm.edit();
+            editor.putInt("positionnow",0);
+            editor.commit();
+
+
+
+
+            System.out.println(playqueue.get(prefm.getInt("positionnow",position)).getTitle());
+
+
+            //System.out.println(ListElementsArrayList.size());
+            //System.out.println(Albumid.size());
+        }
+    }
+
     // Creating Runtime permission function.
     public void AndroidRuntimePermission() {
 
@@ -1890,9 +1978,9 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
             mp = new MediaPlayer();
 
             position = prefm.getInt("positionnow",0);
-            int choice = prefm.getInt("queue",0);
 
-            if(choice==1){
+
+
                 if (position - 1 < 0) {
                     position = playqueue.size();
                 }
@@ -1901,28 +1989,14 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                 SharedPreferences.Editor editor = prefm.edit();
                 editor.putInt("positionnow",position);
                 editor.commit();
-            }else{
-                if (position - 1 < 0) {
-                    position = ListElementsArrayList.size();
-                }
-                position--;
-                PreferenceManager.getDefaultSharedPreferences(context);
-                SharedPreferences.Editor editor = prefm.edit();
-                editor.putInt("positionnow",position);
-                editor.commit();
-            }
+
 
 
             {
-                if (choice == 1) {
+
                     title = playqueue.get(position).getTitle();
                     artist = playqueue.get(position).getArtist();
                     album = playqueue.get(position).getAlbum();
-                }else{
-                    title = ListElementsArrayList.get(position).getTitle();
-                    artist = ListElementsArrayList.get(position).getArtist();
-                    album = ListElementsArrayList.get(position).getAlbum();
-                }
 
 
 
@@ -1934,11 +2008,9 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                 titleS.setText(title);
                 desS.setText(artist);
 
-                if (choice == 1) {
+
                     titleq = playqueue.get(position).getImagepath();
-                }else{
-                    titleq = ListElementsArrayList.get(position).getImagepath();
-                }
+
 
                 Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 
@@ -1953,7 +2025,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
-                    InputStream is = getResources().openRawResource(R.raw.image);
+                    InputStream is = context.getResources().openRawResource(R.raw.image);
                     bm = BitmapFactory.decodeStream(is);
                 }
 
@@ -1999,20 +2071,20 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                         if (type == 0) {
 
                         } else if (type == 1) {
-                            Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                            Drawable myIcon3 = context.getResources().getDrawable(R.drawable.ic_loop);
                             myIcon3.setTint(mutedDark);
                             loop.setBackground(myIcon3);
                         } else if (type == 2) {
-                            Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                            Drawable myIcon3 = context.getResources().getDrawable(R.drawable.ic_unloop);
                             myIcon3.setTint(mutedDark);
                             loop.setBackground(myIcon3);
                         }
 
 
-                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
-                        Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
-                        Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
-                        Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+                        Drawable myIcon3 = context.getResources().getDrawable(R.drawable.ic_next_fill);
+                        Drawable myIcon = context.getResources().getDrawable(R.drawable.ic_prev_fill);
+                        Drawable myIcon1 = context.getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
+                        Drawable myIcon2 = context.getResources().getDrawable(R.drawable.ic_pause_black_24dp);
 
                         myIcon3.setTint(play);
                         myIcon.setTint(play);
@@ -2024,8 +2096,8 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                         //  playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
                         playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
 
-                        Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
-                        Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
+                        Drawable myIcon33 = context.getResources().getDrawable(R.drawable.ic_next_fill);
+                        Drawable myIcon31 = context.getResources().getDrawable(R.drawable.ic_prev_fill);
                         myIcon33.setTint(play);
                         myIcon31.setTint(play);
                         ply.setBackground(myIcon2);
@@ -2035,7 +2107,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                         textView.setTextColor(mutedDark);
                         textView1.setTextColor(mutedDark);
                         // add_phone.setBackgroundColor(vibrant);
-                        LinearLayout linearLayout = getActivity().findViewById(R.id.medic_base);
+                        LinearLayout linearLayout = activity.findViewById(R.id.medic_base);
 
                         waveformSeekBar.setWaveProgressColor(mutedDark);
                         linearLayout.setBackgroundColor(vibrant);
@@ -2046,7 +2118,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
                         ImageButton enablelrc = myView.findViewById(R.id.enablelrc);
                         enablelrc.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
-                        Drawable myIcon3o = getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_24dp);
+                        Drawable myIcon3o = context.getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_24dp);
                         myIcon3o.setTint(mutedDark);
                         showlrc.setBackground(myIcon3o);
 
@@ -2090,13 +2162,10 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
                 mp.start();
                 File file;
-                if (choice == 1) {
+
                    file = new File(Environment.getExternalStorageDirectory() + "/Lyrics/"
                             + playqueue.get(position).getTitle().toLowerCase().replace(" ", "_").concat(".lrc"));
-                }else{
-                    file = new File(Environment.getExternalStorageDirectory() + "/Lyrics/"
-                            + ListElementsArrayList.get(position).getTitle().toLowerCase().replace(" ", "_").concat(".lrc"));
-                }
+
 
 
 
@@ -2111,7 +2180,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                     Bitmap blurred = blurRenderScript(bitmap, 20);//second parametre is radius
                     image.setImageBitmap(blurred);
                 } else mLrcView.setVisibility(View.INVISIBLE);
-                Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+                Drawable myIcon2 = context.getResources().getDrawable(R.drawable.ic_pause_black_24dp);
                 myIcon2.setTint(play);
                 playBtn.setBackground(myIcon2);
                 // playBtn.setBackgroundColor(play);
@@ -2173,9 +2242,9 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                 mp = new MediaPlayer();
 
                 position = prefm.getInt("positionnow",0);
-                int choice = prefm.getInt("queue",0);
 
-                if(choice==1){
+
+
                     if (position - 1 < 0) {
                         position = playqueue.size();
                     }
@@ -2184,41 +2253,25 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                     SharedPreferences.Editor editor = prefm.edit();
                     editor.putInt("positionnow",position);
                     editor.commit();
-                }else{
-                    if (position - 1 < 0) {
-                        position = ListElementsArrayList.size();
-                    }
-                    position--;
-                    PreferenceManager.getDefaultSharedPreferences(context);
-                    SharedPreferences.Editor editor = prefm.edit();
-                    editor.putInt("positionnow",position);
-                    editor.commit();
-                }
+
                 isClicked = true;
 
 
                 // Media Player
 
-                if(choice==1){
+
                     title = playqueue.get(position).getTitle();
                     artist = playqueue.get(position).getArtist();
                     album = playqueue.get(position).getAlbum();
-                }else{
-                    title = ListElementsArrayList.get(position).getTitle();
-                    artist = ListElementsArrayList.get(position).getArtist();
-                    album = ListElementsArrayList.get(position).getAlbum();
-                }
 
 
 
 
                 textView.setText(title);
                 textView1.setText(artist);
-                if(choice==1){
+
                     titleq = playqueue.get(position).getImagepath();
-                }else{
-                    titleq = ListElementsArrayList.get(position).getImagepath();
-                }
+
 
 
 
@@ -2235,7 +2288,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
-                    InputStream is = getResources().openRawResource(R.raw.image);
+                    InputStream is = context.getResources().openRawResource(R.raw.image);
                     bm = BitmapFactory.decodeStream(is);
                 }
 
@@ -2277,11 +2330,11 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                         if (type == 0) {
 
                         } else if (type == 1) {
-                            Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_loop);
+                            Drawable myIcon3 = context.getResources().getDrawable(R.drawable.ic_loop);
                             myIcon3.setTint(mutedDark);
                             loop.setBackground(myIcon3);
                         } else if (type == 2) {
-                            Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_unloop);
+                            Drawable myIcon3 = context.getResources().getDrawable(R.drawable.ic_unloop);
                             myIcon3.setTint(mutedDark);
                             loop.setBackground(myIcon3);
                         }
@@ -2292,10 +2345,10 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                         play = (Color.parseColor("#DF0974"));
                         pause = (Color.parseColor("#DF0974"));
                         playBtn.setColor(play);
-                        Drawable myIcon3 = getResources().getDrawable(R.drawable.ic_next_fill);
-                        Drawable myIcon = getResources().getDrawable(R.drawable.ic_prev_fill);
-                        Drawable myIcon1 = getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
-                        Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+                        Drawable myIcon3 = context.getResources().getDrawable(R.drawable.ic_next_fill);
+                        Drawable myIcon = context.getResources().getDrawable(R.drawable.ic_prev_fill);
+                        Drawable myIcon1 = context.getResources().getDrawable(R.drawable.ic_play_arrow_black_24dp);
+                        Drawable myIcon2 = context.getResources().getDrawable(R.drawable.ic_pause_black_24dp);
 
                         myIcon3.setTint(play);
                         myIcon.setTint(play);
@@ -2307,8 +2360,8 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                         //playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
                         playBtn.setBackgroundTintList(ColorStateList.valueOf(play));
 
-                        Drawable myIcon33 = getResources().getDrawable(R.drawable.ic_next_fill);
-                        Drawable myIcon31 = getResources().getDrawable(R.drawable.ic_prev_fill);
+                        Drawable myIcon33 = context.getResources().getDrawable(R.drawable.ic_next_fill);
+                        Drawable myIcon31 = context.getResources().getDrawable(R.drawable.ic_prev_fill);
                         myIcon33.setTint(play);
                         myIcon31.setTint(play);
                         ply.setBackground(myIcon2);
@@ -2318,10 +2371,11 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                         myIcon3.setTint(mutedDark);
                         myIcon2.setTint(mutedDark);
 
-                        mLrcView.setIndicatorTextColor(play);
-                        mLrcView.setCurrentIndicateLineTextColor(play);
+                    mLrcView.setIndicatorTextColor(play);
+                    mLrcView.setCurrentIndicateLineTextColor(play);
+                    mLrcView.setlrcCurrentTextColor(play);
                         //mLrcView.setLrcTextColor(play);
-                        Drawable myIcons1 = getResources().getDrawable(R.drawable.play);
+                        Drawable myIcons1 = context.getResources().getDrawable(R.drawable.play);
                         myIcons1.setTint(play);
                         mLrcView.setPlayDrawable(myIcons1);
 
@@ -2336,7 +2390,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                         waveformSeekBar.setWaveProgressColor(mutedDark);
                         waveformSeekBar.setWaveBackgroundColor(Color.parseColor("#F7CCBD"));
 
-                        LinearLayout linearLayout = getActivity().findViewById(R.id.medic_base);
+                        LinearLayout linearLayout = activity.findViewById(R.id.medic_base);
 
 
 
@@ -2345,7 +2399,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
                         ImageButton enablelrc = myView.findViewById(R.id.enablelrc);
                         enablelrc.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
-                        Drawable myIcon3o = getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_24dp);
+                        Drawable myIcon3o = context.getResources().getDrawable(R.drawable.ic_keyboard_arrow_up_black_24dp);
                         myIcon3o.setTint(mutedDark);
                         showlrc.setBackground(myIcon3o);
 
@@ -2392,13 +2446,10 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                 mp.start();
 
                 File file;
-                if(choice==1){
+
                     file = new File(Environment.getExternalStorageDirectory() + "/Lyrics/"
                             + playqueue.get(position).getTitle().toLowerCase().replace(" ", "_").concat(".lrc"));
-                }else{
-                    file = new File(Environment.getExternalStorageDirectory() + "/Lyrics/"
-                            + ListElementsArrayList.get(position).getTitle().toLowerCase().replace(" ", "_").concat(".lrc"));
-                }
+
 
 
 
@@ -2413,7 +2464,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                     image.setImageBitmap(blurred);
                 } else mLrcView.setVisibility(View.INVISIBLE);
 
-                Drawable myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
+                Drawable myIcon2 = context.getResources().getDrawable(R.drawable.ic_pause_black_24dp);
                 myIcon2.setTint(play);
                 playBtn.setBackground(myIcon2);
                 myIcon3.setTint(play);
@@ -2528,8 +2579,8 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
 
 
-        if (mVisualizer != null)
-            mVisualizer.release();
+        //if (mVisualizer != null)
+          //  mVisualizer.release();
 
     }
 
@@ -2652,6 +2703,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
         super.onResume();
         context.registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION.NEXT_ACTION));
         context.registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION.PREV_ACTION));
+        context.registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION.LOAD_ACTION));
 
     }
     @Override
@@ -2728,6 +2780,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
 
             context = getActivity().getApplicationContext();
+            activity = getActivity();
 
 
             AndroidRuntimePermission();
@@ -2736,6 +2789,8 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
             if (ListElementsArrayList.isEmpty())
                 GetAllMediaMp3Files();
 
+            if (playqueue.isEmpty())
+                GetAllMediaMp3Files1();
 
 
 
@@ -2747,7 +2802,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
             Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 
 
-            Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(ListElementsArrayList.get(position).getImagepath()));
+            Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(playqueue.get(position).getImagepath()));
             ContentResolver res = getActivity().getContentResolver();
             InputStream in;
             Bitmap bitmap ;
@@ -2773,16 +2828,16 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
             loop = getActivity().findViewById(R.id.loops);
             SharedPreferences prefs1 = context.getSharedPreferences("myPrefsKey", MODE_PRIVATE);
 
-            title = ListElementsArrayList.get(position).getTitle();
-            artist = ListElementsArrayList.get(position).getArtist();
-            album = ListElementsArrayList.get(position).getAlbum();
+            title = playqueue.get(position).getTitle();
+            artist = playqueue.get(position).getArtist();
+            album = playqueue.get(position).getAlbum();
 
 
             textView.setText(title);
             textView1.setText(artist);
 
 
-            titleq = ListElementsArrayList.get(position).getImagepath();
+            titleq = playqueue.get(position).getImagepath();
             sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 
             uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(titleq));
@@ -2855,7 +2910,15 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                     R.anim.slide_up);
 
 // Start animation
-
+            if(isDark) {
+                toolbar.setBackgroundColor(Color.BLACK);
+                add_phone.setBackgroundColor(Color.BLACK);
+            }
+            else {
+                toolbar.setBackgroundColor(Color.WHITE);
+                //toolbar.getNavigationIcon().setTint(Color.BLACK);
+                add_phone.setBackgroundColor(Color.WHITE);
+            }
 
 
             if(mp!=null) {
@@ -3076,7 +3139,8 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                             }
 
 
-                        } else {
+                        }
+                        else {
 
                             {
 
@@ -3897,6 +3961,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
                                         mLrcView.setIndicatorTextColor(play);
                                         mLrcView.setCurrentIndicateLineTextColor(play);
+                                        mLrcView.setlrcCurrentTextColor(play);
                                         //mLrcView.setLrcTextColor(play);
                                         Drawable myIcons1 = getResources().getDrawable(R.drawable.play);
                                         myIcons1.setTint(play);
@@ -4168,6 +4233,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
                                         mLrcView.setIndicatorTextColor(play);
                                         mLrcView.setCurrentIndicateLineTextColor(play);
+                                        mLrcView.setlrcCurrentTextColor(play);
                                         //mLrcView.setLrcTextColor(play);
                                         Drawable myIcons1 = getResources().getDrawable(R.drawable.play);
                                         myIcons1.setTint(play);
@@ -4411,6 +4477,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
                                         mLrcView.setIndicatorTextColor(play);
                                         mLrcView.setCurrentIndicateLineTextColor(play);
+                                        mLrcView.setlrcCurrentTextColor(play);
                                         //mLrcView.setLrcTextColor(play);
                                         Drawable myIcons1 = getResources().getDrawable(R.drawable.play);
                                         myIcons1.setTint(play);
@@ -4640,6 +4707,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
                                         mLrcView.setIndicatorTextColor(play);
                                         mLrcView.setCurrentIndicateLineTextColor(play);
+                                        mLrcView.setlrcCurrentTextColor(play);
                                         //mLrcView.setLrcTextColor(play);
                                         Drawable myIcons1 = getResources().getDrawable(R.drawable.play);
                                         myIcons1.setTint(play);
@@ -4820,7 +4888,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                     //    add_phone.setAlpha((1.0f-slideold[0]));
                     media_base.setAlpha(slideold[0]);
                     add_phone.setAlpha(1.0f-slideold[0]);
-                    music_base.toolbar.setAlpha(1.0f-slideold[0]);
+                    toolbar.setAlpha(1.0f-slideold[0]);
                     //.setAlpha(1.0f-slideold[0]);
 
 
@@ -4849,7 +4917,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                         pauseBtn.setEnabled(true);
                         nxtBtn.setEnabled(true);
                         showlrc.setEnabled(true);
-                        music_base.toolbar.setBackground(null);
+                        //toolbar.setBackground(null);
                         if(isShowlrc){
                             mLrcView.setVisibility(View.VISIBLE);
 
@@ -4879,7 +4947,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
 
 
-                        music_base.toolbar.setBackgroundColor(Color.WHITE);
+
                         listView.setEnabled(true);
                         gridView.setEnabled(true);
                         //     myView.setEnabled(false);
@@ -4935,9 +5003,10 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
             LocalBroadcastManager.getInstance(context).registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION.NEXT_ACTION));
             LocalBroadcastManager.getInstance(context).registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION.PREV_ACTION));
+            LocalBroadcastManager.getInstance(context).registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION.LOAD_ACTION));
 
-            mVisualizer = getActivity().findViewById(R.id.blast);
-            mVisualizer.show();
+           // mVisualizer = getActivity().findViewById(R.id.blast);
+
             //TODO: init MediaPlayer and play the audio
 
             //get the AudioSessionId from your MediaPlayer and pass it to the visualizer
@@ -4989,8 +5058,8 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
 
             songI.setImageBitmap(bitmap);
-            titleS.setText(ListElementsArrayList.get(position).getTitle());
-            desS.setText(ListElementsArrayList.get(position).getArtist());
+            titleS.setText(playqueue.get(position).getTitle());
+            desS.setText(playqueue.get(position).getArtist());
 
 
             // slideUp1(add_phone);
@@ -5044,7 +5113,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
             if(mp!=null){
                 File file = new File(Environment.getExternalStorageDirectory() + "/Lyrics/"
-                        +ListElementsArrayList.get(position).getTitle().toLowerCase().replace(" ","_").concat(".lrc"));
+                        +playqueue.get(position).getTitle().toLowerCase().replace(" ","_").concat(".lrc"));
 
                 System.out.println(file);
                 List<Lrc> lrcs = LrcHelper.parseLrcFromFile(file);
@@ -5099,7 +5168,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                                     new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             if (!input.getText().equals("")) {
-                                                save(input, ListElementsArrayList.get(position).getTitle().toLowerCase().replace(" ", "_").concat(".lrc"));
+                                                save(input, playqueue.get(position).getTitle().toLowerCase().replace(" ", "_").concat(".lrc"));
                                             }
                                         }
                                     });
@@ -5290,6 +5359,8 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                                 listView.setAdapter(adapter);
                                 gridView =  getActivity().findViewById(R.id.gridviews);
                                 gridView.setAdapter(adapterG);
+
+
                             } else if (item.getTitle().equals("Descending")) {
                                 Collections.sort(ListElementsArrayList, Collections.reverseOrder());
                                 //adapter = new MyListAdapter(getParent());
@@ -5297,6 +5368,8 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                                 listView.setAdapter(adapter);
                                 gridView =  getActivity().findViewById(R.id.gridviews);
                                 gridView.setAdapter(adapterG);
+
+
                             } else if (item.getTitle().equals("Time Added Asc")) {
                                 Collections.sort(ListElementsArrayList,
                                         new Comparator<Audio>() {
@@ -5308,6 +5381,8 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                                 listView.setAdapter(adapter);
                                 gridView =  getActivity().findViewById(R.id.gridviews);
                                 gridView.setAdapter(adapterG);
+
+
                             }else if (item.getTitle().equals("Time Added Des")) {
                                 Collections.sort(ListElementsArrayList,
                                         new Comparator<Audio>() {
@@ -5320,6 +5395,9 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                                 listView.setAdapter(adapter);
                                 gridView =  getActivity().findViewById(R.id.gridviews);
                                 gridView.setAdapter(adapterG);
+
+
+
                             } else  if(item.getTitle().equals("View Switch")){
                                 if(VIEW_MODE_LISTVIEW == currentViewMode) {
                                     currentViewMode = VIEW_MODE_GRIDVIEW;
@@ -5357,15 +5435,26 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
            getContext().registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION.NEXT_ACTION));
            getContext().registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION.PREV_ACTION));
+            getContext().registerReceiver(broadcastReceiver, new IntentFilter(Constants.ACTION.LOAD_ACTION));
             return inflater.inflate(R.layout.fragment_music_list, container, false);
         }
 
         public void loadsong(int position){
 
+            playqueue.clear();
+
+
+
             PreferenceManager.getDefaultSharedPreferences(context);
-            SharedPreferences.Editor editor1 = prefm.edit();
-            editor1.putInt("queue",0);
-            editor1.commit();
+            SharedPreferences.Editor editor = prefm.edit();
+            editor.putInt("positionnow",position);
+            editor.commit();
+
+            GetAllMediaMp3Files1();
+
+            position = prefm.getInt("positionnow",position);
+
+
 
             if(theme_changed == false){
                 System.out.println(pro);
@@ -5383,21 +5472,18 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
                 // Media Player
 
-                PreferenceManager.getDefaultSharedPreferences(context);
-                SharedPreferences.Editor editor = prefm.edit();
-                editor.putInt("positionnow",position);
-                editor.commit();
 
-                title = ListElementsArrayList.get(position).getTitle();
-                artist = ListElementsArrayList.get(position).getArtist();
-                album = ListElementsArrayList.get(position).getAlbum();
+
+                title = playqueue.get(position).getTitle();
+                artist = playqueue.get(position).getArtist();
+                album = playqueue.get(position).getAlbum();
 
 
                 textView.setText(title);
                 textView1.setText(artist);
 
 
-                titleq = ListElementsArrayList.get(position).getImagepath();
+                titleq = playqueue.get(position).getImagepath();
                 Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 
                 Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(titleq));
@@ -5520,7 +5606,11 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                         playBtn.change(false);
                         playBtn.setColor(play);
                         int ব্রজে = 10;
-                        mLrcView.setIndicatorLineColor(mutedColor);
+
+                        mLrcView.setIndicatorTextColor(play);
+                        mLrcView.setCurrentIndicateLineTextColor(play);
+                        mLrcView.setlrcCurrentTextColor(play);
+
                         //playBtn.changeMode(FloatingMusicActionButton.Mode.PAUSE_TO_PLAY);
                         playBtn.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
 
@@ -5605,7 +5695,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
 
                 File file = new File(Environment.getExternalStorageDirectory() + "/Lyrics/"
-                        + ListElementsArrayList.get(position).getTitle().toLowerCase().replace(" ", "_").concat(".lrc"));
+                        + playqueue.get(position).getTitle().toLowerCase().replace(" ", "_").concat(".lrc"));
 
                 System.out.println(file);
                 List<Lrc> lrcs = LrcHelper.parseLrcFromFile(file);
@@ -5712,23 +5802,19 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                     isClicked = true;
 
 
-                    PreferenceManager.getDefaultSharedPreferences(context);
-                    SharedPreferences.Editor editor12 = prefm.edit();
-                    editor12.putInt("positionnow",position);
-                    editor12.commit();
 
                     // Media Player
 
 
-                    title = ListElementsArrayList.get(position).getTitle();
-                    artist = ListElementsArrayList.get(position).getArtist();
-                    album = ListElementsArrayList.get(position).getAlbum();
+                    title = playqueue.get(position).getTitle();
+                    artist = playqueue.get(position).getArtist();
+                    album = playqueue.get(position).getAlbum();
 
 
                     textView.setText(title);
                     textView1.setText(artist);
 
-                    titleq = ListElementsArrayList.get(position).getImagepath();
+                    titleq = playqueue.get(position).getImagepath();
                     Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 
                     Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(titleq));
@@ -5755,34 +5841,48 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                             int vibrant = Color.WHITE;
                             int mutedDark = Color.parseColor("#DF0974");
 
-                            PreferenceManager.getDefaultSharedPreferences(context);
-                            SharedPreferences.Editor editor = prefm.edit();
-                            editor.putInt("vibrant",vibrant);
-                            editor.putInt("muted",mutedDark);
-                            editor.commit();
+
 
                             mutedColor = Color.parseColor("#DF0974");
 
 
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                Window window = getActivity().getWindow();
-                                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                                window.setStatusBarColor(ContextCompat.getColor(context,R.color.white));
-                                getActivity().setTitleColor(ContextCompat.getColor(context,R.color.uou));
-                                ((AppCompatActivity)getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(context,R.color.white)));
-                                Toolbar actionBarToolbar = getActivity().findViewById(R.id.toolbar);
-                                if (actionBarToolbar != null)
-                                    actionBarToolbar.setTitleTextColor(ContextCompat.getColor(context,R.color.uou));
+                            if(!isDark) {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    Window window = getActivity().getWindow();
+                                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                                    window.setStatusBarColor(ContextCompat.getColor(context, R.color.white));
+                                    getActivity().setTitleColor(ContextCompat.getColor(context, R.color.uou));
+                                    ((AppCompatActivity) getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(context, R.color.white)));
+                                    Toolbar actionBarToolbar = getActivity().findViewById(R.id.toolbar);
+                                    if (actionBarToolbar != null)
+                                        actionBarToolbar.setTitleTextColor(ContextCompat.getColor(context, R.color.uou));
+                                }
+
+
+                                // fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
+                                //   music_base.toolbar.getNavigationIcon().setTint(ContextCompat.getColor(context,R.color.uou));
+                                Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
+                                icon.setTint(ContextCompat.getColor(context, R.color.uou));
+                                music_base.button.setBackground(icon);
+                            }else{
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    Window window = getActivity().getWindow();
+                                    window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                                    window.setStatusBarColor(ContextCompat.getColor(context, R.color.material_black));
+                                    getActivity().setTitleColor(ContextCompat.getColor(context, R.color.uou));
+                                    ((AppCompatActivity) getActivity()).getSupportActionBar().setBackgroundDrawable(new ColorDrawable(ContextCompat.getColor(context, R.color.material_black)));
+                                    Toolbar actionBarToolbar = getActivity().findViewById(R.id.toolbar);
+                                    if (actionBarToolbar != null)
+                                        actionBarToolbar.setTitleTextColor(ContextCompat.getColor(context, R.color.uou));
+                                }
+
+
+                                // fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
+                                //   music_base.toolbar.getNavigationIcon().setTint(ContextCompat.getColor(context,R.color.uou));
+                                Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
+                                icon.setTint(ContextCompat.getColor(context, R.color.uou));
+                                music_base.button.setBackground(icon);
                             }
-
-
-
-
-                            // fab.setBackgroundTintList(ColorStateList.valueOf(mutedDark));
-                         //   music_base.toolbar.getNavigationIcon().setTint(ContextCompat.getColor(context,R.color.uou));
-                            Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
-                            icon.setTint(ContextCompat.getColor(context,R.color.uou));
-                            music_base.button.setBackground(icon);
 
                             volumeBar.setProgressTintList(ColorStateList.valueOf(mutedDark));
                             volumeBar.setThumbTintList(ColorStateList.valueOf(mutedDark));
@@ -5845,6 +5945,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
                             mLrcView.setIndicatorTextColor(play);
                             mLrcView.setCurrentIndicateLineTextColor(play);
+                            mLrcView.setlrcCurrentTextColor(play);
                             //mLrcView.setLrcTextColor(play);
                             Drawable myIcons1 = getResources().getDrawable(R.drawable.play);
                             myIcons1.setTint(play);
@@ -5917,7 +6018,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                     mp.start();
 
                     File file = new File(Environment.getExternalStorageDirectory() + "/Lyrics/"
-                            + ListElementsArrayList.get(position).getTitle().toLowerCase().replace(" ", "_").concat(".lrc"));
+                            + playqueue.get(position).getTitle().toLowerCase().replace(" ", "_").concat(".lrc"));
 
                     System.out.println(file);
                     List<Lrc> lrcs = LrcHelper.parseLrcFromFile(file);
@@ -6003,6 +6104,8 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                     startService();
                 }
             }
+
+
         }
 
     private class YourAsyncTask extends AsyncTask<String, int[], int[]> {

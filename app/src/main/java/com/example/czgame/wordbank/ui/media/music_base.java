@@ -3,6 +3,7 @@ package com.example.czgame.wordbank.ui.media;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -10,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import com.example.czgame.wordbank.R;
+import com.gauravk.audiovisualizer.visualizer.WaveVisualizer;
 import com.stfalcon.bottomtablayout.BottomTabLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +19,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+
+import static com.example.czgame.wordbank.ui.words.MainActivity.isDark;
 
 public class music_base extends AppCompatActivity {
 
@@ -27,6 +31,8 @@ public class music_base extends AppCompatActivity {
     public  static Toolbar toolbar;
     protected OnBackPressedListener onBackPressedListener;
     private int container;
+    public  static WaveVisualizer mVisualizer;
+    private final int MY_PERMISSIONS_RECORD_AUDIO = 1;
 
     @SuppressLint("ResourceType")
     @Override
@@ -46,6 +52,7 @@ public class music_base extends AppCompatActivity {
 
 
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
+        toolbar.getNavigationIcon().setTint(Color.parseColor("#DF0974"));
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -75,7 +82,9 @@ public class music_base extends AppCompatActivity {
         bottomTabLayout.setIndicatorVisible(true);
         //indicator height
         bottomTabLayout.setIndicatorHeight(getResources().getDimension(R.dimen.indicator_height));
-        bottomTabLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.material_white));
+        if(!isDark)
+            bottomTabLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.material_white));
+        else bottomTabLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.material_black));
         //indicator color
         bottomTabLayout.setIndicatorColor(R.color.uou);
         //indicator line color
@@ -85,6 +94,8 @@ public class music_base extends AppCompatActivity {
 
         button = findViewById(R.id.sortsong);
 
+        mVisualizer = findViewById(R.id.blast);
+
 
     }
 
@@ -93,6 +104,7 @@ public class music_base extends AppCompatActivity {
      * @param id Menu item res id
      */
     public void switchFragment(int id) {
+
         Fragment fragment = null;
         switch (id) {
             case R.id.menu_button1:

@@ -144,12 +144,16 @@
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:background="@drawable/ic_info"
         ></ImageButton>
+
+
+
     <RelativeLayout
+        android:id="@+id/opp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/lay2"
         android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="-120dp"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginBottom="50dp"
         >
@@ -171,12 +175,12 @@
 
 
             <Button
-                android:id="@+id/cacelButtonIdUpdate"
+                android:id="@+id/advance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/buttonshaperound"
-                android:text="cancel"
+                android:text="Advanced"
                 android:textColor="@color/white"
                 />
 
@@ -195,6 +199,7 @@
 
 
     </RelativeLayout>
+
 </RelativeLayout>
 
 

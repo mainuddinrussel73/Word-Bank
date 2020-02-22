@@ -21,7 +21,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.255" />
+        android:layout_centerHorizontal="true"
+        app:layout_constraintVertical_bias="0.255"/>
 
     <com.github.zeng1990java.widget.WaveProgressView
         android:id="@+id/wave_progress_view"
@@ -35,5 +36,11 @@
         app:waveBorderWidth="3dp"
         app:waveBorderRadius="2dp"
         />
+
+    <ImageView
+        android:layout_width="245dp"
+        android:layout_height="378dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/czgame"></ImageView>
 
 </RelativeLayout>

@@ -42,13 +42,13 @@ import androidx.core.app.NotificationCompat;
 import es.dmoral.toasty.Toasty;
 import mkaflowski.mediastylepalette.MediaNotificationProcessor;
 
-import static com.example.czgame.wordbank.ui.media.fragment_music_list.ListElementsArrayList;
 import static com.example.czgame.wordbank.ui.media.fragment_music_list.mLrcView;
-import static com.example.czgame.wordbank.ui.media.fragment_music_list.mVisualizer;
 import static com.example.czgame.wordbank.ui.media.fragment_music_list.mp;
 import static com.example.czgame.wordbank.ui.media.fragment_music_list.playBtn;
 import static com.example.czgame.wordbank.ui.media.fragment_music_list.posit;
 import static com.example.czgame.wordbank.ui.media.fragment_music_list.prefm;
+import static com.example.czgame.wordbank.ui.media.fragment_plau_queue.playqueue;
+import static com.example.czgame.wordbank.ui.media.music_base.mVisualizer;
 
 
 public class NotificationService extends Service implements MediaPlayer.OnCompletionListener,
@@ -165,7 +165,18 @@ public class NotificationService extends Service implements MediaPlayer.OnComple
 
             Toasty.success(this, "Clicked Previous", Toast.LENGTH_SHORT).show();
             Log.i("ok", "Clicked Previous");
-        } else if (intent.getAction().equals(Constants.ACTION.PLAY_ACTION)) {
+        }else if (intent.getAction().equals(Constants.ACTION.LOAD_ACTION)) {
+            p = intent.getIntExtra("p", 0);
+
+            // implementation reference
+
+            startMyOwnForeground();
+            //AsynchTaskTimer();
+
+            Toasty.success(this, "Song Playing", Toast.LENGTH_SHORT).show();
+           // Log.i("ok", "Clicked ");
+        }
+        else if (intent.getAction().equals(Constants.ACTION.PLAY_ACTION)) {
           //  AsynchTaskTimer();
             Toast.makeText(this, "Clicked Play", Toast.LENGTH_SHORT).show();
             Log.i("ok", "Clicked Play");
@@ -236,7 +247,7 @@ public class NotificationService extends Service implements MediaPlayer.OnComple
         Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
 
         int choice = prefm.getInt("queue",0);
-        Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(ListElementsArrayList.get((p)).getImagepath()));
+        Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(playqueue.get((p)).getImagepath()));
 
         ContentResolver res = this.getContentResolver();
         InputStream in;
@@ -254,14 +265,14 @@ public class NotificationService extends Service implements MediaPlayer.OnComple
 
 
         notificationView1 = new RemoteViews(getPackageName(), R.layout.status_bar);
-        notificationView1.setTextViewText(R.id.status_bar_track_name, ListElementsArrayList.get((p)).getTitle());
-        notificationView1.setTextViewText(R.id.status_bar_artist_name, ListElementsArrayList.get((p)).getArtist());
+        notificationView1.setTextViewText(R.id.status_bar_track_name, playqueue.get((p)).getTitle());
+        notificationView1.setTextViewText(R.id.status_bar_artist_name, playqueue.get((p)).getArtist());
         notificationView1.setImageViewBitmap(R.id.status_bar_album_art, bm);
 
         notificationView = new RemoteViews(getPackageName(), R.layout.status_bar_expanded);
-        notificationView.setTextViewText(R.id.status_bar_track_name, ListElementsArrayList.get((p)).getTitle());
-        notificationView.setTextViewText(R.id.status_bar_artist_name, ListElementsArrayList.get((p)).getArtist());
-        notificationView.setTextViewText(R.id.status_bar_album_name, ListElementsArrayList.get((p)).getArtist());
+        notificationView.setTextViewText(R.id.status_bar_track_name, playqueue.get((p)).getTitle());
+        notificationView.setTextViewText(R.id.status_bar_artist_name, playqueue.get((p)).getArtist());
+        notificationView.setTextViewText(R.id.status_bar_album_name, playqueue.get((p)).getArtist());
         notificationView.setImageViewBitmap(R.id.status_bar_album_art, bm);
 
 

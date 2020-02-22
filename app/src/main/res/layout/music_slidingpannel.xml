@@ -3,10 +3,6 @@
     android:id="@+id/music_slider"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:layout_marginLeft="@dimen/activity_vertical_margin"
-    android:layout_marginTop="@dimen/activity_vertical_margin"
-    android:layout_marginRight="@dimen/activity_vertical_margin"
-    android:layout_marginBottom="@dimen/activity_vertical_margin"
     android:orientation="vertical"
 
     >
