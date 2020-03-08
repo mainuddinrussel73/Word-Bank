@@ -3,12 +3,14 @@ package com.example.czgame.wordbank.ui.media;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import com.example.czgame.wordbank.R;
 import com.gauravk.audiovisualizer.visualizer.WaveVisualizer;
@@ -20,7 +22,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import static com.example.czgame.wordbank.ui.words.MainActivity.isDark;
 
 public class music_base extends AppCompatActivity {
 
@@ -82,9 +83,17 @@ public class music_base extends AppCompatActivity {
         bottomTabLayout.setIndicatorVisible(true);
         //indicator height
         bottomTabLayout.setIndicatorHeight(getResources().getDimension(R.dimen.indicator_height));
-        if(!isDark)
-            bottomTabLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.material_white));
-        else bottomTabLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.material_black));
+        SharedPreferences prefs = getSharedPreferences("myPrefsKey", MODE_PRIVATE);
+        boolean isDark = prefs.getBoolean("isDark", false);
+        RelativeLayout relativeLayout = findViewById(R.id.bassss);
+        if(!isDark) {
+            bottomTabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.material_white));
+            relativeLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.material_white));
+
+        }
+        else{ bottomTabLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.material_black));
+            relativeLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.material_black));
+        }
         //indicator color
         bottomTabLayout.setIndicatorColor(R.color.uou);
         //indicator line color
@@ -115,6 +124,9 @@ public class music_base extends AppCompatActivity {
                 break;
             case R.id.menu_button3:
                 fragment = fragment_plau_queue.newInstance("", "Queue");
+                break;
+            case R.id.menu_button4:
+                fragment = fragment_artist.newInstance("", "Album");
                 break;
         }
         if (fragment != null) {

@@ -129,7 +129,7 @@
         android:paddingRight="@dimen/alerter_activity_horizontal_margin"
         android:paddingTop="@dimen/alerter_activity_horizontal_margin"
         android:text="Next"
-        android:background="@drawable/buttonshaperound"
+        android:background="@drawable/btn_style"
         android:textColor="@color/white">
 
     </Button>
@@ -146,7 +146,7 @@
         android:paddingRight="@dimen/alerter_activity_horizontal_margin"
         android:paddingTop="@dimen/alerter_activity_horizontal_margin"
         android:text="Exit"
-        android:background="@drawable/buttonshaperound"
+        android:background="@drawable/btn_style"
         android:textColor="@color/white">
 
     </Button>

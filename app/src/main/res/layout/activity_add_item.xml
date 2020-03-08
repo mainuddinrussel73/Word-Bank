@@ -6,20 +6,22 @@
     android:background="@color/cardview_light_background"
     android:id="@+id/add_item">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <androidx.cardview.widget.CardView
         android:id="@+id/appbarlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+       android:layout_margin="@dimen/activity_horizontal_margin"
+        android:elevation="3dp"
+        app:cardCornerRadius="25dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@drawable/btn_style"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+    </androidx.cardview.widget.CardView>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_below="@+id/appbarlayout"

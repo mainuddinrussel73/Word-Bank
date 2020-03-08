@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:background="@android:color/white"
     android:gravity="center"
+    android:layout_marginTop="100dp"
     android:orientation="vertical">
 
     <ScrollView
@@ -20,7 +21,6 @@
             android:id="@+id/wordsec"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/appbarlayout"
             android:layout_marginTop="10dp">
 
             <com.google.android.material.textfield.TextInputLayout
@@ -237,7 +237,7 @@
                 android:layout_marginStart="18dp"
                 android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
                 android:layout_marginBottom="20dp"
-                android:background="@drawable/buttonshaperound"
+                android:background="@drawable/btn_style"
                 android:paddingLeft="14dp"
                 android:paddingTop="10dp"
                 android:paddingRight="10dp"
@@ -255,7 +255,7 @@
                 android:layout_marginBottom="20dp"
                 android:layout_toStartOf="@+id/delete"
                 android:layout_toEndOf="@+id/update"
-                android:background="@drawable/buttonshaperound"
+                android:background="@drawable/btn_style"
                 android:gravity="center"
                 android:text="Load Online"
                 android:textColor="@color/cardview_light_background"
@@ -270,7 +270,7 @@
                 android:layout_marginLeft="160dp"
                 android:layout_marginEnd="13dp"
                 android:layout_marginBottom="20dp"
-                android:background="@drawable/buttonshaperound"
+                android:background="@drawable/btn_style"
                 android:paddingLeft="5dp"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"

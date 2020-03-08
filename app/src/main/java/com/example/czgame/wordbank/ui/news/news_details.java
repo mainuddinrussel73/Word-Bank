@@ -53,9 +53,9 @@ import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.example.czgame.wordbank.R;
+import com.example.czgame.wordbank.ui.Home.HomeActivity;
 import com.example.czgame.wordbank.ui.backup_scheudle.NestedWebView;
 import com.example.czgame.wordbank.ui.backup_scheudle.PicassoImageGetter;
-import com.example.czgame.wordbank.ui.words.MainActivity;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.itextpdf.text.Document;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
@@ -1052,7 +1052,7 @@ public class news_details extends AppCompatActivity {
                 //PopupMenu popup = new PopupMenu(MainActivity.this, sort);
                 //Inflating the Popup using xml file
                 Context wrapper = new ContextThemeWrapper(news_details.this, R.style.YOURSTYLE1);
-                if (MainActivity.isDark) {
+                if (HomeActivity.isDark) {
                     wrapper = new ContextThemeWrapper(news_details.this, R.style.YOURSTYLE);
 
                 } else {

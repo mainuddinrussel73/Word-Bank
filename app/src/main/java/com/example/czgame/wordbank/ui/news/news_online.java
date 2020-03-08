@@ -44,6 +44,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -60,6 +62,34 @@ public class news_online extends AppCompatActivity {
     online_adapter adapter;
     private DBNewsHelper mDBHelper;
     private ShimmerFrameLayout mShimmerViewContainer;
+
+    public static List<String> extractUrls(String text)
+    {
+        List<String> containedUrls = new ArrayList<String>();
+        String urlRegex = "((https?|ftp|gopher|telnet|file):((//)|(\\\\))+[\\w\\d:#@%/;$()~_?\\+-=\\\\\\.&]*)";
+        Pattern pattern = Pattern.compile(urlRegex, Pattern.CASE_INSENSITIVE);
+        Matcher urlMatcher = pattern.matcher(text);
+
+        while (urlMatcher.find())
+        {
+            containedUrls.add(text.substring(urlMatcher.start(0),
+                    urlMatcher.end(0)));
+        }
+
+        return containedUrls;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    protected void onPause() {
+
+        super.onPause();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -221,11 +251,9 @@ public class news_online extends AppCompatActivity {
 
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
-        if(isDark) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
-        }else {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        }
+
+            toolbar.setTitleTextColor(getResources().getColor(R.color.material_white));
+
         if (isDark && newsList.size() != 0) {
 
             ConstraintLayout constraintLayout = findViewById(R.id.content_editsre);
@@ -341,7 +369,46 @@ public class news_online extends AppCompatActivity {
                             }else{
                                 Toasty.error(news_online.this,"No internet connection.", Toast.LENGTH_LONG).show();
                             }
-                        } else  if(item.getTitle().equals("Aljazeera")){
+                        }
+                        else  if(item.getTitle().equals("Washington Post")) {
+                            Toasty.info(news_online.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                            ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                            NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
+                            if (netInfo != null) {
+                                if (netInfo.isConnected()) {
+                                    new RetrieveFeedTask().execute("washpost");
+                                }
+                            } else {
+                                Toasty.error(news_online.this, "No internet connection.", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                        else  if(item.getTitle().equals("বাংলাদেশ প্রতিদিন")) {
+                            Toasty.info(news_online.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                            ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                            NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
+                            if (netInfo != null) {
+                                if (netInfo.isConnected()) {
+                                    new RetrieveFeedTask().execute("bdpratidin");
+                                }
+                            } else {
+                                Toasty.error(news_online.this, "No internet connection.", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        else  if(item.getTitle().equals("Foreign Policy")) {
+                            Toasty.info(news_online.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                            ConnectivityManager conMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                            NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
+                            if (netInfo != null) {
+                                if (netInfo.isConnected()) {
+                                    new RetrieveFeedTask().execute("foreignpolicy");
+                                }
+                            } else {
+                                Toasty.error(news_online.this, "No internet connection.", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        else  if(item.getTitle().equals("Aljazeera")){
                             Toasty.info(news_online.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
                             ConnectivityManager conMgr =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
                             NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
@@ -447,18 +514,6 @@ public class news_online extends AppCompatActivity {
 
 
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-    }
-
-    @Override
-    protected void onPause() {
-
-        super.onPause();
     }
 
     class RetrieveFeedTask extends AsyncTask<String, Void, Boolean> {
@@ -842,7 +897,186 @@ public class news_online extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }else if(urls[0].equals("nayadiganta")){
+            }
+            else if(urls[0].equals("bdpratidin")){
+                try {
+
+                    Document doc = Jsoup.connect("https://www.bd-pratidin.com/editorial").get();
+                    Elements links = doc.select("a[href]");
+                    List<Element> elements = new ArrayList<>();
+                    //Iterate links and print link attributes.
+                    String reg = "editorial/([0-9]{4})/([0-9]{2})/([0-9]{2})/(.*)";
+                    for (Element link : links) {
+
+                        if(Pattern.matches(reg,link.attr("href")) ){
+                            elements.add(link);
+                            System.out.println(link.attr("abs:href"));
+                        }else{
+                            elements.remove(link);
+                        }
+                    }
+                    for (Element link:
+                            elements) {
+                        Document docs = Jsoup.connect(link.attr("abs:href")).userAgent("Mozila").get();
+                        // With the document fetched, we use JSoup's title() method to fetch the title
+                         News news = new News();
+                         news.setTITLE(docs.title());
+                       // System.out.println(docs.title());
+                        //Elements _ContentRegions =  docs.select("img.image-style-very-big-1");
+
+                        docs.outputSettings(new Document.OutputSettings().prettyPrint(false));
+                        //select all <br> tags and append \n after that
+                        docs.select("br").after("\n");
+                        //select all <p> tags and prepend \n before that
+                        docs.select("p").before("\n");
+                        docs.outputSettings().prettyPrint(true);
+                        docs.outputSettings().prettyPrint(true);
+                        Elements _ContentRegion =  docs.getElementsByTag("article");
+
+                        Element image =  docs.select("div[class=main-image] img").first();
+
+
+
+                        if(image==null){
+                           // System.out.println("https://www.bd-pratidin.com/assets/importent_images/og-logo.jpg");
+                             news.setURL("https://www.bd-pratidin.com/assets/importent_images/og-logo.jpg");
+                        }
+                        else {
+                            //System.out.println(image.absUrl("src"));
+                             news.setURL(image.absUrl("src"));
+                        }
+
+                        StringBuilder ss = new StringBuilder();
+                        for (Element ee : _ContentRegion){
+                            ss.append(ee.wholeText());
+                            ss.append("\n");
+                        }
+                         news.setBODY(ss.toString().trim());
+                        System.out.println(ss.toString().trim());
+                            newsList.add(news);
+
+                    }
+
+                    // In case of any IO errors, we want the messages written to the console
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else if(urls[0].equals("washpost")){
+                try {
+
+                    Document doc = Jsoup.connect("https://www.washingtonpost.com/global-opinions/").get();
+                    Elements links = doc.select("a[href]");
+                    List<Element> elements = new ArrayList<>();
+                    //Iterate links and print link attributes.
+                    String reg = "(.*)/opinions/([0-9]{4})/([0-9]{2})/([0-9]{2})/(.*)";
+                    for (Element link : links) {
+
+                        if(Pattern.matches(reg,link.attr("href")) ){
+                            elements.add(link);
+                            //System.out.println(link.attr("abs:href"));
+                        }else{
+                            elements.remove(link);
+                        }
+                    }
+                    for (Element link:
+                            elements) {
+                        Document docs = Jsoup.connect(link.attr("abs:href")).userAgent("Mozila").get();
+                        // With the document fetched, we use JSoup's title() method to fetch the title
+                         News news = new News();
+                         news.setTITLE(docs.title());
+                        //System.out.println(docs.title());
+                        //Elements _ContentRegions =  docs.select("img.image-style-very-big-1");
+
+                        docs.outputSettings(new Document.OutputSettings().prettyPrint(false));
+                        //select all <br> tags and append \n after that
+                        docs.select("br").after("\n");
+                        //select all <p> tags and prepend \n before that
+                        docs.select("p").before("\n");
+                        docs.outputSettings().prettyPrint(true);
+                        docs.outputSettings().prettyPrint(true);
+                        Elements _ContentRegion =  docs.select("div[class=article-body]");
+
+                        Element image =  docs.select("figure[class=center mb-md ml-neg-gutter mr-neg-gutter ml-auto-ns mr-auto-ns  hide-for-print] img").first();
+
+                        try{
+                             news.setURL(extractUrls(image.absUrl("src")).get(0).replace("=150","=1023"));
+                        }catch (Exception e){
+
+                        }
+                       // System.out.println(extractUrls(image.absUrl("src")).get(0));
+                        StringBuilder ss = new StringBuilder();
+                        for (Element ee : _ContentRegion){
+                            ss.append(ee.wholeText());
+                            ss.append("\n");
+                        }
+                        news.setBODY(ss.toString().trim());
+                        //System.out.println(ss.toString().trim());
+                        newsList.add(news);
+
+                    }
+
+                    // In case of any IO errors, we want the messages written to the console
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else if(urls[0].equals("foreignpolicy")){
+                try {
+
+                    Document doc = Jsoup.connect("https://foreignpolicy.com/channel/analysis/").get();
+                    Elements links = doc.select("a[href]");
+                    List<Element> elements = new ArrayList<>();
+                    //Iterate links and print link attributes.
+                    String reg = "(.*)/([0-9]{4})/([0-9]{2})/([0-9]{2})/(.*)";
+                    for (Element link : links) {
+
+                        if(Pattern.matches(reg,link.attr("href")) ){
+                            elements.add(link);
+                            // System.out.println(link.attr("abs:href"));
+                        }else{
+                            elements.remove(link);
+                        }
+                    }
+                    for (Element link:
+                            elements) {
+                        Document docs = Jsoup.connect(link.attr("abs:href")).userAgent("Mozila").get();
+                        // With the document fetched, we use JSoup's title() method to fetch the title
+                        News news = new News();
+                         news.setTITLE(docs.title());
+                       // System.out.println(doc.title());
+                        //Elements _ContentRegions =  docs.select("img.image-style-very-big-1");
+
+                        docs.outputSettings(new Document.OutputSettings().prettyPrint(false));
+                        //select all <br> tags and append \n after that
+                        docs.select("br").after("\n");
+                        //select all <p> tags and prepend \n before that
+                        docs.select("p").before("\n");
+                        docs.outputSettings().prettyPrint(true);
+                        docs.outputSettings().prettyPrint(true);
+                        Elements _ContentRegion =  docs.select("div[class=post-content-main initial-drop-cap shares-position]");
+
+                        Element image =  docs.select("figure[class=figure-image] img").first();
+
+                         news.setURL(extractUrls(image.absUrl("data-srcset")).get(0));
+                        //System.out.println(extractUrls(image.absUrl("data-srcset")).get(0));
+                        StringBuilder ss = new StringBuilder();
+                        for (Element ee : _ContentRegion){
+                            ss.append(ee.wholeText());
+                            ss.append("\n");
+                        }
+                         news.setBODY(ss.toString().trim());
+                        // System.out.println(ss.toString().trim());
+                           newsList.add(news);
+
+                    }
+
+                    // In case of any IO errors, we want the messages written to the console
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else if(urls[0].equals("nayadiganta")){
 
                 newsList.clear();
                 try {

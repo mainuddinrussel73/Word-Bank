@@ -114,11 +114,9 @@ public class AddDataVoice extends AppCompatActivity {
 
         RelativeLayout lay2 = findViewById(R.id.lay2);
 
-        if(isDark) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
-        }else {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        }
+
+            toolbar.setTitleTextColor(getResources().getColor(R.color.material_white));
+
         if (isDark) {
 
             laybase.setBackgroundColor(Color.BLACK);

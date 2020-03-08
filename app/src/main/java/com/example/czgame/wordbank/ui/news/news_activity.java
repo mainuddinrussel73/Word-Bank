@@ -22,6 +22,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -43,7 +44,7 @@ import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import es.dmoral.toasty.Toasty;
@@ -279,36 +280,38 @@ public class news_activity extends AppCompatActivity {
 
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
-        if(isDark) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
-        }else {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        }
+
+
+            toolbar.setTitleTextColor(getResources().getColor(R.color.material_white));
+
+        CoordinatorLayout cardView = findViewById(R.id.basic);
         if (isDark && newsList.size() != 0) {
 
-            ConstraintLayout constraintLayout = findViewById(R.id.content_newsre);
+            cardView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+            RelativeLayout constraintLayout = findViewById(R.id.content_newsre);
             LinearLayout linearLayout = findViewById(R.id.newslistview);
             constraintLayout.setBackgroundColor(Color.BLACK);
             linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
             list.setAdapter(adapter);
         } else if (!isDark && newsList.size() != 0) {
-
-            ConstraintLayout constraintLayout = findViewById(R.id.content_newsre);
+            cardView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.material_white));
+            RelativeLayout constraintLayout = findViewById(R.id.content_newsre);
             LinearLayout linearLayout = findViewById(R.id.newslistview);
             constraintLayout.setBackgroundColor(Color.WHITE);
             linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
             list.setAdapter(adapter);
 
         } else if (isDark && newsList.size() == 0) {
-
-            ConstraintLayout constraintLayout = findViewById(R.id.content_newsre);
+            cardView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
+            RelativeLayout constraintLayout = findViewById(R.id.content_newsre);
             LinearLayout linearLayout = findViewById(R.id.newslistview);
 
             constraintLayout.setBackgroundColor(Color.BLACK);
             linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
 
         } else if (!isDark && newsList.size() == 0) {
-            ConstraintLayout constraintLayout = findViewById(R.id.content_newsre);
+            cardView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.material_white));
+            RelativeLayout constraintLayout = findViewById(R.id.content_newsre);
             LinearLayout linearLayout = findViewById(R.id.newslistview);
 
             constraintLayout.setBackgroundColor(Color.WHITE);

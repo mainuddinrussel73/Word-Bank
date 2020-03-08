@@ -9,14 +9,20 @@
 
     <item
         android:id="@+id/menu_button2"
-        android:icon="@drawable/ic_artist"
+        android:icon="@drawable/ic_album_black_24dp"
         android:iconTint="@color/uou"
-        android:title="Artists" />
+        android:title="Albums" />
 
     <item
         android:id="@+id/menu_button3"
         android:icon="@drawable/ic_queue_play_next_black_24dp"
         android:iconTint="@color/uou"
         android:title="Play Queue" />
+
+    <item
+        android:id="@+id/menu_button4"
+        android:icon="@drawable/ic_artist"
+        android:iconTint="@color/uou"
+        android:title="Artists" />
 
 </menu>

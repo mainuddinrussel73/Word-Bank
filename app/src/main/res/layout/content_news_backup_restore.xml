@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.czgame.wordbank.ui.news.news_backup"
     tools:showIn="@layout/activity_backup_restore"
+    android:layout_marginTop="70dp"
     android:id="@+id/coordinate">
 
     <RelativeLayout
@@ -50,7 +51,7 @@
             android:paddingTop="10dp"
             android:text="@string/Ok"
             android:textColor="@color/cardview_light_background"
-            android:background="@drawable/buttonshaperound"
+            android:background="@drawable/btn_style"
             android:textSize="10dp" />
 
         <Button
@@ -69,7 +70,7 @@
             android:paddingTop="10dp"
             android:text="@string/restore"
             android:textColor="@color/cardview_light_background"
-            android:background="@drawable/buttonshaperound"
+            android:background="@drawable/btn_style"
             android:textSize="12dp" />
 
         <Button
@@ -89,7 +90,7 @@
             android:paddingTop="10dp"
             android:text="@string/Backup"
             android:textColor="@color/cardview_light_background"
-            android:background="@drawable/buttonshaperound"
+            android:background="@drawable/btn_style"
             android:textSize="12dp" />
 
 

@@ -19,30 +19,23 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.SpannableString;
 import android.text.style.TextAppearanceSpan;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.PopupMenu;
 import android.widget.PopupWindow;
-import android.widget.SearchView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.czgame.wordbank.R;
-import com.example.czgame.wordbank.root.WalkThrough;
+import com.example.czgame.wordbank.ui.Home.HomeActivity;
 import com.example.czgame.wordbank.ui.Quiz.Quiz_confirm;
 import com.example.czgame.wordbank.ui.alertme.AlarmMe;
 import com.example.czgame.wordbank.ui.backup_scheudle.daily_service;
@@ -58,15 +51,14 @@ import com.example.czgame.wordbank.ui.promotodo.TimelineView;
 import com.example.czgame.wordbank.ui.promotodo.daily_details;
 import com.example.czgame.wordbank.ui.promotodo.pro_backup;
 import com.example.czgame.wordbank.ui.promotodo.tree;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.leondzn.simpleanalogclock.SimpleAnalogClock;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -77,32 +69,24 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
-import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
 import es.dmoral.toasty.Toasty;
-import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
-import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetSequence;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final int PICKFILE_RESULT_CODE = 1;
     private static final int PERMISSION_REQUEST_CODE = 1;
-    public static boolean isDark;
     public static Activity mActivity;
     public static int score = 1111111;
     public static boolean isChecked = false;
-    public static int size = 0;
-    public static List<word> contactList = new ArrayList<word>();
-    public static SharedPreferences prefs;
-    public static SharedPreferences sizee;
+    public  boolean isDark;
+    public  SharedPreferences prefs;
+
     ActionBarDrawerToggle toggle;
     com.suke.widget.SwitchButton switchButton;
-    SearchView searchView;
-    SearchView searchView1;
-    Button sort;
-    ListView list;
+
+
+
     DrawerLayout drawer;
-    MyListAdapter adapter;
     Menu menu ;
     private Context mContext;
     NavigationView navigationView1;
@@ -141,12 +125,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mActivity = this;
 
-        if(isDark) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
-        }else {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        }
-
+        toolbar.setTitleTextColor(getResources().getColor(R.color.material_white));
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkPermission()) {
 
@@ -159,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+      /*  FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -169,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(myIntent, 0);
             }
-        });
+        });*/
 
 
         ///Intent intent=new Intent(MainActivity.this,quiz_page.class);
@@ -273,19 +252,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
 
+       /* */
+
+
+
+
+        List<word> wordList = new ArrayList<>();
         DatabaseHelper mDBHelper = new DatabaseHelper(this);
-
-
-        contactList.clear();
-
         int i =0;
-
         final Cursor cursor = mDBHelper.getAllData();
-
-        // looping through all rows and adding to list
         if (cursor.getCount() != 0) {
-            // show message
             while (cursor.moveToNext()) {
+                i++;
 
                 word word = new word();
 
@@ -329,159 +307,67 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-                contactList.add(word);
-             //   System.out.println(word.ANTONYMS);
-
-                // maintitle.add(word.WORD);
-                // subtitle.add(word.MEANING);
-
-                i++;
+                wordList.add(word);
+                
             }
-
-
-            // size = contactList.size();
-            adapter = new MyListAdapter(this);
-            list = findViewById(R.id.list);
-
-            String type = prefs.getString("sort", "asc");
-            if (type.equals("asc")) {
-                Collections.sort(contactList);
-            } else if (type.equals("des")) {
-                Collections.sort(contactList, Collections.reverseOrder());
-            } else if (type.equals("alp")) {
-                Collections.sort(contactList,
-                        new Comparator<word>() {
-                            public int compare(word f1, word f2) {
-                                return f1.getWORD().compareTo(f2.getWORD());
-                            }
-                        });
-            }
-
-            //list.setFastScrollEnabled(true);
-            list.setAdapter(adapter);
-
-            //textView = findViewById(R.id.board);
-            //final Intent intent = getIntent();
-            //bestscore = (intent.getIntExtra("sb",0)> bestscore)?intent.getIntExtra("sb",0) :bestscore;
-//            textView.setText("Total Words : \n"+String.valueOf(contactList.size())+"\nCurrent score : \n"+String.valueOf(bestscore));
-
-
-            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    // TODO Auto-generated method stub
-                    // System.out.println(position);
-                    //list.getChildAt(position).setBackgroundDrawable(ContextCompat.getDrawable(MainActivity.this, R.drawable.card_state_pressed));
-                    Intent myIntent = new Intent(view.getContext(), WordDetail.class);
-                    //String s = view.findViewById(R.id.subtitle).toString();
-                    //String s = (String) parent.getI;
-                    myIntent.putExtra("message", contactList.get(position).getWORD());
-                    myIntent.putExtra("meaningb", contactList.get(position).getMEANINGB());
-                    myIntent.putExtra("meaninge", contactList.get(position).getMEANINGE());
-                    myIntent.putExtra("syn", contactList.get(position).getSYNONYMS());
-                    myIntent.putExtra("ant", contactList.get(position).getANTONYMS());
-                    myIntent.putExtra("id", position);
-                    myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivityForResult(myIntent, 0);
-
-                }
-            });
-        } else {
-
-            Toasty.info(MainActivity.this,"Error Nothing found");
         }
 
-        size = contactList.size();
+        TextView wordc = findViewById(R.id.word);
+        Random r = new Random();
+        wordc.setText(wordList.get(r.nextInt(wordList.size() + 1) + 0).getWORD());
+        Calendar c = Calendar.getInstance();
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        int month = c.get(Calendar.MONTH);
+        int year = c.get(Calendar.YEAR);
+        String date = day + "/" + (month + 1) + "/" + year;
+        
+        TextView sokal = findViewById(R.id.sokal);
+        TextView bikal = findViewById(R.id.bikal);
+        TextView ratir = findViewById(R.id.rait);
+        if(day%2==0){
+            sokal.setText("সকালে :  "+ "আন্তর্জাতিক + মানসিক দক্ষতা + গণিত");
+            bikal.setText("বিকাল :  "+ "পেপার + কারেন্ট অ্যাফেয়ার্স");
+            ratir.setText("রাত   :  "+"ইংরেজী + বাংলা + এক্সাম");
+        }else{
+            sokal.setText("সকালে :  "+ "ইংরেজী + বাংলাদেশ + গণিত");
+            bikal.setText("বিকাল :  "+ "পেপার + জব সলিউসনস");
+            ratir.setText("রাত   :  "+"বাংলা + বিজ্ঞান + ভূগোল ও সুশাষন");
+        }
 
-        sizee = this.getSharedPreferences("ok", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sizee.edit();
-        editor.putInt("size", size);
-        editor.commit();
+        wordcount.setText("Total Number Of Words : " + i);
 
-
-
-        System.out.println(MainActivity.sizee.getInt("size", 0));
-
-
-        wordcount.setText("Total Number Of Words : " + MainActivity.sizee.getInt("size", 0));
-
-
-        sort = findViewById(R.id.sort);
-        sort.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                //Creating the instance of PopupMenu
-                //PopupMenu popup = new PopupMenu(MainActivity.this, sort);
-                //Inflating the Popup using xml file
-                Context wrapper = new ContextThemeWrapper(mContext, R.style.YOURSTYLE1);
-                if (isDark) {
-                    wrapper = new ContextThemeWrapper(MainActivity.this, R.style.YOURSTYLE);
-
-                } else {
-                    wrapper = new ContextThemeWrapper(MainActivity.this, R.style.YOURSTYLE1);
-                }
-
-                PopupMenu popup = new PopupMenu(wrapper, sort);
-                popup.getMenuInflater().inflate(R.menu.pop_up_menu, popup.getMenu());
+        SimpleAnalogClock customAnalogClock = findViewById(R.id.analog_clock);
 
 
-                //registering popup with OnMenuItemClickListener
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    public boolean onMenuItemClick(MenuItem item) {
-                        if (item.getTitle().equals("Ascending")) {
-                            Collections.sort(contactList);
-                            //  adapter = new MyListAdapter(getParent());
-                            list = findViewById(R.id.list);
-                            list.setAdapter(adapter);
+        Handler handler = new Handler();
 
-                            SharedPreferences.Editor editor = prefs.edit();
-                            editor.putString("sort", "asc");
-                            editor.commit();
+        final Runnable ra = new Runnable() {
+            public void run() {
+                Calendar cq = Calendar.getInstance();
+                int seconds = cq.get(Calendar.SECOND);
+                int minutes = cq.get(Calendar.MINUTE);
+                int hour = cq.get(Calendar.HOUR);
 
-                        } else if (item.getTitle().equals("Descending")) {
-                            Collections.sort(contactList, Collections.reverseOrder());
-                            //adapter = new MyListAdapter(getParent());
-                            list = findViewById(R.id.list);
-                            list.setAdapter(adapter);
 
-                            SharedPreferences.Editor editor = prefs.edit();
-                            editor.putString("sort", "des");
-                            editor.commit();
-
-                        } else if (item.getTitle().equals("Alphabetically")) {
-                            Collections.sort(contactList,
-                                    new Comparator<word>() {
-                                        public int compare(word f1, word f2) {
-                                            return f1.getWORD().compareTo(f2.getWORD());
-                                        }
-                                    });
-                            list = findViewById(R.id.list);
-                            list.setAdapter(adapter);
-
-                            SharedPreferences.Editor editor = prefs.edit();
-                            editor.putString("sort", "alp");
-                            editor.commit();
-
-                        } else {
-
-                        }
-
-                        Toasty.info(MainActivity.this, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
-                        return true;
-                    }
-                });
-
-                popup.show();//showing popup menu
+                customAnalogClock.setTime(hour,minutes,seconds);
+                handler.postDelayed(this, 1000);
             }
-        });//closing the setOnClickListener method
+        };
 
+        handler.postDelayed(ra, 1000);
+
+
+     //   customAnalogClock.s(true);
+       // customAnalogClock.setFace();
+
+/*
+
+*/
 
 
 
         ConstraintLayout constraintLayout1 = findViewById(R.id.content_main);
-        LinearLayout linearLayout1 = findViewById(R.id.listview);
+       // LinearLayout linearLayout1 = findViewById(R.id.listview);
 
         navigationView1 = findViewById(R.id.nav_view);
 
@@ -516,9 +402,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             colorStateList = new ColorStateList(states, colors);
 
         }
+        customAnalogClock.setFaceDrawable(ContextCompat.getDrawable(this,R.drawable.ic_clock));
 
         navigationView1.setItemIconTintList(colorStateList);
 
+        RelativeLayout relativeLayout = findViewById(R.id.bass);
         if (isDark) {
 
             constraintLayout1.setBackgroundColor(Color.BLACK);
@@ -532,24 +420,33 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             // ColorStateList colorStateList = new ColorStateList(states, colors);
             //navigationView1.setItemIconTintList(colorStateList);
+            customAnalogClock.setHourTint(ContextCompat.getColor(this,R.color.uou));
 
+           // customAnalogClock.setSecondDrawable(ContextCompat.getDrawable(this,R.drawable.ic_library_music_black_24dp));
+            customAnalogClock.setSecondTint(ContextCompat.getColor(this,R.color.material_lightblueA400));
+            customAnalogClock.setMinuteTint(ContextCompat.getColor(this,R.color.A400red));
 
             navigationView1.setItemTextColor(ColorStateList.valueOf(Color.WHITE));
-            linearLayout1.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
-            if (contactList.size() != 0) list.setAdapter(adapter);
+           relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
+            customAnalogClock.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
+            customAnalogClock.setFaceTint(ContextCompat.getColor(this, R.color.white));
+            //if (contactList.size() != 0) list.setAdapter(adapter);
 
         } else {
             constraintLayout1.setBackgroundColor(Color.WHITE);
             navigationView1.setBackgroundColor(Color.WHITE);
             navigationView1.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
             // linearLayout.setBackgroundColor(Color.WHITE);
-            linearLayout1.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background));
-
-            if (contactList.size() != 0) list.setAdapter(adapter);
+            customAnalogClock.setHourTint(ContextCompat.getColor(this,R.color.uou));
+            customAnalogClock.setSecondTint(ContextCompat.getColor(this,R.color.material_lightblueA400));
+            customAnalogClock.setMinuteTint(ContextCompat.getColor(this,R.color.A400red));
+           relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background));
+            customAnalogClock.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background));
+            customAnalogClock.setFaceTint(ContextCompat.getColor(this, R.color.black));
+            //if (contactList.size() != 0) list.setAdapter(adapter);
         }
 
-
-        editor = prefs.edit();
+        SharedPreferences.Editor editor = prefs.edit();
         editor.putBoolean("isDark", isDark);
         editor.commit();
 
@@ -580,7 +477,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Intent intent4 = new Intent(this, music_base.class);
 
-        intent4.putExtra("size", size);
+
         intent4.setAction(Intent.ACTION_VIEW);
         ShortcutInfo shortcutInfo4 = new ShortcutInfo.Builder(MainActivity.this, "Shortcut_4")
                 .setLongLabel("Play Song")
@@ -593,7 +490,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Intent intent5 = new Intent(this, Promotodo_activity.class);
 
-        intent5.putExtra("size", size);
         intent5.setAction(Intent.ACTION_VIEW);
         ShortcutInfo shortcutInfo5 = new ShortcutInfo.Builder(MainActivity.this, "Shortcut_5")
                 .setLongLabel("Promotodo")
@@ -627,20 +523,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    public void showSequence(View view) {
 
-
-
-
-        new MaterialTapTargetPrompt.Builder(this)
-                .setTarget(searchView)
-                .setPrimaryText("Primary text")
-                .setIcon(R.drawable.ic_searchw)
-                .show();
-
-
-
-    }
 
     public void showMessage(String title, String Message) {
 
@@ -671,7 +554,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivityForResult(myIntent, 0);
 
-        }else if(id == R.id.nav_daily){
+        }
+        else if(id == R.id.nav_daily){
             Intent myIntent = new Intent(this, daily_details.class);
             myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivityForResult(myIntent, 0);
@@ -681,11 +565,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent myIntent = new Intent(MainActivity.this, news_backup.class);
             myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivityForResult(myIntent, 0);
-        } else if (id == R.id.pro_back) {
+        }
+        else if (id == R.id.pro_back) {
             Intent myIntent = new Intent(MainActivity.this, pro_backup.class);
             myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivityForResult(myIntent, 0);
-        } else if (id == R.id.subscription) {
+        }
+        else if (id == R.id.subscription) {
 
 
             Calendar mcurrentTime = Calendar.getInstance();
@@ -721,19 +607,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mTimePicker.show();
 
 
-        } else if (id == R.id.nav_home) {
+        }
+        else if (id == R.id.nav_home) {
 
-            if (contactList.size() >= 4) {
+
                 SharedPreferences prefs = this.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
                 MainActivity.score = prefs.getInt("highscore", 0);
                 Intent myIntent = new Intent(MainActivity.this, Quiz_confirm.class);
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivityForResult(myIntent, 0);
-            } else {
-                showMessage("Sorry", "Collect more then 4 words.");
-            }
 
-        } else if (id == R.id.promotodo) {
+
+        }
+        else if (id == R.id.promotodo) {
 
             try {
                 Intent myIntent = new Intent(MainActivity.this, Promotodo_activity.class);
@@ -743,7 +629,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 e.getMessage();
             }
 
-        } else if (id == R.id.news) {
+        }
+        else if (id == R.id.nav_word) {
+
+            try {
+                Intent myIntent = new Intent(MainActivity.this, HomeActivity.class);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivityForResult(myIntent, 0);
+            } catch (Exception e) {
+                e.getMessage();
+            }
+
+        }
+        else if (id == R.id.news) {
 
             try {
                 Intent myIntent = new Intent(MainActivity.this, news_activity.class);
@@ -753,7 +651,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 e.getMessage();
             }
 
-        }else if(id == R.id.nav_back){
+        }
+        else if(id == R.id.nav_back){
 
             Calendar mcurrentTime = Calendar.getInstance();
             final int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
@@ -805,7 +704,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } catch (Exception e) {
                 e.getMessage();
             }
-        } else if (id == R.id.tree) {
+        }
+        else if (id == R.id.tree) {
             try {
                 Intent myIntent = new Intent(MainActivity.this, tree.class);
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -813,7 +713,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } catch (Exception e) {
                 e.getMessage();
             }
-        } else if (id == R.id.alarmme) {
+        }
+        else if (id == R.id.alarmme) {
             try {
                 Intent myIntent = new Intent(MainActivity.this, AlarmMe.class);
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -821,7 +722,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } catch (Exception e) {
                 e.getMessage();
             }
-        } else if (id == R.id.dairy) {
+        }
+        else if (id == R.id.dairy) {
             try {
                 Intent myIntent = new Intent(MainActivity.this, DiaryMain.class);
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -853,13 +755,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mActivity = MainActivity.this;
 
 
-            if (!isDark && contactList.size() != 0) {
+            if (!isDark && prefs.getInt("size",0) != 0) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogueLight);
                 builder.setTitle(R.string.darkmode);
                 builder.setMessage(R.string.yes);
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     ConstraintLayout constraintLayout = findViewById(R.id.content_main);
-                    LinearLayout linearLayout = findViewById(R.id.listview);
+                  //  LinearLayout linearLayout = findViewById(R.id.listview);
 
                     NavigationView navigationView = findViewById(R.id.nav_view);
 
@@ -875,8 +777,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         // linearLayout.setBackgroundColor(Color.BLACK);
                         navigationView.setBackgroundColor(Color.BLACK);
                         navigationView.setItemTextColor(ColorStateList.valueOf(Color.WHITE));
-                        linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.card_background_dark));
-                        list.setAdapter(adapter);
+                      //  linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.card_background_dark));
+                        //list.setAdapter(adapter);
 
                         Intent myIntent = new Intent(MainActivity.this, MainActivity.class);
                         myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -887,13 +789,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 });
                 builder.setNegativeButton("NO", null);
                 builder.show();
-            } else if (isDark && contactList.size() != 0) {
+            } else if (isDark && prefs.getInt("size",0) != 0) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogurDark);
                 builder.setTitle(R.string.darkmode);
                 builder.setMessage(R.string.no);
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     ConstraintLayout constraintLayout = findViewById(R.id.content_main);
-                    LinearLayout linearLayout = findViewById(R.id.listview);
+                   // LinearLayout linearLayout = findViewById(R.id.listview);
 
                     NavigationView navigationView = findViewById(R.id.nav_view);
 
@@ -907,8 +809,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         navigationView.setBackgroundColor(Color.WHITE);
                         navigationView.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
                         // linearLayout.setBackgroundColor(Color.WHITE);
-                        linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.card_background));
-                        list.setAdapter(adapter);
+                       // linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.card_background));
+                       // list.setAdapter(adapter);
 
                         Intent myIntent = new Intent(MainActivity.this, MainActivity.class);
                         myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -921,13 +823,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 builder.show();
 
 
-            } else if (!isDark && contactList.size() == 0) {
+            } else if (!isDark && prefs.getInt("size",0) == 0) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogueLight);
                 builder.setTitle(R.string.darkmode);
                 builder.setMessage(R.string.yes);
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     ConstraintLayout constraintLayout = findViewById(R.id.content_main);
-                    LinearLayout linearLayout = findViewById(R.id.listview);
+
 
                     NavigationView navigationView = findViewById(R.id.nav_view);
 
@@ -941,7 +843,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         // linearLayout.setBackgroundColor(Color.BLACK);
                         navigationView.setBackgroundColor(Color.BLACK);
                         navigationView.setItemTextColor(ColorStateList.valueOf(Color.WHITE));
-                        linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.card_background_dark));
+
 
 
                         Intent myIntent = new Intent(MainActivity.this, MainActivity.class);
@@ -953,13 +855,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 });
                 builder.setNegativeButton("NO", null);
                 builder.show();
-            } else if (isDark && contactList.size() == 0) {
+            } else if (isDark && prefs.getInt("size",0) == 0) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogurDark);
                 builder.setTitle(R.string.darkmode);
                 builder.setMessage(R.string.no);
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     ConstraintLayout constraintLayout = findViewById(R.id.content_main);
-                    LinearLayout linearLayout = findViewById(R.id.listview);
+
 
                     NavigationView navigationView = findViewById(R.id.nav_view);
 
@@ -974,7 +876,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         //navigationView.setItemTextColor();
                         navigationView.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
                         // linearLayout.setBackgroundColor(Color.WHITE);
-                        linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.card_background));
+
 
                         Intent myIntent = new Intent(MainActivity.this, MainActivity.class);
                         myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -1017,117 +919,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
 
-
-        searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
-        int searchImgId = getResources().getIdentifier("android:id/search_button", null, null);
-        ImageView v = searchView.findViewById(searchImgId);
-        v.setImageResource(R.drawable.ic_searchw);
-
-        searchView1 = (SearchView) menu.findItem(R.id.app_bar_search1).getActionView();
-        searchImgId = getResources().getIdentifier("android:id/search_button", null, null);
-        v = searchView1.findViewById(searchImgId);
-        v.setImageResource(R.drawable.ic_searchm);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                searchView.clearFocus();
-             /*   if(list.contains(query)){
-                    adapter.getFilter().filter(query);
-                }else{
-                    Toast.makeText(MainActivity.this, "No Match found",Toast.LENGTH_LONG).show();
-                }*/
-                return false;
-
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                adapter.filter(newText);
-                return false;
-            }
-
-        });
-        searchView1.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                searchView1.clearFocus();
-             /*   if(list.contains(query)){
-                    adapter.getFilter().filter(query);
-                }else{
-                    Toast.makeText(MainActivity.this, "No Match found",Toast.LENGTH_LONG).show();
-                }*/
-                return false;
-
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                adapter.filter1(newText);
-                return false;
-            }
-
-        });
-
-
-        if (WalkThrough.isfirst) {
-            WalkThrough.isfirst = false;
-            new MaterialTapTargetSequence()
-                    .addPrompt(new MaterialTapTargetPrompt.Builder(MainActivity.this)
-                            .setTarget(findViewById(R.id.fab))
-                            .setPrimaryText("Step 1")
-                            .setSecondaryText("Add Word")
-                            .setSecondaryTextSize(R.dimen.helper_text_size)
-                            .setFocalPadding(R.dimen.dp40)
-                            .create(), 4000)
-                    .addPrompt(new MaterialTapTargetPrompt.Builder(this)
-                            .setPrimaryText("Step 2")
-                            .setSecondaryText("Sort Words")
-                            .setSecondaryTextSize(R.dimen.helper_text_size)
-                            .setAnimationInterpolator(new FastOutSlowInInterpolator())
-                            .setMaxTextWidth(R.dimen.dp40)
-                            .setIcon(R.drawable.ic_sort_black_24dp)
-                            .setTarget(R.id.sort)
-                            .create(), 4000)
-                    .addPrompt(new MaterialTapTargetPrompt.Builder(this)
-                            .setPrimaryText("Step 3")
-                            .setSecondaryText("Search by word")
-                            .setSecondaryTextSize(R.dimen.helper_text_size)
-                            .setAnimationInterpolator(new FastOutSlowInInterpolator())
-                            .setMaxTextWidth(R.dimen.dp40)
-                            .setIcon(R.drawable.ic_searchw)
-                            .setTarget(searchView)
-                            .create(), 4000)
-                    .addPrompt(new MaterialTapTargetPrompt.Builder(MainActivity.this)
-                            .setTarget(findViewById(R.id.app_bar_search1))
-                            .setPrimaryText("Step 4")
-                            .setSecondaryText("Search by meaning")
-                            .setSecondaryTextSize(R.dimen.helper_text_size)
-                            .setAnimationInterpolator(new LinearOutSlowInInterpolator())
-                            .setFocalPadding(R.dimen.dp40)
-                            .setTarget(searchView1)
-                            .setIcon(R.drawable.ic_searchm)
-                            .create(), 4000)
-                    .addPrompt(new MaterialTapTargetPrompt.Builder(this)
-                            .setPrimaryText("Step 5")
-                            .setSecondaryText("Other Options : \n 1) Quiz \n 2) News \n 3) Music \n 4) Promotodo")
-                            .setSecondaryTextSize(R.dimen.helper_text_size)
-                            .setAnimationInterpolator(new FastOutSlowInInterpolator())
-                            .setMaxTextWidth(R.dimen.dp40)
-                            .setIcon(R.drawable.ic_menu_black_24dp)
-                            .setTarget(navigationView)
-                            )
-                    .show();
-            // Do first run stuff here then set 'firstrun' as false
-            // using the following line to edit/commit prefs
-        }
-        return super.onCreateOptionsMenu(menu);
-    }
     private boolean checkPermission() {
         int result = ContextCompat.checkSelfPermission(MainActivity.this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
         return result == PackageManager.PERMISSION_GRANTED;

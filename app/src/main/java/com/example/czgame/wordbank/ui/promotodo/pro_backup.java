@@ -334,17 +334,16 @@ public class pro_backup extends AppCompatActivity {
         mainlayout = findViewById(R.id.coordinate);
         coordinatorLayout = mainlayout.findViewById(R.id.coordinate_backup);
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
+        RelativeLayout relativeLayout = findViewById(R.id.coordinate_j);
         boolean isDark = prefs.getBoolean("isDark", false);
-        if(isDark) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
-        }else {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        }
+
+            toolbar.setTitleTextColor(getResources().getColor(R.color.material_white));
+
         if (isDark) {
             retext.setBackgroundColor(Color.rgb(64, 64, 64));
             retext.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.backgroundborder));
 
-            //coordinatorLayout.setBackgroundColor(Color.BLACK);
+          relativeLayout.setBackgroundColor(Color.BLACK);
             //mainlayout.setBackgroundColor(Color.BLACK);
             mainlayout.setBackgroundColor(Color.BLACK);
             coordinatorLayout.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
@@ -354,7 +353,7 @@ public class pro_backup extends AppCompatActivity {
             retext.setBackgroundColor(Color.WHITE);
             retext.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.backgroundborder));
 
-            //coordinatorLayout.setBackgroundColor(Color.WHITE);
+            relativeLayout.setBackgroundColor(Color.WHITE);
             //mainlayout.setBackgroundColor(Color.WHITE);
             mainlayout.setBackgroundColor(Color.WHITE);
             coordinatorLayout.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background));

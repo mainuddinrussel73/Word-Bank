@@ -26,7 +26,6 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.io.File;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -116,18 +115,7 @@ public class UpdateDiary_voice  extends AppCompatActivity {
                 }
             }
         });
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
 
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
@@ -136,11 +124,9 @@ public class UpdateDiary_voice  extends AppCompatActivity {
         RelativeLayout lidtb = findViewById(R.id.two);
         RelativeLayout lidtb1 = findViewById(R.id.lay2);
 
-        if(isDark) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
-        }else {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        }
+
+           // toolbar.setTitleTextColor(getResources().getColor(R.color.material_white));
+
         if (isDark) {
 
             laybase.setBackgroundColor(Color.BLACK);

@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
@@ -97,14 +96,11 @@ public class AlarmMe extends AppCompatActivity
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
 
-        LinearLayout laybase = findViewById(R.id.laybase);
+        RelativeLayout laybase = findViewById(R.id.laybase);
         RelativeLayout lidtb = findViewById(R.id.alarm_list_r);
 
-        if(isDark) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
-        }else {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        }
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+
         if (isDark && mAlarmListAdapter.getCount() != 0) {
 
             laybase.setBackgroundColor(Color.BLACK);

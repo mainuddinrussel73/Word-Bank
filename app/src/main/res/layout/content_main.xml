@@ -25,6 +25,6 @@
 
 
     <include
-        layout="@layout/list_fragment"
+        layout="@layout/content"
         app:layout_constraintEnd_toEndOf="@+id/nav_host_fragment" />
 </androidx.constraintlayout.widget.ConstraintLayout>

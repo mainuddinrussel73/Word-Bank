@@ -5,29 +5,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.czgame.wordbank.ui.news.news_backup"
-    android:id="@+id/coordinate_backup"
-    android:background="@color/cardview_light_background"
+    android:id="@+id/coordinate_j"
     android:theme="@style/AppTheme.NoActionBar">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <androidx.cardview.widget.CardView
         android:id="@+id/barrrr"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        app:cardCornerRadius="25dp"
+        app:cardElevation="3dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@drawable/btn_style"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+    </androidx.cardview.widget.CardView>
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/barrrr"
         >
         <include layout="@layout/content_news_backup_restore" />
     </RelativeLayout>

@@ -5,16 +5,18 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+       android:layout_margin="@dimen/activity_horizontal_margin"
+        app:cardCornerRadius="25dp"
+        app:cardElevation="3dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@drawable/btn_style"
             app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <Button
@@ -23,12 +25,13 @@
                 android:layout_height="40dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
+                android:layout_marginRight="5dp"
                 android:layout_gravity="right"
                 android:background="@drawable/ic_format_list_bulleted_black_24dp" />
 
         </androidx.appcompat.widget.Toolbar>
 
-    </com.google.android.material.appbar.AppBarLayout>
+    </androidx.cardview.widget.CardView>
 
 
 

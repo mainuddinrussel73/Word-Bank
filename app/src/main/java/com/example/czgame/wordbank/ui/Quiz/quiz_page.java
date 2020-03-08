@@ -23,7 +23,6 @@ import android.widget.Toast;
 
 import com.example.czgame.wordbank.R;
 import com.example.czgame.wordbank.ui.words.DatabaseHelper;
-import com.example.czgame.wordbank.ui.words.MainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -382,13 +381,13 @@ public class quiz_page extends AppCompatActivity {
         List<String> str = new ArrayList<>();
         Random rnd = new Random();
         int randomInt;
-        if (MainActivity.size == 0) {
+        if (Quiz_confirm.contactList.size() == 0) {
             randomInt = size;
         } else {
-            randomInt = 0 + rnd.nextInt(MainActivity.size + 1 - 0 + 1 - iii);
+            randomInt = 0 + rnd.nextInt(Quiz_confirm.contactList.size() + 1 - 0 + 1 - iii);
         }
 
-        // randomDouble = randomDouble * MainActivity.size + 1;
+        // randomDouble = randomDouble * HomeActivity.size + 1;
         //int randomInt = (int) randomDouble;
 
         if (randomInt == iii) {
@@ -424,13 +423,13 @@ public class quiz_page extends AppCompatActivity {
         String str = "";
         Random rnd = new Random();
         int randomInt;
-        if (MainActivity.size == 0) {
+        if (Quiz_confirm.contactList.size() == 0) {
             randomInt = size;
         } else {
-            randomInt = 0 + rnd.nextInt(MainActivity.size + 1 - 0 + 1 - iii);
+            randomInt = 0 + rnd.nextInt(Quiz_confirm.contactList.size() + 1 - 0 + 1 - iii);
         }
 
-        // randomDouble = randomDouble * MainActivity.size + 1;
+        // randomDouble = randomDouble * HomeActivity.size + 1;
         //int randomInt = (int) randomDouble;
 
         if (randomInt == iii) {

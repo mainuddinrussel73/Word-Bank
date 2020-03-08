@@ -40,7 +40,7 @@ public class Editorialonline extends AppCompatActivity {
         });
 
 
-        Button p,i,in,k,ds,dsun,j,jo,ny,al;
+        Button p,i,in,k,ds,dsun,j,jo,ny,al,fp,wp,bdp;
 
         p = findViewById(R.id.prothomalo);
         i = findViewById(R.id.itterfaq);
@@ -54,6 +54,9 @@ public class Editorialonline extends AppCompatActivity {
         dsun = findViewById(R.id.dailysun);
 
         al = findViewById(R.id.aljazeera);
+        fp = findViewById(R.id.foreignpolicy);
+        wp = findViewById(R.id.washpost);
+        bdp = findViewById(R.id.bdpratidin);
 
 
         p.setOnClickListener(new View.OnClickListener() {
@@ -170,17 +173,50 @@ public class Editorialonline extends AppCompatActivity {
             }
         });
 
+        fp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent myIntent = new Intent(Editorialonline.this, news_online.class);
+
+                myIntent.putExtra("tag", "foreignpolicy");
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivityForResult(myIntent, 0);
+            }
+        });
+
+        wp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent myIntent = new Intent(Editorialonline.this, news_online.class);
+
+                myIntent.putExtra("tag", "washpost");
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivityForResult(myIntent, 0);
+            }
+        });
+
+        bdp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent myIntent = new Intent(Editorialonline.this, news_online.class);
+
+                myIntent.putExtra("tag", "bdpratidin");
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivityForResult(myIntent, 0);
+            }
+        });
+
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
         RelativeLayout relativeLayout = findViewById(R.id.newsoptions);
         RelativeLayout baselayout = findViewById(R.id.baselayout);
         if(isDark) {
             baselayout.setBackgroundColor(Color.BLACK);
-            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
+            toolbar.setTitleTextColor(getResources().getColor(R.color.material_white));
             relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
         }else {
             baselayout.setBackgroundColor(Color.WHITE);
-            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+            toolbar.setTitleTextColor(getResources().getColor(R.color.material_white));
             relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
         }
     }

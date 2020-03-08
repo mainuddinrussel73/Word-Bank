@@ -33,8 +33,9 @@ import es.dmoral.toasty.Toasty;
 public class Quiz_confirm extends AppCompatActivity {
 
     public static SharedPreferences prefs;
+
     public static int questioncount = 10;
-    List<word> contactList = new ArrayList<>();
+    public  static  List<word> contactList = new ArrayList<>();
     private Animation mScaleAnimation;
 
     @Override
@@ -133,11 +134,9 @@ public class Quiz_confirm extends AppCompatActivity {
 
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
-        if(isDark) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
-        }else {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        }
+
+            toolbar.setTitleTextColor(getResources().getColor(R.color.material_white));
+
         TextView opt1 = findViewById(R.id.option1);
         TextView opt2 = findViewById(R.id.option2);
         RelativeLayout match = findViewById(R.id.match);

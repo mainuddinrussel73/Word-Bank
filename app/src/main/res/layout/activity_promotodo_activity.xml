@@ -12,16 +12,18 @@
 
 
 
-    <com.google.android.material.appbar.AppBarLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        app:cardCornerRadius="25dp"
+        app:cardElevation="3dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@drawable/btn_style"
             android:popupTheme="@style/AppTheme.PopupOverlay" >
 
 
@@ -30,7 +32,7 @@
 
 
 
-    </com.google.android.material.appbar.AppBarLayout>
+    </androidx.cardview.widget.CardView>
 
 
 

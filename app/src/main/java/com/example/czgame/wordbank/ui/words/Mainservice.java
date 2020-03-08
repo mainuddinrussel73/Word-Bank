@@ -60,10 +60,19 @@ public class Mainservice extends IntentService {
         double randomDouble = Math.random();
 
 
-        randomDouble = randomDouble * MainActivity.sizee.getInt("size", 0) + 0;
+        mDBHelper = new DatabaseHelper(this);
+        Cursor cursor = mDBHelper.getAllData();
+       int size = 0;
+
+        while (cursor.moveToNext()) {
+            size++;
+
+        }
+
+        randomDouble = randomDouble * size + 0;
         int randomInt = (int) randomDouble;
         word = randomword(randomInt);
-        System.out.println(MainActivity.sizee.getInt("size", 0));
+        System.out.println(size);
 
 
         //inflating the views (custom_normal.xml and custom_expanded.xml)

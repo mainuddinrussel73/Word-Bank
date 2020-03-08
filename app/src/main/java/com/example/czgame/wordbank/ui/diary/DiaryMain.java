@@ -105,11 +105,9 @@ public class DiaryMain extends AppCompatActivity {
         RelativeLayout laybase = findViewById(R.id.laybase);
         RelativeLayout lidtb = findViewById(R.id.opp);
 
-        if(isDark) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
-        }else {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        }
+
+            toolbar.setTitleTextColor(getResources().getColor(R.color.material_white));
+
         if (isDark && arrayAdapter.getCount() != 0) {
 
             laybase.setBackgroundColor(Color.BLACK);

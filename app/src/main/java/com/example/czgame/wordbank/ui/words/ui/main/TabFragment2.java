@@ -74,8 +74,12 @@ public class TabFragment2 extends Fragment {
                     sentence.setSENTENCE(cursor.getString(2));
 
                     i++;
-                    //  System.out.println(sentence.SENTENCE);
-                    sentenceList.add(sentence);
+                    try {
+                        if (sentence.getSENTENCE().trim().length() != 0)
+                            sentenceList.add(sentence);
+                    }catch (Exception e){
+
+                    }
 
 
                     // maintitle.add(word.WORD);

@@ -95,7 +95,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:background="@drawable/buttonshaperound"
+            android:background="@drawable/btn_style"
 
             android:text="GO HOME"
             android:textColor="@android:color/white" />

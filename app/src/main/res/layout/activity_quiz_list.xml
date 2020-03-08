@@ -126,7 +126,7 @@
         android:layout_marginStart="15dp"
         android:layout_marginTop="12dp"
         android:paddingBottom="10dp"
-        android:background="@drawable/buttonshaperound"
+        android:background="@drawable/btn_style"
         android:paddingRight="10dp"
         android:paddingTop="10dp"
         android:text="@string/btn_display"
@@ -148,7 +148,7 @@
         android:layout_marginTop="13dp"
 
         android:layout_marginRight="15dp"
-        android:background="@drawable/buttonshaperound"
+        android:background="@drawable/btn_style"
 
         android:gravity="center"
 
@@ -174,7 +174,7 @@
         android:layout_marginTop="18dp"
         android:layout_centerHorizontal="true"
 
-        android:background="@drawable/buttonshaperound"
+        android:background="@drawable/btn_style"
         android:text="@string/end"
         android:textColor="@color/cardview_light_background" />
 

@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="8dp"
-    android:background="@color/colorAccent">
+    android:background="@drawable/btn_style">
 
     <RelativeLayout
         android:id="@+id/icon_container"
@@ -51,7 +51,8 @@
             android:id="@+id/content_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Expand me to see a detailed message!"
+            android:fontFamily="@font/lilita_regular"
+            android:text="Detailed Message!"
             android:textColor="@color/cardview_light_background"
             />
     </LinearLayout>
@@ -78,6 +79,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
+            android:fontFamily="@font/belgrano"
+            android:text="@string/menu_words"
             android:textColor="@color/cardview_light_background"
             android:maxLines="8" />
     </LinearLayout>
@@ -92,7 +95,7 @@
             android:id="@+id/left_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/buttonshaperound"
+            android:background="@drawable/background_transparent"
             android:paddingLeft="4dp"
             android:paddingTop="4dp"
             android:textColor="@color/cardview_light_background"

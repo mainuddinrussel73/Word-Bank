@@ -112,7 +112,6 @@ import static com.example.czgame.wordbank.ui.media.fragment_plau_queue.playqueue
 import static com.example.czgame.wordbank.ui.media.music_base.bottomTabLayout;
 import static com.example.czgame.wordbank.ui.media.music_base.mVisualizer;
 import static com.example.czgame.wordbank.ui.media.music_base.toolbar;
-import static com.example.czgame.wordbank.ui.words.MainActivity.isDark;
 
 public class fragment_music_list extends Fragment implements music_base.OnBackPressedListener,Audiolist_adapter.EventListener,Audiogrid_adapter.EventListener{
     public static final int RUNTIME_PERMISSION_CODE = 7;
@@ -2910,12 +2909,14 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                     R.anim.slide_up);
 
 // Start animation
+            SharedPreferences prefs =context.getSharedPreferences("myPrefsKey", MODE_PRIVATE);
+            boolean isDark = prefs.getBoolean("isDark", false);
             if(isDark) {
-                toolbar.setBackgroundColor(Color.BLACK);
+              //  toolbar.setBackgroundColor(Color.BLACK);
                 add_phone.setBackgroundColor(Color.BLACK);
             }
             else {
-                toolbar.setBackgroundColor(Color.WHITE);
+               // toolbar.setBackgroundColor(Color.WHITE);
                 //toolbar.getNavigationIcon().setTint(Color.BLACK);
                 add_phone.setBackgroundColor(Color.WHITE);
             }
@@ -4903,7 +4904,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
 
 
-
+                        toolbar.setVisibility(View.GONE);
 
                         listView.setEnabled(false);
 
@@ -4948,6 +4949,7 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
 
 
+                        toolbar.setVisibility(View.VISIBLE);
                         listView.setEnabled(true);
                         gridView.setEnabled(true);
                         //     myView.setEnabled(false);
@@ -5135,6 +5137,8 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
                     @Override
                     public void onClick(View view) {
                         AlertDialog.Builder alertDialog;
+                        SharedPreferences prefs =context.getSharedPreferences("myPrefsKey", MODE_PRIVATE);
+                        boolean isDark = prefs.getBoolean("isDark", false);
                         try {
                             if (isDark) {
                                 alertDialog = new AlertDialog.Builder(getContext(), R.style.DialogurDark);
@@ -5200,9 +5204,6 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
             myIcon2 = getResources().getDrawable(R.drawable.ic_pause_black_24dp);
 
 
-
-            SharedPreferences prefs = context.getSharedPreferences("myPrefsKey", MODE_PRIVATE);
-            boolean isDark = prefs.getBoolean("isDark", false);
 
 
 
@@ -5845,7 +5846,8 @@ public class fragment_music_list extends Fragment implements music_base.OnBackPr
 
                             mutedColor = Color.parseColor("#DF0974");
 
-
+                        SharedPreferences prefs =context.getSharedPreferences("myPrefsKey", MODE_PRIVATE);
+                        boolean isDark = prefs.getBoolean("isDark", false);
                             if(!isDark) {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                     Window window = getActivity().getWindow();

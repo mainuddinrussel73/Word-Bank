@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 
 import com.example.czgame.wordbank.R;
 import com.example.czgame.wordbank.ui.words.ui.main.SectionsPagerAdapter;
@@ -13,6 +14,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager.widget.ViewPager;
 
 public class WordDetail extends AppCompatActivity {
@@ -38,17 +40,19 @@ public class WordDetail extends AppCompatActivity {
 
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
-        if(isDark) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
-        }else {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        }
+
+            toolbar.setTitleTextColor(getResources().getColor(R.color.material_white));
+
 
         TabLayout tabLayout = findViewById(R.id.tabs);
-        if(isDark) {
-            tabLayout.setBackgroundColor(getResources().getColor(R.color.black));
-        }else {
-            tabLayout.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+
+            //tabLayout.(getResources().getColor(R.color.material_white));
+
+        RelativeLayout cardView = findViewById(R.id.bbss);
+        if(isDark){
+            cardView.setBackgroundColor(ContextCompat.getColor(this,R.color.black));
+        }else{
+            cardView.setBackgroundColor(ContextCompat.getColor(this,R.color.material_white));
         }
         tabLayout.addTab(tabLayout.newTab().setText("Word Section"));
         tabLayout.addTab(tabLayout.newTab().setText("Sentences"));

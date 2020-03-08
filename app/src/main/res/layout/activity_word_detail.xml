@@ -1,34 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/bbss"
+    android:background="@color/uou"
     tools:context=".ui.words.WordDetail">
 
-    <com.google.android.material.appbar.AppBarLayout
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/open"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        app:cardCornerRadius="25dp"
+        app:cardElevation="3dp">
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@drawable/btn_style"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
+    </androidx.cardview.widget.CardView>
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabs"
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/appbarlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary" />
-    </com.google.android.material.appbar.AppBarLayout>
+            android:layout_below="@+id/open"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            app:cardCornerRadius="25dp"
+            app:cardElevation="3dp"
+
+            >
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:background="@drawable/btn_style"
+                app:tabTextColor="@color/white" />
+        </androidx.cardview.widget.CardView>
+
+
+
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/appbarlayout"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</RelativeLayout>

@@ -13,6 +13,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.example.czgame.wordbank.R;
+import com.example.czgame.wordbank.ui.Home.HomeActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -36,7 +37,7 @@ public class MyListAdapter extends BaseAdapter implements SectionIndexer {
 
         this.context = context;
         this.contactList = new ArrayList<word>();
-        this.contactList.addAll(MainActivity.contactList);
+        this.contactList.addAll(HomeActivity.contactList);
         this.alphaIndexer = new HashMap<String, Integer>();
 
         int size = this.contactList.size();
@@ -60,12 +61,12 @@ public class MyListAdapter extends BaseAdapter implements SectionIndexer {
 
     @Override
     public int getCount() {
-        return MainActivity.contactList.size();
+        return HomeActivity.contactList.size();
     }
 
     @Override
     public word getItem(int i) {
-        return MainActivity.contactList.get(i);
+        return HomeActivity.contactList.get(i);
     }
 
     @Override
@@ -83,9 +84,9 @@ public class MyListAdapter extends BaseAdapter implements SectionIndexer {
         TextView number = rowView.findViewById(R.id.num);
 
 
-        //System.out.println("klkl"+MainActivity.contactList.size());
-        titleText.setText(MainActivity.contactList.get(position).getWORD());
-        number.setText(Integer.toString(MainActivity.contactList.get(position).getID()));
+        //System.out.println("klkl"+HomeActivity.contactList.size());
+        titleText.setText(HomeActivity.contactList.get(position).getWORD());
+        number.setText(Integer.toString(HomeActivity.contactList.get(position).getID()));
 
         //LinearLayout listitem = rowView.findViewById(R.id.list_item);
 
@@ -118,62 +119,62 @@ public class MyListAdapter extends BaseAdapter implements SectionIndexer {
 
     public void filter(String charText) {
         charText = charText.toLowerCase();
-        MainActivity.contactList.clear();
+        HomeActivity.contactList.clear();
         // System.out.println(this.contactList.size());
         if (charText.length() == 0) {
-            MainActivity.contactList.addAll(this.contactList);
+            HomeActivity.contactList.addAll(this.contactList);
         } else {
             for (word wp : this.contactList) {
                 if (wp.getWORD().toLowerCase().contains(charText)) {
-                    MainActivity.contactList.add(wp);
+                    HomeActivity.contactList.add(wp);
                 }
             }
         }
         //SharedPreferences prefs = MyListAdapter.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
-        String type = MainActivity.prefs.getString("sort", "asc");
+        String type = HomeActivity.prefs.getString("sort", "asc");
         if (type.equals("asc")) {
-            Collections.sort(MainActivity.contactList);
+            Collections.sort(HomeActivity.contactList);
         } else if (type.equals("des")) {
-            Collections.sort(MainActivity.contactList, Collections.reverseOrder());
+            Collections.sort(HomeActivity.contactList, Collections.reverseOrder());
         } else if (type.equals("alp")) {
-            Collections.sort(MainActivity.contactList,
+            Collections.sort(HomeActivity.contactList,
                     new Comparator<word>() {
                         public int compare(word f1, word f2) {
                             return f1.getWORD().compareTo(f2.getWORD());
                         }
                     });
         }
-        // System.out.println(MainActivity.contactList.size());
+        // System.out.println(HomeActivity.contactList.size());
         notifyDataSetChanged();
     }
 
     public void filter1(String charText) {
         charText = charText.toLowerCase();
-        MainActivity.contactList.clear();
+        HomeActivity.contactList.clear();
         // System.out.println(this.contactList.size());
         if (charText.length() == 0) {
-            MainActivity.contactList.addAll(this.contactList);
+            HomeActivity.contactList.addAll(this.contactList);
         } else {
             for (word wp : this.contactList) {
                 if (wp.getMEANINGB().toLowerCase().contains(charText) || wp.getMEANINGE().toLowerCase().contains(charText)) {
-                    MainActivity.contactList.add(wp);
+                    HomeActivity.contactList.add(wp);
                 }
             }
         }
-        String type = MainActivity.prefs.getString("sort", "asc");
+        String type = HomeActivity.prefs.getString("sort", "asc");
         if (type.equals("asc")) {
-            Collections.sort(MainActivity.contactList);
+            Collections.sort(HomeActivity.contactList);
         } else if (type.equals("des")) {
-            Collections.sort(MainActivity.contactList, Collections.reverseOrder());
+            Collections.sort(HomeActivity.contactList, Collections.reverseOrder());
         } else if (type.equals("alp")) {
-            Collections.sort(MainActivity.contactList,
+            Collections.sort(HomeActivity.contactList,
                     new Comparator<word>() {
                         public int compare(word f1, word f2) {
                             return f1.getWORD().compareTo(f2.getWORD());
                         }
                     });
         }
-        // System.out.println(MainActivity.contactList.size());
+        // System.out.println(HomeActivity.contactList.size());
         notifyDataSetChanged();
     }
 

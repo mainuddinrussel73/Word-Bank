@@ -7,20 +7,22 @@
     android:background="@color/black">
 
     <!-- This dialog activity for adding information -->
-    <com.google.android.material.appbar.AppBarLayout
+    <androidx.cardview.widget.CardView
         android:id="@+id/appbarlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:elevation="3dp"
+        app:cardCornerRadius="25dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@drawable/btn_style"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+    </androidx.cardview.widget.CardView>
 
 <RelativeLayout
     android:id="@+id/two"
@@ -150,7 +152,7 @@
 
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:background="@drawable/buttonshaperound"
+                android:background="@drawable/btn_style"
                 android:drawableStart="@drawable/ic_share_black_24dp"
                 android:paddingLeft="30dp"
                 />
@@ -160,7 +162,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:background="@drawable/buttonshaperound"
+                android:background="@drawable/btn_style"
                 android:text="cancel"
                 android:textColor="@color/white" />
 
@@ -171,7 +173,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:background="@drawable/buttonshaperound"
+                android:background="@drawable/btn_style"
                 android:text="Save"
                 android:textColor="@color/white" />
 

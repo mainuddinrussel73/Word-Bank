@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/llll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,34 +10,19 @@
 
 
 
-    <com.google.android.material.appbar.AppBarLayout
-
-        android:id="@+id/topbar"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/topbar"
+        android:layout_margin="@dimen/activity_horizontal_margin">
 
 
-        </androidx.appcompat.widget.Toolbar>
-
-
-
-
-    </com.google.android.material.appbar.AppBarLayout>
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/layoutbase"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_below="@+id/topbar"
-            android:layout_margin="@dimen/activity_horizontal_margin"
+
             android:background="@drawable/card_background_dark"
             android:orientation="vertical"
             android:padding="@dimen/activity_horizontal_margin">
@@ -85,6 +69,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
+                    android:backgroundTint="@color/uou"
                     android:text="Alarm" />
 
                 <Spinner
@@ -108,14 +93,14 @@
 
                 <Button
                     android:id="@+id/date_button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_alignParentLeft="true"
                     android:layout_margin="5dp"
                     android:paddingLeft="35dp"
                     android:paddingRight="35dp"
-                    android:background="@drawable/buttonshaperound"
+                    android:background="@drawable/btn_style"
                     android:onClick="onDateClick"
                     android:text="Date Pick"
                     android:textColor="@color/white"/>
@@ -128,7 +113,7 @@
                     android:layout_margin="5dp"
                     android:layout_alignParentRight="true"
                     android:text="Time Pick"
-                    android:background="@drawable/buttonshaperound"
+                    android:background="@drawable/btn_style"
                     android:onClick="onTimeClick"
                     android:textColor="@color/white"/>
 
@@ -140,7 +125,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                android:layout_below="@+id/fff"
-                android:layout_marginTop="300dp"
+                android:layout_marginTop="200dp"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
                 android:padding="@dimen/activity_horizontal_margin">
             <Button
                 android:id="@+id/done"
@@ -148,7 +134,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                android:layout_alignParentLeft="true"
-                android:background="@drawable/buttonshaperound"
+                android:background="@drawable/btn_style"
                 android:onClick="onDoneClick"
                 android:text="Done"
                 android:layout_margin="@dimen/activity_horizontal_margin"
@@ -163,7 +149,7 @@
                 android:layout_gravity="right"
                 android:layout_marginStart="120dp"
                 android:layout_alignParentRight="true"
-                android:background="@drawable/buttonshaperound"
+                android:background="@drawable/btn_style"
                 android:onClick="onCancelClick"
                 android:layout_margin="@dimen/activity_horizontal_margin"
                 android:text="Cancel"
@@ -177,7 +163,7 @@
 
 
 
-
+    </ScrollView>
 
 
 </RelativeLayout>

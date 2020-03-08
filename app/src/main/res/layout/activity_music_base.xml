@@ -3,21 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/bassss"
     android:layout_height="match_parent"
+    android:background="@color/uou"
     tools:context=".ui.media.music_base">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <androidx.cardview.widget.CardView
         android:id="@+id/app_bar_music"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@null">
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:elevation="3dp"
+        app:cardCornerRadius="25dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/material_black"
-            app:titleTextColor="@color/uou"
+            android:background="@drawable/btn_style"
+            app:titleTextColor="@color/material_pink50"
            >
 
 
@@ -31,7 +35,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_gravity="right"
                 android:background="@drawable/ic_sort_black_24dp"
-                android:backgroundTint="@color/uou"
+                android:backgroundTint="@color/material_pink50"
                 />
 
         </androidx.appcompat.widget.Toolbar>
@@ -39,15 +43,16 @@
 
 
 
-    </com.google.android.material.appbar.AppBarLayout>
+    </androidx.cardview.widget.CardView>
 
 
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
         android:id="@+id/sliding_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="820dp"
         android:layout_above="@+id/bottomTabLayout"
         android:layout_alignTop="@+id/app_bar_music"
+        android:layout_marginTop="-8dp"
         android:layout_marginBottom="-20dp"
         android:gravity="bottom">
 

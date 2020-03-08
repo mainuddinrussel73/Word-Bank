@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.czgame.wordbank.R;
-import com.example.czgame.wordbank.ui.words.MainActivity;
+import com.example.czgame.wordbank.ui.Home.HomeActivity;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -168,7 +168,7 @@ public class News_adapter extends BaseAdapter {
             }
         }
 
-            String type = MainActivity.prefs.getString("sort", "asc");
+            String type = HomeActivity.prefs.getString("sort", "asc");
             if (type.equals("asc")) {
                 Collections.sort(news_activity.newsList);
             } else if (type.equals("des")) {

@@ -4,6 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:id="@+id/sen_frag"
+    android:layout_marginTop="100dp"
     android:layout_height="match_parent">
 
 
@@ -48,7 +49,7 @@
             android:paddingRight="5dp"
             android:paddingTop="5dp"
             android:src="@drawable/fab_add"
-            android:background="@drawable/buttonshaperound"
+            android:background="@drawable/btn_style"
             />
 
     </LinearLayout>

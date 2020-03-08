@@ -32,7 +32,6 @@ import java.util.GregorianCalendar;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 
 public class EditAlarm extends AppCompatActivity
@@ -131,19 +130,6 @@ public class EditAlarm extends AppCompatActivity
 
 
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
-
         mTitle = findViewById(R.id.title);
         mAlarmEnabled = findViewById(R.id.alarm_checkbox);
         mOccurence = findViewById(R.id.occurence_spinner);
@@ -183,7 +169,7 @@ public class EditAlarm extends AppCompatActivity
 
 
         if(isDark) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
+          //  toolbar.setBackgroundColor(getResources().getColor(R.color.black));
             lll.setBackgroundColor(Color.BLACK);
             mTitle.setTextColor(Color.WHITE);
             mAlarmEnabled.setTextColor(Color.WHITE);
@@ -194,7 +180,7 @@ public class EditAlarm extends AppCompatActivity
             laybase.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
 
         }else {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
+           // toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
             lll.setBackgroundColor(Color.WHITE);
             mTitle.setTextColor(Color.BLACK);
             mAlarmEnabled.setTextColor(Color.BLACK);

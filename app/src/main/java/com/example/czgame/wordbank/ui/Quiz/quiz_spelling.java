@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.example.czgame.wordbank.R;
 import com.example.czgame.wordbank.ui.words.DatabaseHelper;
-import com.example.czgame.wordbank.ui.words.MainActivity;
 import com.example.czgame.wordbank.ui.words.word;
 
 import java.util.Locale;
@@ -73,10 +72,12 @@ public class quiz_spelling extends AppCompatActivity {
 
         texth = findViewById(R.id.wordh);
 
-        pos =getRandomNumberInRange(0,MainActivity.size-1);
+        pos =getRandomNumberInRange(0,Quiz_confirm.contactList.size()-1);
 
         System.out.println(pos);
-        curr = randomword(pos);
+        try {
+            curr = randomword(pos);
+        }catch (Exception e){}
       //  mCheckView = findViewById(R.id.check);
 
         listView = findViewById(R.id.learnlist);
@@ -88,7 +89,11 @@ public class quiz_spelling extends AppCompatActivity {
         for (int j = 0; j <i ; j++) {
             int y = getRandomNumberInRange(0,i-1);
             System.out.println(y);
-            s = replaceCharAt(s,y,'_');
+            try{
+            s = replaceCharAt(s,y,'_');}
+            catch (Exception e) {
+
+            }
         }
 
         texth.setText(s);
@@ -203,6 +208,7 @@ public class quiz_spelling extends AppCompatActivity {
             texth.setText(curr.getWORD());
             texth.setTextColor(Color.GREEN);
 
+
         }else{
             score2--;
            // mCheckView.uncheck();
@@ -217,22 +223,35 @@ public class quiz_spelling extends AppCompatActivity {
 
     }
 
+
     public void onNxt(View view) {
 
-        curr = randomword(getRandomNumberInRange(0,MainActivity.size-1));
+        curr = randomword(getRandomNumberInRange(0, Quiz_confirm.contactList.size()-1));
 
-        int i = curr.getWORD().length();
-        String s = curr.getWORD().trim();
+try {
+    int i = curr.getWORD().length();
 
-        for (int j = 0; j <i ; j++) {
-            int y =getRandomNumberInRange(0,i-1);
-            s = replaceCharAt(s,y,'_');
+    String s = curr.getWORD().trim();
+
+    for (int j = 0; j < i; j++) {
+        int y = getRandomNumberInRange(0, i - 1);
+        try {
+            s = replaceCharAt(s, y, '_');
+        } catch (Exception e) {
+
         }
+    }
 
-        texth.setText(s);
+    word.setText("");
 
-        spell_adapter spell_adapter = new spell_adapter(curr);
-        listView.setAdapter(spell_adapter);
+
+    texth.setText(s);
+
+    spell_adapter spell_adapter = new spell_adapter(curr);
+    listView.setAdapter(spell_adapter);
+}catch ( Exception e){
+
+}
 
     }
 

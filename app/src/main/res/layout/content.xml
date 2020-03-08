@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bass"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginTop="70dp"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginBottom="@dimen/activity_horizontal_margin"
+    android:background="@drawable/card_background"
+    android:orientation="vertical">
+
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/topcard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:backgroundTint="@color/av_light_blue"
+        app:cardCornerRadius="@dimen/activity_horizontal_margin"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:fontFamily="@font/lilita_regular"
+            android:gravity="center"
+            android:text="Word Of the day : "
+            android:textColor="@color/background"
+            android:textSize="20dp">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/word"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="50dp"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:fontFamily="@font/lilita_regular"
+            android:gravity="center"
+            android:text="Mortification."
+            android:textColor="@color/background"
+            android:textSize="35dp">
+
+        </TextView>
+
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/seccaed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/topcard"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:background="@drawable/card_background"
+        android:backgroundTint="@color/uou"
+        app:cardCornerRadius="@dimen/activity_horizontal_margin"
+        app:cardElevation="20dp"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:fontFamily="@font/lilita_regular"
+            android:gravity="left"
+            android:text="আজকের রুটিন : "
+            android:textColor="@color/background"
+            android:textSize="25dp">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/sokal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:fontFamily="@font/lilita_regular"
+            android:gravity="left"
+            android:text="সকালে :  "
+            android:textColor="@color/background"
+            android:textSize="15dp">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/bikal"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="80dp"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:fontFamily="@font/lilita_regular"
+            android:gravity="left"
+            android:text="দুপুরে : "
+            android:textColor="@color/background"
+            android:textSize="15dp">
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/rait"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="120dp"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:fontFamily="@font/lilita_regular"
+            android:gravity="left"
+            android:text="রাতে : "
+            android:textColor="@color/background"
+            android:textSize="15dp">
+
+        </TextView>
+
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+    <com.leondzn.simpleanalogclock.SimpleAnalogClock
+        android:id="@+id/analog_clock"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_below="@+id/seccaed"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:background="@drawable/card_background"
+        app:faceDrawable="@drawable/ic_clock"
+        app:hourTint="@color/colorPrimary"
+        app:secondTint="@color/colorAccent" />
+
+</RelativeLayout>

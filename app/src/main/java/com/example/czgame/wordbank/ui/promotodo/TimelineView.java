@@ -92,11 +92,9 @@ public class TimelineView extends AppCompatActivity {
         });
 
 
-        if(isDark) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
-        }else {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        }
+
+            toolbar.setTitleTextColor(getResources().getColor(R.color.material_white));
+
 
         DbTaskDhandle mDBHelper = new DbTaskDhandle(this);
         List<Task_Detail> singerList = new ArrayList<>();

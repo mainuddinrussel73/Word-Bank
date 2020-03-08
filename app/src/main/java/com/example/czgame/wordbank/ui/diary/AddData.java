@@ -75,11 +75,9 @@ public class AddData  extends AppCompatActivity {
         RelativeLayout laybase = findViewById(R.id.dialogId);
         RelativeLayout lidtb = findViewById(R.id.two);
 
-        if(isDark) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
-        }else {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        }
+
+            toolbar.setTitleTextColor(getResources().getColor(R.color.material_white));
+
         if (isDark) {
 
             laybase.setBackgroundColor(Color.BLACK);

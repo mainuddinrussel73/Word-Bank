@@ -15,6 +15,18 @@ public class Audio implements Serializable, Comparable<Audio> {
 
     private String imagepath;
 
+    @Override
+    public String toString() {
+        return "Audio{" +
+                "data='" + data + '\'' +
+                ", title='" + title + '\'' +
+                ", album='" + album + '\'' +
+                ", artist='" + artist + '\'' +
+                ", Duration='" + Duration + '\'' +
+                ", imagepath='" + imagepath + '\'' +
+                '}';
+    }
+
     public Audio(String data, String title, String album, String artist) {
         this.data = data;
         this.title = title;

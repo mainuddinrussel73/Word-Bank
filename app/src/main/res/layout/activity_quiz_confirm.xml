@@ -7,20 +7,22 @@
     tools:context="com.example.czgame.wordbank.ui.Quiz.Quiz_confirm"
     android:id="@+id/confirm">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/app_bar_music"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        app:cardCornerRadius="25dp"
+        app:cardElevation="3dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@drawable/btn_style"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+    </androidx.cardview.widget.CardView>
 
     <RelativeLayout
         android:id="@+id/multi"
@@ -81,7 +83,7 @@
 
         </RelativeLayout>
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/strtquiz"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -91,11 +93,11 @@
             android:layout_marginBottom="50dp"
             android:padding="5dp"
             android:text="Start !"
+            android:background="@drawable/btn_style"
             android:textColor="@android:color/white"
-
             android:textSize="30sp">
 
-        </com.google.android.material.button.MaterialButton>
+        </Button>
 
     </RelativeLayout>
 
@@ -119,19 +121,19 @@
 
         </TextView>
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/strtquizmatch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="55dp"
-
+            android:background="@drawable/btn_style"
             android:padding="5dp"
             android:text="Start !"
             android:textColor="@android:color/white"
             android:textSize="30sp">
 
-        </com.google.android.material.button.MaterialButton>
+        </Button>
     </RelativeLayout>
 
     <RelativeLayout
@@ -154,7 +156,7 @@
 
         </TextView>
 
-        <com.google.android.material.button.MaterialButton
+        <Button
             android:id="@+id/spelling"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -163,12 +165,13 @@
             android:padding="5dp"
             android:text="Start !"
             android:layout_centerHorizontal="true"
+            android:background="@drawable/btn_style"
             android:layout_marginTop="55dp"
             android:layout_marginBottom="55dp"
             android:textColor="@android:color/white"
             android:textSize="30sp">
 
-        </com.google.android.material.button.MaterialButton>
+        </Button>
     </RelativeLayout>
 
 </RelativeLayout>

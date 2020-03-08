@@ -102,7 +102,7 @@ import jp.wasabeef.glide.transformations.BlurTransformation;
 import mkaflowski.mediastylepalette.MediaNotificationProcessor;
 
 import static com.bumptech.glide.request.RequestOptions.bitmapTransform;
-import static com.example.czgame.wordbank.ui.words.MainActivity.isDark;
+import static com.example.czgame.wordbank.ui.Home.HomeActivity.isDark;
 
 public class Media_list_activity extends AppCompatActivity  {
 

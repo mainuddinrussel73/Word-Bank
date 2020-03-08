@@ -8,20 +8,22 @@
     android:orientation="vertical"
     android:id="@+id/add_news_item">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <androidx.cardview.widget.CardView
         android:id="@+id/appbarlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        app:cardCornerRadius="25dp"
+        app:cardElevation="3dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@drawable/btn_style"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+    </androidx.cardview.widget.CardView>
     <RelativeLayout
         android:id="@+id/newslay"
         android:layout_width="match_parent"
@@ -129,7 +131,7 @@
             android:layout_gravity="left"
             android:layout_marginLeft="150dp"
             android:paddingBottom="10dp"
-            android:background="@drawable/buttonshaperound"
+            android:background="@drawable/btn_style"
             android:paddingLeft="20dp"
             android:paddingTop="10dp"
             android:text="Save"

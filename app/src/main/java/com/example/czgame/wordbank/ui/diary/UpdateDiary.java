@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -34,8 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.czgame.wordbank.R;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
+import com.example.czgame.wordbank.utill.TextViewEx;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,7 +49,6 @@ import java.util.List;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import es.dmoral.toasty.Toasty;
 
@@ -84,10 +81,8 @@ class words{
 }
 
 public class UpdateDiary  extends AppCompatActivity {
-    TextInputEditText subjectEt;
-    TextInputLayout s;
-    TextInputEditText descriptionEt;
-    TextInputLayout d;
+    EditText subjectEt;
+    TextViewEx descriptionEt;
     Button updateBt,shareBtOnUpdate,advance;
     SqliteDatabase dbUpdate;
     List<words> suggs = new ArrayList<>();
@@ -110,9 +105,7 @@ public class UpdateDiary  extends AppCompatActivity {
         SQLiteDatabase sqliteDatabase = dbUpdate.getWritableDatabase();
 
         subjectEt = findViewById(R.id.subjectEditTextIdUpdate1);
-        s = findViewById(R.id.subjectEditTextIdUpdate);
         descriptionEt = findViewById(R.id.descriptionEditTextIdUpdate1);
-        d = findViewById(R.id.descriptionEditTextIdUpdate);
 
 
         updateBt = findViewById(R.id.saveButtonIdUpdate);
@@ -127,7 +120,7 @@ public class UpdateDiary  extends AppCompatActivity {
 
 
         subjectEt.setText(sub);
-        descriptionEt.setText(des);
+        descriptionEt.setText(des,true);
 
 
 
@@ -182,18 +175,7 @@ public class UpdateDiary  extends AppCompatActivity {
         warn = findViewById(R.id.warn);
 
         warn.setVisibility(View.GONE);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
-
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
-
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
 
 
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
@@ -202,37 +184,28 @@ public class UpdateDiary  extends AppCompatActivity {
         RelativeLayout laybase = findViewById(R.id.dialogId);
         RelativeLayout lidtb = findViewById(R.id.two);
 
-        if(isDark) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
-        }else {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        }
+
         if (isDark) {
 
-            laybase.setBackgroundColor(Color.BLACK);
+            laybase.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.dark_gray));
             subjectEt.setHintTextColor(Color.rgb(185, 185, 185));
             subjectEt.setTextColor(Color.WHITE);
 
-            s.setDefaultHintTextColor( ColorStateList.valueOf(ContextCompat.getColor(this, R.color.divider)));
 
             descriptionEt.setHintTextColor(Color.rgb(185, 185, 185));
             descriptionEt.setTextColor(Color.WHITE);
 
-            d.setDefaultHintTextColor( ColorStateList.valueOf(ContextCompat.getColor(this, R.color.divider)));
 
             lidtb.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
         } else if (!isDark) {
 
-            laybase.setBackgroundColor(Color.WHITE);
+            laybase.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),R.color.material_pink50));
             subjectEt.setHintTextColor(Color.BLACK);
             subjectEt.setTextColor(Color.BLACK);
 
-            s.setDefaultHintTextColor( ColorStateList.valueOf(ContextCompat.getColor(this, R.color.darkgray)));
 
             descriptionEt.setHintTextColor(Color.BLACK);
             descriptionEt.setTextColor(Color.BLACK);
-
-            d.setDefaultHintTextColor( ColorStateList.valueOf(ContextCompat.getColor(this, R.color.darkgray)));
 
 
             lidtb.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
@@ -252,8 +225,9 @@ public class UpdateDiary  extends AppCompatActivity {
 
             }
         });
+        descriptionEt.setEnabled(false);
 
-
+        final int[] i = {0};
         //for updating database data
         updateBt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -261,10 +235,18 @@ public class UpdateDiary  extends AppCompatActivity {
                 Date date = new Date();
                 String d = (String) DateFormat.format("dd/MM/yyyy  hh:mm: a",date);
 
-                if(dbUpdate.update(subjectEt.getText().toString(),descriptionEt.getText().toString(),"",d,id,0)==true){
-                    Toasty.success(getApplicationContext(), "Data updated", Toast.LENGTH_SHORT).show();
-                    backToMain();
+                i[0]++;
+                if(i[0] ==2){
+                    if(dbUpdate.update(subjectEt.getText().toString(),descriptionEt.getText().toString(),"",d,id,0)==true){
+                        Toasty.success(getApplicationContext(), "Data updated", Toast.LENGTH_SHORT).show();
+                        backToMain();
+                    }
+                    i[0]=0;
+                }else if(i[0]==1){
+                    descriptionEt.setEnabled(true);
+                    descriptionEt.setText(descriptionEt.getText().toString(),false);
                 }
+
             }
         });
 

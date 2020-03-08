@@ -96,11 +96,9 @@ public class add_page extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
 
-        if(isDark) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.black));
-        }else {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.colorAccent));
-        }
+
+            toolbar.setTitleTextColor(getResources().getColor(R.color.material_white));
+
         if (isDark) {
             additem.setBackgroundColor(Color.BLACK);
             word.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.edittextstyledark));
