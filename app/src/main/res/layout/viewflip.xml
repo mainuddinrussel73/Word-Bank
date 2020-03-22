@@ -1,5 +1,5 @@
 <ViewFlipper android:id="@+id/viewFlipper"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -20,11 +20,8 @@
         android:id="@+id/some"
         android:layout_height="wrap_content"
         android:background="@drawable/editextstyle"
-        android:paddingTop="3dp"
-        android:paddingLeft="2dp"
-        android:paddingBottom="5dp"
-        android:paddingRight="2dp"
-        android:layout_margin="@dimen/text_margin"
+        android:padding="2dp"
+
         >
         <include layout="@layout/content_web_news" />
     </RelativeLayout>

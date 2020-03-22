@@ -110,7 +110,7 @@ public class Artist_adapter  extends BaseAdapter {
             tt.setTextColor(Color.parseColor("#10bcc9"));
 
 
-            griditm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background_dark));
+            griditm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.background_card_dark));
 
         } else {
 
@@ -118,7 +118,7 @@ public class Artist_adapter  extends BaseAdapter {
             // tt.setTextColor(Color.BLACK);
             tt.setTextColor(Color.parseColor("#10bcc9"));
 
-            griditm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background));
+            griditm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.background_card));
         }
 
 

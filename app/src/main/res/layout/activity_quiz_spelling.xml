@@ -4,9 +4,34 @@
     android:id="@+id/backup"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bbb"
+    android:background="@color/soft_light"
     tools:context=".ui.Quiz.quiz_spelling">
 
+
+    <LinearLayout
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/card_style"
+        android:orientation="horizontal">
+        <View android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            ></View>
+
+        <TextView
+            android:id="@+id/scores"
+            android:layout_width="140dp"
+            android:layout_height="77dp"
+            android:layout_gravity="right"
+            android:fontFamily="@font/lilita_regular"
+            android:gravity="center"
+            android:text="@string/Score"
+            android:textColor="@color/av_red"
+            android:textSize="14dp" />
+
+
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/texth"
@@ -18,7 +43,7 @@
 
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_marginBottom="@dimen/activity_horizontal_margin"
-        android:background="@drawable/card_background_dark"
+        android:background="@drawable/base_rounded_white"
        >
 
         <EditText
@@ -55,7 +80,7 @@
             android:id="@+id/learnlist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/card_background_dark"
+            android:background="@drawable/base_rounded_white"
             android:padding="25dp">
 
         </androidx.recyclerview.widget.RecyclerView>
@@ -75,6 +100,7 @@
           android:layout_height="50dp"
           android:layout_margin="@dimen/activity_horizontal_margin"
           android:hint="Spell the word.."
+          android:background="@drawable/base_rounded_white"
           android:padding="15dp"
 
           >

@@ -1,5 +1,6 @@
 package com.example.czgame.wordbank.ui.media;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,7 +22,7 @@ import com.example.czgame.wordbank.R;
 import java.util.ArrayList;
 
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -107,6 +108,7 @@ public class fragment_music_artist extends Fragment implements music_base.OnBack
 
 
 
+
         if (isDark && allsongs.size() != 0) {
 
 
@@ -114,7 +116,7 @@ public class fragment_music_artist extends Fragment implements music_base.OnBack
             linearLayout.setBackgroundColor(Color.BLACK);
             gridView.setAdapter(artist_adapter);
             gridView.setBackgroundColor(Color.BLACK);
-            relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(getContext().getApplicationContext(), R.drawable.card_background_dark));
+            relativeLayout.setBackgroundColor(Color.BLACK);
         } else if (!isDark && allsongs.size() != 0) {
 
             linearLayout.setBackgroundColor(Color.WHITE);
@@ -124,14 +126,14 @@ public class fragment_music_artist extends Fragment implements music_base.OnBack
             gridView.setBackgroundColor(Color.WHITE);
            // listView.setAdapter(adapter);
             gridView.setAdapter(artist_adapter);
-            relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(getContext().getApplicationContext(), R.drawable.card_background));
+            relativeLayout.setBackgroundColor(Color.WHITE);
 
         } else if (isDark && allsongs.size() == 0) {
 
             _rootLayout.setBackgroundColor(Color.BLACK);
             //listView.setBackgroundColor(Color.BLACK);
             gridView.setBackgroundColor(Color.BLACK);
-            relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(getContext().getApplicationContext(), R.drawable.card_background_dark));
+            relativeLayout.setBackgroundColor(Color.BLACK);
             linearLayout.setBackgroundColor(Color.BLACK);
 
 
@@ -142,8 +144,7 @@ public class fragment_music_artist extends Fragment implements music_base.OnBack
           //  listView.setBackgroundColor(Color.WHITE);
             gridView.setBackgroundColor(Color.WHITE);
            linearLayout.setBackgroundColor(Color.WHITE);
-            relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(getContext().getApplicationContext(), R.drawable.card_background));
-
+            relativeLayout.setBackgroundColor(Color.WHITE);
 
 
         }
@@ -159,7 +160,8 @@ public class fragment_music_artist extends Fragment implements music_base.OnBack
                myIntent.putExtra("albumid", allsongs.get(position).getID());
                myIntent.putExtra("album", allsongs.get(position).getAlbumName());
                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-               startActivityForResult(myIntent, 0);
+               ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) view.getContext(),view.findViewById(R.id.play_pause), "image_share1");
+               startActivity(myIntent, activityOptionsCompat.toBundle());
            }
        });
     }

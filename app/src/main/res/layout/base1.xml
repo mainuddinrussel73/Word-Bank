@@ -24,12 +24,13 @@
             android:layout_alignParentLeft="true"
             android:layout_marginRight="5dip"
             android:padding="3dip"
-            app:cardCornerRadius="5dp">
+            app:cardCornerRadius="25dp">
 
             <com.github.siyamed.shapeimageview.RoundedImageView
                 android:id="@+id/play_pause"
                 android:layout_width="40dip"
                 android:layout_height="40dip"
+                app:siRadius="25dp"
                 android:src="@drawable/image"/>
 
         </androidx.cardview.widget.CardView>
@@ -47,6 +48,7 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:text="Song Name - [details]"
+            android:fontFamily="@font/lilita_regular"
             android:textColor="#DF0974"
             android:textSize="10sp"
             android:textStyle="bold" />
@@ -67,6 +69,7 @@
             android:singleLine = "true"
             android:text="Singer Name"
             android:textColor="#DF0974"
+            android:fontFamily="@font/belgrano"
             android:textSize="10sp" />
 
 

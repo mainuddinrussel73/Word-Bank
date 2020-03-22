@@ -196,29 +196,37 @@ public class daily_details extends AppCompatActivity {
         RelativeLayout ooo = findViewById(R.id.ooo);
         RelativeLayout uuu = findViewById(R.id.uuuu);
         if (isDark) {
-            mChart.setBackgroundColor(Color.BLACK);
+            mChart.setBackgroundColor(Color.parseColor("#272627"));
             mChart.getXAxis().setTextColor(Color.WHITE);
             mChart.getAxisLeft().setTextColor(Color.WHITE);
+            mChart.getAxisRight().setTextColor(Color.WHITE);
+            mChart.getLineData().setValueTextColor(Color.WHITE);
             mChart.getLegend().setTextColor(Color.WHITE);
             barChart.getXAxis().setTextColor(Color.WHITE);
             barChart.getAxisLeft().setTextColor(Color.WHITE);
             barChart.getLegend().setTextColor(Color.WHITE);
-            barChart.setBackgroundColor(Color.BLACK);
+            barChart.getBarData().setValueTextColor(Color.WHITE);
+            barChart.getAxisRight().setTextColor(Color.WHITE);
+            barChart.setBackgroundColor(Color.parseColor("#272627"));
             relativeLayout.setBackgroundColor(Color.BLACK);
-            ooo.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.card_background_dark));
-            uuu.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.card_background_dark));
+            ooo.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.background_card_dark));
+            uuu.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.background_card_dark));
         } else {
-            mChart.setBackgroundColor(Color.WHITE);
+            mChart.setBackgroundColor(Color.parseColor("#d7d7d1"));
             mChart.getXAxis().setTextColor(Color.BLACK);
             mChart.getAxisLeft().setTextColor(Color.BLACK);
+            mChart.getAxisRight().setTextColor(Color.BLACK);
+            mChart.getLineData().setValueTextColor(Color.BLACK);
             mChart.getLegend().setTextColor(Color.BLACK);
             barChart.getXAxis().setTextColor(Color.BLACK);
             barChart.getAxisLeft().setTextColor(Color.BLACK);
+            barChart.getBarData().setValueTextColor(Color.BLACK);
+            barChart.getAxisRight().setTextColor(Color.BLACK);
             barChart.getLegend().setTextColor(Color.BLACK);
-            barChart.setBackgroundColor(Color.WHITE);
+            barChart.setBackgroundColor(Color.parseColor("#d7d7d1"));
             relativeLayout.setBackgroundColor(Color.WHITE);
-            ooo.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.card_background));
-            uuu.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.card_background));
+            ooo.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.background_card));
+            uuu.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.background_card));
         }
 
 

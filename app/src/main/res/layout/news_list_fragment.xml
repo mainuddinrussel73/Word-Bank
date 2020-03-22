@@ -1,73 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-
-    android:layout_marginLeft="@dimen/activity_vertical_margin"
-    android:layout_marginBottom="@dimen/activity_vertical_margin"
-    android:layout_marginRight="@dimen/activity_vertical_margin"
-    android:layout_marginTop="@dimen/activity_vertical_margin"
     android:id="@+id/newslistview"
-    android:background="@drawable/card_background">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ui.news.news_activity"
+    tools:showIn="@layout/content_news">
 
 
-    <com.facebook.shimmer.ShimmerFrameLayout
-        android:id="@+id/shimmer_view_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
 
-        android:visibility="gone"
-        >
 
-        <!-- Adding 7 rows of placeholders -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <include layout="@layout/placeholderforshimmer" />
-            <include layout="@layout/placeholderforshimmer" />
-            <include layout="@layout/placeholderforshimmer" />
-            <include layout="@layout/placeholderforshimmer" />
-            <include layout="@layout/placeholderforshimmer" />
-            <include layout="@layout/placeholderforshimmer" />
-            <include layout="@layout/placeholderforshimmer" />
-        </LinearLayout>
-
-    </com.facebook.shimmer.ShimmerFrameLayout>
-
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/pullToRefresh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fastScrollAlwaysVisible="true"
-        android:fastScrollEnabled="true"
-        android:padding="10dp">
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/news_list"
-
-        android:fastScrollEnabled="true"
-        android:fastScrollAlwaysVisible="true"
         android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_height="match_parent"
-        android:background="?android:selectableItemBackground"
-
-        android:divider="@null"
-
+        android:clipToPadding= "false"
         android:dividerHeight="10dp"
+        android:divider="@null"
+        android:fastScrollAlwaysVisible="false"
+        android:fastScrollEnabled="true"
+        android:paddingTop="80dp"
+        android:scrollbarStyle="outsideOverlay"
+
+
+
         >
 
 
 
-    </ListView>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </androidx.recyclerview.widget.RecyclerView>
+
 
 </LinearLayout>

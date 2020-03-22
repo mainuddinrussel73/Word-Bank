@@ -7,38 +7,40 @@
     android:background="@color/white"
     tools:context=".ui.media.fragment_plau_queue">
 
+
+
+
+
     <RelativeLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginTop="?attr/actionBarSize"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
-        android:background="@drawable/card_background"
+
         >
+
+
 
 
         <RelativeLayout
             android:id="@+id/inner"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/activity_horizontal_margin"
-            android:background="@color/white"
-            android:padding="@dimen/activity_horizontal_margin">
+            android:background="@color/white">
 
-            <ListView
+
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/gridviews"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding= "false"
                 android:divider="@null"
-                android:dividerHeight="0dp"
                 android:fastScrollAlwaysVisible="false"
+                android:dividerHeight="5dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:fastScrollEnabled="true"
-                android:horizontalSpacing="0dp"
+                android:paddingTop="80dp"
+                android:paddingRight="@dimen/activity_horizontal_margin"
                 android:scrollbarStyle="outsideOverlay"
-                android:stretchMode="spacingWidth"
 
 
 
@@ -48,7 +50,7 @@
 
 
 
-            </ListView>
+            </androidx.recyclerview.widget.RecyclerView>
         </RelativeLayout>
 
 

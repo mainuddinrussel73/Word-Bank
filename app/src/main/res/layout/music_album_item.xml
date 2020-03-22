@@ -6,23 +6,27 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:background="@drawable/card_background"
+    android:background="@drawable/background_card"
     android:orientation="vertical"
     android:paddingBottom="15dp">
 
 
 
     <androidx.cardview.widget.CardView android:id="@+id/thumbnail"
-        android:layout_width="290dp"
-        android:layout_height="290dp"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
-        app:cardCornerRadius="5dp">
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        app:cardCornerRadius="55dp">
 
         <com.github.siyamed.shapeimageview.RoundedImageView
             android:id="@+id/play_pause"
-            android:layout_width="290dp"
-            android:layout_height="290dp"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:transitionName="image_share"
+            app:siRadius="55dp"
             android:src="@drawable/image"/>
 
     </androidx.cardview.widget.CardView>

@@ -3,10 +3,10 @@ package com.example.czgame.wordbank.ui.Quiz;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.method.ScrollingMovementMethod;
@@ -14,10 +14,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +27,7 @@ import java.util.List;
 import java.util.Random;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import es.dmoral.toasty.Toasty;
 
@@ -44,19 +43,22 @@ public class quiz_page extends AppCompatActivity {
     public long total = 30000;
     public long temp = 0;
     SharedPreferences gamePrefs;
-    ScrollView scrollView;
+    RelativeLayout scrollView;
     CountDownTimer cTimer = null;
     List<String> word = new ArrayList<>();
     TextView timer;
     int size;
     int currnum = Quiz_confirm.questioncount;
     int max = Quiz_confirm.questioncount;
-    private RadioGroup radioSexGroup;
-    private RadioButton radioSexButton;
+    CardView c1,c2,c3,c4;
+    Button t1,t2,t3,t4;
     private Button btnDisplay, nxt, previousquiz;
     private DatabaseHelper mDBHelper;
     private SQLiteDatabase mDb;
-    private TextView textView, scoress;
+    List<Button> optionn =  new ArrayList<>();
+    private LinearLayout radioSexGroup;
+    private LinearLayout radioSexButton;
+    private TextView quess,textView, scoress;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,7 +76,8 @@ public class quiz_page extends AppCompatActivity {
         scoress.setText("Current score : " + score);
         btnDisplay = findViewById(R.id.btnDisplay);
         btnDisplay.setEnabled(true);
-        textView = findViewById(R.id.quiz_question);
+        quess = findViewById(R.id.quiz_question);
+        textView = findViewById(R.id.quiz_detail);
         textView.setMovementMethod(new ScrollingMovementMethod());
 
         scrollView = findViewById(R.id.scrollButtons);
@@ -90,20 +93,71 @@ public class quiz_page extends AppCompatActivity {
         while (word.isEmpty()) {
             word = randomword(randomInt);
         }
-        textView.setText("Question : " + (currnum) + "\n What is the meaning of the word : " + word.get(0) + "?");
+        quess.setText("Question : " + (currnum) +" : ");
+        textView.setText("What is the meaning of the word : " + word.get(0) + "?");
 
-        RadioGroup radioGroup = scrollView.findViewById(R.id.radioGroup);
+        LinearLayout radioGroup = scrollView.findViewById(R.id.radioGroup);
 
-        for (int i = 0; i < radioGroup.getChildCount(); i++) {
-
-            ((RadioButton) radioGroup.getChildAt(i)).setText(randommean(randomInt));
-        }
-
-
-        ((RadioButton) radioGroup.getChildAt(randomInt)).setText(word.get(1));
+        c1  = findViewById(R.id.radio0);
+        c2  = findViewById(R.id.radio1);
+        c3  = findViewById(R.id.radio2);
+        c4  = findViewById(R.id.radio3);
 
 
-        addListenerOnButton(word);
+        t1 =  findViewById(R.id.op1);
+        t1.setText(randommean(randomInt));
+        t2 =  findViewById(R.id.op2);
+        t2.setText(randommean(randomInt));
+        t3 =  findViewById(R.id.op3);
+        t3.setText(randommean(randomInt));
+        t4 =  findViewById(R.id.op4);
+        t4.setText(randommean(randomInt));
+
+        optionn.add(t1);
+        optionn.add(t2);
+        optionn.add(t3);
+        optionn.add(t4);
+        optionn.get(randomInt).setText(word.get(1));
+
+
+
+
+
+
+        t1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("clicked");
+                addListenerOnButton(word,t1);
+                c1.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(quiz_page.this,R.color.uou)));
+
+            }
+        });
+        t2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addListenerOnButton(word,t2);
+                c2.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(quiz_page.this,R.color.uou)));
+            }
+        });
+        t3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addListenerOnButton(word,t3);
+                c3.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(quiz_page.this,R.color.uou)));
+            }
+        });
+        t4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addListenerOnButton(word,t4);
+                c4.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(quiz_page.this,R.color.uou)));
+            }
+        });
+
+
+
+
         nxt = findViewById(R.id.nextquiz);
 
         nxt.setOnClickListener(new View.OnClickListener() {
@@ -134,45 +188,54 @@ public class quiz_page extends AppCompatActivity {
 
 
         RelativeLayout relativeLayout = findViewById(R.id.relative_quiz);
+        CardView linearLayout = findViewById(R.id.question);
 
+        LinearLayout linearLayout1 = findViewById(R.id.radioGroup);
         timer = findViewById(R.id.timer);
 
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
-        ScrollView scrollView = findViewById(R.id.scrollButtons);
+        RelativeLayout scrollView = findViewById(R.id.scrollButtons);
         if (isDark) {
 
-            scoress.setTextColor(Color.WHITE);
             textView.setTextColor(Color.WHITE);
-            timer.setTextColor(Color.WHITE);
-            timer.setBackground(ContextCompat.getDrawable(this,R.drawable.card_background_dark));
-            scoress.setBackground(ContextCompat.getDrawable(this,R.drawable.card_background_dark));
-            textView.setBackground(ContextCompat.getDrawable(this,R.drawable.card_background_dark));
-            for (int i = 0; i < radioGroup.getChildCount(); i++) {
-
-
-                ((RadioButton) radioGroup.getChildAt(i)).setTextColor(Color.WHITE);
-                radioGroup.getChildAt(i).setBackground(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
-            }
-            relativeLayout.setBackgroundColor(Color.BLACK);
-            scrollView.setBackground(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
+            quess.setTextColor(Color.WHITE);
+            linearLayout.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.black)));
+            relativeLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.soft_dark));
+            linearLayout1.setBackgroundColor(ContextCompat.getColor(this,R.color.soft_dark));
+            scrollView.setBackgroundColor(ContextCompat.getColor(this, R.color.soft_dark));
+            c1.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.black)));
+            c2.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.black)));
+            c3.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.black)));
+            c4.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.black)));
+            t1.setTextColor(Color.WHITE);
+            t2.setTextColor(Color.WHITE);
+            t3.setTextColor(Color.WHITE);
+            t4.setTextColor(Color.WHITE);
         } else {
-            timer.setBackground(ContextCompat.getDrawable(this,R.drawable.card_background));
-            scoress.setBackground(ContextCompat.getDrawable(this,R.drawable.card_background));
-            textView.setBackground(ContextCompat.getDrawable(this,R.drawable.card_background));
-            scoress.setTextColor(Color.BLACK);
+            quess.setTextColor(Color.BLACK);
+            linearLayout.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.white)));
             textView.setTextColor(Color.BLACK);
-            timer.setTextColor(Color.BLACK);
-            for (int i = 0; i < radioGroup.getChildCount(); i++) {
+            relativeLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.soft_light));
+            linearLayout1.setBackgroundColor(ContextCompat.getColor(this,R.color.soft_light));
+            scrollView.setBackgroundColor(ContextCompat.getColor(this, R.color.soft_light));
 
-
-                ((RadioButton) radioGroup.getChildAt(i)).setTextColor(Color.BLACK);
-                radioGroup.getChildAt(i).setBackground(ContextCompat.getDrawable(this, R.drawable.card_background));
-            }
-            relativeLayout.setBackgroundColor(Color.WHITE);
-            scrollView.setBackground(ContextCompat.getDrawable(this, R.drawable.card_background));
+            c1.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.white)));
+            c2.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.white)));
+            c3.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.white)));
+            c4.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.white)));
+            t1.setTextColor(Color.BLACK);
+            t2.setTextColor(Color.BLACK);
+            t3.setTextColor(Color.BLACK);
+            t4.setTextColor(Color.BLACK);
         }
 
+        btnDisplay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toasty.info(quiz_page.this,"Click an option.",Toast.LENGTH_LONG).show();
+            }
+        });
         Button button2 = findViewById(R.id.endquiz);
 
         button2.setOnClickListener(new View.OnClickListener() {
@@ -260,102 +323,83 @@ public class quiz_page extends AppCompatActivity {
         getWindow().setBackgroundDrawableResource(android.R.color.white);
     }
 
-    public void addListenerOnButton(List<String> s) {
+    public void addListenerOnButton(List<String> s,Button b) {
 
         radioSexGroup = findViewById(R.id.radioGroup);
         final List<String> sr = s;
-        int selectedId = radioSexGroup.getCheckedRadioButtonId();
-
-        // find the radiobutton by returned id
-        //btnDisplay.setEnabled(true);
-        System.out.println(selectedId);
 
         btnDisplay.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-
-                int selectedId = radioSexGroup.getCheckedRadioButtonId();
-
-                if (selectedId > 0) {
                     btnDisplay.setEnabled(true);
-                    radioSexButton = findViewById(selectedId);
 
-                    if (sr.get(1).equals(radioSexButton.getText())) {
+
+                    if (sr.get(1).equals(b.getText())) {
                         Toasty.success(quiz_page.this,
                                 "congrats", Toast.LENGTH_SHORT).show();
 
 
-                        for (int i = 0; i < radioSexGroup.getChildCount(); i++) {
 
-
-                            if (sr.get(1).equals(((RadioButton) radioSexGroup.getChildAt(i)).getText())) {
-                                Drawable marker;
-                                marker = getResources().getDrawable(R.drawable.card_background_green);
-                                radioSexGroup.getChildAt(i).setBackground(marker);
-
-
-                                //rb_flash.setTextColor(Color.BLACK);
-                            }
-
-
+                        if(b.getId()==t1.getId()){
+                            c1.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(quiz_page.this,R.color.av_green)));
+                        }
+                        if(b.getId()==t2.getId()){
+                            c2.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(quiz_page.this,R.color.av_green)));
+                        }
+                        if(b.getId()==t3.getId()){
+                            c3.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(quiz_page.this,R.color.av_green)));
+                        }
+                        if(b.getId()==t4.getId()){
+                            c4.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(quiz_page.this,R.color.av_green)));
                         }
                         score++;
-
-
                         btnDisplay.setEnabled(false);
-
-
                         correct++;
                         scoress.setText("Current score : " + score);
-
-
                         Intent myIntent = new Intent(quiz_page.this, quiz_page.class);
-                        //String s = view.findViewById(R.id.subtitle).toString();
-                        //String s = (String) parent.getI;
                         myIntent.putExtra("s", score);
                         myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivityForResult(myIntent, 0);
                         cancelTimer();
-
                         check(v.getContext());
                     } else {
                         Toasty.error(quiz_page.this,
                                 "Alas!", Toast.LENGTH_SHORT).show();
-
-
-                        for (int i = 0; i < radioSexGroup.getChildCount(); i++) {
-
-
-                            if (sr.get(1).equals(((RadioButton) radioSexGroup.getChildAt(i)).getText())) {
-                                Drawable marker;
-                                marker = getResources().getDrawable(R.drawable.card_background_green);
-                                radioSexGroup.getChildAt(i).setBackground(marker);
-                            } else if (((RadioButton) radioSexGroup.getChildAt(i)).getText().equals(radioSexButton.getText())) {
-                                Drawable marker;
-                                marker = getResources().getDrawable(R.drawable.card_red);
-                                radioSexGroup.getChildAt(i).setBackground(marker);
-                            }
-
-                        }
-                        System.out.println("srrr" + sr.get(0));
-                        // index++;
                         wordBuck.add(sr.get(0));
-                        System.out.println("sssss" + wordBuck.toString());
+                        if(b.getId()==t1.getId()){
+                            c1.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(quiz_page.this,R.color.av_red)));
+                        }
+                        if(b.getId()==t2.getId()){
+                            c2.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(quiz_page.this,R.color.av_red)));
+                        }
+                        if(b.getId()==t3.getId()){
+                            c3.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(quiz_page.this,R.color.av_red)));
+                        }
+                        if(b.getId()==t4.getId()){
+                            c4.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(quiz_page.this,R.color.av_red)));
+                        }
+                        if(t1.getText().toString().trim().equals(sr.get(1))){
+                            c1.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(quiz_page.this,R.color.av_green)));
+                        }
+                        if(t2.getText().toString().trim().equals(sr.get(1))){
+                            c2.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(quiz_page.this,R.color.av_green)));
+                        }
+                        if(t3.getText().toString().trim().equals(sr.get(1))){
+                            c3.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(quiz_page.this,R.color.av_green)));
+                        }
+                        if(t4.getText().toString().trim().equals(sr.get(1))){
+                            c4.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(quiz_page.this,R.color.av_green)));
+                        }
 
 
                         score--;
                         wrong++;
                         if (score < 0) score = 0;
-
                         scoress.setText("Current score : " + score);
                         btnDisplay.setEnabled(false);
-
-
                         Intent myIntent = new Intent(quiz_page.this, quiz_page.class);
-                        //String s = view.findViewById(R.id.subtitle).toString();
-                        //String s = (String) parent.getI;
                         myIntent.putExtra("s", score);
                         myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivityForResult(myIntent, 0);
@@ -363,10 +407,7 @@ public class quiz_page extends AppCompatActivity {
                         check(v.getContext());
 
                     }
-                } else {
-                    Toasty.warning(quiz_page.this,
-                            "Select an option.", Toast.LENGTH_SHORT).show();
-                }
+
                 // find the radiobutton by returned id
 
 
@@ -384,7 +425,7 @@ public class quiz_page extends AppCompatActivity {
         if (Quiz_confirm.contactList.size() == 0) {
             randomInt = size;
         } else {
-            randomInt = 0 + rnd.nextInt(Quiz_confirm.contactList.size() + 1 - 0 + 1 - iii);
+            randomInt = rnd.nextInt(Quiz_confirm.contactList.size());
         }
 
         // randomDouble = randomDouble * HomeActivity.size + 1;
@@ -426,7 +467,7 @@ public class quiz_page extends AppCompatActivity {
         if (Quiz_confirm.contactList.size() == 0) {
             randomInt = size;
         } else {
-            randomInt = 0 + rnd.nextInt(Quiz_confirm.contactList.size() + 1 - 0 + 1 - iii);
+            randomInt = rnd.nextInt(Quiz_confirm.contactList.size());
         }
 
         // randomDouble = randomDouble * HomeActivity.size + 1;

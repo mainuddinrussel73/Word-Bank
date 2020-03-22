@@ -4,20 +4,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -26,22 +23,23 @@ import com.example.czgame.wordbank.ui.words.DatabaseHelper;
 import com.example.czgame.wordbank.ui.words.word;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
 public class Quiz_match extends Activity {
     public static int a, b;
     public static word[] words = new word[4];
-    public static String[] s2 = new String[4];
-    public static String[] s3 = new String[4];
+    public static List<String> s2 = new ArrayList<>();
+    public static List<String> s1 = new ArrayList<>();
     private static ArrayList<String> usedNames = new ArrayList<String>();
     ArrayAdapter<String> listadapter;
     ArrayAdapter<String> listadapter2;
     DrawView draw;
     word word = null;
-    String[] s1 = new String[4];
     boolean toogle = true;
     Random Dice = new Random();
     float x1;
@@ -52,6 +50,9 @@ public class Quiz_match extends Activity {
     private SQLiteDatabase mDb;
     public static TextView scoress;
     public  static  int score1 = 0;
+    CardView c1,c2,c3,c4,c5,c6,c7,c8;
+    Button b1,b2,b3,b4,b5,b6,b7,b8;
+    List<Button> optionn =  new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +71,9 @@ public class Quiz_match extends Activity {
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
 
+        s1.clear();
+        s2.clear();
+        words = new word[4];
         for (int i = 0; i < 4; i++) {
 
             double randomDouble = Math.random();
@@ -77,87 +81,68 @@ public class Quiz_match extends Activity {
             int randomInt = (int) randomDouble;
 
             System.out.println(randomInt);
-
-            while (word == null) {
-                word = randomword(randomInt);
-            }
-
+            word = randomword(randomInt);
             System.out.println(word.getWORD());
 
-            s1[i] = word.getWORD();
+            s1.add(i,word.getWORD());
             words[i] = word;
-            s2[i] = word.getMEANINGB();
-            s3[i] = word.getMEANINGB();
+            s2.add(i,word.getMEANINGB());
 
-            word = null;
         }
 
 
-        Fighters();
+        c1  = findViewById(R.id.radio0);
+        c2  = findViewById(R.id.radio1);
+        c3  = findViewById(R.id.radio2);
+        c4  = findViewById(R.id.radio3);
+        c5  = findViewById(R.id.radio4);
+        c6  = findViewById(R.id.radio5);
+        c7  = findViewById(R.id.radio6);
+        c8  = findViewById(R.id.radio7);
 
-        for (int i = 0; i < usedNames.size(); i++) {
-            System.out.println("----------------------");
-            System.out.println(usedNames.get(i));
-            System.out.println(s2[i]);
-            System.out.println("----------------------");
-            //s2[i] = usedNames.get(i);
-        }
+        b1 =  findViewById(R.id.op1);
+        b2 =  findViewById(R.id.op2);
+        b3 =  findViewById(R.id.op3);
+        b4 =  findViewById(R.id.op4);
+        b5 =  findViewById(R.id.op5);
+        b6 =  findViewById(R.id.op6);
+        b7 =  findViewById(R.id.op7);
+        b8 =  findViewById(R.id.op8);
 
-        for (int i = 0; i < usedNames.size(); i++) {
-            s2[i] = usedNames.get(i);
-        }
+        optionn.add(b1);
+        optionn.add(b2);
+        optionn.add(b3);
+        optionn.add(b4);
+        optionn.add(b5);
+        optionn.add(b6);
+        optionn.add(b7);
+        optionn.add(b8);
 
-        usedNames.clear();
-
-        ListView lv = findViewById(R.id.text_list);
-        ListView lv2 = findViewById(R.id.text_list1);
-
-
-        ArrayList<String> list = new ArrayList<String>();
-        list.addAll(Arrays.asList(s1));
-        listadapter = new ArrayAdapter<String>(this, R.layout.rowtext, s1) {
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                TextView textView = (TextView) super.getView(position, convertView, parent);
-                textView.setMaxLines(2);
-                if (isDark) {
-
-                    textView.setTextColor(Color.WHITE);
-                    textView.setBackground(ContextCompat.getDrawable(Quiz_match.this, R.drawable.card_background_dark));
-                } else {
-
-                    textView.setTextColor(Color.BLACK);
-                    textView.setBackground(ContextCompat.getDrawable(Quiz_match.this, R.drawable.card_background));
-                }
+        b1.setText(s1.get(0));
+        b2.setText(s1.get(1));
+        b3.setText(s1.get(2));
+        b4.setText(s1.get(3));
 
 
-                return textView;
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        Random randomGenerator = new Random();
+        while (list.size() < 4) {
+
+            int random = randomGenerator .nextInt(4);
+            if (!list.contains(random)) {
+                list.add(random);
             }
-        };
-        lv.setAdapter(listadapter);
+        }
+
+        Collections.shuffle(s2);
 
 
-        ArrayList<String> list2 = new ArrayList<String>();
-        list2.addAll(Arrays.asList(s2));
-        listadapter2 = new ArrayAdapter<String>(this, R.layout.rowtext, s2) {
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent) {
-                TextView textView = (TextView) super.getView(position, convertView, parent);
-                textView.setMaxLines(2);
-                if (isDark) {
+        b5.setText(s2.get(0));
+        b6.setText(s2.get(1));
+        b7.setText(s2.get(2));
+        b8.setText(s2.get(3));
 
-                    textView.setTextColor(Color.WHITE);
-                    textView.setBackground(ContextCompat.getDrawable(Quiz_match.this, R.drawable.card_background_dark));
-                } else {
 
-                    textView.setTextColor(Color.BLACK);
-                    textView.setBackground(ContextCompat.getDrawable(Quiz_match.this, R.drawable.card_background));
-                }
-
-                return textView;
-            }
-        };
-        lv2.setAdapter(listadapter2);
 
 
         TextView scoress = findViewById(R.id.scores);
@@ -167,42 +152,296 @@ public class Quiz_match extends Activity {
         LinearLayout ll = findViewById(R.id.draw_line);
         draw = new DrawView(this);
         ll.addView(draw);
+        b5.setClickable(false);
+        b6.setClickable(false);
+        b7.setClickable(false);
+        b8.setClickable(false);
+        b1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                b5.setClickable(true);
+                b6.setClickable(true);
+                b7.setClickable(true);
+                b8.setClickable(true);
+                c1.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Quiz_match.this,R.color.uou)));
+                float x1 = c1.getX();
+                float y1 =  c1.getHeight() / 2 + c1.getY();
+                a = 0;
+                draw.addSourcePoint(x1, y1);
+                b5.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        c5.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Quiz_match.this,R.color.uou)));
+                        float x2 = ll.getWidth() + c5.getX();
+                        float y2 =  c5.getHeight() / 2 + c5.getY();
+                        b = 0;
+                        draw.addDestinationPoint(x2, y2);
+                        b5.setClickable(false);
+                        b6.setClickable(false);
+                        b7.setClickable(false);
+                        b8.setClickable(false);
+                    }
+                });
+                b6.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        c6.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Quiz_match.this,R.color.uou)));
+                        float x2 = ll.getWidth() + c6.getX();
+                        float y2 =  c6.getHeight() / 2 + c6.getY();
+                        b = 1;
+                        draw.addDestinationPoint(x2, y2);
+                        b5.setClickable(false);
+                        b6.setClickable(false);
+                        b7.setClickable(false);
+                        b8.setClickable(false);
+                    }
+                });
+                b7.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        c7.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Quiz_match.this,R.color.uou)));
+                        float x2 = ll.getWidth() + c7.getX();
+                        float y2 =  c7.getHeight() / 2 + c7.getY();
+                        b = 2;
+                        draw.addDestinationPoint(x2, y2);
+                        b5.setClickable(false);
+                        b6.setClickable(false);
+                        b7.setClickable(false);
+                        b8.setClickable(false);
+                    }
+                });
+                b8.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        c8.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Quiz_match.this,R.color.uou)));
+                        float x2 = ll.getWidth() + c8.getX();
+                        float y2 =  c8.getHeight() / 2 + c8.getY();
+                        b = 3;
+                        draw.addDestinationPoint(x2, y2);
+                        b5.setClickable(false);
+                        b6.setClickable(false);
+                        b7.setClickable(false);
+                        b8.setClickable(false);
+                    }
+                });
 
-        lv2.setOnItemClickListener(null);
-
-
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> arg0, View v, int arg2, long arg3) {
-                if (lv.getChildAt(arg2).isEnabled()) {
-                    float x1 = v.getX();
-                    float y1 = 42 + v.getHeight() / 2 + v.getY();
-                    a = arg2;
-                    draw.addSourcePoint(x1, y1);
-                    //lv.getChildAt(a).setEnabled(false);
-                    v.setBackground(ContextCompat.getDrawable(Quiz_match.this, R.drawable.card_background_green));
-                    lv2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        public void onItemClick(AdapterView<?> arg0, View v, int arg2, long arg3) {
-                            if (lv.getChildAt(a).isEnabled() && lv2.getChildAt(arg2).isEnabled()) {
-                                lv.getChildAt(a).setEnabled(false);
-                                lv2.getChildAt(arg2).setEnabled(false);
-                                float x2 = ll.getWidth() + v.getX();
-                                float y2 = 42 + v.getHeight() / 2 + v.getY();
-                                b = arg2;
-                                draw.addDestinationPoint(x2, y2);
-                                v.setBackground(ContextCompat.getDrawable(Quiz_match.this, R.drawable.card_background_green));
-
-                                //a=-1;
-                            }
-
-                            Log.d("list", "image positions x2:" + x2 + " y2:" + y2);
-                            lv2.setOnItemClickListener(null);
-                        }
-                    });
-
-                }
-                Log.d("list", "text positions x1:" + x1 + " y1:" + y1);
             }
         });
+        b2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                b5.setClickable(true);
+                b6.setClickable(true);
+                b7.setClickable(true);
+                b8.setClickable(true);
+                c2.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Quiz_match.this,R.color.uou)));
+                float x1 = c2.getX();
+                float y1 =  c2.getHeight() / 2 + c2.getY();
+                a = 1;
+                draw.addSourcePoint(x1, y1);
+                b5.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        c5.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Quiz_match.this,R.color.uou)));
+                        float x2 = ll.getWidth() + c5.getX();
+                        float y2 =  c5.getHeight() / 2 + c5.getY();
+                        b = 0;
+                        draw.addDestinationPoint(x2, y2);
+                        b5.setClickable(false);
+                        b6.setClickable(false);
+                        b7.setClickable(false);
+                        b8.setClickable(false);
+                    }
+                });
+                b6.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        c6.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Quiz_match.this,R.color.uou)));
+                        float x2 = ll.getWidth() + c6.getX();
+                        float y2 =  c6.getHeight() / 2 + c6.getY();
+                        b = 1;
+                        draw.addDestinationPoint(x2, y2);
+                        b5.setClickable(false);
+                        b6.setClickable(false);
+                        b7.setClickable(false);
+                        b8.setClickable(false);
+                    }
+                });
+                b7.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        c7.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Quiz_match.this,R.color.uou)));
+                        float x2 = ll.getWidth() + c7.getX();
+                        float y2 =  c7.getHeight() / 2 + c7.getY();
+                        b = 2;
+                        draw.addDestinationPoint(x2, y2);
+                        b5.setClickable(false);
+                        b6.setClickable(false);
+                        b7.setClickable(false);
+                        b8.setClickable(false);
+                    }
+                });
+                b8.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        c8.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Quiz_match.this,R.color.uou)));
+                        float x2 = ll.getWidth() + c8.getX();
+                        float y2 =  c8.getHeight() / 2 + c8.getY();
+                        b = 3;
+                        draw.addDestinationPoint(x2, y2);
+                        b5.setClickable(false);
+                        b6.setClickable(false);
+                        b7.setClickable(false);
+                        b8.setClickable(false);
+                    }
+                });
+
+            }
+        });
+        b3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                b5.setClickable(true);
+                b6.setClickable(true);
+                b7.setClickable(true);
+                b8.setClickable(true);
+                c3.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Quiz_match.this,R.color.uou)));
+                float x1 = c3.getX();
+                float y1 =  c3.getHeight() / 2 + c3.getY();
+                a = 2;
+                draw.addSourcePoint(x1, y1);
+                b5.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        c5.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Quiz_match.this,R.color.uou)));
+                        float x2 = ll.getWidth() + c5.getX();
+                        float y2 =  c5.getHeight() / 2 + c5.getY();
+                        b = 0;
+                        draw.addDestinationPoint(x2, y2);
+                        b5.setClickable(false);
+                        b6.setClickable(false);
+                        b7.setClickable(false);
+                        b8.setClickable(false);
+                    }
+                });
+                b6.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        c6.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Quiz_match.this,R.color.uou)));
+                        float x2 = ll.getWidth() + c6.getX();
+                        float y2 =  c6.getHeight() / 2 + c6.getY();
+                        b = 1;
+                        draw.addDestinationPoint(x2, y2);
+                        b5.setClickable(false);
+                        b6.setClickable(false);
+                        b7.setClickable(false);
+                        b8.setClickable(false);
+                    }
+                });
+                b7.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        c7.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Quiz_match.this,R.color.uou)));
+                        float x2 = ll.getWidth() + c7.getX();
+                        float y2 =  c7.getHeight() / 2 + c7.getY();
+                        b = 2;
+                        draw.addDestinationPoint(x2, y2);
+                        b5.setClickable(false);
+                        b6.setClickable(false);
+                        b7.setClickable(false);
+                        b8.setClickable(false);
+                    }
+                });
+                b8.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        c8.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Quiz_match.this,R.color.uou)));
+                        float x2 = ll.getWidth() + c8.getX();
+                        float y2 =  c8.getHeight() / 2 + c8.getY();
+                        b = 3;
+                        draw.addDestinationPoint(x2, y2);
+                        b5.setClickable(false);
+                        b6.setClickable(false);
+                        b7.setClickable(false);
+                        b8.setClickable(false);
+                    }
+                });
+
+            }
+        });
+
+        b4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                b5.setClickable(true);
+                b6.setClickable(true);
+                b7.setClickable(true);
+                b8.setClickable(true);
+                c4.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Quiz_match.this,R.color.uou)));
+                float x1 = c4.getX();
+                float y1 =  c4.getHeight() / 2 + c4.getY();
+                a = 3;
+                draw.addSourcePoint(x1, y1);
+                b5.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        c5.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Quiz_match.this,R.color.uou)));
+                        float x2 = ll.getWidth() + c5.getX();
+                        float y2 =  c5.getHeight() / 2 + c5.getY();
+                        b = 0;
+                        draw.addDestinationPoint(x2, y2);
+                        b5.setClickable(false);
+                        b6.setClickable(false);
+                        b7.setClickable(false);
+                        b8.setClickable(false);
+                    }
+                });
+                b6.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        c6.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Quiz_match.this,R.color.uou)));
+                        float x2 = ll.getWidth() + c6.getX();
+                        float y2 =  c6.getHeight() / 2 + c6.getY();
+                        b = 1;
+                        draw.addDestinationPoint(x2, y2);
+                        b5.setClickable(false);
+                        b6.setClickable(false);
+                        b7.setClickable(false);
+                        b8.setClickable(false);
+                    }
+                });
+                b7.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        c7.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Quiz_match.this,R.color.uou)));
+                        float x2 = ll.getWidth() + c7.getX();
+                        float y2 =  c7.getHeight() / 2 + c7.getY();
+                        b = 2;
+                        draw.addDestinationPoint(x2, y2);
+                        b5.setClickable(false);
+                        b6.setClickable(false);
+                        b7.setClickable(false);
+                        b8.setClickable(false);
+                    }
+                });
+                b8.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        c8.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(Quiz_match.this,R.color.uou)));
+                        float x2 = ll.getWidth() + c8.getX();
+                        float y2 =  c8.getHeight() / 2 + c8.getY();
+                        b = 3;
+                        draw.addDestinationPoint(x2, y2);
+                        b5.setClickable(false);
+                        b6.setClickable(false);
+                        b7.setClickable(false);
+                        b8.setClickable(false);
+                    }
+                });
+
+            }
+        });
+
 
         Button button = findViewById(R.id.nextpage);
         button.setOnClickListener(new View.OnClickListener() {
@@ -217,7 +456,7 @@ public class Quiz_match extends Activity {
         });
         Button button2 = findViewById(R.id.extpage);
 
-        button2.setOnClickListener(new View.OnClickListener() {
+       button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
@@ -242,33 +481,60 @@ public class Quiz_match extends Activity {
 
         RelativeLayout relativeLayout = findViewById(R.id.mmmmm);
         RelativeLayout relativeLayoutq = findViewById(R.id.buttonss);
-        LinearLayout linearLayout = findViewById(R.id.llll);
-
+        LinearLayout linearLayout = findViewById(R.id.draw_line);
+        CardView cardView = findViewById(R.id.question);
+        LinearLayout linearLayout1 = findViewById(R.id.radioGroup);
 
         if (isDark) {
-            relativeLayout.setBackgroundColor(Color.BLACK);
-            relativeLayoutq.setBackgroundColor(Color.BLACK);
-            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(Quiz_match.this, R.drawable.card_background_dark));
-            lv.setBackgroundColor(Color.BLACK);
-            lv2.setBackgroundColor(Color.BLACK);
-            lv.setAdapter(listadapter);
-            lv2.setAdapter(listadapter2);
-            scoress.setTextColor(Color.WHITE);
-            scoress.setBackground(ContextCompat.getDrawable(Quiz_match.this, R.drawable.card_background_dark));
-            textView.setBackground(ContextCompat.getDrawable(Quiz_match.this, R.drawable.card_background_dark));
+            linearLayout1.setBackgroundColor(ContextCompat.getColor(this,R.color.soft_dark));
+            relativeLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.soft_dark));
+            relativeLayoutq.setBackgroundColor(ContextCompat.getColor(this,R.color.soft_dark));
+            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(Quiz_match.this, R.drawable.background_card_dark));
+            ll.setBackgroundColor(ContextCompat.getColor(Quiz_match.this, R.color.soft_dark));
+            cardView.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.black)));
+           // cardView.setBackground(ContextCompat.getDrawable(Quiz_match.this, R.drawable.back_b));
             textView.setTextColor(Color.WHITE);
+            c1.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.black)));
+            c2.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.black)));
+            c3.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.black)));
+            c4.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.black)));
+            c5.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.black)));
+            c6.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.black)));
+            c7.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.black)));
+            c8.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.black)));
+            b1.setTextColor(Color.WHITE);
+            b2.setTextColor(Color.WHITE);
+            b3.setTextColor(Color.WHITE);
+            b4.setTextColor(Color.WHITE);
+            b5.setTextColor(Color.WHITE);
+            b6.setTextColor(Color.WHITE);
+            b7.setTextColor(Color.WHITE);
+            b8.setTextColor(Color.WHITE);
         } else {
-            relativeLayout.setBackgroundColor(Color.WHITE);
-            relativeLayoutq.setBackgroundColor(Color.WHITE);
-            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(Quiz_match.this, R.drawable.card_background));
-            lv.setBackgroundColor(Color.WHITE);
-            lv2.setBackgroundColor(Color.WHITE);
-            lv.setAdapter(listadapter);
-            lv2.setAdapter(listadapter2);
-            scoress.setTextColor(Color.BLACK);
-            scoress.setBackground(ContextCompat.getDrawable(Quiz_match.this, R.drawable.card_background));
-            textView.setBackground(ContextCompat.getDrawable(Quiz_match.this, R.drawable.card_background));
+            linearLayout1.setBackgroundColor(ContextCompat.getColor(this,R.color.soft_light));
+            relativeLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.soft_light));
+            relativeLayoutq.setBackgroundColor(ContextCompat.getColor(this,R.color.soft_light));
+            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(Quiz_match.this, R.drawable.background_card));
+            ll.setBackgroundColor(ContextCompat.getColor(Quiz_match.this, R.color.soft_light));
+            cardView.setBackground(ContextCompat.getDrawable(Quiz_match.this, R.drawable.back_w));
+            cardView.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.white)));
             textView.setTextColor(Color.BLACK);
+            c1.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.white)));
+            c2.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.white)));
+            c3.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.white)));
+            c4.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.white)));
+            c5.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.white)));
+            c6.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.white)));
+            c7.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.white)));
+            c8.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this,R.color.white)));
+            b1.setTextColor(Color.BLACK);
+            b2.setTextColor(Color.BLACK);
+            b3.setTextColor(Color.BLACK);
+            b4.setTextColor(Color.BLACK);
+            b5.setTextColor(Color.BLACK);
+            b6.setTextColor(Color.BLACK);
+            b7.setTextColor(Color.BLACK);
+            b8.setTextColor(Color.BLACK);
         }
 
 
@@ -304,23 +570,11 @@ public class Quiz_match extends Activity {
     }
 
 
-    public void Fighters() {
-
-
-        for (int i = 0; i < 4; i++) {
-            String checkedName = null;
-            do {
-                checkedName = s2[(int) (Math.random() * 4)];
-            } while (usedNames.contains(checkedName));
-            usedNames.add(checkedName);
-        }
-
-
-    }
 
     public void onBackPressed() {
 
     }
+
 
 
 }

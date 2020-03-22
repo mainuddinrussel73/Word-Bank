@@ -6,25 +6,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import com.example.czgame.wordbank.R;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -44,15 +36,15 @@ import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.core.content.ContextCompat;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import es.dmoral.toasty.Toasty;
 
-public class news_activity extends AppCompatActivity {
+public class news_activity extends AppCompatActivity{
 
     public static List<News> newsList = new ArrayList<>();
-    ListView list;
+    RecyclerView list;
     News_adapter adapter;
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference ref = database.getReference("news");
@@ -60,8 +52,6 @@ public class news_activity extends AppCompatActivity {
     int i = 0,c=5;
     //int k = 0;
     int tiken = 0;
-    private View footer;
-    private boolean moreData = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +103,6 @@ public class news_activity extends AppCompatActivity {
         mShimmerViewContainer = findViewById(R.id.shimmer_view_container);
 
         newsList.clear();
-        footer = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.progress, null, false);
 
 
         SharedPreferences prefs1 = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
@@ -135,20 +124,20 @@ public class news_activity extends AppCompatActivity {
             while (cursor[0].moveToNext()) {
 
 
-                if(i<5){
-                News word = new News();
-                word.setID(Integer.parseInt(cursor[0].getString(0)));
-                word.setTITLE(cursor[0].getString(1));
-                word.setBODY(cursor[0].getString(2));
-                word.ISREAD =  cursor[0].getInt(3);
-                word.setURL(cursor[0].getString(4));
+               //if(i<5) {
+                   News word = new News();
+                   word.setID(Integer.parseInt(cursor[0].getString(0)));
+                   word.setTITLE(cursor[0].getString(1));
+                   word.setBODY(cursor[0].getString(2));
+                   word.ISREAD = cursor[0].getInt(3);
+                   word.setURL(cursor[0].getString(4));
 
-                newsList.add(word);
+                   newsList.add(word);
+                 //  i++;
+               //}else {
+                 //i=0;
+               //}
 
-                    i++;
-                }else{
-                    break;
-                }
 
 
             }
@@ -157,96 +146,7 @@ public class news_activity extends AppCompatActivity {
 
 
 
-            adapter = new News_adapter(this);
 
-            list = findViewById(R.id.news_list);
-
-            list.addFooterView(footer);
-            list.setAdapter(adapter);
-
-            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    // TODO Auto-generated method stub
-                    Intent myIntent = new Intent(view.getContext(), news_details.class);
-                    //String s = view.findViewById(R.id.subtitle).toString();
-                    //String s = (String) parent.getI;
-                    myIntent.putExtra("title", newsList.get(position).getTITLE());
-                    myIntent.putExtra("body", newsList.get(position).getBODY());
-                    myIntent.putExtra("url", newsList.get(position).getURL());
-                    myIntent.putExtra("id", position);
-                    myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivityForResult(myIntent, 0);
-
-                }
-            });
-
-
-//            k = 0;
-            list.setOnScrollListener(new AbsListView.OnScrollListener() {
-
-                @Override
-                public void onScrollStateChanged(AbsListView absListView, int i) {
-                    moreData = true;
-
-
-                }
-
-                @Override
-                public void onScroll(AbsListView absListView, int firstItem, int visibleItemCount, final int totalItems) {
-
-
-
-                    final int lastItem = firstItem + visibleItemCount;
-
-                    if (lastItem == totalItems) {
-
-
-                            footer.setVisibility(View.VISIBLE);
-                            footer.setPadding(0, 0, 0, 0);
-                            //newsList.clear();
-
-
-                        Handler handler = new Handler(); // hear is the handler for testing purpose
-                        handler.postDelayed(new Runnable() { // make some delay for check load more view
-                            @Override
-                            public void run() {
-
-
-                                if(moreData){
-
-                                    loadmore();
-                                    moreData=false;
-                                }
-
-
-                                adapter = new News_adapter(news_activity.this);
-                                footer.setVisibility(View.GONE);
-                                footer.setPadding(0, -1 * footer.getHeight(), 0, 0);
-                                //here above tow line invisible footer after data added
-                                if (adapter != null) {
-                                    adapter.notifyDataSetChanged();
-
-                                }
-
-                            }
-                        }, 2000);
-
-
-
-                        }
-
-
-
-
-
-
-                   // }
-
-                }
-
-            });
 
 
 
@@ -258,48 +158,44 @@ public class news_activity extends AppCompatActivity {
         }
 
 
+        adapter = new News_adapter(this,newsList);
 
-        final SwipeRefreshLayout pullToRefresh = findViewById(R.id.pullToRefresh);
-        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                ConnectivityManager conMgr =  (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
-                if (netInfo != null) {
-                    if (netInfo.isConnected()) {
-                        //new LoadData().execute();
 
-                    }
-                }else{
-                    Toasty.error(news_activity.this,"No internet connection.",Toast.LENGTH_LONG).show();
-                }
-                pullToRefresh.setRefreshing(false);
-            }
-        });
+        list = findViewById(R.id.news_list);
+
+        list.setHasFixedSize(false);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        list.setLayoutManager(linearLayoutManager);
+        list.setAdapter(adapter);
+
+
+
 
 
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
 
 
-            toolbar.setTitleTextColor(getResources().getColor(R.color.material_white));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.material_white));
 
-        CoordinatorLayout cardView = findViewById(R.id.basic);
+        RelativeLayout cardView = findViewById(R.id.basic);
         if (isDark && newsList.size() != 0) {
 
             cardView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
             RelativeLayout constraintLayout = findViewById(R.id.content_newsre);
             LinearLayout linearLayout = findViewById(R.id.newslistview);
             constraintLayout.setBackgroundColor(Color.BLACK);
-            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
+            linearLayout.setBackgroundColor(Color.BLACK);
+            toolbar.setBackground(ContextCompat.getDrawable(this,R.drawable.btn_style));
             list.setAdapter(adapter);
         } else if (!isDark && newsList.size() != 0) {
             cardView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.material_white));
             RelativeLayout constraintLayout = findViewById(R.id.content_newsre);
             LinearLayout linearLayout = findViewById(R.id.newslistview);
             constraintLayout.setBackgroundColor(Color.WHITE);
-            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
+            linearLayout.setBackgroundColor(Color.WHITE);
             list.setAdapter(adapter);
+            toolbar.setBackground(ContextCompat.getDrawable(this,R.drawable.btn_style));
 
         } else if (isDark && newsList.size() == 0) {
             cardView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
@@ -307,15 +203,17 @@ public class news_activity extends AppCompatActivity {
             LinearLayout linearLayout = findViewById(R.id.newslistview);
 
             constraintLayout.setBackgroundColor(Color.BLACK);
-            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
+            linearLayout.setBackgroundColor(Color.BLACK);
 
+            toolbar.setBackground(ContextCompat.getDrawable(this,R.drawable.btn_style));
         } else if (!isDark && newsList.size() == 0) {
             cardView.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.material_white));
             RelativeLayout constraintLayout = findViewById(R.id.content_newsre);
             LinearLayout linearLayout = findViewById(R.id.newslistview);
 
             constraintLayout.setBackgroundColor(Color.WHITE);
-            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
+            linearLayout.setBackgroundColor(Color.WHITE);
+            toolbar.setBackground(ContextCompat.getDrawable(this,R.drawable.btn_style));
 
 
         }
@@ -351,7 +249,7 @@ public class news_activity extends AppCompatActivity {
 
                     //moreData = false;
 
-                   // k = 0;
+                    // k = 0;
                     break;
 
 
@@ -406,6 +304,9 @@ public class news_activity extends AppCompatActivity {
         });
         return super.onCreateOptionsMenu(menu);
     }
+
+
+
 
     class LoadData extends AsyncTask<Void, Void, Void> {
         private ProgressDialog dialog;
@@ -493,7 +394,7 @@ public class news_activity extends AppCompatActivity {
                     }
 
 
-                    adapter = new News_adapter(news_activity.this);
+                    adapter = new News_adapter(news_activity.this,newsList);
                     list = findViewById(R.id.news_list);
                     list.setAdapter(adapter);
 

@@ -12,4 +12,13 @@
         <attr name="progressV" format="string"/>
         <attr name="progressPercent" format="integer"/>
     </declare-styleable>
+
+    <declare-styleable name="SpreadView">
+        <attr name="spread_center_color" format="color" />
+        <attr name="spread_radius" format="integer" />
+        <attr name="spread_spread_color" format="color" />
+        <attr name="spread_distance" format="integer" />
+        <attr name="spread_max_radius" format="integer" />
+        <attr name="spread_delay_milliseconds" format="integer" />
+    </declare-styleable>
 </resources>

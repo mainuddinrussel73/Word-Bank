@@ -4,34 +4,56 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.czgame.wordbank.ui.Quiz.quiz_result"
-    android:id="@+id/quiz_res">
+    android:id="@+id/quiz_res"
+    android:background="@color/soft_light">
 
+    <LinearLayout
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@drawable/card_style"
+        android:orientation="horizontal">
+        <View android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            ></View>
+
+
+
+
+    </LinearLayout>
 
 
     <RelativeLayout
         android:id="@+id/layouts"
+        android:layout_below="@+id/card_view"
         android:layout_width="wrap_content"
         android:layout_height="324dp"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:background="@drawable/card_background"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="-25dp"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:background="@drawable/base_rounded_white"
        >
 
 
-
-
-        <com.razerdp.widget.animatedpieview.AnimatedPieView
-            android:id="@+id/chart"
-            android:layout_width="301dp"
-            android:layout_height="302dp"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="@dimen/activity_horizontal_margin" />
 
         <org.apmem.tools.layouts.FlowLayout
             android:id="@+id/ll_legends"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="bottom"
-          />
+            />
+
+        <com.razerdp.widget.animatedpieview.AnimatedPieView
+            android:id="@+id/chart"
+            android:layout_width="301dp"
+            android:layout_height="302dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/ll_legends"
+            android:layout_margin="@dimen/activity_horizontal_margin" />
+
+
 
         <TextView
             android:id="@+id/result"
@@ -52,13 +74,14 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/layouts"
                 android:layout_margin="@dimen/activity_horizontal_margin"
-                android:background="@drawable/card_background">
+                android:background="@drawable/base_rounded_white">
                 <TextView
                     android:id="@+id/mainresult"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/activity_horizontal_margin"
                     android:gravity="center"
+                    android:fontFamily="@font/lilita_regular"
                     android:text="Scores">
 
                 </TextView>
@@ -75,8 +98,8 @@
 
                     android:id="@+id/learnlist"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/card_background"
+                    android:layout_height="100dp"
+                    android:background="@drawable/base_rounded_white"
                     android:padding="5dp">
 
                 </androidx.recyclerview.widget.RecyclerView>

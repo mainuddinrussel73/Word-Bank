@@ -29,7 +29,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import static com.example.czgame.wordbank.ui.media.Media_list_activity.RUNTIME_PERMISSION_CODE;
+import static com.example.czgame.wordbank.ui.media.fragment_music_list.RUNTIME_PERMISSION_CODE;
+
 
 public class UpdateDiary_voice  extends AppCompatActivity {
     private final int MY_PERMISSIONS_RECORD_AUDIO = 1;

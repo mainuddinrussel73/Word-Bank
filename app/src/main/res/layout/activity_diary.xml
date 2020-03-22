@@ -12,20 +12,24 @@
         android:id="@+id/appbarlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:elevation="3dp"
-        app:cardCornerRadius="25dp">
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        app:cardCornerRadius="28dp"
+        app:cardElevation="3dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@drawable/btn_style"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:layout_height="45dp"
+            android:background="@drawable/background_card_dark"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+
+        </androidx.appcompat.widget.Toolbar>
 
     </androidx.cardview.widget.CardView>
-
-
 
 
 
@@ -50,11 +54,9 @@
 
     <RelativeLayout
         android:id="@+id/opp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/appbarlayout"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:background="@drawable/card_background">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
         <include layout="@layout/content_dairy" />
     </RelativeLayout>

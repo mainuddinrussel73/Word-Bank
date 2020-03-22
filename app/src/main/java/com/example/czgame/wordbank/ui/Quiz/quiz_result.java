@@ -184,12 +184,12 @@ public class quiz_result extends AppCompatActivity {
             result.setText("Correct : " + df.format(res) + "%");
                     result.setTextSize(10);
                     result.setTextColor(Color.WHITE);
-            relativeLayout.setBackgroundColor(Color.BLACK);
+            relativeLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.soft_dark));
           //  result.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.backgroundborder));
             mainresult.setTextColor(Color.WHITE);
-            listView.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
-            layouts.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
-            resultview.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
+            listView.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.base_rounded));
+            layouts.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.base_rounded));
+            resultview.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.base_rounded));
 
             if (wordBuck.size() != 0) listView.setAdapter(adapter);
         } else {
@@ -197,12 +197,12 @@ public class quiz_result extends AppCompatActivity {
             result.setText("Correct : " + df.format(res) + "%");
             result.setTextSize(10);
             result.setTextColor(Color.BLACK);
-            relativeLayout.setBackgroundColor(Color.WHITE);
+            relativeLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.soft_light));
             //result.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.backgroundborder));
             mainresult.setTextColor(Color.BLACK);
-            listView.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background));
-            layouts.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background));
-            resultview.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background));
+            listView.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.base_rounded_white));
+            layouts.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.base_rounded_white));
+            resultview.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.base_rounded_white));
 
             if (wordBuck.size() != 0) listView.setAdapter(adapter);
         }

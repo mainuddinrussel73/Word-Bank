@@ -140,14 +140,14 @@ class AlarmListAdapter extends BaseAdapter
 
 
             holder.details.setTextColor(Color.RED);
-            convertView.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.card_background_dark));
+            convertView.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.background_card_dark));
 
 
 
         } else {
 
             holder.details.setTextColor(Color.RED);
-            convertView.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.card_background));
+            convertView.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.background_card));
 
         }
         return convertView;

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.example.czgame.wordbank.ui.promotodo.promodetail"
     android:id="@+id/pro_detail"
     android:orientation="vertical">
@@ -17,6 +18,21 @@
 
     <include layout="@layout/thridlayout" />
 
+    <pl.bclogic.pulsator4droid.library.PulsatorLayout
+        android:id="@+id/pulsator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/main_view"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="-110dp"
+        app:pulse_color="@color/colorAccent"
+        app:pulse_count="10"
+        app:pulse_duration="7000"
+        app:pulse_interpolator="Linear"
+        app:pulse_repeat="10000"
+        app:pulse_startFromScratch="true">
+    </pl.bclogic.pulsator4droid.library.PulsatorLayout>
+
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -26,6 +42,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="-80dp"
         android:layout_gravity="center"
+        android:background="@drawable/ripple"
         android:src="@drawable/ic_add_black_24dp" />
 
 

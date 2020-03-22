@@ -94,8 +94,11 @@ public class HomeActivity extends AppCompatActivity {
         RelativeLayout homelay = findViewById(R.id.homelayoyt);
         if(isDark){
             homelay.setBackgroundColor(Color.BLACK);
+            toolbar.setBackground(ContextCompat.getDrawable(this,R.drawable.btn_style));
+
         }else{
             homelay.setBackgroundColor(Color.WHITE);
+            toolbar.setBackground(ContextCompat.getDrawable(this,R.drawable.btn_style));
         }
 
 
@@ -314,11 +317,11 @@ public class HomeActivity extends AppCompatActivity {
         RelativeLayout linearLayout1 = findViewById(R.id.listview);
 
         if (isDark) {
-            linearLayout1.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
+            linearLayout1.setBackgroundColor(Color.BLACK);
             if (contactList.size() != 0) list.setAdapter(adapter);
 
         } else {
-            linearLayout1.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background));
+            linearLayout1.setBackgroundColor(Color.WHITE);
             if (contactList.size() != 0) list.setAdapter(adapter);
         }
 

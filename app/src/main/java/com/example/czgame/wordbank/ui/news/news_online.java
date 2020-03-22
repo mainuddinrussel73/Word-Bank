@@ -4,33 +4,30 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.method.ScrollingMovementMethod;
 import android.view.ContextThemeWrapper;
 import android.view.Display;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.SubMenu;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.czgame.wordbank.R;
+import com.example.czgame.wordbank.utill.PopUpClass;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
@@ -52,7 +49,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.ContextCompat;
 import es.dmoral.toasty.Toasty;
 
 public class news_online extends AppCompatActivity {
@@ -62,6 +58,7 @@ public class news_online extends AppCompatActivity {
     online_adapter adapter;
     private DBNewsHelper mDBHelper;
     private ShimmerFrameLayout mShimmerViewContainer;
+    Context context;
 
     public static List<String> extractUrls(String text)
     {
@@ -127,6 +124,7 @@ public class news_online extends AppCompatActivity {
 
         mShimmerViewContainer = findViewById(R.id.shimmer_view_container);
 
+        context = getBaseContext();
         if(newsList.size()>0){
 
             adapter = new online_adapter(news_online.this);
@@ -150,6 +148,7 @@ public class news_online extends AppCompatActivity {
                     } else {
                         wrapper = new ContextThemeWrapper(news_online.this, R.style.YOURSTYLE1);
                     }
+
 
 
                     PopupMenu popup = new PopupMenu(wrapper, view);
@@ -200,13 +199,12 @@ public class news_online extends AppCompatActivity {
                                     Toasty.error(getApplicationContext(), "opps.", Toast.LENGTH_SHORT).show();
                                 }
                             }else if(item.getTitle().equals("Detail")){
-                                float density=news_online.this.getResources().getDisplayMetrics().density;
-                                LayoutInflater inflater = (LayoutInflater) news_online.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                                View layout = inflater.inflate(R.layout.popupdetail,null);
-                                final PopupWindow pw = new PopupWindow(layout, (int)density*370, (int)density*685, true);
+                                //float density=news_online.this.getResources().getDisplayMetrics().density;
+                                //LayoutInflater inflater = (LayoutInflater) news_online.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                                //View layout = inflater.inflate(R.layout.popupdetail,null);
+                               // final PopupWindow pw = new PopupWindow(layout, (int)density*370, (int)density*685, true);
 
-
-                                ((TextView)layout.findViewById(R.id.goldName)).setText(newsList.get(position).BODY);
+                               /* ((TextView)layout.findViewById(R.id.goldName)).setText(newsList.get(position).BODY);
                                 ((TextView)layout.findViewById(R.id.goldName)).setMovementMethod(new ScrollingMovementMethod());
                                 ((TextView)layout.findViewById(R.id.goldNamet)).setText(newsList.get(position).TITLE);
                                 ((TextView)layout.findViewById(R.id.goldNamet)).setMovementMethod(new ScrollingMovementMethod());
@@ -222,7 +220,7 @@ public class news_online extends AppCompatActivity {
                                     }
                                 });
                                 pw.setOutsideTouchable(true);
-                                pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
+                                pw.showAtLocation(layout, Gravity.CENTER, 0, 0);*/
 
                             }
                             return true;
@@ -259,30 +257,32 @@ public class news_online extends AppCompatActivity {
             ConstraintLayout constraintLayout = findViewById(R.id.content_editsre);
             LinearLayout linearLayout = findViewById(R.id.editlistview);
             constraintLayout.setBackgroundColor(Color.BLACK);
-            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
+            linearLayout.setBackgroundColor(Color.BLACK);
+            list.setBackgroundColor(Color.BLACK);
             list.setAdapter(adapter);
         } else if (!isDark && newsList.size() != 0) {
 
             ConstraintLayout constraintLayout = findViewById(R.id.content_editsre);
             LinearLayout linearLayout = findViewById(R.id.editlistview);
             constraintLayout.setBackgroundColor(Color.WHITE);
-            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
+            linearLayout.setBackgroundColor(Color.WHITE);
             list.setAdapter(adapter);
 
+            list.setBackgroundColor(Color.WHITE);
         } else if (isDark && newsList.size() == 0) {
 
             ConstraintLayout constraintLayout = findViewById(R.id.content_editsre);
             LinearLayout linearLayout = findViewById(R.id.editlistview);
 
             constraintLayout.setBackgroundColor(Color.BLACK);
-            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
+            linearLayout.setBackgroundColor(Color.BLACK);
 
         } else if (!isDark && newsList.size() == 0) {
             ConstraintLayout constraintLayout = findViewById(R.id.content_editsre);
             LinearLayout linearLayout = findViewById(R.id.editlistview);
 
             constraintLayout.setBackgroundColor(Color.WHITE);
-            linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
+            linearLayout.setBackgroundColor(Color.WHITE);
 
 
         }
@@ -1406,29 +1406,12 @@ public class news_online extends AppCompatActivity {
                                 //list.setAdapter(adapter);
                             }else if(item.getTitle().equals("Detail")){
 
-                                float density=news_online.this.getResources().getDisplayMetrics().density;
-                                LayoutInflater inflater = (LayoutInflater) news_online.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                                View layout = inflater.inflate(R.layout.popupdetail,null);
-                                final PopupWindow pw = new PopupWindow(layout, (int)density*370, (int)density*685, true);
+
+                                ViewGroup root = (ViewGroup) getWindow().getDecorView().getRootView();
+                                PopUpClass popUpClass = new PopUpClass(root);
+                                popUpClass.showPopupWindow(context,view,newsList.get(position).TITLE,newsList.get(position).BODY);
 
 
-                                ((TextView)layout.findViewById(R.id.goldName)).setText(newsList.get(position).BODY.trim());
-                                ((TextView)layout.findViewById(R.id.goldName)).setMovementMethod(new ScrollingMovementMethod());
-                                ((TextView)layout.findViewById(R.id.goldNamet)).setText(newsList.get(position).TITLE.trim());
-                                ((TextView)layout.findViewById(R.id.goldNamet)).setMovementMethod(new ScrollingMovementMethod());
-
-                                pw.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                                pw.setTouchInterceptor(new View.OnTouchListener() {
-                                    public boolean onTouch(View v, MotionEvent event) {
-                                        if(event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-                                            pw.dismiss();
-                                            return true;
-                                        }
-                                        return false;
-                                    }
-                                });
-                                pw.setOutsideTouchable(true);
-                                pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
 
                             }
                             return true;
@@ -1444,4 +1427,5 @@ public class news_online extends AppCompatActivity {
 
         }
     }
+
 }

@@ -7,8 +7,7 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.czgame.wordbank.ui.news.news_activity"
     android:id="@+id/content_newsre"
-    android:layout_marginTop="70dp"
-    android:background="@color/uou"
+    android:background="@color/black"
     tools:showIn="@layout/activity_news">
 
     <include layout="@layout/news_list_fragment" />

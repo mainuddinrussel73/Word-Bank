@@ -101,16 +101,22 @@ public class AlarmMe extends AppCompatActivity
 
         toolbar.setTitleTextColor(getResources().getColor(R.color.white));
 
+        if(isDark){
+            toolbar.setBackground(ContextCompat.getDrawable(this,R.drawable.btn_style));
+
+        }else{
+            toolbar.setBackground(ContextCompat.getDrawable(this,R.drawable.btn_style));
+        }
         if (isDark && mAlarmListAdapter.getCount() != 0) {
 
             laybase.setBackgroundColor(Color.BLACK);
-            lidtb.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
+            lidtb.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
             mAlarmList.setBackgroundColor(Color.BLACK);
             mAlarmList.setAdapter(mAlarmListAdapter);
         } else if (!isDark && mAlarmListAdapter.getCount()!= 0) {
 
             laybase.setBackgroundColor(Color.WHITE);
-            lidtb.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
+            lidtb.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
             mAlarmList.setBackgroundColor(Color.WHITE);
             mAlarmList.setAdapter(mAlarmListAdapter);
 
@@ -118,13 +124,13 @@ public class AlarmMe extends AppCompatActivity
 
 
             laybase.setBackgroundColor(Color.BLACK);
-            lidtb.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
+            lidtb.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
             mAlarmList.setBackgroundColor(Color.BLACK);
 
         } else if (!isDark && mAlarmListAdapter.getCount() == 0) {
 
             laybase.setBackgroundColor(Color.WHITE);
-            lidtb.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
+            lidtb.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
             mAlarmList.setBackgroundColor(Color.WHITE);
 
 

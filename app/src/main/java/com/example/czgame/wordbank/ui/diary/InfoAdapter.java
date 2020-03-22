@@ -171,7 +171,7 @@ public class InfoAdapter extends ArrayAdapter<Info> {
 
                 subject.setTextColor(context.getResources().getColor(R.color.av_dark_blue));
                 date.setTextColor(Color.RED);
-                view.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background_dark));
+                view.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.background_card_dark));
 
                 Drawable myIcon2 = context.getResources().getDrawable(R.drawable.ic_waver);
 
@@ -184,7 +184,7 @@ public class InfoAdapter extends ArrayAdapter<Info> {
 
                 subject.setTextColor(context.getResources().getColor(R.color.av_dark_blue));
                 date.setTextColor(Color.RED);
-                view.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background));
+                view.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.background_card));
 
                 Drawable myIcon2 = context.getResources().getDrawable(R.drawable.ic_waver);
 
@@ -287,7 +287,7 @@ public class InfoAdapter extends ArrayAdapter<Info> {
                 subject.setTextColor(context.getResources().getColor(R.color.av_dark_blue));
                 date.setTextColor(Color.RED);
                 description.setTextColor(ContextCompat.getColor(context,R.color.bg));
-                view.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background_dark));
+                view.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.background_card_dark));
 
 
 
@@ -296,7 +296,7 @@ public class InfoAdapter extends ArrayAdapter<Info> {
                 subject.setTextColor(context.getResources().getColor(R.color.av_dark_blue));
                 date.setTextColor(Color.RED);
                 description.setTextColor(ContextCompat.getColor(context,R.color.bg));
-                view.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background));
+                view.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.background_card));
 
             }
 

@@ -1,35 +1,73 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/popup_element"
-    android:layout_width="370dp"
-    android:layout_height="685dp"
-    android:background="@drawable/customborder">
 
-    <TextView
-        android:id="@+id/goldNamet"
-        android:layout_width="341dp"
-        android:layout_height="65dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginBottom="5dp"
-        android:text="Gold Name"
-        android:scrollbarStyle="outsideOverlay"
-        android:scrollbars="vertical"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/white"
-        android:textSize="20dp" />
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/popup_element"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
 
-    <TextView
-        android:id="@+id/goldName"
-        android:layout_width="340dp"
-        android:layout_height="567dp"
-        android:layout_below="@+id/goldNamet"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="18dp"
-        android:scrollbarStyle="outsideOverlay"
-        android:scrollbars="vertical"
-        android:text="Gold Name"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:textColor="@color/white"
-        android:textSize="15dp" />
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:cardCornerRadius="25dp">
 
-</RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/nnmnm"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/bbb"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+
+                <ImageButton
+                    android:id="@+id/messageButton"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="right"
+                    android:background="@drawable/ic_cancel_black_24dp"
+                    android:backgroundTint="@color/uou"
+                    />
+
+
+                <TextView
+                    android:id="@+id/goldNamet"
+                    android:layout_width="341dp"
+                    android:layout_height="65dp"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginBottom="5dp"
+                    android:fontFamily="@font/lilita_regular"
+                    android:scrollbarStyle="outsideOverlay"
+                    android:scrollbars="vertical"
+                    android:text="Gold Name"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/black"
+                    android:textSize="20dp" />
+
+                <TextView
+                    android:id="@+id/goldName"
+                    android:layout_width="340dp"
+                    android:layout_height="567dp"
+                    android:layout_below="@+id/goldNamet"
+                    android:layout_marginLeft="4dp"
+                    android:layout_marginTop="18dp"
+                    android:fontFamily="@font/belgrano"
+                    android:justificationMode="inter_word"
+                    android:scrollbarStyle="outsideOverlay"
+                    android:scrollbars="vertical"
+                    android:text="Gold Name"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/black"
+                    android:textSize="15dp" />
+
+
+
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>>
+    </RelativeLayout>

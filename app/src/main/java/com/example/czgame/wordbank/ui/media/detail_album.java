@@ -13,23 +13,27 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.czgame.wordbank.R;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.util.ArrayList;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class detail_album extends AppCompatActivity {
 
     public static ArrayList<Audio> songs = new ArrayList<>();
     long albumid;
-    ListView listView;
+    RecyclerView listView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +50,8 @@ public class detail_album extends AppCompatActivity {
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black);
 
 
-        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.toolbar_layout);
-        ImageView imageView = collapsingToolbarLayout.findViewById(R.id.image);
+
+        ImageView imageView = findViewById(R.id.image);
 
         final Intent intent = getIntent();
         albumid = intent.getLongExtra("albumid",new Long(0));
@@ -86,48 +90,53 @@ public class detail_album extends AppCompatActivity {
 
         System.out.println(songs.size());
 
-        Album_list_adapter album_list_adapter  = new Album_list_adapter(this);
+        Album_list_adapter album_list_adapter  = new Album_list_adapter(this,songs);
 
+        listView.setHasFixedSize(true);
+        listView.setLayoutManager(new LinearLayoutManager(this));
         listView.setAdapter(album_list_adapter);
 
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
-
-
+        NestedScrollView relativeLayout1 = findViewById(R.id.basealbum);
+        RelativeLayout relativeLayout2 = findViewById(R.id.container);
+        TextView textView = findViewById(R.id.artist_info);
 
         if (isDark && songs.size() != 0) {
 
 
             listView.setAdapter(album_list_adapter);
             listView.setBackgroundColor(Color.BLACK);
-            // linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getContext().getApplicationContext(), R.drawable.card_background_dark));
+            relativeLayout1.setBackgroundColor(Color.BLACK);
+            relativeLayout2.setBackgroundDrawable(ContextCompat.getDrawable(this.getApplicationContext(), R.drawable.base_rounded));
         } else if (!isDark && songs.size() != 0) {
 
             //     relativeLayout.setBackgroundColor(Color.WHITE);
 
-
+            relativeLayout1.setBackgroundColor(Color.WHITE);
 
             listView.setBackgroundColor(Color.WHITE);
             // listView.setAdapter(adapter);
             listView.setAdapter(album_list_adapter);
-            //linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getContext().getApplicationContext(), R.drawable.card_background));
+            relativeLayout2.setBackgroundDrawable(ContextCompat.getDrawable(this.getApplicationContext(), R.drawable.base_rounded_white));
 
         } else if (isDark && songs.size() == 0) {
 
             //listView.setBackgroundColor(Color.BLACK);
             listView.setBackgroundColor(Color.BLACK);
-            //linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getContext().getApplicationContext(), R.drawable.card_background_dark));
+            relativeLayout1.setBackgroundColor(Color.BLACK);
+            relativeLayout2.setBackgroundDrawable(ContextCompat.getDrawable(this.getApplicationContext(), R.drawable.base_rounded));
             //relativeLayout.setBackgroundColor(Color.BLACK);
 
 
         } else if (!isDark && songs.size() == 0) {
 
-
+            relativeLayout1.setBackgroundColor(Color.WHITE);
 
             //  listView.setBackgroundColor(Color.WHITE);
             listView.setBackgroundColor(Color.WHITE);
             //  relativeLayout.setBackgroundColor(Color.WHITE);
-            //linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(getContext().getApplicationContext(), R.drawable.card_background));
+            relativeLayout2.setBackgroundDrawable(ContextCompat.getDrawable(this.getApplicationContext(), R.drawable.base_rounded_white));
 
 
 

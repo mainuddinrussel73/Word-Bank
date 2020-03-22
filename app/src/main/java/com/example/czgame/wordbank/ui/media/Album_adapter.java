@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +14,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.czgame.wordbank.R;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import androidx.core.content.ContextCompat;
@@ -30,6 +30,7 @@ public class Album_adapter  extends BaseAdapter {
     ArrayList<ArtistModel> contactList;
     ImageView titleText;
     TextView tt,tt1;
+    private DatabaseHelper_artist_image databaseHelper;
 
     // private final Integer[] imgid;
 
@@ -39,6 +40,7 @@ public class Album_adapter  extends BaseAdapter {
         this.contactList = new ArrayList<ArtistModel>();
         this.contactList.addAll(allsongs);
 
+        databaseHelper = new DatabaseHelper_artist_image(context);
 
 
 
@@ -82,20 +84,21 @@ public class Album_adapter  extends BaseAdapter {
         tt1.setText("Total Tracks : "+(allsongs.get(position).getNr_of_songs()));
 
 
+        try {
+
+            ImageHelper imageHelper = databaseHelper.getImage(Long.toString(allsongs.get(position).getID()));
+            Bitmap myBitmap = BitmapFactory.decodeByteArray(imageHelper.getImageByteArray(), 0, imageHelper.getImageByteArray().length);
+            RequestOptions options = new RequestOptions()
+                    .centerCrop()
+                    .placeholder(R.drawable.image)
+                    .error(R.drawable.image);
+            Glide.with(context).load(myBitmap).apply(options).into(titleText);
 
 
-
-        String root = Environment.getExternalStorageDirectory().getAbsolutePath()+"/saved_images/"+"Image-"+ allsongs.get(position).getID() +".jpg";
-
-        File imgFile = new  File(root);
-
-        if(imgFile.exists()){
-
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            titleText.setImageBitmap(myBitmap);
-            System.out.println("ok");
-
+        }catch (Exception e){
+            System.out.println(e.getMessage());
         }
+
 
 
         RelativeLayout listitem = rowView.findViewById(R.id.grid_item);
@@ -112,7 +115,7 @@ public class Album_adapter  extends BaseAdapter {
             tt.setTextColor(Color.parseColor("#10bcc9"));
 
 
-            griditm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background_dark));
+            griditm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.background_card_dark));
 
         } else {
 
@@ -120,7 +123,7 @@ public class Album_adapter  extends BaseAdapter {
             // tt.setTextColor(Color.BLACK);
             tt.setTextColor(Color.parseColor("#10bcc9"));
 
-            griditm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background));
+            griditm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.background_card));
         }
 
 
@@ -142,7 +145,6 @@ public class Album_adapter  extends BaseAdapter {
 
         return Color.argb(alpha, red, green, blue);
     }
-
 
 
 

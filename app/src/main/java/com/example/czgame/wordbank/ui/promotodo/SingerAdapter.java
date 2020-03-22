@@ -35,12 +35,13 @@ public class SingerAdapter  extends RecyclerView.Adapter<SingerAdapter.ViewHolde
         SharedPreferences prefs = context.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
         if (isDark) {
-            listItem.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background_dark));
+            listItem.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.background_card_dark));
+
 
 
         } else {
 
-            listItem.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background));
+            listItem.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.background_card));
 
         }
         return viewHolder;
@@ -62,16 +63,16 @@ public class SingerAdapter  extends RecyclerView.Adapter<SingerAdapter.ViewHolde
             // listitem.setBackgroundColor(Color.BLACK);
 
 
-            holder.textView.setTextColor(Color.WHITE);
-            holder.num.setTextColor(Color.WHITE);
+            holder.textView.setTextColor(ContextCompat.getColor(context,R.color.white));
+            holder.num.setTextColor(Color.parseColor("#a0a092"));
             //.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background_dark));
 
 
 
         } else {
 
-            holder.textView.setTextColor(Color.BLACK);
-            holder.textView.setTextColor(Color.BLACK);
+            holder.textView.setTextColor(ContextCompat.getColor(context,R.color.bbb));
+            holder.textView.setTextColor(ContextCompat.getColor(context,R.color.soft_dark));
            // listitm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background));
 
         }

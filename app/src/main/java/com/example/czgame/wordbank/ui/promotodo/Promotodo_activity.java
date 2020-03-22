@@ -197,7 +197,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
             if (isDark) {
                 cvh.imgLogo2.setImageDrawable(Utils.getDrawable(rowView.getContext(), R.drawable.ic_keyboard_arrow_left_white_24dp));
                 cvh.txtName.setTextColor(getResources().getColor(R.color.av_dark_blue));
-                listitm.setBackgroundDrawable(ContextCompat.getDrawable(rowView.getContext(), R.drawable.card_background_dark));
+                listitm.setBackgroundDrawable(ContextCompat.getDrawable(rowView.getContext(), R.drawable.background_card_dark));
                 LocalDate parsedDate = LocalDate.now(); //Parse date from String
                 LocalDate parsedDate1 = LocalDate.parse(item.getDue_date()); //Parse date from String
                 if (parsedDate.isAfter(parsedDate1)) {
@@ -224,7 +224,7 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
             } else {
                 cvh.imgLogo2.setImageDrawable(Utils.getDrawable(rowView.getContext(), R.drawable.ic_keyboard_arrow_left_black_24dp));
                 cvh.txtName.setTextColor(getResources().getColor(R.color.av_dark_blue));
-                listitm.setBackgroundDrawable(ContextCompat.getDrawable(rowView.getContext(), R.drawable.card_background));
+                listitm.setBackgroundDrawable(ContextCompat.getDrawable(rowView.getContext(), R.drawable.background_card));
                 LocalDate parsedDate = LocalDate.now(); //Parse date from String
                 LocalDate parsedDate1 = LocalDate.parse(item.getDue_date()); //Parse date from String
                 if (parsedDate.isAfter(parsedDate1)) {
@@ -475,24 +475,24 @@ public class Promotodo_activity extends AppCompatActivity implements AdapterView
         if (isDark) {
 
             mListView.setBackgroundColor(Color.BLACK);
-            relativeLayout1.setBackground(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
+            relativeLayout1.setBackgroundColor(ContextCompat.getColor(this, R.color.bbb));
             additem.setBackgroundColor(Color.BLACK);
             relativeLayout.setBackgroundColor(Color.BLACK);
-            linearLayout.setBackground(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
+            linearLayout.setBackground(ContextCompat.getDrawable(this, R.drawable.background_card_dark));
 
-            llll.setBackground(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
-            tfb.setBackgroundColor(Color.BLACK);
+            llll.setBackground(ContextCompat.getDrawable(this, R.drawable.background_card_dark));
+            tfb.setBackgroundColor(ContextCompat.getColor(this,R.color.soft_dark));
             tfb.setTextColor(Color.WHITE);
             tfb.setHintTextColor(Color.rgb(185, 185, 185));
         } else {
 
             mListView.setBackgroundColor(Color.WHITE);
-            relativeLayout1.setBackground(ContextCompat.getDrawable(this, R.drawable.card_background));
-            linearLayout.setBackground(ContextCompat.getDrawable(this, R.drawable.card_background));
-            llll.setBackground(ContextCompat.getDrawable(this, R.drawable.card_background));
+            relativeLayout1.setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+            linearLayout.setBackground(ContextCompat.getDrawable(this, R.drawable.background_card));
+            llll.setBackground(ContextCompat.getDrawable(this, R.drawable.background_card));
             additem.setBackgroundColor(Color.WHITE);
             relativeLayout.setBackgroundColor(Color.WHITE);
-            tfb.setBackgroundColor(Color.WHITE);
+            tfb.setBackgroundColor(ContextCompat.getColor(this,R.color.soft_light));
             tfb.setTextColor(Color.BLACK);
             tfb.setHintTextColor(Color.BLACK);
         }

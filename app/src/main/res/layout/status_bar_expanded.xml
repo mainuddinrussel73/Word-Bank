@@ -80,7 +80,7 @@
         android:layout_toLeftOf="@id/status_bar_collapse"
         android:layout_toRightOf="@id/status_bar_album_art"
         android:layout_alignParentTop="true"
-        android:background="@color/cardview_dark_background">
+        android:background="@color/uou">
         <TextView
             android:ellipsize="marquee"
             android:layout_gravity="left"
@@ -90,8 +90,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:background="@color/cardview_dark_background"
-            android:textColor="@color/cardview_light_background"
+            android:background="@color/uou"
+            android:fontFamily="@font/lilita_regular"
+            android:textColor="@color/black"
             />
         <TextView
             android:ellipsize="marquee"
@@ -101,8 +102,9 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:background="@color/cardview_dark_background"
-            android:textColor="@color/cardview_light_background"/>
+            android:background="@color/uou"
+            android:fontFamily="@font/belgrano"
+            android:textColor="@color/black"/>
         <TextView
             android:ellipsize="marquee"
             android:layout_gravity="left"
@@ -111,7 +113,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
-            android:background="@color/cardview_dark_background"
-            android:textColor="@color/cardview_light_background"/>
+            android:background="@color/uou"
+            android:fontFamily="@font/belgrano"
+            android:textColor="@color/black"/>
     </LinearLayout>
 </RelativeLayout>

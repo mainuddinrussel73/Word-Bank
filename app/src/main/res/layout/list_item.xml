@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="5dp"
-    android:paddingRight="5dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
     android:orientation="horizontal" >
 
 
@@ -11,12 +11,9 @@
 
     <RelativeLayout android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="15dp"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
-        android:paddingRight="15dp"
+
         android:id="@+id/list_item"
-        android:background="@drawable/card_background_selector"
+        android:background="@drawable/background_card"
 
         >
 
@@ -28,9 +25,10 @@
             android:textStyle="bold"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/belgrano"
             android:textSize="20dp"
-            android:textColor="@android:color/background_dark"
+            android:textColor="@color/black"
 
             />
 
@@ -43,8 +41,10 @@
             android:text="Medium Text"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"
+            android:layout_marginBottom="20dp"
             android:textSize="12dp"
-            android:textColor="@android:color/background_dark"
+            android:fontFamily="@font/kalpurush"
+            android:textColor="@color/soft_dark"
             android:textStyle="bold"
 
             />

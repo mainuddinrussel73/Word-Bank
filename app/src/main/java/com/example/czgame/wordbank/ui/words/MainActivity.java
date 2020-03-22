@@ -17,6 +17,8 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,6 +36,13 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.azan.Azan;
+import com.azan.AzanTimes;
+import com.azan.Method;
+import com.azan.Time;
+import com.azan.astrologicalCalc.Location;
+import com.azan.astrologicalCalc.SimpleDate;
+import com.developer.kalert.KAlertDialog;
 import com.example.czgame.wordbank.R;
 import com.example.czgame.wordbank.ui.Home.HomeActivity;
 import com.example.czgame.wordbank.ui.Quiz.Quiz_confirm;
@@ -51,12 +60,14 @@ import com.example.czgame.wordbank.ui.promotodo.TimelineView;
 import com.example.czgame.wordbank.ui.promotodo.daily_details;
 import com.example.czgame.wordbank.ui.promotodo.pro_backup;
 import com.example.czgame.wordbank.ui.promotodo.tree;
+import com.example.czgame.wordbank.utill.LocationTrack;
 import com.google.android.material.navigation.NavigationView;
 import com.leondzn.simpleanalogclock.SimpleAnalogClock;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Random;
 
@@ -64,12 +75,15 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import es.dmoral.toasty.Toasty;
+
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -78,16 +92,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static Activity mActivity;
     public static int score = 1111111;
     public static boolean isChecked = false;
-    public  boolean isDark;
-    public  SharedPreferences prefs;
+    private final static int ALL_PERMISSIONS_RESULT = 101;
+    public static KAlertDialog kAlertDialog;
 
     ActionBarDrawerToggle toggle;
     com.suke.widget.SwitchButton switchButton;
-
-
-
+    public boolean isDark;
+    public SharedPreferences prefs;
+    protected LocationManager locationManager;
+    protected LocationListener locationListener;
+    protected double latitude, longitude;
+    protected boolean gps_enabled, network_enabled;
+    String provider;
+    LocationTrack locationTrack;
+    Menu menu;
+    private List<String> permissionsToRequest;
+    private List<String> permissionsRejected = new ArrayList();
     DrawerLayout drawer;
-    Menu menu ;
+    private List<String> permissions = new ArrayList();
     private Context mContext;
     NavigationView navigationView1;
     NavigationView navigationView;
@@ -122,8 +144,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
 
+        kAlertDialog = new KAlertDialog(this, KAlertDialog.WARNING_TYPE);
 
         mActivity = this;
+
+
+        permissions.add(ACCESS_FINE_LOCATION);
+        permissions.add(ACCESS_COARSE_LOCATION);
+
+        permissionsToRequest = findUnAskedPermissions((ArrayList) permissions);
+        //get the permissions we have asked for before but are not granted..
+        //we will store this in a global list to access later.
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+
+            if (permissionsToRequest.size() > 0)
+                requestPermissions(permissionsToRequest.toArray(new String[permissionsToRequest.size()]), ALL_PERMISSIONS_RESULT);
+        }
+
+
 
         toolbar.setTitleTextColor(getResources().getColor(R.color.material_white));
         if (Build.VERSION.SDK_INT >= 23) {
@@ -366,7 +407,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-        ConstraintLayout constraintLayout1 = findViewById(R.id.content_main);
+        RelativeLayout constraintLayout1 = findViewById(R.id.content_main);
        // LinearLayout linearLayout1 = findViewById(R.id.listview);
 
         navigationView1 = findViewById(R.id.nav_view);
@@ -403,9 +444,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         }
         customAnalogClock.setFaceDrawable(ContextCompat.getDrawable(this,R.drawable.ic_clock));
+        customAnalogClock.setHourDrawable(ContextCompat.getDrawable(this,R.drawable.ic_hourhand));
+        customAnalogClock.setMinuteDrawable(ContextCompat.getDrawable(this,R.drawable.ic_minute));
+        customAnalogClock.setSecondDrawable(ContextCompat.getDrawable(this,R.drawable.ic_second));
 
         navigationView1.setItemIconTintList(colorStateList);
 
+        RelativeLayout scrollView = findViewById(R.id.bbnb);
         RelativeLayout relativeLayout = findViewById(R.id.bass);
         if (isDark) {
 
@@ -420,16 +465,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             // ColorStateList colorStateList = new ColorStateList(states, colors);
             //navigationView1.setItemIconTintList(colorStateList);
-            customAnalogClock.setHourTint(ContextCompat.getColor(this,R.color.uou));
+            customAnalogClock.setHourTint(ContextCompat.getColor(this,R.color.white));
 
            // customAnalogClock.setSecondDrawable(ContextCompat.getDrawable(this,R.drawable.ic_library_music_black_24dp));
-            customAnalogClock.setSecondTint(ContextCompat.getColor(this,R.color.material_lightblueA400));
-            customAnalogClock.setMinuteTint(ContextCompat.getColor(this,R.color.A400red));
+            customAnalogClock.setSecondTint(ContextCompat.getColor(this,R.color.white));
+            customAnalogClock.setMinuteTint(ContextCompat.getColor(this,R.color.white));
 
             navigationView1.setItemTextColor(ColorStateList.valueOf(Color.WHITE));
-           relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
-            customAnalogClock.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
+           scrollView.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background_dark));
+            customAnalogClock.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.background_card_dark));
             customAnalogClock.setFaceTint(ContextCompat.getColor(this, R.color.white));
+            relativeLayout.setBackgroundColor(Color.BLACK);
             //if (contactList.size() != 0) list.setAdapter(adapter);
 
         } else {
@@ -437,12 +483,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             navigationView1.setBackgroundColor(Color.WHITE);
             navigationView1.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
             // linearLayout.setBackgroundColor(Color.WHITE);
-            customAnalogClock.setHourTint(ContextCompat.getColor(this,R.color.uou));
-            customAnalogClock.setSecondTint(ContextCompat.getColor(this,R.color.material_lightblueA400));
-            customAnalogClock.setMinuteTint(ContextCompat.getColor(this,R.color.A400red));
-           relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background));
-            customAnalogClock.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background));
+            customAnalogClock.setHourTint(ContextCompat.getColor(this,R.color.black));
+            customAnalogClock.setSecondTint(ContextCompat.getColor(this,R.color.black));
+            customAnalogClock.setMinuteTint(ContextCompat.getColor(this,R.color.black));
+           scrollView.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.card_background));
+            customAnalogClock.setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.background_card));
             customAnalogClock.setFaceTint(ContextCompat.getColor(this, R.color.black));
+            relativeLayout.setBackgroundColor(Color.WHITE);
             //if (contactList.size() != 0) list.setAdapter(adapter);
         }
 
@@ -521,7 +568,98 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP,cal.getTimeInMillis(),AlarmManager.INTERVAL_DAY, pIntent);
         }
+
+
+
+        locationTrack = new LocationTrack(MainActivity.this);
+
+
+        if (locationTrack.canGetLocation()) {
+
+
+             longitude = locationTrack.getLongitude();
+             latitude = locationTrack.getLatitude();
+
+            Toast.makeText(getApplicationContext(), "Longitude:" + longitude + "\nLatitude:" + latitude, Toast.LENGTH_SHORT).show();
+        } else {
+
+            locationTrack.showSettingsAlert();
+        }
+
+
+        CardView cardView = findViewById(R.id.fourcard);
+        TextView faz = findViewById(R.id.faz);
+        TextView zhr = findViewById(R.id.zoh);
+        TextView asr = findViewById(R.id.asr);
+        TextView mag = findViewById(R.id.mag);
+        TextView esa = findViewById(R.id.esa);
+
+
+        SimpleDate simpleDate = new SimpleDate(new GregorianCalendar());
+        System.out.println(latitude+",,,,,,"+ longitude);
+        Location locationa = new Location(latitude, longitude,6.0,0);
+        Azan azan = new Azan(locationa,Method.Companion.getEGYPT_SURVEY());
+        AzanTimes prayerTimes = azan.getPrayerTimes(simpleDate);
+        System.out.println(prayerTimes.assr());
+        Time imsaak = azan.getImsaak(simpleDate);
+
+        System.out.println(imsaak.toString());
+        faz.setText(prayerTimes.fajr().toString());
+        zhr.setText(prayerTimes.thuhr().toString());
+        asr.setText(prayerTimes.assr().toString());
+        mag.setText(prayerTimes.maghrib().toString());
+        esa.setText(prayerTimes.ishaa().toString());
+
+
+
+
+
+
+
+
+
+
+
     }
+
+    private ArrayList findUnAskedPermissions(ArrayList wanted) {
+        ArrayList result = new ArrayList();
+
+        for (Object perm : wanted) {
+            if (!hasPermission((String) perm)) {
+                result.add(perm);
+            }
+        }
+
+        return result;
+    }
+
+    private boolean hasPermission(String permission) {
+        if (canMakeSmores()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                return (checkSelfPermission(permission) == PackageManager.PERMISSION_GRANTED);
+            }
+        }
+        return true;
+    }
+
+    private boolean canMakeSmores() {
+        return (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1);
+    }
+
+
+
+
+    private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
+        new AlertDialog.Builder(MainActivity.this)
+                .setMessage(message)
+                .setPositiveButton("OK", okListener)
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show();
+    }
+
+
 
 
 
@@ -755,139 +893,127 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mActivity = MainActivity.this;
 
 
-            if (!isDark && prefs.getInt("size",0) != 0) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogueLight);
-                builder.setTitle(R.string.darkmode);
-                builder.setMessage(R.string.yes);
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    ConstraintLayout constraintLayout = findViewById(R.id.content_main);
-                  //  LinearLayout linearLayout = findViewById(R.id.listview);
+            if (isDark ) {
 
-                    NavigationView navigationView = findViewById(R.id.nav_view);
+                KAlertDialog.DARK_STYLE = true;
+                kAlertDialog =  new KAlertDialog(this, KAlertDialog.WARNING_TYPE);
+                kAlertDialog
+                        .setTitleText("Dark Mode.")
+                        .setContentText("Enable Dark Mode?")
+                        .setCancelText("No, cancel!")
+                        .setConfirmText("Yes, do!")
+                        .showCancelButton(true)
+                        .confirmButtonColor(R.drawable.btn_style)
+                        .cancelButtonColor(R.drawable.btn_style)
+                        .setCancelClickListener(new KAlertDialog.KAlertClickListener() {
+                            @Override
+                            public void onClick(KAlertDialog sDialog) {
+                                sDialog.cancel();
+                            }
+                        })
+                        .setConfirmClickListener(new KAlertDialog.KAlertClickListener() {
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                            RelativeLayout constraintLayout = findViewById(R.id.content_main);
+                            // LinearLayout linearLayout = findViewById(R.id.listview);
 
+                            NavigationView navigationView = findViewById(R.id.nav_view);
 
-                        isDark = true;
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.putBoolean("isDark", isDark);
-                        editor.commit();
-                        constraintLayout.setBackgroundColor(Color.BLACK);
-                        // linearLayout.setBackgroundColor(Color.BLACK);
-                        navigationView.setBackgroundColor(Color.BLACK);
-                        navigationView.setItemTextColor(ColorStateList.valueOf(Color.WHITE));
-                      //  linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.card_background_dark));
-                        //list.setAdapter(adapter);
-
-                        Intent myIntent = new Intent(MainActivity.this, MainActivity.class);
-                        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivityForResult(myIntent, 0);
-
-                        Toasty.success(mContext, "Enabled", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                builder.setNegativeButton("NO", null);
-                builder.show();
-            } else if (isDark && prefs.getInt("size",0) != 0) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogurDark);
-                builder.setTitle(R.string.darkmode);
-                builder.setMessage(R.string.no);
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    ConstraintLayout constraintLayout = findViewById(R.id.content_main);
-                   // LinearLayout linearLayout = findViewById(R.id.listview);
-
-                    NavigationView navigationView = findViewById(R.id.nav_view);
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        isDark = false;
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.putBoolean("isDark", isDark);
-                        editor.commit();
-                        constraintLayout.setBackgroundColor(Color.WHITE);
-                        navigationView.setBackgroundColor(Color.WHITE);
-                        navigationView.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
-                        // linearLayout.setBackgroundColor(Color.WHITE);
-                       // linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.card_background));
-                       // list.setAdapter(adapter);
-
-                        Intent myIntent = new Intent(MainActivity.this, MainActivity.class);
-                        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivityForResult(myIntent, 0);
-
-                        Toasty.success(mContext, "Disabled", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                builder.setNegativeButton("NO", null);
-                builder.show();
+                            @Override
+                            public void onClick(KAlertDialog  sDialog) {
 
 
-            } else if (!isDark && prefs.getInt("size",0) == 0) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogueLight);
-                builder.setTitle(R.string.darkmode);
-                builder.setMessage(R.string.yes);
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    ConstraintLayout constraintLayout = findViewById(R.id.content_main);
+                                    sDialog
+                                            .setTitleText("Done!")
+                                            .setContentText("Dark Mode Has been Set!")
+                                            .changeAlertType(KAlertDialog.SUCCESS_TYPE);
 
 
-                    NavigationView navigationView = findViewById(R.id.nav_view);
+                                isDark = false;
+                                SharedPreferences.Editor editor = prefs.edit();
+                                editor.putBoolean("isDark", isDark);
+                                editor.commit();
+                                constraintLayout.setBackgroundColor(Color.WHITE);
+                                navigationView.setBackgroundColor(Color.WHITE);
+                                navigationView.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
+                                // linearLayout.setBackgroundColor(Color.WHITE);
+                                // linearLayout.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.card_background));
+                                // list.setAdapter(adapter);
 
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        isDark = true;
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.putBoolean("isDark", isDark);
-                        editor.commit();
-                        constraintLayout.setBackgroundColor(Color.BLACK);
-                        // linearLayout.setBackgroundColor(Color.BLACK);
-                        navigationView.setBackgroundColor(Color.BLACK);
-                        navigationView.setItemTextColor(ColorStateList.valueOf(Color.WHITE));
+                                Intent myIntent = new Intent(MainActivity.this, MainActivity.class);
+                                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivityForResult(myIntent, 0);
+
+                                Toasty.success(mContext, "Disabled", Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+
+
+                kAlertDialog.show();
 
 
 
-                        Intent myIntent = new Intent(MainActivity.this, MainActivity.class);
-                        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivityForResult(myIntent, 0);
-
-                        Toasty.success(mContext, "Enabled", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                builder.setNegativeButton("NO", null);
-                builder.show();
-            } else if (isDark && prefs.getInt("size",0) == 0) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.DialogurDark);
-                builder.setTitle(R.string.darkmode);
-                builder.setMessage(R.string.no);
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    ConstraintLayout constraintLayout = findViewById(R.id.content_main);
-
-
-                    NavigationView navigationView = findViewById(R.id.nav_view);
-
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        isDark = false;
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.putBoolean("isDark", isDark);
-                        editor.commit();
-                        constraintLayout.setBackgroundColor(Color.WHITE);
-                        navigationView.setBackgroundColor(Color.WHITE);
-                        //navigationView.setItemTextColor();
-                        navigationView.setItemTextColor(ColorStateList.valueOf(Color.BLACK));
-                        // linearLayout.setBackgroundColor(Color.WHITE);
-
-
-                        Intent myIntent = new Intent(MainActivity.this, MainActivity.class);
-                        myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivityForResult(myIntent, 0);
-
-                        Toasty.success(mContext, "Disabled", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                builder.setNegativeButton("NO", null);
-                builder.show();
             }
+            else if (!isDark) {
+                KAlertDialog.DARK_STYLE = false;
+                kAlertDialog =  new KAlertDialog(this, KAlertDialog.WARNING_TYPE);
+                kAlertDialog
+                        .setTitleText("Dark Mode.")
+                        .setContentText("Enable Dark Mode?")
+                        .setCancelText("No, cancel!")
+                        .setConfirmText("Yes, do!")
+                        .showCancelButton(true)
+                        .confirmButtonColor(R.drawable.btn_style)
+                        .cancelButtonColor(R.drawable.btn_style)
+                        .setCancelClickListener(new KAlertDialog.KAlertClickListener() {
+                            @Override
+                            public void onClick(KAlertDialog sDialog) {
+                                sDialog.cancel();
+                            }
+                        })
+                        .setConfirmClickListener(new KAlertDialog.KAlertClickListener() {
+
+                            RelativeLayout constraintLayout = findViewById(R.id.content_main);
+                            // LinearLayout linearLayout = findViewById(R.id.listview);
+
+                            NavigationView navigationView = findViewById(R.id.nav_view);
+
+                            @Override
+                            public void onClick(KAlertDialog  sDialog) {
+
+
+                                sDialog
+                                        .setTitleText("Done!")
+                                        .setContentText("Dark Mode Has been Set!")
+                                        .changeAlertType(KAlertDialog.SUCCESS_TYPE);
+
+
+                                isDark = true;
+                                SharedPreferences.Editor editor = prefs.edit();
+                                editor.putBoolean("isDark", isDark);
+                                editor.commit();
+                                constraintLayout.setBackgroundColor(Color.BLACK);
+                                // linearLayout.setBackgroundColor(Color.BLACK);
+                                navigationView.setBackgroundColor(Color.BLACK);
+                                navigationView.setItemTextColor(ColorStateList.valueOf(Color.WHITE));
+
+
+
+                                Intent myIntent = new Intent(MainActivity.this, MainActivity.class);
+                                myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivityForResult(myIntent, 0);
+
+                                Toasty.success(mContext, "Enabled", Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+
+
+                kAlertDialog.show();
+
+
+            }
+
 
 
         }
@@ -944,7 +1070,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 } else {
                     Log.e("value", "Permission Denied, You cannot use local drive .");
                 }
+            case ALL_PERMISSIONS_RESULT:
+                for (String perms : permissionsToRequest) {
+                    if (!hasPermission(perms)) {
+                        permissionsRejected.add(perms);
+                    }
+                }
+
+                if (permissionsRejected.size() > 0) {
+
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (shouldShowRequestPermissionRationale(permissionsRejected.get(0))) {
+                            showMessageOKCancel("These permissions are mandatory for the application. Please allow access.",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                                                requestPermissions(permissionsRejected.toArray(new String[permissionsRejected.size()]), ALL_PERMISSIONS_RESULT);
+                                            }
+                                        }
+                                    });
+                            return;
+                        }
+                    }
+
+                }
+
                 break;
+
         }
     }
 

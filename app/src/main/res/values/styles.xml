@@ -11,6 +11,8 @@
         <item name="android:windowActionBarOverlay">true</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:scrollbarThumbVertical">@drawable/back_scrollbar</item>
     </style>
 
     <style name="AppThemeDarkActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -22,12 +24,16 @@
         <item name="android:windowActionBarOverlay">true</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:scrollbarThumbVertical">@drawable/back_scrollbar</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:scrollbarThumbVertical">@drawable/back_scrollbar</item>
+        <item name="android:windowContentTransitions">true</item>
 
     </style>
 
@@ -142,10 +148,12 @@
         </item>
         <item name="android:fastScrollOverlayPosition">aboveThumb</item>
         <item name="android:fastScrollTextColor">@color/cardview_light_background</item>
+        <item name="android:scrollbarThumbVertical">@drawable/back_scrollbar</item>
     </style>
 
     <style name="CitySearchView" parent="Base.Widget.AppCompat.SearchView">
         <item name="searchIcon">@drawable/ic_searchw</item>
+        <item name="android:editTextColor">@color/white</item>
         <item name="closeIcon">@drawable/ic_close_black_24dp</item>
         <item name="searchHintIcon">@null</item>
 
@@ -187,6 +195,25 @@
     <style name="TabButtonTextStyle" parent="android:Widget.Button">
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@drawable/tab_button_text_selector</item>
+    </style>
+
+    <style name="SearchViewTheme" parent="Widget.AppCompat.SearchView.ActionBar">
+        <item name="layout">@layout/toolbar_search_view</item>
+        <item name="commitIcon">@drawable/ic_search_commit</item>
+        <item name="colorControlNormal">@color/material_light_active_icon</item>
+        <item name="colorControlHighlight">@color/material_ripple_light</item>
+        <item name="autoCompleteTextViewStyle">@style/AutoCompleteTextViewStyle</item>
+        <item name="suggestionRowLayout">@layout/search_view_suggestion_row</item>
+        <item name="android:maxWidth">9999dp</item>
+    </style>
+
+    <style name="AutoCompleteTextViewStyle" parent="Widget.AppCompat.Light.AutoCompleteTextView">
+        <item name="android:popupBackground">@drawable/search_suggestions_bg</item>
+        <item name="android:popupElevation">0dp</item>
+    </style>
+
+    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="searchViewStyle">@style/SearchViewTheme</item>
     </style>
 
 </resources>

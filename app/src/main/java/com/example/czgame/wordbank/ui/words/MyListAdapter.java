@@ -100,14 +100,14 @@ public class MyListAdapter extends BaseAdapter implements SectionIndexer {
 
 
             titleText.setTextColor(Color.WHITE);
-            number.setTextColor(Color.WHITE);
+            number.setTextColor(ContextCompat.getColor(context,R.color.soft_light));
             listitm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background_dark));
 
 
         } else {
 
             titleText.setTextColor(Color.BLACK);
-            number.setTextColor(Color.BLACK);
+            number.setTextColor(ContextCompat.getColor(context,R.color.soft_dark));
             listitm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background));
         }
 

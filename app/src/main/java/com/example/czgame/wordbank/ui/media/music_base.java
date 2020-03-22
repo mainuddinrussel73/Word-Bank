@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -61,7 +62,6 @@ public class music_base extends AppCompatActivity {
             }
         });
 
-
         container = R.id.container; //Container for fragments
 
         //Setup button tab layout
@@ -86,13 +86,25 @@ public class music_base extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("myPrefsKey", MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
         RelativeLayout relativeLayout = findViewById(R.id.bassss);
+        button = findViewById(R.id.sortsong);
         if(!isDark) {
             bottomTabLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.material_white));
             relativeLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.material_white));
+            toolbar.setBackground(ContextCompat.getDrawable(this,R.drawable.btn_style));
+            toolbar.setTitleTextColor(Color.WHITE);
+            Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
+            icon.setTint(ContextCompat.getColor(this, R.color.uou));
+            button.setBackground(icon);
+
 
         }
         else{ bottomTabLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.material_black));
             relativeLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.material_black));
+            toolbar.setBackground(ContextCompat.getDrawable(this,R.drawable.btn_style));
+            toolbar.setTitleTextColor(Color.WHITE);
+            Drawable icon = getResources().getDrawable(R.drawable.ic_sort_black_24dp);
+            icon.setTint(ContextCompat.getColor(this, R.color.white));
+            button.setBackground(icon);
         }
         //indicator color
         bottomTabLayout.setIndicatorColor(R.color.uou);
@@ -101,7 +113,7 @@ public class music_base extends AppCompatActivity {
         context = getBaseContext();
         activity = this;
 
-        button = findViewById(R.id.sortsong);
+
 
         mVisualizer = findViewById(R.id.blast);
 
@@ -116,6 +128,9 @@ public class music_base extends AppCompatActivity {
 
         Fragment fragment = null;
         switch (id) {
+            case R.id.menu_button0:
+                fragment = fragment_music_home.newInstance("", "Home");
+                break;
             case R.id.menu_button1:
                 fragment = fragment_music_list.newInstance(R.color.blue, "Music");
                 break;
@@ -153,5 +168,6 @@ public class music_base extends AppCompatActivity {
 
        // boolean onCreateOptionsMenu(Menu menu);
     }
+
 
 }

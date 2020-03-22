@@ -55,6 +55,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import es.dmoral.toasty.Toasty;
+import pl.bclogic.pulsator4droid.library.PulsatorLayout;
 import studio.carbonylgroup.textfieldboxes.ExtendedEditText;
 
 public class promodetail extends AppCompatActivity {
@@ -87,6 +88,7 @@ public class promodetail extends AppCompatActivity {
     MediaPlayer mediaPlayer;
     TextView textViewss,shownoise;
     private CountDownTimer cdTimer;
+    PulsatorLayout pulsator;
     private long total = 1800000;
     private StorageReference mStorageRef;
     ImageButton saveTitle,cancelTitle;
@@ -186,6 +188,8 @@ public class promodetail extends AppCompatActivity {
 
         shake = AnimationUtils.loadAnimation(this, R.anim.glowing);
         // fab.setImageBitmap(textAsBitmap("OK", 40, Color.WHITE));
+
+         pulsator = findViewById(R.id.pulsator);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -403,6 +407,10 @@ public class promodetail extends AppCompatActivity {
 
         TextView textView = findViewById(R.id.isrepeat);
 
+
+        if(!Promotodo_service.ispause){
+            pulsator.start();
+        }
 
         if (currenttask.isIsrepeat() == 1) {
             textView.setText("Repeat");
@@ -652,10 +660,10 @@ public class promodetail extends AppCompatActivity {
 
             texts.setTextColor(Color.WHITE);
             texts.setHintTextColor(Color.rgb(185, 185, 185));
-            relativeLayout1.setBackgroundDrawable(ContextCompat.getDrawable(promodetail.this, R.drawable.card_background_dark));
+            relativeLayout1.setBackgroundDrawable(ContextCompat.getDrawable(promodetail.this, R.drawable.background_card_dark));
 
             shownoise.setTextColor(Color.WHITE);
-            main_view.setBackground(ContextCompat.getDrawable(promodetail.this, R.drawable.card_background_dark));
+            main_view.setBackground(ContextCompat.getDrawable(promodetail.this, R.drawable.background_card_dark));
             //fab1.setBackgroundColor(Color.RED);
             spinner.setBackgroundColor(Color.rgb(31,39,41));
             spinner.setTextColor(Color.WHITE);
@@ -678,10 +686,10 @@ public class promodetail extends AppCompatActivity {
 
             texts.setTextColor(Color.BLACK);
             texts.setHintTextColor(Color.BLACK);
-            relativeLayout1.setBackgroundDrawable(ContextCompat.getDrawable(promodetail.this, R.drawable.card_background));
+            relativeLayout1.setBackgroundDrawable(ContextCompat.getDrawable(promodetail.this, R.drawable.background_card));
 
             shownoise.setTextColor(Color.BLACK);
-            main_view.setBackground(ContextCompat.getDrawable(promodetail.this, R.drawable.card_background));
+            main_view.setBackground(ContextCompat.getDrawable(promodetail.this, R.drawable.background_card));
             // mListView.setBackgroundColor(Color.WHITE);
             // relativeLayout1.setBackground(ContextCompat.getDrawable(this, R.drawable.listview_border));
             additem.setBackgroundColor(Color.WHITE);
@@ -939,6 +947,7 @@ public class promodetail extends AppCompatActivity {
 
                     Promotodo_service.resume(promodetail.this);
 
+                    pulsator.start();
 
                     fab1.setVisibility(View.INVISIBLE);
                     fab2.setVisibility(View.VISIBLE);
@@ -956,6 +965,7 @@ public class promodetail extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Promotodo_service.pause();
+                    pulsator.stop();
                     //stopService(new Intent(promodetail.this, Promotodo_service.class));
                     // mediaPlayer.pause();
 
@@ -975,6 +985,7 @@ public class promodetail extends AppCompatActivity {
                     Promotodo_service.total = 1800000;
 
                     Promotodo_service.ispause = true;
+                    pulsator.stop();
                     stopService(new Intent(promodetail.this, Promotodo_service.class));
                     // mediaPlayer.pause();
 
@@ -1022,6 +1033,7 @@ public class promodetail extends AppCompatActivity {
                     editor.putInt("CURR", curr);
                     editor.commit();
 
+                    pulsator.start();
                     startService();
                     Promotodo_service.ispause = false;
                     // revealShow(true);
@@ -1039,7 +1051,7 @@ public class promodetail extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     Promotodo_service.pause();
-
+                        pulsator.stop();
                     fab1.setVisibility(View.VISIBLE);
                     fab2.setVisibility(View.INVISIBLE);
                     fab3.setVisibility(View.INVISIBLE);

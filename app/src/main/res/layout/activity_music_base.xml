@@ -12,27 +12,27 @@
         android:id="@+id/app_bar_music"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:elevation="3dp"
-        app:cardCornerRadius="25dp">
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"
+        app:cardCornerRadius="28dp"
+        app:cardElevation="3dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@drawable/btn_style"
-            app:titleTextColor="@color/material_pink50"
-           >
-
-
-
+            android:layout_height="45dp"
+            android:background="@drawable/background_card_dark"
+            app:popupTheme="@style/AppTheme.PopupOverlay">
 
             <Button
                 android:id="@+id/sortsong"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
+                android:layout_marginTop="4dp"
                 android:layout_gravity="right"
                 android:background="@drawable/ic_sort_black_24dp"
                 android:backgroundTint="@color/material_pink50"
@@ -42,24 +42,24 @@
 
 
 
-
     </androidx.cardview.widget.CardView>
 
 
     <com.sothree.slidinguppanel.SlidingUpPanelLayout
         android:id="@+id/sliding_layout"
         android:layout_width="match_parent"
-        android:layout_height="820dp"
+        android:layout_height="match_parent"
         android:layout_above="@+id/bottomTabLayout"
         android:layout_alignTop="@+id/app_bar_music"
-        android:layout_marginTop="-8dp"
-        android:layout_marginBottom="-20dp"
+        android:layout_marginTop="-25dp"
+        android:layout_marginBottom="-25dp"
         android:gravity="bottom">
 
         <include
             layout="@layout/music_base_frame"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            >
 
         </include>
 

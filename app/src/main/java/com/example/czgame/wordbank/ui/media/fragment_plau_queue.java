@@ -9,17 +9,15 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.example.czgame.wordbank.R;
+import com.example.czgame.wordbank.utill.SimpleItemTouchHelperCallback;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,9 +25,11 @@ import java.util.Comparator;
 import java.util.List;
 
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.palette.graphics.Palette;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import static android.content.Context.MODE_PRIVATE;
 import static com.example.czgame.wordbank.ui.media.fragment_music_list.isShowlrc;
@@ -37,7 +37,6 @@ import static com.example.czgame.wordbank.ui.media.fragment_music_list.nxt;
 import static com.example.czgame.wordbank.ui.media.fragment_music_list.nxtBtn;
 import static com.example.czgame.wordbank.ui.media.fragment_music_list.pauseBtn;
 import static com.example.czgame.wordbank.ui.media.fragment_music_list.pre;
-import static com.example.czgame.wordbank.ui.media.fragment_music_list.prefm;
 
 
 /**
@@ -48,13 +47,13 @@ import static com.example.czgame.wordbank.ui.media.fragment_music_list.prefm;
  * Use the {@link fragment_plau_queue#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class fragment_plau_queue extends Fragment implements music_base.OnBackPressedListener,Adapter_queue.EventListener{
+public class fragment_plau_queue extends Fragment implements music_base.OnBackPressedListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     public static  List<Audio> playqueue = new ArrayList<>();
-    ListView listView;
+    RecyclerView listView;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -118,17 +117,18 @@ public class fragment_plau_queue extends Fragment implements music_base.OnBackPr
 
 
         Adapter_queue artist_adapter = new Adapter_queue(getActivity());
-        listView.setAdapter(artist_adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                loadsong(i);
 
-            }
-        });
+        listView.setHasFixedSize(true);
+        listView.setLayoutManager(new LinearLayoutManager(getContext()));
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(artist_adapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(listView);
+        listView.setAdapter(artist_adapter);
+
 
         SharedPreferences prefs = getContext().getSharedPreferences("myPrefsKey", MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
+
 
 
 
@@ -143,7 +143,7 @@ public class fragment_plau_queue extends Fragment implements music_base.OnBackPr
 
             _rootLayout.setBackgroundColor(Color.BLACK);
 
-            relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(getContext().getApplicationContext(), R.drawable.card_background_dark));
+            relativeLayout.setBackgroundColor(Color.BLACK);
         } else if (!isDark && playqueue.size() != 0) {
 
             linearLayout.setBackgroundColor(Color.WHITE);
@@ -153,7 +153,7 @@ public class fragment_plau_queue extends Fragment implements music_base.OnBackPr
 
             listView.setBackgroundColor(Color.WHITE);
             listView.setAdapter(artist_adapter);
-            relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(getContext().getApplicationContext(), R.drawable.card_background));
+            relativeLayout.setBackgroundColor(Color.WHITE);
 
         } else if (isDark && playqueue.size() == 0) {
 
@@ -161,7 +161,7 @@ public class fragment_plau_queue extends Fragment implements music_base.OnBackPr
 
             _rootLayout.setBackgroundColor(Color.BLACK);
             listView.setBackgroundColor(Color.BLACK);
-            relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(getContext().getApplicationContext(), R.drawable.card_background_dark));
+            relativeLayout.setBackgroundColor(Color.BLACK);
             linearLayout.setBackgroundColor(Color.BLACK);
 
 
@@ -171,7 +171,7 @@ public class fragment_plau_queue extends Fragment implements music_base.OnBackPr
             _rootLayout.setBackgroundColor(Color.WHITE);
             listView.setBackgroundColor(Color.WHITE);
             linearLayout.setBackgroundColor(Color.WHITE);
-            relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(getContext().getApplicationContext(), R.drawable.card_background));
+            relativeLayout.setBackgroundColor(Color.WHITE);
 
 
 
@@ -247,17 +247,8 @@ public class fragment_plau_queue extends Fragment implements music_base.OnBackPr
        // getContext().unregisterReceiver(broadcastReceiver);
 
     }
-    @Override
-    public  void  loadsong(int position){
-        //System.out.println(pro);
-        System.out.println("event");
-        PreferenceManager.getDefaultSharedPreferences(getContext());
-        SharedPreferences.Editor editor = prefm.edit();
-        editor.putInt("positionnow",position);
-        editor.commit();
 
-        getContext().sendBroadcast(new Intent(Constants.ACTION.LOAD_ACTION));
-    }
+
 
     private String[] getAudioPath(Context context, String songTitle) {
 

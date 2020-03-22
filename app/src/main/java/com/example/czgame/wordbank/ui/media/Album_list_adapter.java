@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -24,10 +23,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
-import static com.example.czgame.wordbank.ui.media.detail_album.songs;
-
-public class Album_list_adapter extends BaseAdapter {
+public class Album_list_adapter extends RecyclerView.Adapter<Album_list_adapter.ViewHolder> {
 
     private final Activity context;
     List<Audio> contactList;
@@ -36,7 +34,7 @@ public class Album_list_adapter extends BaseAdapter {
 
     // private final Integer[] imgid;
 
-    public Album_list_adapter(Activity context) {
+    public Album_list_adapter(Activity context,ArrayList<Audio> songs) {
 
         this.context = context;
         this.contactList = new ArrayList<Audio>();
@@ -53,54 +51,45 @@ public class Album_list_adapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
-        return songs.size();
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        View listItem= layoutInflater.inflate(R.layout.media_item_layout, parent, false);
+        ViewHolder viewHolder = new ViewHolder(listItem);
+        return viewHolder;
     }
 
     @Override
-    public Audio getItem(int i) {
-        return songs.get(i);
-    }
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        final Audio myListData = contactList.get(position);
+        holder.tt.setText(myListData.getTitle());
+        holder.tt1.setText(myListData.getArtist());
 
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
-
-    public View getView(int position, View view, ViewGroup parent) {
-
-        LayoutInflater inflater = context.getLayoutInflater();
-        View rowView = inflater.inflate(R.layout.media_item_layout, null, true);
-        RelativeLayout listitm = rowView.findViewById(R.id.list_item);
-        titleText = rowView.findViewById(R.id.play_pause);
-        tt = rowView.findViewById(R.id.title5);
-        tt1 = rowView.findViewById(R.id.title6);
-        long num = Long.parseLong(songs.get(position).getDuration());
-        duration = rowView.findViewById(R.id.duration); // duration
-
-        tt.setText((songs.get(position).getTitle()));
-        tt1.setText((songs.get(position).getArtist()));
+        long num = Long.parseLong(myListData.getDuration());
         String s = String.format("%02d:%02d",
                 TimeUnit.MILLISECONDS.toMinutes(num),
                 TimeUnit.MILLISECONDS.toSeconds(num) -
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(num))
         );
-        duration.setText(s);
+        holder.duration.setText(s);
 
         Uri sArtworkUri = Uri.parse("content://media/external/audio/albumart");
-        Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(songs.get(position).getImagepath()));
+        Uri uri = ContentUris.withAppendedId(sArtworkUri, Integer.valueOf(myListData.getImagepath()));
 
         //in.close();
         RequestOptions options = new RequestOptions()
                 .centerCrop()
                 .placeholder(R.drawable.image)
                 .error(R.drawable.image);
-        Glide.with(context).load(uri).apply(options).into(titleText);
+        Glide.with(context).load(uri).apply(options).into(holder.imageView);
+
+        holder.listitem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Toast.makeText(view.getContext(),"click on item: "+myListData.getDescription(),Toast.LENGTH_LONG).show();
+            }
+        });
 
 
-
-
-        RelativeLayout listitem = rowView.findViewById(R.id.list_item);
 
         SharedPreferences prefs = context.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
@@ -108,28 +97,47 @@ public class Album_list_adapter extends BaseAdapter {
         if (isDark) {
 
             //System.out.println("klklkl");
-            listitem.setBackgroundColor(Color.BLACK);
+            holder.listitem.setBackgroundColor(Color.BLACK);
 
 
-            tt.setTextColor(context.getResources().getColor(R.color.per50white));
+            holder.tt.setTextColor(context.getResources().getColor(R.color.per50white));
 
-            tt1.setTextColor(context.getResources().getColor(R.color.material_white));
+            holder.tt1.setTextColor(context.getResources().getColor(R.color.material_white));
 
-            listitm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background_dark));
+            holder.listitem.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.background_card_dark));
 
         } else {
 
-            listitem.setBackgroundColor(Color.WHITE);
+            holder.listitem.setBackgroundColor(Color.WHITE);
             // tt.setTextColor(Color.BLACK);
-            tt.setTextColor(context.getResources().getColor(R.color.per54black));
+            holder.tt.setTextColor(context.getResources().getColor(R.color.per54black));
 
-            tt1.setTextColor(context.getResources().getColor(R.color.darkgray));
-            listitm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background));
+            holder.tt1.setTextColor(context.getResources().getColor(R.color.darkgray));
+            holder.listitem.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.background_card));
         }
 
+    }
 
-        return rowView;
+    @Override
+    public int getItemCount() {
+        return contactList.size();
+    }
 
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView imageView;
+        TextView tt, tt1, duration;
+        RelativeLayout listitem;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            this.imageView = itemView.findViewById(R.id.play_pause);
+            this.duration = itemView.findViewById(R.id.duration);
+            this.tt = itemView.findViewById(R.id.title5);
+            this.tt1 = itemView.findViewById(R.id.title6);
+            listitem = itemView.findViewById(R.id.list_item);
+
+        }
     }
 
     public int getComplimentColor(int color) {

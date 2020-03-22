@@ -4,11 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/activity_horizontal_margin"
-    android:paddingLeft="5dp"
-    android:paddingTop="5dp"
-    android:paddingRight="5dp"
-    android:paddingBottom="5dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ui.diary.DiaryMain"
     tools:showIn="@layout/activity_diary">
@@ -23,9 +18,13 @@
         android:background="@color/white"
         android:divider="@null"
 
+
         app:column_count="2"
-        android:dividerHeight="0dp"
+        android:clipToPadding= "false"
+        android:dividerHeight="20dp"
+        android:paddingTop="80dp"
         android:fastScrollEnabled="true"
-        app:item_margin="8dp" />
+        app:grid_paddingBottom="@dimen/activity_horizontal_margin"
+        app:item_margin="18dp"/>
 
 </RelativeLayout>

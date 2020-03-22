@@ -4,9 +4,24 @@ public class AlbumModel {
 
     private long id;
     private String albumName;
+
+    private String firstYear;
+
     private String artistName;
     private String nr_of_songs;
     private String albumImg;
+
+    @Override
+    public String toString() {
+        return "AlbumModel{" +
+                "id=" + id +
+                ", albumName='" + albumName + '\'' +
+                ", artistName='" + artistName + '\'' +
+                ", nr_of_songs='" + nr_of_songs + '\'' +
+                ", albumImg='" + albumImg + '\'' +
+                ", firstYear='" + firstYear + '\'' +
+                '}';
+    }
 
     AlbumModel(){
 
@@ -53,5 +68,11 @@ public class AlbumModel {
         this.nr_of_songs = nr_of_songs;
     }
 
+    public String getFirstYear() {
+        return firstYear;
+    }
 
+    public void setFirstYear(String firstYear) {
+        this.firstYear = firstYear;
+    }
 }

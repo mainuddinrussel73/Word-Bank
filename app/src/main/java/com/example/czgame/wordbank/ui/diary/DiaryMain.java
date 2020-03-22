@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
@@ -23,6 +24,7 @@ import java.util.Collections;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class DiaryMain extends AppCompatActivity {
     public static StaggeredGridView listView;
@@ -108,16 +110,22 @@ public class DiaryMain extends AppCompatActivity {
 
             toolbar.setTitleTextColor(getResources().getColor(R.color.material_white));
 
+        if(isDark){
+            toolbar.setBackground(ContextCompat.getDrawable(this,R.drawable.btn_style));
+
+        }else{
+            toolbar.setBackground(ContextCompat.getDrawable(this,R.drawable.btn_style));
+        }
         if (isDark && arrayAdapter.getCount() != 0) {
 
             laybase.setBackgroundColor(Color.BLACK);
-            lidtb.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
+            lidtb.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
             listView.setBackgroundColor(Color.BLACK);
             listView.setAdapter(arrayAdapter);
         } else if (!isDark && arrayAdapter.getCount()!= 0) {
 
             laybase.setBackgroundColor(Color.WHITE);
-            lidtb.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
+            lidtb.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
             listView.setBackgroundColor(Color.WHITE);
             listView.setAdapter(arrayAdapter);
 
@@ -125,13 +133,13 @@ public class DiaryMain extends AppCompatActivity {
 
 
             laybase.setBackgroundColor(Color.BLACK);
-            lidtb.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background_dark));
+            lidtb.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.black));
             listView.setBackgroundColor(Color.BLACK);
 
         } else if (!isDark && arrayAdapter.getCount() == 0) {
 
             laybase.setBackgroundColor(Color.WHITE);
-            lidtb.setBackgroundDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.card_background));
+            lidtb.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white));
             listView.setBackgroundColor(Color.WHITE);
 
 
@@ -141,6 +149,28 @@ public class DiaryMain extends AppCompatActivity {
 
     }
 
+    public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
+        private int space;
+
+        public SpacesItemDecoration(int space) {
+            this.space = space;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view,
+                                   RecyclerView parent, RecyclerView.State state) {
+            outRect.left = space;
+            outRect.right = space;
+            outRect.bottom = space;
+
+            // Add top margin only for the first item to avoid double space between items
+            if (parent.getChildLayoutPosition(view) == 0) {
+                outRect.top = space;
+            } else {
+                outRect.top = 0;
+            }
+        }
+    }
 
 
 

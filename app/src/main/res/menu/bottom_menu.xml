@@ -2,10 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/menu_button0"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:iconTint="@color/uou"
+        android:title="Home" />
+    <item
         android:id="@+id/menu_button1"
         android:icon="@drawable/ic_queue_music_black_24dp"
         android:iconTint="@color/uou"
-        android:title="Home" />
+        android:title="Songs" />
 
     <item
         android:id="@+id/menu_button2"

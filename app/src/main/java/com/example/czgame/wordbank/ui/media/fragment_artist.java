@@ -1,5 +1,6 @@
 package com.example.czgame.wordbank.ui.media;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -7,6 +8,8 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,7 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.ListView;
+import android.widget.GridView;
 import android.widget.RelativeLayout;
 
 import com.example.czgame.wordbank.R;
@@ -36,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
+import androidx.core.app.ActivityOptionsCompat;
 import androidx.fragment.app.Fragment;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -49,12 +52,13 @@ public class fragment_artist extends Fragment implements music_base.OnBackPresse
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     public  static  ArrayList<ArtistModel> allsongs = new ArrayList<>();
-    public  static  List<ArtistModel> imagepathm = new ArrayList<>();
+    public  static  List<String> imagepathm = new ArrayList<>();
     private final int MY_PERMISSIONS_RECORD_AUDIO = 1;
-    ListView gridView;
+    GridView gridView;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    DatabaseHelper_artist_image  databaseHelper_artist_image;
     public fragment_artist() {
         // Required empty public constructor
     }
@@ -77,7 +81,7 @@ public class fragment_artist extends Fragment implements music_base.OnBackPresse
         return fragment;
     }
 
-    public static Bitmap getBitmapFromURL(String src) {
+    public Bitmap getBitmapFromURL(String src) {
         try {
             URL url = new URL(src);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -156,44 +160,56 @@ public class fragment_artist extends Fragment implements music_base.OnBackPresse
 
 
 
+        databaseHelper_artist_image = new DatabaseHelper_artist_image(getContext());
+        ConnectivityManager conMgr =  (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = conMgr.getActiveNetworkInfo();
+        if (netInfo != null) {
+            if (netInfo.isConnected()) {
+               // databaseHelper_artist_image.deleteAll();
+                TheTaskAdvance t = new TheTaskAdvance();
+                t.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
+                System.out.println("not");
+
+            }
+        }else{
+
+        }
 
         if (isDark && allsongs.size() != 0) {
 
 
             _rootLayout.setBackgroundColor(Color.BLACK);
+
             linearLayout.setBackgroundColor(Color.BLACK);
             gridView.setAdapter(artist_adapter);
             gridView.setBackgroundColor(Color.BLACK);
-            relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(getContext().getApplicationContext(), R.drawable.card_background_dark));
+            relativeLayout.setBackgroundColor(Color.BLACK);
         } else if (!isDark && allsongs.size() != 0) {
 
             linearLayout.setBackgroundColor(Color.WHITE);
 
             _rootLayout.setBackgroundColor(Color.WHITE);
-
             gridView.setBackgroundColor(Color.WHITE);
             // listView.setAdapter(adapter);
             gridView.setAdapter(artist_adapter);
-            relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(getContext().getApplicationContext(), R.drawable.card_background));
-
+            relativeLayout.setBackgroundColor(Color.WHITE);
         } else if (isDark && allsongs.size() == 0) {
 
             _rootLayout.setBackgroundColor(Color.BLACK);
             //listView.setBackgroundColor(Color.BLACK);
             gridView.setBackgroundColor(Color.BLACK);
-            relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(getContext().getApplicationContext(), R.drawable.card_background_dark));
+            relativeLayout.setBackgroundColor(Color.BLACK);
             linearLayout.setBackgroundColor(Color.BLACK);
 
 
         } else if (!isDark && allsongs.size() == 0) {
 
             _rootLayout.setBackgroundColor(Color.WHITE);
-
             //  listView.setBackgroundColor(Color.WHITE);
             gridView.setBackgroundColor(Color.WHITE);
             linearLayout.setBackgroundColor(Color.WHITE);
-            relativeLayout.setBackgroundDrawable(ContextCompat.getDrawable(getContext().getApplicationContext(), R.drawable.card_background));
-
+            relativeLayout.setBackgroundColor(Color.WHITE);
 
 
         }
@@ -205,11 +221,12 @@ public class fragment_artist extends Fragment implements music_base.OnBackPresse
                 Intent myIntent = new Intent(view.getContext(), detail_artist.class);
                 //String s = view.findViewById(R.id.subtitle).toString();
                 //String s = (String) parent.getI;
-                System.out.println(allsongs.get(position).getID());
+           //     System.out.println(allsongs.get(position).getID());
                 myIntent.putExtra("artistid", allsongs.get(position).getID());
                 myIntent.putExtra("artistname", allsongs.get(position).getArtistName());
                 myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivityForResult(myIntent, 0);
+                ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) view.getContext(),view.findViewById(R.id.play_pause), "image_share");
+                startActivity(myIntent, activityOptionsCompat.toBundle());
             }
         });
     }
@@ -257,13 +274,20 @@ public class fragment_artist extends Fragment implements music_base.OnBackPresse
                         .getColumnIndex(tracks)));
 
                 list.add(albumData);
+              ///  DatabaseHelper_artist_image databaseHelper;
+                //databaseHelper = new DatabaseHelper_artist_image(getContext());
+
+                //System.out.println( databaseHelper.getImage(Long.toString(albumData.getID())).getImageByteArray().toString());
+
 
             } while (cursor.moveToNext());
         }
 
         cursor.close();
 
-        new TheTaskAdvance().execute();
+
+
+
 
         return list;
     }
@@ -271,53 +295,57 @@ public class fragment_artist extends Fragment implements music_base.OnBackPresse
     class TheTaskAdvance extends AsyncTask<Void, Void, Void>
     {
 
+
+
         @Override
         protected Void doInBackground(Void... arg0) {
             // TODO Auto-generated method stub
+
+
             for (ArtistModel a:
                     allsongs) {
+                if(!(databaseHelper_artist_image.Iscontains(Long.toString(a.getID())))){
+                    a.setArtistName(a.getArtistName().replace(",","&"));
+                    String kb = "https://api.deezer.com/search/artist/?q="+a.getArtistName()+"&index=0&limit=2&output=json&fbclid=IwAR2lYmIf6tuGiJWcYb2oXxPo5sz1QsSK24iatPGr8YdnlIuknsKxNCZzPMc";
+                    String json = "";
+                    try {
+                        json  = Jsoup.connect(kb).ignoreContentType(true).execute().body();
+                       // System.out.println(json);
 
-                String kb = "https://www.theaudiodb.com/api/v1/json/1/search.php?s="+a.getArtistName();
-                String json = "";
-                try {
-                    json  = Jsoup.connect(kb).ignoreContentType(true).execute().body();
-                    // System.out.println(json);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                // System.out.println(connection.request());
-
-                try {
-                    JSONObject jsnobject = new JSONObject(json);
-                    //System.out.println(jsnobject.toString());
-
-                    JSONArray jsonArray = jsnobject.getJSONArray("artists");
-                    // System.out.println(jsonArray);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-
-                        JSONObject explrObject = jsonArray.getJSONObject(i);
-
-                        System.out.println(explrObject.get("strArtistThumb").toString());
-                        a.setUrl(explrObject.get("strArtistThumb").toString());
-
-                        imagepathm.add(a);
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
+                    // System.out.println(connection.request());
 
-                }catch (Exception e){
+                    try {
+                        JSONObject jsnobject = new JSONObject(json);
+                        //System.out.println(jsnobject.toString());
 
+                        JSONArray jsonArray = jsnobject.getJSONArray("data");
+                        // System.out.println(jsonArray);
+                        for (int i = 0; i < 1; i++) {
+
+                            JSONObject explrObject = jsonArray.getJSONObject(i);
+
+                            System.out.println(a.getID());
+                            //System.out.println(explrObject.get("strArtistThumb").toString());
+                            System.out.println(explrObject.get("picture").toString().concat("?size=big"));
+                            System.out.println(getBitmapFromURL((explrObject.get("picture").toString())));
+                            databaseHelper_artist_image.insetImage(getBitmapFromURL((explrObject.get("picture").toString().concat("?size=big"))),Long.toString(a.getID()));
+
+
+
+
+                        }
+
+                    }catch (Exception e){
+
+                    }
                 }
+
+
             }
 
-            allsongs.clear();
-            allsongs.addAll(imagepathm);
-
-            for (ArtistModel a:
-                    allsongs) {
-                String s = Long.toString(a.getID());
-
-                SaveImage(getBitmapFromURL(a.getUrl()),s);
-            }
 
             return null;
         }
@@ -327,11 +355,9 @@ public class fragment_artist extends Fragment implements music_base.OnBackPresse
             // TODO Auto-generated method stub
 
             super.onPostExecute(result);
+            ImageHelper imageHelper = new ImageHelper();
 
 
-
-            Album_adapter artist_adapter = new Album_adapter(getActivity());
-            gridView.setAdapter(artist_adapter);
 
 
 
@@ -351,4 +377,6 @@ public class fragment_artist extends Fragment implements music_base.OnBackPresse
         }
 
     }
+
+
 }

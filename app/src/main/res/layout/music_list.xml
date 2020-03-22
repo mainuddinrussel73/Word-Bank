@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_margin="@dimen/activity_horizontal_margin"
     android:id="@+id/listview"
-    android:background="@drawable/card_background"
+    android:background="@color/black"
     tools:showIn="@layout/content_music"
 
     >
@@ -14,22 +14,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:background="@color/white"
+        android:background="@color/black"
         android:orientation="vertical">
 
 
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listviews"
         android:layout_width="match_parent"
-
+        android:clipToPadding= "false"
+        android:dividerHeight="20dp"
         android:layout_height="match_parent"
         android:fastScrollAlwaysVisible="false"
-        android:dividerHeight="0dp"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
         android:divider="@null"
         android:fastScrollEnabled="true"
-
+        android:paddingTop="80dp"
+        android:paddingRight="@dimen/activity_horizontal_margin"
         android:scrollbarStyle="outsideOverlay"
 
 
@@ -42,26 +43,21 @@
 
 
 
-    </ListView>
+    </androidx.recyclerview.widget.RecyclerView>
 
 
-    <GridView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/gridviews"
         android:layout_width="match_parent"
+
         android:layout_height="match_parent"
         android:fastScrollAlwaysVisible="false"
-        android:dividerHeight="0dp"
+        android:clipToPadding= "false"
         android:divider="@null"
         android:fastScrollEnabled="true"
-android:columnWidth="110dp"
-        android:horizontalSpacing="0dp"
+        android:dividerHeight="5dp"
+        android:paddingTop="80dp"
         android:scrollbarStyle="outsideOverlay"
-        android:gravity="center|bottom"
-        android:numColumns="3"
-        android:stretchMode="spacingWidth"
-        android:verticalSpacing="0dp"
-
-
         android:visibility="gone"
 
 
@@ -70,7 +66,7 @@ android:columnWidth="110dp"
 
 
 
-    </GridView>
+    </androidx.recyclerview.widget.RecyclerView>
 
     </LinearLayout>
 

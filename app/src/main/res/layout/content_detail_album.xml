@@ -1,47 +1,171 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ui.media.detail_album"
-
     tools:showIn="@layout/activity_detail_album">
+
+
+
+
+
+
     <RelativeLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:background="@drawable/card_background">
+        android:background="@drawable/base_rounded">
 
-        <ListView
+
+
+        <RelativeLayout
+            android:id="@+id/controll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/artistname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/typer_roboto_bold"
+                android:padding="@dimen/activity_horizontal_margin"
+                android:text="Album Name"
+                android:textColor="@color/uou"
+                android:textSize="25dp"
+                >
+            </TextView>
+
+            <LinearLayout
+                android:id="@+id/details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/artistname"
+                android:orientation="horizontal"
+                >
+
+
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    ></View>
+                <TextView
+                    android:id="@+id/otherinfo1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/typer_roboto_bold"
+                    android:padding="@dimen/activity_horizontal_margin"
+                    android:text="7 Songs"
+                    android:textColor="@color/uou"
+                    android:textSize="15dp"
+                    >
+                </TextView>
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@drawable/ic_lens_black_24dp"
+                    android:backgroundTint="@color/uou"
+                    ></View>
+                <TextView
+                    android:id="@+id/otherinfo2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/typer_roboto_bold"
+                    android:padding="@dimen/activity_horizontal_margin"
+                    android:text="31:23"
+                    android:textColor="@color/uou"
+                    android:textSize="15dp"
+                    >
+                </TextView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/buttons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/details"
+                android:orientation="horizontal"
+                android:padding="@dimen/activity_horizontal_margin">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_horizontal_margin"
+                    android:background="@drawable/btn_style"
+                    android:drawableLeft="@drawable/btn_play_white"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="18dp"
+                    android:text="Play all"
+                    android:textColor="@color/white">
+
+                </Button>
+
+                <View
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5">
+
+                </View>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_horizontal_margin"
+                    android:background="@drawable/btn_style"
+                    android:drawableLeft="@drawable/ic_shuffle_white_24dp"
+                    android:paddingLeft="@dimen/activity_horizontal_margin"
+                    android:paddingRight="18dp"
+                    android:text="Shuffle"
+                    android:textColor="@color/white">
+
+                </Button>
+
+            </LinearLayout>
+
+
+
+
+
+        </RelativeLayout>
+
+
+
+
+
+        <androidx.recyclerview.widget.RecyclerView
+
+            android:layout_height="wrap_content"
             android:id="@+id/listviews"
             android:layout_width="match_parent"
-
-            android:layout_height="match_parent"
-            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:layout_below="@+id/controll"
+            android:background="@color/black"
             android:divider="@null"
-            android:dividerHeight="0dp"
+            android:dividerHeight="10dp"
             android:fastScrollAlwaysVisible="false"
-
             android:fastScrollEnabled="true"
             android:scrollbarStyle="outsideOverlay"
-
-
-
-
-
 
 
             >
 
 
+        </androidx.recyclerview.widget.RecyclerView>
 
-        </ListView>
+
+
+
+
     </RelativeLayout>
 
 
 
-</androidx.core.widget.NestedScrollView>
+
+
+
+
+</RelativeLayout>

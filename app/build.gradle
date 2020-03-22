@@ -154,6 +154,16 @@ dependencies {
     implementation 'com.github.4inodev:Neomorphic-FrameLayout-Android:1.03'
     compile 'com.github.devlight.shadowlayout:library:1.0.2'
     implementation 'com.github.leondzn:simple-analog-clock:1.0.1'
+    implementation 'com.github.TutorialsAndroid:KAlertDialog:v7.0.19'
+    implementation 'com.github.ahmedeltaher:Azan:3.0'
+
+    compile 'com.github.jaouan:revealator:1.2.1'
+    implementation "com.jakewharton:butterknife:10.1.0"
+    annotationProcessor "com.jakewharton:butterknife-compiler:10.1.0"
+    compile 'com.github.markomilos:paginate:0.5.1'
+    compile 'com.skyfishjy.ripplebackground:library:1.0.1'
+    compile 'pl.bclogic:pulsator4droid:1.0.3'
+    compile 'com.miguelcatalan:materialsearchview:1.4.0'
 
 
 }

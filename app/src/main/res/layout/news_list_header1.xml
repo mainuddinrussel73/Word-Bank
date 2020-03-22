@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/baselayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffff"
+    android:orientation="horizontal">
+
+
+
+
+    <LinearLayout android:id="@+id/list_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_horizontal_margin"
+        android:background="@drawable/background_card"
+        android:descendantFocusability="afterDescendants"
+        android:orientation="horizontal"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp"
+        >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/news_title"
+                android:layout_width="190dp"
+                android:layout_height="26dp"
+
+                android:layout_margin="3dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/lobs_star"
+                android:maxLines="1"
+                android:text="Medium Text"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+
+                />
+
+            <TextView
+                android:id="@+id/news_detail"
+                android:layout_width="190dp"
+                android:layout_height="107dp"
+
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:ellipsize="end"
+                android:fontFamily="@font/belgrano"
+                android:maxLines="4"
+                android:paddingTop="5dp"
+                android:text="Around 200 shanties were damaged as a blaze swept through a slum in Dhaka's Rupnagar area this morning, police said.
+
+On information, 25 firefighting units rushed to the spot, Duty Officer of Fire Service and Civil Defence Russel Shikdar told The Daily Star around 11:45am. "
+                android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                android:textColor="#99000000"
+                android:textSize="12dp"
+                android:textStyle="bold"
+
+                />
+        </LinearLayout>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_margin="0dp"
+            android:elevation="15dp"
+            app:cardCornerRadius="25dp">
+            <com.github.siyamed.shapeimageview.RoundedImageView
+                android:id="@+id/topnews"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:padding="0dp"
+                android:src="@drawable/news"
+                android:transitionName="imageShared"
+                app:siRadius="25dp">
+
+            </com.github.siyamed.shapeimageview.RoundedImageView>
+
+            <cdflynn.android.library.checkview.CheckView
+                android:id="@+id/check"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="right"
+                android:layout_marginTop="99dp"
+                android:layout_marginRight="9dp"
+                app:checkView_strokeColor="@color/green"
+                app:checkView_strokeWidth="5dp"/>
+
+        </androidx.cardview.widget.CardView>
+
+
+    </LinearLayout>
+</FrameLayout>

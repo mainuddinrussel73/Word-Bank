@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.czgame.wordbank.R;
+import com.example.czgame.wordbank.ui.Home.HomeActivity;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -207,7 +208,7 @@ public class add_page extends AppCompatActivity {
                                 synonym.getText().toString(),antonym.getText().toString());
                         if (b == true) {
                             Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
-                            Intent myIntent = new Intent(v.getContext(), MainActivity.class);
+                            Intent myIntent = new Intent(v.getContext(), HomeActivity.class);
                             myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivityForResult(myIntent, 0);
                         } else {
@@ -225,7 +226,7 @@ public class add_page extends AppCompatActivity {
                             synonym.getText().toString(),antonym.getText().toString());
                     if (b == true) {
                         Toasty.success(getApplicationContext(), "Done.", Toast.LENGTH_SHORT).show();
-                        Intent myIntent = new Intent(add_page.this, MainActivity.class);
+                        Intent myIntent = new Intent(add_page.this, HomeActivity.class);
                         myIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivityForResult(myIntent, 0);
                     } else {

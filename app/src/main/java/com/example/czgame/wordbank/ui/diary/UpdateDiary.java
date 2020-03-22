@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,25 +13,22 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextPaint;
 import android.text.format.DateFormat;
-import android.text.method.ScrollingMovementMethod;
 import android.text.style.CharacterStyle;
 import android.text.style.UpdateAppearance;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.czgame.wordbank.R;
+import com.example.czgame.wordbank.utill.PopUpClass;
 import com.example.czgame.wordbank.utill.TextViewEx;
 
 import org.json.JSONArray;
@@ -253,29 +249,11 @@ public class UpdateDiary  extends AppCompatActivity {
         warn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                float density= UpdateDiary.this.getResources().getDisplayMetrics().density;
-                LayoutInflater inflater = (LayoutInflater) UpdateDiary.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View layout = inflater.inflate(R.layout.popupdetail,null);
-                final PopupWindow pw = new PopupWindow(layout, (int)density*370, (int)density*685, true);
 
+                ViewGroup root = (ViewGroup) getWindow().getDecorView().getRootView();
+                PopUpClass popUpClass = new PopUpClass(root);
+                popUpClass.showPopupWindow(UpdateDiary.this,view,"Mistakes : ",suggestions);
 
-                ((TextView)layout.findViewById(R.id.goldName)).setText(suggestions);
-                ((TextView)layout.findViewById(R.id.goldName)).setMovementMethod(new ScrollingMovementMethod());
-                ((TextView)layout.findViewById(R.id.goldNamet)).setText("Mistakes.");
-                ((TextView)layout.findViewById(R.id.goldNamet)).setMovementMethod(new ScrollingMovementMethod());
-
-                pw.setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                pw.setTouchInterceptor(new View.OnTouchListener() {
-                    public boolean onTouch(View v, MotionEvent event) {
-                        if(event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-                            pw.dismiss();
-                            return true;
-                        }
-                        return false;
-                    }
-                });
-                pw.setOutsideTouchable(true);
-                pw.showAtLocation(layout, Gravity.CENTER, 0, 0);
             }
         });
 

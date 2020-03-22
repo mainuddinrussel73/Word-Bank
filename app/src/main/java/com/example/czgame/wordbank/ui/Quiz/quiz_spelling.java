@@ -44,7 +44,8 @@ public class quiz_spelling extends AppCompatActivity {
     ExtendedEditText word;
     EditText texth;
     Button d,n;
-    word curr;
+    TextView scores;
+    word curr = null;
     ImageButton listed;
     int pos = 0;
     private DatabaseHelper mDBHelper;
@@ -71,14 +72,16 @@ public class quiz_spelling extends AppCompatActivity {
         word = findViewById(R.id.word);
 
         texth = findViewById(R.id.wordh);
+        scores = findViewById(R.id.scores);
 
         pos =getRandomNumberInRange(0,Quiz_confirm.contactList.size()-1);
 
         System.out.println(pos);
-        try {
-            curr = randomword(pos);
-        }catch (Exception e){}
-      //  mCheckView = findViewById(R.id.check);
+
+            while (curr==null) {
+                curr = randomword(pos);
+            }
+
 
         listView = findViewById(R.id.learnlist);
 
@@ -113,14 +116,19 @@ public class quiz_spelling extends AppCompatActivity {
         if(isDark) {
            word.setHintTextColor(Color.rgb(185, 185, 185));
             word.setTextColor(Color.WHITE);
-            relativeLayout.setBackgroundColor(Color.BLACK);
-            listView.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.card_background_dark));
+            word.setBackground(ContextCompat.getDrawable(this,R.drawable.base_rounded));
+            texth.setBackground(ContextCompat.getDrawable(this,R.drawable.base_rounded));
+
+            relativeLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.soft_dark));
+            listView.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.base_rounded));
         }else {
 
             word.setHintTextColor(Color.BLACK);
             word.setTextColor(Color.BLACK);
-            relativeLayout.setBackgroundColor(Color.WHITE);
-            listView.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.card_background));
+            word.setBackground(ContextCompat.getDrawable(this,R.drawable.base_rounded_white));
+            texth.setBackground(ContextCompat.getDrawable(this,R.drawable.base_rounded_white));
+            relativeLayout.setBackgroundColor(ContextCompat.getColor(this,R.color.soft_light));
+            listView.setBackgroundDrawable(ContextCompat.getDrawable(this,R.drawable.base_rounded_white));
         }
 
         textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
@@ -207,6 +215,7 @@ public class quiz_spelling extends AppCompatActivity {
             Toasty.success(this,"Correct.", Toast.LENGTH_LONG).show();
             texth.setText(curr.getWORD());
             texth.setTextColor(Color.GREEN);
+            scores.setText(Integer.toString(score2));
 
 
         }else{
@@ -218,6 +227,7 @@ public class quiz_spelling extends AppCompatActivity {
             texth.setText(curr.getWORD());
             texth.setTextColor(Color.RED);
             wordBuck.add(curr.getWORD());
+            scores.setText(Integer.toString(score2));
         }
 
 

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginTop="-65dp"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".ui.news.news_details"
+    tools:showIn="@layout/activity_news_details">
+
+    <include layout="@layout/viewflip" />
+
+    <io.codetail.widget.RevealFrameLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+
+            <FrameLayout
+                android:id="@+id/the_awesome_view"
+                android:layout_width="match_parent"
+               android:layout_height="match_parent"
+                android:background="@color/wwwww"
+                android:visibility="invisible"
+                >
+
+                <LinearLayout
+                    android:id="@+id/mainlay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginTop="80dp"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                    android:background="@drawable/rounded_corner"
+                    android:orientation="vertical"
+                    android:padding="50dp">
+
+                    <TextView
+                        android:id="@+id/texbt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/lilita_regular"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="Select an Option."
+                        android:textColor="@color/white"
+                        android:textSize="20sp" />
+
+
+                    <Button
+                        android:id="@+id/the_wonderful_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/activity_horizontal_margin"
+                        android:background="@drawable/btn_style"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="Update"
+                        android:textColor="@color/material_white" />
+                    <Button
+                        android:id="@+id/the_wonderful_button1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/activity_horizontal_margin"
+                        android:background="@drawable/btn_style"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="Delete"
+                        android:textColor="@color/material_white" />
+
+                    <Button
+                        android:id="@+id/the_wonderful_button2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/activity_horizontal_margin"
+                        android:background="@drawable/btn_style"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="Save As PDF"
+                        android:textColor="@color/material_white" />
+
+                    <Button
+                        android:id="@+id/the_wonderful_button3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/activity_horizontal_margin"
+                        android:background="@drawable/btn_style"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="Cancel"
+                        android:textColor="@color/material_white" />
+                </LinearLayout>
+            </FrameLayout>
+
+
+    </io.codetail.widget.RevealFrameLayout>
+
+</FrameLayout>

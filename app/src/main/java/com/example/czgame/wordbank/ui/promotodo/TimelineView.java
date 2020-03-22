@@ -26,6 +26,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import es.dmoral.toasty.Toasty;
@@ -52,6 +53,7 @@ public class TimelineView extends AppCompatActivity {
         RelativeLayout layout2 = findViewById(R.id.layout2);
 
         layout1.setVisibility(RelativeLayout.GONE);
+
 
 
         if (isDark && layout1.getVisibility()==View.GONE) {
@@ -95,6 +97,12 @@ public class TimelineView extends AppCompatActivity {
 
             toolbar.setTitleTextColor(getResources().getColor(R.color.material_white));
 
+        if(isDark){
+            toolbar.setBackground(ContextCompat.getDrawable(this,R.drawable.btn_style));
+
+        }else{
+            toolbar.setBackground(ContextCompat.getDrawable(this,R.drawable.btn_style));
+        }
 
         DbTaskDhandle mDBHelper = new DbTaskDhandle(this);
         List<Task_Detail> singerList = new ArrayList<>();

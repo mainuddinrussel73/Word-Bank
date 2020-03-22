@@ -43,6 +43,7 @@
             android:maxLines="1"
             android:text="hjbhjbjbhjb"
             android:enabled="true"
+            android:background="@color/transparent"
             android:textColor="@color/red"
             android:textStyle="bold"
             android:fontFamily="@font/belgrano"
@@ -100,7 +101,6 @@
             android:layout_marginTop="5dp"
             android:textSize="15dp"
             android:textStyle="bold|italic"
-            android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
             android:text="Number of promotodos : "
             >
 
@@ -112,7 +112,7 @@
             android:layout_marginTop="30dp"
             android:layout_weight="1"
             android:gravity="center"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="20dp"
             android:orientation="vertical"
             android:layout_marginBottom="5dp">
 
@@ -130,7 +130,7 @@
         <LinearLayout
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginLeft="52dp"
+            android:layout_marginLeft="42dp"
             android:layout_marginRight="50dp"
             android:layout_weight="1"
             android:layout_marginTop="30dp"
@@ -153,7 +153,7 @@
         <LinearLayout
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginLeft="74dp"
+            android:layout_marginLeft="64dp"
             android:layout_marginRight="50dp"
             android:layout_weight="1"
             android:layout_marginTop="30dp"
@@ -175,7 +175,7 @@
         <LinearLayout
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginLeft="96dp"
+            android:layout_marginLeft="86dp"
             android:layout_marginRight="50dp"
             android:layout_weight="1"
             android:layout_marginTop="30dp"
@@ -197,10 +197,10 @@
 
         <RelativeLayout
             android:id="@+id/spinerlayout"
-            android:layout_width="match_parent"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="200dp"
             android:layout_marginTop="5dp"
+            android:layout_alignParentRight="true"
             android:orientation="horizontal">
 
             <com.jaredrummler.materialspinner.MaterialSpinner
@@ -211,7 +211,6 @@
                 android:layout_gravity="center"
                 android:background="@android:color/transparent"
                 android:gravity="center"
-                android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
                 android:spinnerMode="dropdown" />
 
@@ -232,10 +231,7 @@
         android:id="@+id/lay4"
 
         android:layout_below="@+id/lay2"
-        android:layout_marginTop="10dp"
-
-        android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
-        android:layout_marginRight="@dimen/alerter_activity_horizontal_margin">
+        android:layout_marginTop="10dp">
 
         <TextView
             android:id="@+id/place"
@@ -245,6 +241,7 @@
             android:textSize="15dp"
             android:textStyle="bold|italic"
             android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
+            android:layout_alignParentLeft="true"
             android:text="Repeat">
 
         </TextView>
@@ -268,7 +265,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:layout_marginLeft="200dp">
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp">
 
             </com.suke.widget.SwitchButton>
 
@@ -282,7 +280,6 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:id="@+id/lay3"
-
         android:layout_below="@+id/lay4"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="@dimen/alerter_activity_horizontal_margin"
@@ -293,13 +290,13 @@
             android:id="@+id/datepick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="7dp"
             android:layout_marginTop="6dp"
             android:paddingRight="5dp"
             android:paddingLeft="5dp"
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
             android:text="Date Pick"
+            android:layout_alignParentLeft="true"
             android:background="@drawable/btn_style"
             android:textColor="@color/white"
 
@@ -309,9 +306,9 @@
             android:id="@+id/viewdate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:layout_marginLeft="200dp"
             android:layout_marginTop="20dp"
+            android:layout_alignParentRight="true"
+            android:text="@string/nav_header_subtitle"
             android:textColor="@color/darkgray">
 
 
@@ -336,7 +333,6 @@
             android:id="@+id/soundpick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="7dp"
             android:layout_marginTop="6dp"
             android:paddingLeft="5dp"
             android:paddingTop="5dp"
@@ -344,6 +340,7 @@
             android:paddingBottom="5dp"
             android:text="White Noise"
             android:textColor="@color/white"
+            android:layout_alignParentLeft="true"
             android:background="@drawable/btn_style"
 
             />
@@ -352,9 +349,10 @@
             android:id="@+id/viewsound"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:layout_marginLeft="210dp"
             android:layout_marginTop="20dp"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:text="@string/nav_header_subtitle"
             android:textColor="@color/darkgray">
 
 
@@ -378,9 +376,9 @@
         <EditText
             android:id="@+id/texts"
             android:layout_width="match_parent"
+            android:background="@color/transparent"
             android:layout_height="200dp"
             android:layout_margin="15dp"
-            android:background="@drawable/backgroundborder"
             android:gravity="top|left"
             android:hint="Note.."
             android:paddingLeft="15dp"

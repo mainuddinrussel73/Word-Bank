@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -118,23 +119,24 @@ public class online_adapter extends BaseAdapter {
 
         SharedPreferences prefs = context.getSharedPreferences("myPrefsKey", Context.MODE_PRIVATE);
         boolean isDark = prefs.getBoolean("isDark", false);
+        FrameLayout linearLayout = rowView.findViewById(R.id.baselayout);
         if (isDark) {
 
             //System.out.println("klklkl");
-            // listitem.setBackgroundColor(Color.BLACK);
+            linearLayout.setBackgroundColor(Color.BLACK);
 
 
             titleText.setTextColor(Color.WHITE);
             body.setTextColor(Color.WHITE);
-            listitm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background_dark));
+            listitm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.background_card_dark));
 
 
 
         } else {
-
+            linearLayout.setBackgroundColor(Color.WHITE);
             titleText.setTextColor(Color.BLACK);
             body.setTextColor(Color.BLACK);
-            listitm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.card_background));
+            listitm.setBackgroundDrawable(ContextCompat.getDrawable(context, R.drawable.background_card));
 
         }
 

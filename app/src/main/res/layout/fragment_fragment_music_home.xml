@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/_rootLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context=".ui.media.fragment_music_home">
+
+
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:clipToPadding= "false"
+        android:paddingTop="80dp">
+
+
+
+    <RelativeLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+
+        <RelativeLayout
+            android:id="@+id/userspace"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:background="@drawable/base_rounded">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.github.siyamed.shapeimageview.CircularImageView
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_margin="@dimen/activity_horizontal_margin"
+                    android:src="@drawable/image1"
+                    app:siRadius="25dp">
+
+                </com.github.siyamed.shapeimageview.CircularImageView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginBottom="25dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/userfield"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:fontFamily="@font/lilita_regular"
+                        android:text="User Name : "
+                        android:textColor="@color/white"
+                        android:textSize="20dp"
+                        >
+
+                    </TextView>
+                    <TextView
+                        android:id="@+id/username"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:fontFamily="@font/lilita_regular"
+                        android:text="Cz Game"
+                        android:textColor="@color/soft_light"
+                        android:textSize="15dp"
+                        >
+
+                    </TextView>
+
+                </LinearLayout>
+            </LinearLayout>
+
+
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/userspace"
+            android:layout_margin="@dimen/activity_horizontal_margin"
+            android:background="@drawable/base_rounded">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_horizontal_margin"
+                    android:layout_weight="0.25"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/activity_horizontal_margin"
+                        android:background="@drawable/btn_shape"
+                        android:src="@drawable/ic_history_black_24dp"
+
+                        >
+
+                    </ImageButton>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/lilita_regular"
+                        android:text="History"
+                        android:textColor="#1AECCC"
+                        android:textSize="10dp">
+
+                    </TextView>
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_horizontal_margin"
+                    android:layout_weight="0.25"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/activity_horizontal_margin"
+                        android:background="@drawable/btn_shape2"
+                        android:src="@drawable/ic_add_to_photos_black_24dp"
+
+                        >
+
+                    </ImageButton>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/lilita_regular"
+                        android:text="Latest Added"
+                        android:textColor="#1AECCC"
+                        android:textSize="10dp">
+
+                    </TextView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_horizontal_margin"
+                    android:layout_weight="0.25"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/activity_horizontal_margin"
+                        android:background="@drawable/btn_shape3"
+                        android:src="@drawable/ic_trending_up_black_24dp"
+
+                        >
+
+                    </ImageButton>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/lilita_regular"
+                        android:text="Most Played"
+                        android:textColor="#1AECCC"
+                        android:textSize="10dp">
+
+                    </TextView>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/activity_horizontal_margin"
+                    android:layout_weight="0.25"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="@dimen/activity_horizontal_margin"
+                        android:background="@drawable/btn_shape4"
+                        android:src="@drawable/ic_shuffle_black_24dp"
+
+                        >
+
+                    </ImageButton>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/lilita_regular"
+                        android:text="Shuffle"
+                        android:textColor="#1AECCC"
+                        android:textSize="10dp">
+
+                    </TextView>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/inner0"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/options"
+            android:background="@color/black"
+            >
+
+            <TextView
+                android:id="@+id/title0"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:fontFamily="@font/lilita_regular"
+                android:text="Genres"
+                android:textColor="#1AECCC"
+                android:textSize="30dp">
+
+            </TextView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gridviews0"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/title0"
+                android:background="@color/black"
+                android:columnWidth="170dp"
+                android:divider="@null"
+                android:dividerHeight="15dp"
+                android:fastScrollAlwaysVisible="false"
+                android:fastScrollEnabled="true"
+                android:gravity="center"
+                android:horizontalSpacing="0dp"
+                android:numColumns="2"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:scrollbarStyle="outsideOverlay"
+                android:stretchMode="spacingWidth"
+                android:verticalSpacing="10dp"
+
+
+
+
+
+                >
+
+
+
+            </androidx.recyclerview.widget.RecyclerView>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/inner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/inner0"
+            android:background="@color/black"
+            >
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:fontFamily="@font/lilita_regular"
+                android:text="Recent Albums."
+                android:textColor="#1AECCC"
+                android:textSize="30dp">
+
+            </TextView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gridviews"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/title"
+                android:background="@color/black"
+                android:columnWidth="170dp"
+                android:divider="@null"
+                android:dividerHeight="15dp"
+                android:fastScrollAlwaysVisible="false"
+                android:fastScrollEnabled="true"
+                android:gravity="center"
+                android:horizontalSpacing="0dp"
+                android:numColumns="2"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:scrollbarStyle="outsideOverlay"
+                android:stretchMode="spacingWidth"
+                android:verticalSpacing="10dp"
+
+
+
+
+
+                >
+
+
+
+            </androidx.recyclerview.widget.RecyclerView>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/inner2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/inner"
+            android:background="@color/black"
+            >
+
+            <TextView
+                android:id="@+id/title2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:fontFamily="@font/lilita_regular"
+                android:text="Recent Artists."
+                android:textColor="#1AECCC"
+                android:textSize="30dp">
+
+            </TextView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gridviews2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/title2"
+                android:background="@color/black"
+                android:columnWidth="170dp"
+                android:divider="@null"
+                android:dividerHeight="15dp"
+                android:fastScrollAlwaysVisible="false"
+                android:fastScrollEnabled="true"
+                android:gravity="center"
+                android:horizontalSpacing="0dp"
+                android:numColumns="2"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:scrollbarStyle="outsideOverlay"
+                android:stretchMode="spacingWidth"
+                android:verticalSpacing="10dp"
+
+
+
+
+
+                >
+
+
+
+            </androidx.recyclerview.widget.RecyclerView>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/inner4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/inner2"
+            android:background="@color/black"
+            >
+
+            <TextView
+                android:id="@+id/title4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:fontFamily="@font/lilita_regular"
+                android:gravity="center_horizontal"
+                android:text="Recently Played Songs."
+                android:textColor="#1AECCC"
+                android:textSize="20dp">
+
+            </TextView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/gridviews4"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"
+                android:layout_below="@+id/title4"
+                android:background="@color/white"
+                android:divider="@null"
+                android:dividerHeight="15dp"
+                android:fastScrollAlwaysVisible="false"
+                android:fastScrollEnabled="true"
+                android:gravity="center"
+                android:horizontalSpacing="0dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:scrollbarStyle="outsideOverlay"
+                android:stretchMode="spacingWidth"
+                android:verticalSpacing="10dp"
+
+
+
+
+
+                >
+
+
+
+            </androidx.recyclerview.widget.RecyclerView>
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+    </ScrollView>
+
+</FrameLayout>
